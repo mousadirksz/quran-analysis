@@ -40,7 +40,6 @@ page = st.sidebar.radio("Pagina", [
     "🔍 Vers opzoeken",
     "🌳 Wortel zoeken",
     "📊 Statistieken",
-    "📝 Vrije SQL query",
 ])
 
 
@@ -199,31 +198,3 @@ elif page == "📊 Statistieken":
         FROM corpus GROUP BY surah ORDER BY surah
     """)
     st.bar_chart(wps.set_index('surah'))
-
-
-# ── Page: Vrije SQL query ──────────────────────────────────────────────────
-elif page == "📝 Vrije SQL query":
-    st.title("📝 Vrije SQL query")
-    st.caption("Tabellen: `corpus` | Views: `words`, `ayat`")
-
-    query = st.text_area("SQL Query", value="SELECT * FROM ayat WHERE surah = 112", height=100)
-
-    if st.button("Uitvoeren", type="primary"):
-        try:
-            result = sql(query)
-            st.success(f"{len(result):,} rijen")
-            st.dataframe(result, use_container_width=True, hide_index=True)
-        except Exception as e:
-            st.error(f"Fout: {e}")
-
-    with st.expander("Schema referentie"):
-        st.markdown("""
-        **Tabel `corpus`** — alle morphologische segmenten:
-        `surah, ayah, word, segment, form_bw, form_ar, tag, segment_type, pos, 
-        lemma, lemma_ar, root, root_ar, aspect, verb_form, voice, derivation,
-        person, gender, number, "case", mood, state, prefix, suffix_pron, special`
-        
-        **View `words`** — per woord: `surah, ayah, word, word_ar, word_bw`
-        
-        **View `ayat`** — per vers: `surah, ayah, verse_ar`
-        """)
