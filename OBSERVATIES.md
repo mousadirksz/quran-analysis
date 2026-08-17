@@ -145,30 +145,44 @@ boodschappers (رسل), leiding (هدي), barmhartigheid (رحم) en bestraffing
 ## Wujuh wa-naza'ir: de polysemielaag
 
 Voor betekenisverschillen binnen een woord (polysemie) is een `wujuh`-tabel
-toegevoegd, gebouwd uit twee klassieke werken (OpenITI/Shamela-digitaliseringen):
+toegevoegd, gebouwd uit drie klassieke werken (OpenITI/Shamela-digitaliseringen)
+die samen vier eeuwen traditie beslaan:
 
-- **al-Damaghani** (d. 478 AH), *Qamus al-Qur'an / Islah al-wujuh wa-l-naza'ir*:
-  387 entries, 1.253 geparste senses, 88% van 2.095 citaten geresolved.
+- **Yahya ibn Sallam** (d. 200 AH), *at-Tasarif* — het oudste overgeleverde werk
+  van het genre, op Muqatils materiaal: 114 entries, 551 senses, 99% van
+  1.871 citaten geresolved.
+- **al-Damaghani** (d. 478 AH), *Qamus al-Qur'an*: 387 entries, 1.253 geparste
+  senses, 99% van 2.082 echte citaten geresolved.
 - **Ibn al-Jawzi** (d. 597 AH), *Nuzhat al-a'yun al-nawazir*: 300 entries,
-  1.500 geparste senses, 92% van 2.752 citaten geresolved.
+  1.500 senses, 98% van 2.749 citaten geresolved.
 
-Pijplijn: `parse_damaghani.py` / `parse_ibnjawzi.py` (tekst -> entries met
-genummerde senses, glossen en citaten), `resolve_citations.py` (citaten ->
-soera:vers via drie matchingslagen die het verschil tussen rasm Uthmani en
-moderne spelling overbruggen), `add_wujuh.py` (tabel + root-inferentie uit
-de geciteerde verzen zelf). Resultaat: **4.432 citaatrijen** over 513 entries
-en 328 roots; 504 entries kregen automatisch een root toegewezen (de 9
-zonder zijn harf-entries, die terecht geen root hebben).
+Pijplijn: `parse_tasarif.py` / `parse_damaghani.py` / `parse_ibnjawzi.py`
+(tekst -> entries met genummerde senses, glossen en citaten),
+`resolve_citations.py` (citaten -> soera:vers via gelaagde matching die het
+verschil tussen rasm Uthmani en moderne spelling overbrugt, inclusief de
+archaische soeranamen van Ibn Sallam: sabhan, ta-ha, ha-mim as-sajda,
+alladhina kafaru), `substantiate_jk.py` (onopgeloste citaten gesubstantieerd
+uit de tweede, onafhankelijke JK-digitalisering van de Nuzhat) en
+`add_wujuh.py` (tabel + root-inferentie uit de geciteerde verzen zelf).
+
+Resultaat: **7.637 citaatrijen** over 628 entries en 348 roots; 612 entries
+kregen automatisch een root toegewezen (de overige zijn harf-entries, die
+terecht geen root hebben). 36 roots zijn door alle drie de werken behandeld,
+wat sensevergelijking over vier eeuwen mogelijk maakt.
 
 Statusonderscheid dat hierbij is vastgelegd: homonymie over de klassegrens
 (ma ism/harf) en functiesplitsing binnen een klasse (istifhamiyyah vs
 shartiyyah — verschillend 'amal, en de istifhamiyyah verliest als enige haar
 alif na jarr: 24 voorkomens, allemaal istifham) zijn **andere woorden**;
 de wujuh van bijv. هدى zijn **één woord met meerdere betekenissen**.
-Voorbeeld: هدى bij Ibn al-Jawzi — al-bayan (2:5), din al-islam (2:120),
-al-iman (18:13), al-du'a (13:7), al-'irfan (16:16), al-irshad (28:22)...
+
+Mooiste validatie: هدى heeft bij Ibn Sallam (2e eeuw) 17 wujuh en bij Ibn
+al-Jawzi (6e eeuw) 18 — met vrijwel dezelfde glossen in dezelfde volgorde
+(bayan, din al-islam, iman, du'a, ma'rifa/'irfan, amr Muhammad, rashad...).
+De traditie blijkt over vier eeuwen opmerkelijk stabiel overgeleverd.
 
 Beperkingen: de klassieke werken citeren voorbeeldverzen per sense (geen
-uitputtende dekking per voorkomen); ~250 citaten bleven onopgelost door
-Shamela-tikfouten; en de parsers missen nog senses in tekstdelen waar de
-digitalisering haar structuur verliest (o.a. al-Damaghani's grote هدى-entry).
+uitputtende dekking per voorkomen — een sense-label per voorkomen zou een
+moderne laag vergen); ~50 citaten bleven onopgelost door digitaliseringsfouten
+en lexicale notities die geen citaat zijn; en `parse_damaghani.py` mist nog
+senses in tekstdelen waar de Shamela-digitalisering haar structuur verliest.
