@@ -61,7 +61,7 @@ def main():
     data = json.loads(path.read_text(encoding="utf-8"))
     fixed = 0
     remaining = 0
-    for e in data["ibnjawzi"] + data["damaghani"]:
+    for e in data["ibnjawzi"] + data["damaghani"] + data["ibnsallam"]:
         for sense in e["senses"]:
             for q in sense["quotes"]:
                 if q["status"] not in ("no_match", "too_short"):

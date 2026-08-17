@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Resolve the Quran citations in the parsed wujuh works (al-Damaghani,
-Ibn al-Jawzi) to sura:aya references by matching them against the corpus
-text in quran.db.
+"""Resolve the Quran citations in the parsed wujuh works (Yahya ibn Sallam,
+al-Damaghani, Ibn al-Jawzi) to sura:aya references by matching them against
+the corpus text in quran.db.
 
 Both the quotes and the corpus text are normalized aggressively (diacritics
 stripped, hamza/alef/ya variants collapsed) because the Shamela digitizations
@@ -80,7 +80,39 @@ SURA_NAMES = {
     "الماعون": 107, "ارايت": 107, "الكوثر": 108, "الكافرون": 109,
     "النصر": 110, "المسد": 111, "تبت": 111, "الاخلاص": 112,
     "الفلق": 113, "الناس": 114,
+    # archaic names, as used by Yahya ibn Sallam (2nd c. AH): suras are cited
+    # by their opening words rather than by the later canonical titles
+    "سبحان": 17, "بني اسراييل": 17, "طاه": 20, "الم تنزيل": 32,
+    "الم السجده": 32, "تنزيل السجده": 32, "المين": 36,
+    "حم السجده": 41, "حمالسجده": 41, "حم عساقا": 42, "حمعساقا": 42,
+    "حمعاساقا": 42, "عساقا": 42, "حم الزخرف": 43, "حمالزخرف": 43,
+    "حم الدخان": 44, "حمالدخان": 44, "حم المومن": 40, "حمالمومن": 40,
+    "حم الاحقاف": 46, "حمالاحقاف": 46, "الذين كفروا": 47, "اقتربت الساعه": 54,
+    "قد سمع": 58, "الحواريون": 61, "قل اوحي": 72, "هل اتي": 76,
+    "لا اقسم": 75, "عم يتسايلون": 78, "هل اتاك": 88, "الليل اذا يغشي": 92,
+    "لم يكن الذين كفروا": 98, "اذا زلزلت الارض": 99, "الهاكم التكاثر": 102,
+    "اريت الذي": 107, "قل يا ايها الكافرون": 109, "تبت يدا": 111,
+    "قل هو الله احد": 112, "قل اعوذ برب الفلق": 113, "قل اعوذ برب الناس": 114,
 }
+
+
+HINT_NOISE = re.compile(r"^(?:اخر |اول |سوره |قوله |وقوله |تفسير )+")
+
+
+def hint_to_sura(raw):
+    """Map a parsed sura hint to a number, tolerating the framing words the
+    authors wrap around it ('in the end of sura Bara'a', 'his word in
+    al-Zumar') and trailing words swept up by the citation regex."""
+    n = normalize(raw)
+    n = HINT_NOISE.sub("", n).strip()
+    while n:
+        if n in SURA_NAMES:
+            return SURA_NAMES[n]
+        parts = n.split()
+        if len(parts) == 1:
+            return None
+        n = " ".join(parts[:-1])  # drop trailing words that are not the name
+    return None
 
 
 def load_verses():
@@ -323,7 +355,8 @@ def main():
     word_idx = build_word_index(skel_verses)
     out = {}
     for work, fn in (("damaghani", "damaghani_wujuh.json"),
-                     ("ibnjawzi", "ibnjawzi_wujuh.json")):
+                     ("ibnjawzi", "ibnjawzi_wujuh.json"),
+                     ("ibnsallam", "tasarif_wujuh.json")):
         entries = json.loads((HERE / "sources" / fn).read_text(encoding="utf-8"))
         stats = {"unique": 0, "hint_resolved": 0, "ambiguous": 0,
                  "cross_verse": 0, "fuzzy": 0, "short_hint": 0,
@@ -333,8 +366,8 @@ def main():
         for e in entries:
             r_senses = []
             for sense in e["senses"]:
-                hints = {SURA_NAMES[normalize(s)] for s in sense.get("suras", [])
-                         if normalize(s) in SURA_NAMES}
+                hints = {n for n in (hint_to_sura(s)
+                                     for s in sense.get("suras", [])) if n}
                 r_quotes = []
                 for q in sense["quotes"]:
                     refs, status = resolve_quote(normalize(q), verses, skel_verses,
