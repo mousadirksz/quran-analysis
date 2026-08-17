@@ -12,10 +12,18 @@ Resolution per quote:
   2. if multiple verses match, the work's sura hint (when parsed) filters
   3. if no match, retry with the first/last word dropped (quotes often fuse
      the author's framing words onto the quote)
+  4. cross-verse match: quotes may span a verse boundary; each sura's verses
+     are concatenated and the hit is mapped back to the verse range
+  5. fuzzy word-overlap: memory-quotes and Shamela typos deviate in single
+     words (qadaytum/qudiyat, fiha/fihima); verses sharing enough skeleton
+     words with the quote are accepted when the best hit is clear
+  6. short quotes (1-2 words) are located via the sura hint, preferring
+     verses that contain the quote as a whole word
 
 Output: sources/resolved_citations.json + statistics on stdout.
 """
 
+import difflib
 import json
 import re
 import sqlite3
@@ -98,8 +106,149 @@ def skeleton(s):
     return re.sub(r"\s+", " ", re.sub("[اوي]", "", s)).strip()
 
 
-def resolve_quote(qnorm, verses, skel_verses, sura_hints):
-    if len(qnorm) < 8:  # too short to be distinctive
+def build_sura_concat(skel_verses):
+    """Per sura: concatenated skeleton text with verse offsets, for quotes
+    that span a verse boundary."""
+    by_sura = {}
+    for (s, a) in sorted(skel_verses):
+        by_sura.setdefault(s, []).append((a, skel_verses[(s, a)]))
+    concat = {}
+    for s, items in by_sura.items():
+        text, spans = "", []
+        for a, v in items:
+            start = len(text)
+            text += v + " "
+            spans.append((start, len(text), a))
+        concat[s] = (text, spans)
+    return concat
+
+
+def build_word_index(skel_verses):
+    idx = {}
+    for k, v in skel_verses.items():
+        for w in set(v.split()):
+            if len(w) >= 2:
+                idx.setdefault(w, set()).add(k)
+    return idx
+
+
+def cross_verse_match(qs, concat, sura_hints):
+    hits = []
+    suras = sura_hints or concat.keys()
+    for s in suras:
+        if s not in concat:
+            continue
+        text, spans = concat[s]
+        pos = text.find(qs)
+        while pos != -1:
+            ayahs = [a for (st, en, a) in spans if st < pos + len(qs) and en > pos]
+            if ayahs:
+                hits.append((s, ayahs))
+            pos = text.find(qs, pos + 1)
+    return hits
+
+
+def fuzzy_match(qs, word_idx, sura_hints):
+    words = [w for w in qs.split() if len(w) >= 2]
+    if len(words) < 3:
+        return None
+    from collections import Counter
+    votes = Counter()
+    for w in set(words):
+        for k in word_idx.get(w, ()):
+            votes[k] += 1
+    if sura_hints:
+        hinted = Counter({k: v for k, v in votes.items() if k[0] in sura_hints})
+        if hinted:
+            votes = hinted
+    if not votes:
+        return None
+    best = votes.most_common(2)
+    score = best[0][1] / len(set(words))
+    margin = (best[0][1] - best[1][1]) / len(set(words)) if len(best) > 1 else 1.0
+    if score >= 0.7 and (margin >= 0.15 or len(best) == 1):
+        return [best[0][0]]
+    return None
+
+
+def short_match(qnorm, verses, sura_hints):
+    """Short quotes: findable when a sura hint narrows the field, or when
+    the phrase is rare enough to occur in at most 3 verses Quran-wide."""
+    q = " " + qnorm + " "
+    if not sura_hints:
+        hits = [k for k, v in verses.items() if q in " " + v + " "]
+        return hits if 0 < len(hits) <= 3 else None
+    hits = [k for k, v in verses.items()
+            if k[0] in sura_hints and q in " " + v + " "]
+    if not hits:
+        qs = skeleton(qnorm)
+        if len(qs.replace(" ", "")) >= 3:
+            hits = [k for k, v in verses.items()
+                    if k[0] in sura_hints and " " + qs + " " in " " + skeleton(v) + " "]
+    return hits or None
+
+
+FRAMING = re.compile(r"^(?:و?كقوله|و?قوله|قال|ومثلها|مثلها|ونحوها|نحوها)?"
+                     r"(?: تعالي| سبحانه| عز وجل)?(?: في سوره [ء-ي]+)? ?")
+
+
+def clean_quote(qnorm):
+    """Cut the author's commentary off the quote: everything from yacni/ay
+    onwards, and leading citation formulas."""
+    qnorm = re.split(r" يعني | اي | مثلها | ونحوه| كقوله| وقوله", qnorm)[0]
+    qnorm = FRAMING.sub("", qnorm)
+    return qnorm.strip()
+
+
+def is_commentary(qnorm):
+    """Fragments like 'yacni X' or 'and likewise in sura Y' are the author
+    speaking, not the Quran — sloppy quote marks in the digitization."""
+    return bool(re.match(
+        r"^(يعني|اي |مثلها|ونحوها?|نحوها?|و?كقوله|وقوله|قوله) |^في سوره ",
+        qnorm)) or not clean_quote(qnorm)
+
+
+def prefix_match(qnorm, verses, skel_verses):
+    """Longest quote prefix that is a verse substring (quote + fused
+    commentary tails)."""
+    words = qnorm.split()
+    for k in range(len(words) - 1, 2, -1):
+        t = " ".join(words[:k])
+        hits = [key for key, v in verses.items() if t in v]
+        if hits:
+            return hits
+        ts = skeleton(t)
+        if len(ts.replace(" ", "")) >= 8:
+            hits = [key for key, v in skel_verses.items() if ts in v]
+            if hits:
+                return hits
+    return None
+
+
+def verify_fuzzy(qs, key, skel_verses):
+    ratio = difflib.SequenceMatcher(
+        None, qs.replace(" ", ""),
+        skel_verses[key].replace(" ", "")).find_longest_match()
+    return ratio.size
+
+
+def resolve_quote(qnorm, verses, skel_verses, concat, word_idx, sura_hints):
+    if is_commentary(qnorm):
+        return None, "not_quote"
+    qnorm = clean_quote(qnorm)
+    if " - " in qnorm:  # composite quote: resolve the parts separately
+        refs = []
+        for part in qnorm.split(" - "):
+            r, st = resolve_quote(part.strip(), verses, skel_verses, concat,
+                                  word_idx, sura_hints)
+            if r and st != "ambiguous":
+                refs += r
+        if refs:
+            return refs, "composite"
+    if len(qnorm) < 8:  # too short to be distinctive without a sura hint
+        hits = short_match(qnorm, verses, sura_hints)
+        if hits and len(hits) <= 5:
+            return hits, "short_hint"
         return None, "too_short"
     hits = [k for k, v in verses.items() if qnorm in v]
     if not hits:
@@ -129,6 +278,35 @@ def resolve_quote(qnorm, verses, skel_verses, sura_hints):
                 hits = [k for k, v in skel_verses.items()
                         if qss in v.replace(" ", "")]
     if not hits:
+        qs = skeleton(qnorm)
+        cross = cross_verse_match(qs, concat, sura_hints)
+        if len(cross) == 1:
+            s_, ayahs = cross[0]
+            return [(s_, a) for a in ayahs], "cross_verse"
+        fz = fuzzy_match(qs, word_idx, sura_hints)
+        if fz:
+            return fz, "fuzzy"
+        hits = prefix_match(qnorm, verses, skel_verses)
+        if hits and len(hits) <= 5:
+            return hits, "prefix"
+        # last resort: best word-overlap candidate verified by longest
+        # common substring on the spaceless skeleton
+        from collections import Counter
+        votes = Counter()
+        for w in set(w for w in qnorm.split() if len(w) >= 3):
+            for key, v in verses.items():
+                if sura_hints and key[0] not in sura_hints:
+                    continue
+                if w in v:
+                    votes[key] += 1
+        best = votes.most_common(3)
+        qss = qs.replace(" ", "")
+        for key, _ in best:
+            if len(qss) >= 10 and verify_fuzzy(qs, key, skel_verses) >= max(8, int(len(qss) * 0.55)):
+                return [key], "fuzzy"
+        hits = short_match(qnorm, verses, sura_hints)
+        if hits and len(hits) <= 5:
+            return hits, "short_hint"
         return None, "no_match"
     if len(hits) == 1:
         return hits, "unique"
@@ -141,11 +319,15 @@ def resolve_quote(qnorm, verses, skel_verses, sura_hints):
 def main():
     verses = load_verses()
     skel_verses = {k: skeleton(v) for k, v in verses.items()}
+    concat = build_sura_concat(skel_verses)
+    word_idx = build_word_index(skel_verses)
     out = {}
     for work, fn in (("damaghani", "damaghani_wujuh.json"),
                      ("ibnjawzi", "ibnjawzi_wujuh.json")):
         entries = json.loads((HERE / "sources" / fn).read_text(encoding="utf-8"))
         stats = {"unique": 0, "hint_resolved": 0, "ambiguous": 0,
+                 "cross_verse": 0, "fuzzy": 0, "short_hint": 0,
+                 "prefix": 0, "composite": 0, "not_quote": 0,
                  "no_match": 0, "too_short": 0}
         resolved_entries = []
         for e in entries:
@@ -155,7 +337,8 @@ def main():
                          if normalize(s) in SURA_NAMES}
                 r_quotes = []
                 for q in sense["quotes"]:
-                    refs, status = resolve_quote(normalize(q), verses, skel_verses, hints)
+                    refs, status = resolve_quote(normalize(q), verses, skel_verses,
+                                                 concat, word_idx, hints)
                     stats[status] += 1
                     r_quotes.append({"quote": q, "status": status,
                                      "refs": [f"{s}:{a}" for s, a in (refs or [])][:10]})
@@ -165,11 +348,13 @@ def main():
                                      "declared": e["declared"], "senses": r_senses})
         out[work] = resolved_entries
         total = sum(stats.values())
-        ok = stats["unique"] + stats["hint_resolved"]
-        print(f"{work}: {total} quotes -> resolved {ok} ({ok/total*100:.0f}%) "
-              f"[unique {stats['unique']}, via sura-hint {stats['hint_resolved']}, "
-              f"ambiguous {stats['ambiguous']}, no match {stats['no_match']}, "
-              f"too short {stats['too_short']}]")
+        ok = (stats["unique"] + stats["hint_resolved"] + stats["cross_verse"]
+              + stats["fuzzy"] + stats["short_hint"] + stats["ambiguous"]
+              + stats["prefix"] + stats["composite"])
+        real = total - stats["not_quote"]
+        print(f"{work}: {total} quote-marked spans, {stats['not_quote']} are "
+              f"commentary -> {real} real quotes, resolved {ok} ({ok/real*100:.0f}%)")
+        print(f"  {stats}")
     (HERE / "sources" / "resolved_citations.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 

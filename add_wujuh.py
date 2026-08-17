@@ -25,6 +25,12 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 
+# statuses from resolve_citations.py that carry usable verse references;
+# 'ambiguous' rows list every verse containing the quoted phrase, which for
+# wujuh purposes is what the author's "and its likes" intends
+RESOLVED = {"unique", "hint_resolved", "cross_verse", "fuzzy", "short_hint",
+            "prefix", "composite", "ambiguous"}
+
 
 def norm_letters(s):
     s = re.sub("[آأإٱا]", "ا", s)
@@ -98,7 +104,7 @@ def main():
             refs = []
             for sense in e["senses"]:
                 for q in sense["quotes"]:
-                    if q["status"] in ("unique", "hint_resolved"):
+                    if q["status"] in RESOLVED:
                         refs += [tuple(map(int, r.split(":"))) for r in q["refs"]]
             if not refs:
                 continue
@@ -108,7 +114,7 @@ def main():
                 entries_with_root += 1
             for sense in e["senses"]:
                 for q in sense["quotes"]:
-                    if q["status"] not in ("unique", "hint_resolved"):
+                    if q["status"] not in RESOLVED:
                         continue
                     for ref in q["refs"]:
                         s, a = map(int, ref.split(":"))
