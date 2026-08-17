@@ -141,3 +141,34 @@ Top van de 128.189 kalimaat: وَ (9.566; 7,5%), ٱل (8.377), هُم (8.272),
 De top leest als de kernboodschap zelf: God (اله, ربب) spreekt (قول) tot de
 mens over geloof (امن) en ongeloof (كفر), kennis (علم), tekenen (ايي),
 boodschappers (رسل), leiding (هدي), barmhartigheid (رحم) en bestraffing (عذب).
+
+## Wujuh wa-naza'ir: de polysemielaag
+
+Voor betekenisverschillen binnen een woord (polysemie) is een `wujuh`-tabel
+toegevoegd, gebouwd uit twee klassieke werken (OpenITI/Shamela-digitaliseringen):
+
+- **al-Damaghani** (d. 478 AH), *Qamus al-Qur'an / Islah al-wujuh wa-l-naza'ir*:
+  387 entries, 1.253 geparste senses, 88% van 2.095 citaten geresolved.
+- **Ibn al-Jawzi** (d. 597 AH), *Nuzhat al-a'yun al-nawazir*: 300 entries,
+  1.500 geparste senses, 92% van 2.752 citaten geresolved.
+
+Pijplijn: `parse_damaghani.py` / `parse_ibnjawzi.py` (tekst -> entries met
+genummerde senses, glossen en citaten), `resolve_citations.py` (citaten ->
+soera:vers via drie matchingslagen die het verschil tussen rasm Uthmani en
+moderne spelling overbruggen), `add_wujuh.py` (tabel + root-inferentie uit
+de geciteerde verzen zelf). Resultaat: **4.432 citaatrijen** over 513 entries
+en 328 roots; 504 entries kregen automatisch een root toegewezen (de 9
+zonder zijn harf-entries, die terecht geen root hebben).
+
+Statusonderscheid dat hierbij is vastgelegd: homonymie over de klassegrens
+(ma ism/harf) en functiesplitsing binnen een klasse (istifhamiyyah vs
+shartiyyah — verschillend 'amal, en de istifhamiyyah verliest als enige haar
+alif na jarr: 24 voorkomens, allemaal istifham) zijn **andere woorden**;
+de wujuh van bijv. هدى zijn **één woord met meerdere betekenissen**.
+Voorbeeld: هدى bij Ibn al-Jawzi — al-bayan (2:5), din al-islam (2:120),
+al-iman (18:13), al-du'a (13:7), al-'irfan (16:16), al-irshad (28:22)...
+
+Beperkingen: de klassieke werken citeren voorbeeldverzen per sense (geen
+uitputtende dekking per voorkomen); ~250 citaten bleven onopgelost door
+Shamela-tikfouten; en de parsers missen nog senses in tekstdelen waar de
+digitalisering haar structuur verliest (o.a. al-Damaghani's grote هدى-entry).
