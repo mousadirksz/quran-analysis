@@ -1550,8 +1550,10 @@
      "quotes": [
       {
        "quote": "إن ذلك كان يؤذي النبي",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "50:37"
+       ]
       },
       {
        "quote": "فيستحي منكم",
@@ -2933,8 +2935,10 @@
       },
       {
        "quote": "واذكر بعد امة",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "12:45"
+       ]
       }
      ]
     },
@@ -3943,8 +3947,10 @@
       },
       {
        "quote": "ومن آناء الليل",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "73:20"
+       ]
       },
       {
        "quote": "أمن هو قانت آناء الليل",
@@ -8785,8 +8791,10 @@
       },
       {
        "quote": "يعلمون",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "2:102"
+       ]
       },
       {
        "quote": "الله حفيظ عليهم",
@@ -9595,8 +9603,10 @@
      "quotes": [
       {
        "quote": "أحاطت به خطيئة",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "2:81"
+       ]
       },
       {
        "quote": "وأحيط بثمره",
@@ -10055,8 +10065,10 @@
      "quotes": [
       {
        "quote": "مختوم ختامه مسك",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "83:26"
+       ]
       },
       {
        "quote": "وخاتم النبيين",
@@ -15192,8 +15204,10 @@
       },
       {
        "quote": "وما عليك أن لا يزكى",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "3:145"
+       ]
       }
      ]
     },
@@ -15632,13 +15646,17 @@
      "quotes": [
       {
        "quote": "يسألونك",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "2:219"
+       ]
       },
       {
        "quote": "يسألونك",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "2:219"
+       ]
       }
      ]
     },
@@ -17462,8 +17480,10 @@
       },
       {
        "quote": "قالوا سلاما",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "25:63"
+       ]
       }
      ]
     },
@@ -18162,8 +18182,10 @@
       },
       {
        "quote": "ثم سواه",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "32:9"
+       ]
       },
       {
        "quote": "خلقك فسواك",
@@ -23019,8 +23041,10 @@
       },
       {
        "quote": "وألقينا في الأرض",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "4:97"
+       ]
       }
      ]
     },
@@ -25111,8 +25135,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وما\nأصابكم يوم التقى الجمعان فبإذن الله",
@@ -25795,8 +25821,10 @@
       },
       {
        "quote": "10 / ب",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "80:31"
+       ]
       },
       {
        "quote": "من\nينكر بعضه",
@@ -26196,8 +26224,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "إلا ابتغاء وجه ربه الأعلى",
@@ -27009,8 +27039,10 @@
       },
       {
        "quote": "ومثله",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "52:34"
+       ]
       }
      ]
     },
@@ -27929,8 +27961,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وآية لهم أنا خملنا ذريتهم في الفلك المشحون",
@@ -28034,8 +28068,10 @@
       },
       {
        "quote": "ولقد (12 / أ",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "25:40"
+       ]
       }
      ]
     },
@@ -28611,8 +28647,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -28958,8 +28996,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وإن كادوا ليستفزونك من\nالأرض ليخرجوك منها",
@@ -31561,13 +31601,17 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -33906,8 +33950,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -34686,8 +34732,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "فإن\nخفتم ألا تعدلوا فواحدة",
@@ -35046,8 +35094,10 @@
      "quotes": [
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "لن\nيؤتيهم الله خيرا",
@@ -35084,8 +35134,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -35508,8 +35560,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "إن الله يعلم ما يدعون\nمن دونه",
@@ -35554,8 +35608,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -36910,8 +36966,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -37092,8 +37150,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -37332,8 +37392,10 @@
      "quotes": [
       {
        "quote": "وقالوا",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "41:47"
+       ]
       }
      ]
     },
@@ -37617,8 +37679,10 @@
       },
       {
        "quote": "(أولئك",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "47:20"
+       ]
       },
       {
        "quote": "فيدخلهم ربهم في\nرحمته",
@@ -37635,8 +37699,10 @@
      "quotes": [
       {
        "quote": "(والله",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "7:44"
+       ]
       },
       {
        "quote": "يدخل من يشاء في رحمته",
@@ -37661,8 +37727,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -37719,8 +37787,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -37744,8 +37814,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -39163,8 +39235,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -39573,8 +39647,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "ادع\nإلى سبيل ربك",
@@ -39611,8 +39687,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -39778,8 +39856,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "ثم كان عاقبة الذين أساءوا السوأى",
@@ -40070,8 +40150,10 @@
      "quotes": [
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "ومن الناس من يشتري لهو الحديث",
@@ -41784,13 +41866,17 @@
      "quotes": [
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "إني إذا لفي ضلال مبين",
@@ -42025,8 +42111,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     }
@@ -43424,13 +43512,17 @@
       },
       {
        "quote": "وما (90 / أ",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "41:47"
+       ]
       },
       {
        "quote": "قالت امرأة العزيز",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "12:30"
+       ]
       },
       {
        "quote": "يا أيها العزيز",
@@ -45723,8 +45815,10 @@
       },
       {
        "quote": "وإن كادوا ليفتنوك",
-       "status": "no_match",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "43:52"
+       ]
       }
      ]
     },
@@ -47744,23 +47838,31 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "ربنا لم كتبت علينا القتال",
@@ -48041,8 +48143,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "الكبير المتعال",
@@ -48073,8 +48177,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -48956,8 +49062,10 @@
       },
       {
        "quote": "ومثله",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "52:34"
+       ]
       }
      ]
     }
@@ -49603,13 +49711,17 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "117\n/ ب",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "80:31"
+       ]
       }
      ]
     }
@@ -50103,8 +50215,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
@@ -50741,8 +50855,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       },
       {
        "quote": "سنقرئك فلا تنسى",
@@ -51498,8 +51614,10 @@
       },
       {
        "quote": "وفيها",
-       "status": "too_short",
-       "refs": []
+       "status": "edition_jk",
+       "refs": [
+        "17:69"
+       ]
       }
      ]
     },
