@@ -1,7 +1,12 @@
 # Observaties bij de Quran-corpusanalyse
 
-Bevindingen uit de analyse van `quran.db` (Quranic Arabic Corpus, morfologie v0.4),
-inclusief de toegevoegde `kalima_type`-kolom en de gelemmatiseerde damaa'ir.
+Bevindingen uit de analyse van `quran.db`: de Quranic Arabic Corpus
+(morfologie v0.4) met de toegevoegde kolommen `kalima_type` en `wazifa`, de
+gelemmatiseerde damaa'ir, en de wujuh-laag uit vier klassieke werken.
+
+Alle getallen hieronder zijn opnieuw tegen de database gecontroleerd.
+`README.md` beschrijft het schema en de pijplijn; dit document beschrijft wat
+er in de data te zien is.
 
 ## Basistellingen
 
@@ -42,14 +47,15 @@ De corpustags zijn gecorrigeerd naar de klassieke indeling: vraag- en
 voorwaardewoorden (مَن, كَيْف, أَيْن, مَتَىٰ, كَم, مَاذَا, أَىّ, أَيَّان,
 أَنَّىٰ, مَهْمَا, حَيْثُ, ٱلَّذِى voorwaardelijk, إِذَا shartiyya en مَا als
 istifhaam/shart) zijn asmaa', geen huruf — 583 segmenten verhuisden daarmee
-van harf naar ism. Vanuit nahw-oogpunt telt de Quran zo **128.189 kalimaat**
-(exclusief de 30 muqatta'aat-reeksen). De verborgen damier (mustatir) telt
-niet mee; alleen wat geschreven staat is geannoteerd.
+van harf naar ism (346 met tag `INTG`, 237 met tag `COND`). Vanuit
+nahw-oogpunt telt de Quran zo **128.189 kalimaat** (exclusief de 30
+muqatta'aat-reeksen). De verborgen damier (mustatir) telt niet mee; alleen wat
+geschreven staat is geannoteerd.
 
 ## De damaa'ir als lemma's
 
-De corpus laat persoonlijke voornaamwoorden zonder lemma (24.661 segmenten,
-een derde van alle ism-voorkomens). Elk PRON-segment is gelemmatiseerd naar
+De corpus laat persoonlijke voornaamwoorden zonder lemma (24.685 segmenten,
+bijna 40% van alle ism-voorkomens). Elk PRON-segment is gelemmatiseerd naar
 het canonieke losstaande voornaamwoord van zijn persoon-geslacht-getal-cel
 (ـهُ/ـهِ/هُوَ → هُوَ; tweevouden naar أَنتُمَا en هُمَا), inclusief de
 onderwerpssuffixen aan werkwoorden (كَتَبُوا۟ = fi'l + waw al-jamaa'a).
@@ -59,7 +65,8 @@ grootste.
 ## Meerduidige woorden
 
 Slechts **twee** lemma's overschrijden de ism/harf-grens: مَا en إِذَا.
-Alle overige meerduidigheid speelt binnen één klasse. De belangrijkste:
+Alle overige meerduidigheid speelt binnen één klasse. De belangrijkste
+(geteld per lemma waar de corpus er een geeft, anders per geschreven vorm):
 
 - **مَا**: ism 1.594x (mawsula 1.476, istifhaam 95, shart 23);
   harf 971x (nafiya 705, kaffa 162, masdariyya 83, zaa'ida 21).
@@ -70,39 +77,48 @@ Alle overige meerduidigheid speelt binnen één klasse. De belangrijkste:
 - **أَن**: masdariyya 578, mufassira 47.
 - **وَ** is met zes functies het veelzijdigste woord: 'atf 8.177,
   isti'naafiyya 1.034, haliyya 293, zaa'ida 59, **qasam 28** (harf jarr!),
-  ma'iyya 3.
-- **فَ**: isti'naafiyya 1.891, 'atf 517, jawaab ash-shart 350, sababiyya 88.
-- **لَ**: laam al-jarr 1.328 naast laam at-tawkied 1.001.
-- Ruim 250 naamwoorden wisselen tussen N en ADJ (vooral de Schone Namen:
-  رَحِيم 112x bijvoeglijk / 4x zelfstandig; عَزِيز juist 63x zelfstandig).
+  ma'iyya 3 — samen 9.594 voorkomens van وَ en de geassimileerde variant وَّ.
+- **فَ**: isti'naafiyya 1.891, 'atf 517, jawaab ash-shart 350, zaa'ida 155,
+  sababiyya 88.
+- **لَ/لِ**: laam al-jarr 2.451 naast laam at-tawkied 1.001, laam at-ta'liel
+  319 en laam al-amr 78.
+- Ruim 230 naamwoorden wisselen tussen N en ADJ (vooral de Schone Namen:
+  عَزِيز is 63x zelfstandig en 38x bijvoeglijk getagd).
 
 ## Frequentieverdeling van kalimaat
 
-Top van de 128.189 kalimaat: وَ (9.566; 7,5%), ٱل (8.377), هُم (8.272),
-أَنتُم (5.175), هُوَ (3.845), مِن (3.226), فَ (3.001), ٱللَّه (2.699).
+Geteld per lemma waar de corpus er een geeft, anders per geschreven
+segmentvorm, met alle vormen van het lidwoord samengenomen. Top van de
+128.189 kalimaat: وَ (9.572; 7,5%), ٱل (8.377), هُم (8.272), أَنتُم (5.175),
+هُوَ (3.845), مِن (3.226), فَ (3.001), ٱللَّه (2.699).
 
-- De top 3 is 20% van de hele tekst; de top 20 dekt 50,5%; de **top 100
-  dekt 72,9%** — wie die 100 woorden kent, herkent bijna drie van elke
+- De top 3 dekt 20,5% van de hele tekst; de top 20 dekt 51,8%; de **top 100
+  dekt 72,8%** — wie die 100 woorden kent, herkent bijna drie van elke
   vier woorden.
 - Het frequentste fi'l is قَالَ (1.618x), passend voor een tekst die
   grotendeels uit weergegeven spraak bestaat.
-- Het frequentste inhoudswoord is ٱللَّه.
+- Het frequentste inhoudswoord is ٱللَّه (2.699x).
 
 ## Roots: dekking en vruchtbaarheid
 
 | | Met root | Zonder root |
 |---|---|---|
 | Unieke lemma's | 4.657 (96,1%) | 187 (3,9%) |
-| Voorkomens | 49.968 (39,0%) | 78.221 (61,0%) |
+| Voorkomens | 49.968 (39,0%) | 78.251 (61,0%) |
 
 - Elk fi'l heeft een root (100%); geen enkel harf heeft er een; van de
   ism-lemma's is 95,7% afgeleid. Geen enkel lemma is gemengd.
 - De 187 rootloze lemma's: damaa'ir, mawsulaat, ishaara-woorden, versteende
-  zuruf (إِذَا, إِذ, مَع…) en vooral niet-Arabische eigennamen (مُوسَىٰ,
+  zuruf (إِذَا, إِذ, مَع…) en de niet-Arabische eigennamen (مُوسَىٰ,
   إِبْرَاهِيم, فِرْعَوْن). In de lopende tekst dekt het rootloze deel wel
   61% — het grammaticale bindweefsel domineert de frequenties.
+- **Eigennamen zijn niet overwegend rootloos.** Van de 3.911 PN-segmenten
+  hebben er 3.016 (77%) juist wél een root, omdat de meeste eigennamen
+  gewone Arabische woorden zijn (صبر, حمد). Het is op *lemma*-niveau dat ze
+  uitdunnen: van de 107 verschillende PN-lemma's hebben er maar 30 een root.
+  De rootloze eigennamen zijn weinig in aantal maar frequent in de tekst.
 - **6% van de roots dekt 60% van het root-dragende deel**: de top 100 roots
-  leveren 781 lemma's (16,1% van het lexicon) en 23,6% van alle kalimaat.
+  leveren 779 lemma's (16,1% van het lexicon) en 23,6% van alle kalimaat.
 - Frequentie en vruchtbaarheid zijn onafhankelijk: ارض is 461x aanwezig met
   één lemma; قوم brengt 22 lemma's voort; اله (2.851x, nr. 1) heeft er maar
   drie: ٱللَّه (2.699), إِلَٰه (147, waarvan 34x meervoud ءَالِهَة) en
@@ -144,45 +160,160 @@ boodschappers (رسل), leiding (هدي), barmhartigheid (رحم) en bestraffing
 
 ## Wujuh wa-naza'ir: de polysemielaag
 
-Voor betekenisverschillen binnen een woord (polysemie) is een `wujuh`-tabel
-toegevoegd, gebouwd uit drie klassieke werken (OpenITI/Shamela-digitaliseringen)
-die samen vier eeuwen traditie beslaan:
+Voor betekenisverschillen binnen één woord (polysemie) is een `wujuh`-tabel
+toegevoegd, gebouwd uit **vier** klassieke werken (OpenITI-digitaliseringen van
+Shamela en JK) die samen vier eeuwen traditie beslaan. Per werk, zoals de
+parsers ze uit de tekst halen en zoals ze in de tabel terechtkomen:
 
-- **Yahya ibn Sallam** (d. 200 AH), *at-Tasarif* — het oudste overgeleverde werk
-  van het genre, op Muqatils materiaal: 114 entries, 551 senses, 99% van
-  1.871 citaten geresolved.
-- **al-Damaghani** (d. 478 AH), *Qamus al-Qur'an*: 387 entries, 1.253 geparste
-  senses, 99% van 2.082 echte citaten geresolved.
-- **Ibn al-Jawzi** (d. 597 AH), *Nuzhat al-a'yun al-nawazir*: 300 entries,
-  1.500 senses, 98% van 2.749 citaten geresolved.
+| Werk | Sterfjaar | Entries geparst | Senses geparst | Citaten | Geresolved | Rijen in `wujuh` |
+|---|---|---|---|---|---|---|
+| Yahya ibn Sallam, *at-Tasarif* | 200 AH | 114 | 551 | 1.871 | 96,5% | 2.571 |
+| Abu Hilal al-Askari, *al-Wujuh wa-l-Naza'ir* | ca. 395 AH | 210 | 848 | 2.079 | 96,2% | 2.584 |
+| al-Damaghani, *Qamus al-Qur'an* | 478 AH | 497 | 2.329 | 3.723 | 98,2% | 4.319 |
+| Ibn al-Jawzi, *Nuzhat al-a'yun al-nawazir* | 597 AH | 300 | 1.500 | 2.749 | 96,8% | 2.870 |
 
-Pijplijn: `parse_tasarif.py` / `parse_damaghani.py` / `parse_ibnjawzi.py`
-(tekst -> entries met genummerde senses, glossen en citaten),
-`resolve_citations.py` (citaten -> soera:vers via gelaagde matching die het
-verschil tussen rasm Uthmani en moderne spelling overbrugt, inclusief de
-archaische soeranamen van Ibn Sallam: sabhan, ta-ha, ha-mim as-sajda,
-alladhina kafaru), `substantiate_jk.py` (onopgeloste citaten gesubstantieerd
-uit de tweede, onafhankelijke JK-digitalisering van de Nuzhat) en
-`add_wujuh.py` (tabel + root-inferentie uit de geciteerde verzen zelf).
+*at-Tasarif* is het oudste overgeleverde werk van het genre, gebouwd op
+Muqatils materiaal. Al-Askari is als vierde werk het laatst toegevoegd; zijn
+editie nummert de wujuh met kale rangtelwoorden en zet de citaten tussen ronde
+haken in plaats van de accolades die de andere drie digitaliseringen gebruiken,
+en hij noemt vrijwel nooit de soera waaruit hij citeert (acht keer in het hele
+boek). De
+al-Damaghani-parse is fors verbeterd: van 387 naar 497 entries, waarmee de
+dekking van het boek van ongeveer de helft naar ongeveer 98% ging — de
+digitalisering verliest vanaf *baab as-saad* haar hamza's, dubbele punten,
+aanhalingstekens en regeleindes, en de parser vangt dat nu met begrensde
+terugvalregels op.
 
-Resultaat: **7.637 citaatrijen** over 628 entries en 348 roots; 612 entries
-kregen automatisch een root toegewezen (de overige zijn harf-entries, die
-terecht geen root hebben). 36 roots zijn door alle drie de werken behandeld,
-wat sensevergelijking over vier eeuwen mogelijk maakt.
+Totaal: **12.344 citaatrijen** over 1.083 entries (werk + trefwoord), 4.935
+senses en 450 roots, verwijzend naar 3.635 verschillende verzen. 9.947 rijen
+noemen bovendien het concrete *woord* in dat vers waar de wajh over gaat
+(kolommen `word`, `corpus_id`, `form_ar`).
+
+Van de 450 roots wordt er 167 door één werk behandeld, 129 door twee, 87 door
+drie en **67 door alle vier** — dat laatste is het vergelijkingsmateriaal over
+vier eeuwen.
+
+### Sense-uitlijning over de werken heen
+
+Omdat `sense_nr` per werk telt, is Ibn Sallams eerste wajh van هدى ("bayaanan")
+formeel iets anders dan die van Ibn al-Jawzi ("al-bayaan"), terwijl het
+dezelfde wajh is. De tabel `sense_alignment` legt daarom canonieke sense-ids
+over de werken heen: **5.027 uitgelijnde senses in 3.284 canonieke senses**,
+waarvan 442 door drie of meer werken worden gedragen en 140 door alle vier.
+
+Twee signalen beslissen, en beide moeten verdiend worden: overlap in de
+geciteerde verzen (alleen citaten met confidence high/medium tellen mee — de
+low-rijen zijn kandidatenlijsten) en gelijkenis van de glossen. Verzenoverlap
+alleen is nooit genoeg, want twee wujuh van één root citeren juist regelmatig
+hetzelfde vers omdát de auteurs het oneens zijn over welke wajh erbij hoort.
+Volgordematching is bewust niet gebruikt: de werken lopen grofweg parallel,
+maar Ibn al-Jawzi splitst waar Ibn Sallam samenneemt.
+
+Mooiste validatie blijft هدى: Ibn Sallam (2e eeuw) geeft 17 wujuh, al-Askari
+(4e eeuw) 12, al-Damaghani (5e eeuw) 16 en Ibn al-Jawzi (6e eeuw) 19 — en zes
+daarvan (al-bayaan, dien al-islaam, al-imaan, amr Muhammad, al-ilhaam en
+al-ma'rifa) staan bij alle vier in de lijst, meestal zelfs op een
+vergelijkbare plaats in de volgorde; nog eens zes worden door drie van de
+vier gedragen. De traditie blijkt over vier eeuwen opmerkelijk stabiel
+overgeleverd. Waar ze uiteenlopen is dat even sprekend: voor خير geeft Ibn
+al-Jawzi 19
+senses, al-Askari 10, Ibn Sallam 8 en al-Damaghani 7.
 
 Statusonderscheid dat hierbij is vastgelegd: homonymie over de klassegrens
-(ma ism/harf) en functiesplitsing binnen een klasse (istifhamiyyah vs
-shartiyyah — verschillend 'amal, en de istifhamiyyah verliest als enige haar
-alif na jarr: 24 voorkomens, allemaal istifham) zijn **andere woorden**;
-de wujuh van bijv. هدى zijn **één woord met meerdere betekenissen**.
+(ما ism/harf) en functiesplitsing binnen een klasse (istifhamiyya vs
+shartiyya — verschillend 'amal) zijn **andere woorden**; de wujuh van
+bijvoorbeeld هدى zijn **één woord met meerdere betekenissen**.
 
-Mooiste validatie: هدى heeft bij Ibn Sallam (2e eeuw) 17 wujuh en bij Ibn
-al-Jawzi (6e eeuw) 18 — met vrijwel dezelfde glossen in dezelfde volgorde
-(bayan, din al-islam, iman, du'a, ma'rifa/'irfan, amr Muhammad, rashad...).
-De traditie blijkt over vier eeuwen opmerkelijk stabiel overgeleverd.
+## Gemeten kwaliteit van de wujuh-laag
 
-Beperkingen: de klassieke werken citeren voorbeeldverzen per sense (geen
-uitputtende dekking per voorkomen — een sense-label per voorkomen zou een
-moderne laag vergen); ~50 citaten bleven onopgelost door digitaliseringsfouten
-en lexicale notities die geen citaat zijn; en `parse_damaghani.py` mist nog
-senses in tekstdelen waar de Shamela-digitalisering haar structuur verliest.
+De laag is niet uniform betrouwbaar, en dat is per inferentiestap gemeten in
+plaats van geschat. Dat leverde de belangrijkste correctie van het hele
+project op.
+
+### De confidence-kolom
+
+| Waarde | Rijen | Betekenis |
+|---|---|---|
+| `high` | 9.242 (75%) | de geciteerde woorden zijn gevonden, in precies één vers — attestatie |
+| `medium` | 480 (4%) | het vers is waarschijnlijk maar niet vastgesteld: de bewoording moest benaderd worden, of er bleven twee à drie verzen over |
+| `low` | 2.622 (21%) | kandidatenlijst, geen attestatie: de zinsnede komt in vier of meer verzen voor en het werk zegt niet welk |
+
+Filter hierop vóór je iets telt. Wie de low-rijen als attestaties meetelt,
+blaast juist de meest generieke zinsneden op.
+
+### Twee lagen die de toets niet doorstonden en herbouwd zijn
+
+- **`substantiate_jk`** (het redden van mislukte citaten met behulp van de
+  tweede, onafhankelijk getypte digitalisering van de Nuzhat, die correct
+  getypte tegenhangers van verminkte citaten levert — ook voor citaten uit de
+  andere drie werken) accepteerde eerder elke tegenhanger met 0,6
+  woordoverlap, zonder verificatie. Dat leverde 82 rijen op waarvan ongeveer
+  **91% een vers noemde waar het citaat niet in staat**;
+  44% ervan klapte samen op 17:69 alleen, doordat het redactionele woord
+  *wa-fiehaa* toevallig overlapte. De keten eist nu locatie-informatie, een
+  skeletgelijkenis, verificatie tegen de verstekst zélf en uniciteit onder de
+  overgebleven kandidaten. Resultaat: **9 rijen voor 7 citaten**, stuk voor
+  stuk met de hand nagelopen.
+- **`short_hint`** (zeer korte citaten geplaatst via een soeraverwijzing) was
+  bij 162 rijen ongeveer **50% fout**. Nu 15 rijen, alle 15 letterlijk
+  verifieerbaar in het aangewezen vers.
+
+### Een laag die juist goed bleek
+
+- **`fuzzy`** stond te boek als de zwakke schakel, maar meet **96% correct**.
+  Hij blijft op `medium` staan omdat een match op woordoverlap niet kan
+  bewijzen wélk vers de auteur bedoelde, niet omdat hij onbetrouwbaar is.
+
+### Ambiguous is een kandidatenlijst
+
+De `ambiguous`-rijen zijn geen attestaties: **2.588 rijen voor 584 citaten**,
+gemiddeld 4,43 verzen per citaat. De breedste lijst telt **152 verzen** (het
+citaat الذين كفروا onder al-Damaghani's *k-f-r*). Eerder werd die breedte
+verborgen door een stille afkapping op tien kandidaten; die is verwijderd, en
+`candidate_count` toont nu de werkelijke breedte. Alle ambiguous-rijen staan op
+confidence `low`.
+
+### Wat een match écht garandeert
+
+De klassieke auteurs citeren uit het hoofd en in de spelling van hun eigen
+tijd, niet uit de rasm van de moeshaf. `validate.py` verifieert daarom elk
+citaat in cumulatieve niveaus en rapporteert ze naast elkaar, omdat elk
+niveau afzonderlijk misleidt. Op een steekproef van 750 `unique`-rijen:
+
+| Niveau | `unique` | `ambiguous` | `hint_resolved` |
+|---|---|---|---|
+| letterlijk aanwezig in het vers | 58,0% | 61,1% | 52,3% |
+| na weglaten van het inleidende woord | 71,5% | 76,3% | 70,6% |
+| op het medeklinkerskelet | 100% | 100% | 100% |
+
+`unique` betekent dus **niet** "het genormaliseerde citaat komt letterlijk in
+precies één vers voor". Het betekent dat het citaat op het niveau waarop de
+matcher werkte in precies één vers gevonden is: letterlijk geldt dat voor
+ongeveer 58%, op medeklinkerskeletniveau voor alle. De tolerante niveaus
+overdrijven de andere kant op: ze zeggen dat de woorden in dat vers staan,
+niet dat het het vers is dat de auteur bedoelde.
+
+`validate.py` draait in totaal 19 controles over de afgebouwde database; op de
+huidige database slagen er 17 en waarschuwen er 2 (de breedte van
+`ambiguous`, en het feit dat `prefix` en `edition_jk` op het zwakste niveau
+onder de 90% blijven — samen 76 rijen).
+
+## Wat er bewust níet in zit
+
+- **Geen tafsir-mining.** Het idee om betekenistoekenningen uit al-Tabari's
+  *Jaami' al-bayaan* te halen — en zo verder te komen dan de verzen die de
+  wujuh-werken zelf citeren — is onderzocht en afgeraden. Gemeten haalde het
+  ongeveer **35% precisie bij een recall-plafond van ongeveer 35%**. Dat ligt
+  ver onder de maat waaraan de rest van deze laag gehouden wordt, dus er wordt
+  geen tafsir gebruikt.
+- **Geen vijfde wujuh-werk.** Al-Hiri (431 AH) en het zelfstandige
+  *Wujuh*-werk van Muqatil ibn Sulayman zijn uitputtend gezocht in heel
+  OpenITI — 36 eeuw-repositories, 13.364 tekstversies — en komen daar niet in
+  voor. Al-Askari was de laatste beschikbare volledige wujuh-tekst; de laag is
+  daarmee zo breed als de gedigitaliseerde traditie toelaat.
+- **Geen sense-label per voorkomen.** De klassieke werken citeren
+  voorbeeldverzen per sense; ze annoteren de Quran niet uitputtend. De 450
+  gedekte roots komen 38.785 keer voor in de corpus, en slechts 6.530 daarvan
+  (17%) staan in een vers waar een wujuh-rij naar wijst — bij alleen
+  `high`-rijen 5.155 (13%). Een label per voorkomen zou een moderne laag
+  vergen, geen klassieke.

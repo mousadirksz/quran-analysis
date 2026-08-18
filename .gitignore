@@ -1,6 +1,24 @@
+# Python
 __pycache__/
-.venv/
 *.pyc
+.venv/
+
+# SQLite sidecar files of quran.db itself (the database is committed on purpose,
+# these journals are not) and hand-made backups/copies made while testing
+*.db-journal
+*.db-wal
+*.db-shm
+*.db.bak
+quran.db.tmp
+
+# Notebook state
+.ipynb_checkpoints/
+
+# Leftovers from earlier scripting sessions
 branch_structure.json
 temp_auto_push.bat
 temp_interactive_push.bat
+
+# OS junk
+.DS_Store
+Thumbs.db

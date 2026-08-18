@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Resolve the Quran citations in the parsed wujuh works (Yahya ibn Sallam,
-al-Damaghani, Ibn al-Jawzi) to sura:aya references by matching them against
-the corpus text in quran.db.
+al-Damaghani, Ibn al-Jawzi, Abu Hilal al-Askari) to sura:aya references by
+matching them against the corpus text in quran.db.
 
 Both the quotes and the corpus text are normalized aggressively (diacritics
 stripped, hamza/alef/ya variants collapsed) because the Shamela digitizations
@@ -17,8 +17,22 @@ Resolution per quote:
   5. fuzzy word-overlap: memory-quotes and Shamela typos deviate in single
      words (qadaytum/qudiyat, fiha/fihima); verses sharing enough skeleton
      words with the quote are accepted when the best hit is clear
-  6. short quotes (1-2 words) are located via the sura hint, preferring
-     verses that contain the quote as a whole word
+  6. short quotes (1-2 words) are located via the sura hint, but only when
+     the evidence is unambiguous: a hint must exist, the quote must carry
+     lexical content (a bare 'wa-fiha' identifies nothing), and it must
+     occur as a whole phrase in exactly one verse of the hinted suras
+
+Layer 6 used to guess without a hint and to accept up to five candidate
+verses per quote: 162 rows over the three parsed works, only about half of
+which name a verse the quote is demonstrably in. Tightened as above it keeps
+15 rows, every one of them a verse that literally contains its quote.
+
+The output is deterministic: every ranking over a Counter is tie-broken on
+the lowest sura:aya instead of on Counter insertion order, which follows set
+iteration order and therefore PYTHONHASHSEED.
+
+A work whose parsed JSON is missing (a parser not run, or not present in the
+checkout) is reported and skipped, not fatal.
 
 Output: sources/resolved_citations.json + statistics on stdout.
 """
@@ -180,14 +194,22 @@ def cross_verse_match(qs, concat, sura_hints):
     return hits
 
 
+def top_votes(votes, n):
+    """The n best-voted verses. Counter.most_common breaks ties in insertion
+    order, which follows set iteration order and therefore PYTHONHASHSEED;
+    ranking on (-votes, sura, aya) makes a tied race resolve to the earliest
+    verse in every run."""
+    return sorted(votes.items(), key=lambda kv: (-kv[1], kv[0]))[:n]
+
+
 def fuzzy_match(qs, word_idx, sura_hints):
     words = [w for w in qs.split() if len(w) >= 2]
     if len(words) < 3:
         return None
     from collections import Counter
     votes = Counter()
-    for w in set(words):
-        for k in word_idx.get(w, ()):
+    for w in sorted(set(words)):
+        for k in sorted(word_idx.get(w, ())):
             votes[k] += 1
     if sura_hints:
         hinted = Counter({k: v for k, v in votes.items() if k[0] in sura_hints})
@@ -195,7 +217,7 @@ def fuzzy_match(qs, word_idx, sura_hints):
             votes = hinted
     if not votes:
         return None
-    best = votes.most_common(2)
+    best = top_votes(votes, 2)
     score = best[0][1] / len(set(words))
     margin = (best[0][1] - best[1][1]) / len(set(words)) if len(best) > 1 else 1.0
     if score >= 0.7 and (margin >= 0.15 or len(best) == 1):
@@ -203,21 +225,71 @@ def fuzzy_match(qs, word_idx, sura_hints):
     return None
 
 
+# Particles, pronouns, relatives and demonstratives in their normalized
+# shape, including the preposition+pronoun fusions ('fiha', 'lahum') the
+# editors like to fuse onto a quote. None of these narrows a quote down: they
+# occur in hundreds of verses, and a quote made of them alone is usually the
+# editor's own connective rather than Quranic text.
+FUNCTION_WORDS = {
+    "من", "في", "علي", "الي", "عن", "مع", "عند", "بين", "حتي", "لدي",
+    "اذا", "اذ", "ان", "انا", "انت", "انتم", "انتما", "انتن", "نحن",
+    "هو", "هي", "هم", "هن", "هما", "ما", "لا", "لم", "لن", "لو", "قد",
+    "ثم", "او", "ام", "بل", "يا", "اي", "كل", "بعض", "غير", "كما", "كذلك",
+    "الذي", "التي", "الذين", "اللاتي", "اللايي", "ذلك", "تلك", "ذلكم",
+    "هذا", "هذه", "هولا", "اوليك", "به", "بها", "بهم", "بهما",
+    "له", "لها", "لهم", "لهما", "لك", "لكم", "لنا", "لي", "منه", "منها",
+    "منهم", "فيه", "فيها", "فيهم", "فيهما", "عليه", "عليها", "عليهم",
+    "اليه", "اليها", "اليهم", "انه", "انها", "انهم", "بعد", "قبل", "دون",
+}
+
+MIN_SOLO_LEN = 5  # a one-word quote must at least be a long word
+
+
+def _stem(tok):
+    """Strip the clitics that hide a function word ('wa-fiha' -> 'fiha'),
+    but never so far that a content word is eaten ('allah' keeps its alif
+    lam, 'lahu' is not shortened to a single letter)."""
+    if len(tok) > 3 and tok[0] in "وف":
+        tok = tok[1:]
+    if len(tok) > 3 and tok[0] in "بلك":
+        tok = tok[1:]
+    if len(tok) > 4 and tok.startswith("ال"):
+        tok = tok[2:]
+    return tok
+
+
+def content_words(qnorm):
+    """The tokens of a quote that carry lexical content, i.e. that make the
+    phrase identifiable at all."""
+    out = []
+    for tok in qnorm.split():
+        stem = _stem(tok)
+        if tok in FUNCTION_WORDS or stem in FUNCTION_WORDS or len(stem) < 3:
+            continue
+        out.append(stem)
+    return out
+
+
 def short_match(qnorm, verses, sura_hints):
-    """Short quotes: findable when a sura hint narrows the field, or when
-    the phrase is rare enough to occur in at most 3 verses Quran-wide."""
-    q = " " + qnorm + " "
+    """Place a short quote only on unambiguous evidence: a parsed sura hint,
+    enough lexical content to identify anything, and exactly one verse in the
+    hinted suras containing the quote as a whole phrase.
+
+    The looser predecessor (no hint needed, skeleton fallback, up to five
+    candidates kept) placed 162 rows of which barely half named a verse the
+    quote is demonstrably in, next to layers scoring 96-100%. Returning
+    nothing is the better answer for a quote this thin."""
     if not sura_hints:
-        hits = [k for k, v in verses.items() if q in " " + v + " "]
-        return hits if 0 < len(hits) <= 3 else None
+        return None
+    content = content_words(qnorm)
+    if not content:
+        return None
+    if len(content) < 2 and len(content[0]) < MIN_SOLO_LEN:
+        return None
+    q = " " + qnorm + " "
     hits = [k for k, v in verses.items()
             if k[0] in sura_hints and q in " " + v + " "]
-    if not hits:
-        qs = skeleton(qnorm)
-        if len(qs.replace(" ", "")) >= 3:
-            hits = [k for k, v in verses.items()
-                    if k[0] in sura_hints and " " + qs + " " in " " + skeleton(v) + " "]
-    return hits or None
+    return hits if len(hits) == 1 else None
 
 
 FRAMING = re.compile(r"^(?:و?كقوله|و?قوله|قال|ومثلها|مثلها|ونحوها|نحوها)?"
@@ -279,7 +351,7 @@ def resolve_quote(qnorm, verses, skel_verses, concat, word_idx, sura_hints):
             return refs, "composite"
     if len(qnorm) < 8:  # too short to be distinctive without a sura hint
         hits = short_match(qnorm, verses, sura_hints)
-        if hits and len(hits) <= 5:
+        if hits:
             return hits, "short_hint"
         return None, "too_short"
     hits = [k for k, v in verses.items() if qnorm in v]
@@ -325,19 +397,19 @@ def resolve_quote(qnorm, verses, skel_verses, concat, word_idx, sura_hints):
         # common substring on the spaceless skeleton
         from collections import Counter
         votes = Counter()
-        for w in set(w for w in qnorm.split() if len(w) >= 3):
+        for w in sorted({w for w in qnorm.split() if len(w) >= 3}):
             for key, v in verses.items():
                 if sura_hints and key[0] not in sura_hints:
                     continue
                 if w in v:
                     votes[key] += 1
-        best = votes.most_common(3)
+        best = top_votes(votes, 3)
         qss = qs.replace(" ", "")
         for key, _ in best:
             if len(qss) >= 10 and verify_fuzzy(qs, key, skel_verses) >= max(8, int(len(qss) * 0.55)):
                 return [key], "fuzzy"
         hits = short_match(qnorm, verses, sura_hints)
-        if hits and len(hits) <= 5:
+        if hits:
             return hits, "short_hint"
         return None, "no_match"
     if len(hits) == 1:
@@ -348,16 +420,28 @@ def resolve_quote(qnorm, verses, skel_verses, concat, word_idx, sura_hints):
     return hits, "ambiguous"
 
 
+# The parsed wujuh works, each written by its own parser into sources/ in the
+# same shape (entries with headword, declared, senses of nr/gloss/quotes/suras).
+WORKS = (("damaghani", "damaghani_wujuh.json"),
+         ("ibnjawzi", "ibnjawzi_wujuh.json"),
+         ("ibnsallam", "tasarif_wujuh.json"),
+         ("askari", "askari_wujuh.json"))
+
+
 def main():
     verses = load_verses()
     skel_verses = {k: skeleton(v) for k, v in verses.items()}
     concat = build_sura_concat(skel_verses)
     word_idx = build_word_index(skel_verses)
     out = {}
-    for work, fn in (("damaghani", "damaghani_wujuh.json"),
-                     ("ibnjawzi", "ibnjawzi_wujuh.json"),
-                     ("ibnsallam", "tasarif_wujuh.json")):
-        entries = json.loads((HERE / "sources" / fn).read_text(encoding="utf-8"))
+    for work, fn in WORKS:
+        path = HERE / "sources" / fn
+        if not path.exists():
+            # a parser that has not run (or is not in this checkout) costs
+            # this work's citations, not the whole resolution run
+            print(f"{work}: sources/{fn} not found, skipped")
+            continue
+        entries = json.loads(path.read_text(encoding="utf-8"))
         stats = {"unique": 0, "hint_resolved": 0, "ambiguous": 0,
                  "cross_verse": 0, "fuzzy": 0, "short_hint": 0,
                  "prefix": 0, "composite": 0, "not_quote": 0,
@@ -373,8 +457,11 @@ def main():
                     refs, status = resolve_quote(normalize(q), verses, skel_verses,
                                                  concat, word_idx, hints)
                     stats[status] += 1
+                    # 'ambiguous' quotes can have far more candidates than
+                    # these ten; the list is a sample of the candidates, not
+                    # the attestation set, and consumers must treat it so
                     r_quotes.append({"quote": q, "status": status,
-                                     "refs": [f"{s}:{a}" for s, a in (refs or [])][:10]})
+                                     "refs": [f"{s}:{a}" for s, a in (refs or [])]})
                 r_senses.append({"nr": sense["nr"], "gloss": sense["gloss"],
                                  "quotes": r_quotes})
             resolved_entries.append({"headword": e["headword"],
@@ -385,8 +472,9 @@ def main():
               + stats["fuzzy"] + stats["short_hint"] + stats["ambiguous"]
               + stats["prefix"] + stats["composite"])
         real = total - stats["not_quote"]
+        pct = f"{ok / real * 100:.0f}%" if real else "n/a"
         print(f"{work}: {total} quote-marked spans, {stats['not_quote']} are "
-              f"commentary -> {real} real quotes, resolved {ok} ({ok/real*100:.0f}%)")
+              f"commentary -> {real} real quotes, resolved {ok} ({pct})")
         print(f"  {stats}")
     (HERE / "sources" / "resolved_citations.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
