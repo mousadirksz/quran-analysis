@@ -560,6 +560,16 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
+| `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
+
+`BEVINDINGEN.md` (Dutch) is the analytical companion to this file: what the
+data turned out to say. Word counting under two definitions, what does and does
+not carry a root, when one written form is two different words, frequency and
+coverage, juz Amma as a starting point for learning, why the lexically richest
+juz is not the most useful one, and the wujuh findings including the cases where
+the four works disagree. Every figure in it is produced by a named analysis in
+`analyses.py`, so it can be re-derived rather than trusted.
+
 `OBSERVATIES.md` (Dutch) records findings from the data: counts, distributions,
 what the kalima/lemma distinction changes about them, and what the four wujuh
 works do and do not agree on.
