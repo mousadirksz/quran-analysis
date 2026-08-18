@@ -37,13 +37,44 @@ regularly cite the same verse precisely because the authors disagree
 about which wajh it belongs to, so bare overlap aligns "al-cadl" with
 "ar-rukub". Everything below that stays unaligned: a wrong alignment
 costs more than a missing one, and a sense that stays alone is simply a
-canonical sense of its own. Two senses of one entry can never land in
-the same cluster, and a cluster is only extended by a sense that is
-alignable with every sense already in it (complete linkage), so no chain
-of pairwise matches can smuggle in a third reading.
+canonical sense of its own. Two senses that share a work and a headword
+can never land in the same cluster, and a cluster is only extended by a
+sense that is alignable with every sense already in it (complete
+linkage), so no chain of pairwise matches can smuggle in a third
+reading.
 
-Idempotent: drops and rebuilds the table. Join back with
-wujuh via (work, headword, sense_nr).
+Identifying a sense
+-------------------
+A headword is not unique within a work: al-Damaghani has 26 headwords
+that head two, three or four separate entries ("r-j-l" once for rajul
+and once for rijal, "ar-ruh" for the spirit and for rayhan), Ibn
+al-Jawzi has one, and Yahya ibn Sallam has an entry in which the
+numbering restarts halfway. Since sense_nr is counted per entry, both
+entries own a sense 1, so (work, headword, sense_nr) collapses senses of
+different entries onto one key: 80 such keys in the data as it stands,
+swallowing 92 senses, of which one gloss won while the verses of all of
+them piled onto it - Ibn al-Jawzi's sense 1 of "ar-ruh" then read "the
+ruh of a living creature" and was attested by 12:87 as well, a verse
+about rawh in the sense of relief, cited under the other entry. The
+gloss is added to the key, which separates every one of them (no two
+entries of one work share a headword, a sense_nr and a gloss), so a
+sense keeps its own verses; `merged_keys` reports it should a future
+parse produce a pair the gloss cannot separate either.
+
+Which *entry* a sense came from is a step further than the wujuh table
+supports, since it carries no entry number. The alignment therefore
+treats a shared headword within a work as one entry: a cluster takes at
+most one of the two "ar-rahma" senses that Ibn al-Jawzi's two "ar-ruh"
+entries both offer, and the other stays alone. That errs towards leaving
+senses unaligned rather than pooling them.
+
+Idempotent: drops and rebuilds the table. Join back with wujuh on
+(work, headword, sense_nr, gloss); wujuh's NULL glosses are stored here
+as the empty string, so the gloss leg of the join needs a COALESCE:
+
+    JOIN wujuh w ON w.work = a.work AND w.headword = a.headword
+                AND w.sense_nr = a.sense_nr
+                AND COALESCE(w.gloss, '') = a.gloss
 """
 
 import re
@@ -156,21 +187,46 @@ def score_pair(a, b):
 
 
 def load_senses(cur):
+    """One dict entry per (work, headword, sense_nr, gloss); see module
+    docstring on why the gloss belongs in the key."""
     columns = {r[1] for r in cur.execute("PRAGMA table_info(wujuh)")}
     if "confidence" not in columns:
         raise SystemExit("wujuh has no confidence column; run add_wujuh.py first")
     senses = {}
     for work, head, root, nr, gloss in cur.execute(
-            "SELECT DISTINCT work, headword, root_ar, sense_nr, gloss FROM wujuh"):
-        senses[(work, head, nr)] = {
+            "SELECT DISTINCT work, headword, root_ar, sense_nr, gloss"
+            " FROM wujuh"):
+        senses[(work, head, nr, gloss or "")] = {
             "root": root, "gloss": gloss or "",
             "key": gloss_key(gloss, head, root),
             "verses": set()}
-    for work, head, nr, s, a in cur.execute(
-            "SELECT work, headword, sense_nr, surah, ayah FROM wujuh"
+    for work, head, nr, gloss, s, a in cur.execute(
+            "SELECT work, headword, sense_nr, gloss, surah, ayah FROM wujuh"
             " WHERE confidence IN ('high','medium')"):
-        senses[(work, head, nr)]["verses"].add((s, a))
+        senses[(work, head, nr, gloss or "")]["verses"].add((s, a))
     return senses
+
+
+def merged_keys(cur):
+    """Keys that two entries would still share, as a count.
+
+    The citations of one sense are written consecutively, so a key whose
+    rows resume after another key of the same headword intervened comes
+    from two entries after all, and this script has merged them. Nothing
+    in the table can take them apart again; the number is reported so the
+    silent merge does not stay invisible. It relies on insertion order
+    (wujuh.id) and is therefore a diagnostic only, never an identity."""
+    finished, current, merged = set(), None, set()
+    for work, head, nr, gloss in cur.execute(
+            "SELECT work, headword, sense_nr, gloss FROM wujuh ORDER BY id"):
+        key = (work, head, nr, gloss or "")
+        if key == current:
+            continue
+        if key in finished:
+            merged.add(key)
+        finished.add(key)
+        current = key
+    return len(merged)
 
 
 def cluster(senses):
@@ -193,6 +249,9 @@ def cluster(senses):
 
     parent = {k: k for k in senses}
     members = {k: [k] for k in senses}
+    # the coarsest entry identity the wujuh table supports: work + headword,
+    # so the two senses of one entry stay apart and the senses of two entries
+    # sharing a headword stay apart too (see module docstring)
     entries = {k: {(k[0], k[1])} for k in senses}
     joined = {}
 
@@ -245,6 +304,7 @@ def main():
     con = sqlite3.connect(HERE / "quran.db")
     cur = con.cursor()
     senses = load_senses(cur)
+    still_merged = merged_keys(cur)
     members, joined, find = cluster(senses)
 
     cur.execute("DROP TABLE IF EXISTS sense_alignment")
@@ -253,7 +313,7 @@ def main():
         root_ar TEXT, canonical_gloss TEXT, n_works INTEGER, n_senses INTEGER,
         work TEXT, headword TEXT, sense_nr INTEGER, gloss TEXT,
         confidence TEXT, evidence TEXT,
-        PRIMARY KEY (work, headword, sense_nr))""")
+        PRIMARY KEY (work, headword, sense_nr, gloss))""")
 
     rows = []
     clusters = sorted({find(k) for k in senses},
@@ -286,6 +346,10 @@ def main():
           f"(strong {conf['strong']}, weak {conf['weak']})")
     print(f"canonical senses by works: one {shared[1]}, two {shared[2]}, "
           f"all three {shared[3]}")
+    if still_merged:
+        noun = "key" if still_merged == 1 else "keys"
+        print(f"warning: {still_merged} sense {noun} carrying the senses of "
+              "two entries (same work, headword, sense_nr and gloss)")
     con.close()
 
 

@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
-"""Export the Quranic corpus TSV to a SQLite database with useful indexes."""
+"""Export the Quranic corpus TSV to a SQLite database with useful indexes.
+
+The corpus is segment-level: a written word such as `wa-bi-l-kitabi` occupies
+several rows (prefix, stem, suffix). The `words` and `ayat` views put those
+segments back together so that word- and verse-level queries do not have to
+re-implement the concatenation each time.
+
+Both views concatenate over an ordered subquery instead of using the
+`GROUP_CONCAT(... ORDER BY ...)` syntax: SQLite only accepts that form from
+3.44 on, and quran.db is meant to open in older clients too. SQLite may not
+flatten a subquery that carries an ORDER BY into an aggregating outer query,
+so the segments reach GROUP_CONCAT in segment order.
+"""
 
 import sqlite3
 import csv
@@ -69,19 +81,29 @@ def main():
     cur.execute("CREATE INDEX IF NOT EXISTS idx_tag ON corpus(tag)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_aspect ON corpus(aspect)")
 
-    # View: one row per word (concatenated segments)
+    # The views are dropped first so that a re-run replaces an older, possibly
+    # wrong definition; CREATE VIEW IF NOT EXISTS would silently keep it.
+    # View: one row per written word, its segments concatenated in segment
+    # order. Without the GROUP BY this collapsed the whole corpus into a
+    # single row.
+    cur.execute("DROP VIEW IF EXISTS words")
     cur.execute("""
-        CREATE VIEW IF NOT EXISTS words AS
+        CREATE VIEW words AS
         SELECT surah, ayah, word,
                GROUP_CONCAT(form_ar, '') AS word_ar,
                GROUP_CONCAT(form_bw, '') AS word_bw
-        FROM corpus
-        ORDER BY surah, ayah, word, segment
+        FROM (
+            SELECT surah, ayah, word, segment, form_ar, form_bw
+            FROM corpus
+            ORDER BY surah, ayah, word, segment
+        )
+        GROUP BY surah, ayah, word
     """)
 
     # View: one row per ayah (full verse text)
+    cur.execute("DROP VIEW IF EXISTS ayat")
     cur.execute("""
-        CREATE VIEW IF NOT EXISTS ayat AS
+        CREATE VIEW ayat AS
         SELECT surah, ayah,
                GROUP_CONCAT(word_ar, ' ') AS verse_ar
         FROM (
@@ -100,11 +122,14 @@ def main():
     count = cur.execute("SELECT COUNT(*) FROM corpus").fetchone()[0]
     surahs = cur.execute("SELECT COUNT(DISTINCT surah) FROM corpus").fetchone()[0]
     roots = cur.execute("SELECT COUNT(DISTINCT root) FROM corpus WHERE root IS NOT NULL").fetchone()[0]
+    words = cur.execute("SELECT COUNT(*) FROM words").fetchone()[0]
+    ayat = cur.execute("SELECT COUNT(*) FROM ayat").fetchone()[0]
 
     conn.close()
 
     print(f"✓ Database aangemaakt: {dst}")
-    print(f"  {count:,} segmenten | {surahs} soera's | {roots:,} unieke wortels")
+    print(f"  {count:,} segmenten | {words:,} woorden | {ayat:,} verzen | "
+          f"{surahs} soera's | {roots:,} unieke wortels")
     print(f"  Tabellen:  corpus")
     print(f"  Views:     words (woord-niveau), ayat (vers-niveau)")
     print(f"  Indexes:   surah+ayah, root, lemma, pos, tag, aspect")

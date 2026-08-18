@@ -11,7 +11,14 @@ sura or a juz is. Those facts belong in the database:
                    the ayah_count *derived from the corpus itself*. The
                    reference counts are only used to verify the corpus, not to
                    fill the column, so a divergence is reported instead of
-                   silently written.
+                   silently written. ayah_count is COUNT(DISTINCT ayah), the
+                   number of ayat the corpus actually holds, not MAX(ayah):
+                   with a hole in the corpus the highest number present says
+                   nothing about how many verses are there, and the column
+                   would then quietly claim more than the database contains.
+                   The two are checked against each other (plus MIN(ayah) = 1)
+                   and any sura whose numbering is not the unbroken run
+                   1..ayah_count is named on stdout.
   juz_boundaries   the 30 ajza' with their first and last verse; the end of a
                    juz is derived from the start of the next one, so only the
                    starts are constants.
@@ -20,10 +27,50 @@ sura or a juz is. Those facts belong in the database:
                    one starts at the mushaf's mid-juz mark, which is a fixed
                    published list, not a computed halfway point.
   verses           one row per aya: the joined Arabic text (segments of a word
-                   concatenated, a space only between words), the normalized
-                   text used for citation matching (same normalize() as
-                   resolve_citations.py, imported so the two can never drift),
+                   concatenated, a space only between words) with the corpus'
+                   leftover Buckwalter markers repaired (see MARKER_TO_ARABIC
+                   below), the normalized text used for citation matching
+                   (normalize() is imported from resolve_citations.py so the
+                   function itself can never drift; note that the *input*
+                   does differ - see the note at the end of this docstring),
                    the word count, and the juz/hizb the aya belongs to.
+
+Why text_ar needs repairing at all. corpus.form_ar was produced by converting
+the Buckwalter forms of the morphology file to Arabic script, but the mapping
+used covers only the letters and the ordinary diacritics. The Quranic Arabic
+Corpus writes in an *extended* Buckwalter alphabet in which a dozen ASCII
+characters stand for the Quranic annotation signs of the Uthmani script: the
+small silent alef of 'قَالُوا۟', the small waw and small yeh of the pronouns
+'هُۥ' and 'بِهِۦ', the iqlab meem of 'مِنۢ بَعْدِ', and so on. Those characters were
+passed through unconverted, so corpus.form_ar holds 'وا@' where the mushaf has
+'وا۟' and 'هُ,' where it has 'هُۥ' - about 12.000 stray ASCII characters over
+the corpus. Concatenating those forms straight into a verse column called
+text_ar advertises readable Arabic and delivers mojibake.
+
+Repairing beats renaming here. The markers are not noise to be stripped: the
+mushaf really does write 'لَهُۥ' and not 'لَهُ', so dropping them would move the
+text away from the printed page rather than towards it, and there is a
+correct, well-defined Unicode sign for every one of them. Once they are
+mapped, text_ar is the Uthmani text of the aya and nothing else, so a second
+"clean" column would only give a reader two things to choose between where one
+is simply right; the unrepaired forms stay available in corpus.form_ar for
+anyone who wants them. What text_ar does *not* carry is the parts of a printed
+mushaf page that are not verse text: no waqf (pause) signs, no sajda marks, no
+end-of-aya numeral - the corpus does not record them. After the repair every
+character of text_ar is in the Arabic Unicode block, apart from the single
+genuine space inside 'إِلْ يَاسِينَ' (37:130), and that is asserted rather than
+promised: an unknown marker in a future corpus version stops the build.
+
+The repair also reaches text_normalized, and there it changes more than
+cosmetics. normalize() turns every character it does not recognize into a
+space, so an unrepaired 'أُو@لَٰٓئِكَ' normalized to two tokens 'او ليك' instead of
+one 'اوليك', and 'ذَن[بِ' to 'ذن ب' instead of 'ذنب'. 467 of the 6236 verses
+normalize differently once the markers are signs rather than ASCII; the signs
+themselves fall inside the diacritic class normalize() already strips, so they
+leave no trace. Worth knowing: resolve_citations.py does not read this table -
+it rebuilds the verse text from corpus.form_ar itself and therefore still
+matches against the split-word forms. Until it uses the same repair (or this
+table), the two normalized texts are not the same text.
 
 The link from the corpus to juz/hizb runs through verses(surah, ayah); no
 existing table is touched.
@@ -39,6 +86,53 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
 
 from resolve_citations import normalize
+
+# Extended-Buckwalter markers left unconverted in corpus.form_ar -> the Unicode
+# Quranic annotation sign each of them stands for. Counts are over the whole
+# corpus; the examples are the words the marker actually occurs in.
+MARKER_TO_ARABIC = {
+    "@": "۟",  # 3988x  small high rounded zero: silent alef, qaaluu 'قَالُوا۟'
+    ",": "ۥ",  # 1257x  small waw: the long -hu of 'لَهُۥ'
+    ".": "ۦ",  #  995x  small yeh: the long -hi of 'بِهِۦ'
+    "[": "ۢ",  #  510x  small high meem: iqlab, 'مِنۢ بَعْدِ', 'عَلِيمٌۢ بِ'
+    "]": "ۭ",  #   99x  small low meem: iqlab after kasratan, 'مَّكَانٍۭ'
+    '"': "۠",  #   66x  small high rectangular zero: 'أَنَا۠'
+    ":": "ۜ",  #    2x  small high seen over sad: 'وَيَبْصُۜطُ' (2:245, 7:69)
+    ";": "ۣ",  #    1x  small low seen: 'ٱلْمُصَۣيْطِرُونَ' (52:37)
+    "!": "ۨ",  #    1x  small high noon: 'نُۨجِى' (21:88)
+    "-": "۪",  #    1x  empty centre low stop: 'مَجْر۪ىٰهَا' (11:41)
+    "+": "۫",  #    1x  empty centre high stop: 'تَأْمَ۫نَّا' (12:11)
+    "%": "۬",  #    1x  rounded high stop, filled centre: 'ءَا۬عْجَمِىٌّ' (41:44)
+}
+
+# What text_ar is allowed to contain once the markers are mapped: the Arabic
+# block, and the space between words. The corpus writes one word with a space
+# inside it (37:130 'إِلْ يَاسِينَ'), which is why the space is not merely a joiner.
+NON_ARABIC_ALLOWED = {" "}
+
+
+def repair_markers(text):
+    """Replace the unconverted extended-Buckwalter markers by the Quranic
+    annotation signs they encode (see MARKER_TO_ARABIC)."""
+    return "".join(MARKER_TO_ARABIC.get(ch, ch) for ch in text)
+
+
+def check_script(verses):
+    """Refuse to write a text_ar that is not Arabic. A corpus update that
+    introduces a marker MARKER_TO_ARABIC does not know would otherwise reach
+    the column as a stray ASCII character, exactly the way these twelve did."""
+    stray = {}
+    for s, a, text, _ in verses:
+        for ch in text:
+            if ch not in NON_ARABIC_ALLOWED and not ("؀" <= ch <= "ۿ"):
+                stray.setdefault(ch, (s, a))
+    if stray:
+        details = ", ".join(f"{ch!r} (U+{ord(ch):04X}, first at {s}:{a})"
+                            for ch, (s, a) in sorted(stray.items()))
+        raise SystemExit(
+            f"verses.text_ar would contain non-Arabic characters: {details}. "
+            f"Add them to MARKER_TO_ARABIC in {Path(__file__).name}.")
+
 
 # number -> (Arabic name, transliteration, revelation type, revelation order).
 # Revelation order and type follow the Egyptian standard edition, as used by
@@ -201,7 +295,8 @@ HIZB_STARTS = [
 
 def load_verses(cur):
     """Rebuild every verse from the segment-level corpus: the segments of one
-    word are concatenated without a separator, words are joined with a space."""
+    word are concatenated without a separator, words are joined with a space,
+    and the leftover Buckwalter markers are mapped to their Arabic signs."""
     cur.execute("SELECT surah, ayah, word, form_ar FROM corpus "
                 "ORDER BY surah, ayah, word, segment")
     words = {}
@@ -210,8 +305,25 @@ def load_verses(cur):
     verses = []
     for (s, a) in sorted(words):
         forms = [("".join(words[(s, a)][w])) for w in sorted(words[(s, a)])]
-        verses.append((s, a, " ".join(forms), len(forms)))
+        verses.append((s, a, repair_markers(" ".join(forms)), len(forms)))
     return verses
+
+
+def count_ayat(order):
+    """ayah_count per sura, and the suras whose ayah numbering is not the
+    unbroken run 1..count. Returns (counts, breaks) where a break is
+    (sura, count, max, missing numbers)."""
+    seen = {}
+    for s, a in order:
+        seen.setdefault(s, set()).add(a)
+    counts = {s: len(ayat) for s, ayat in seen.items()}
+    breaks = []
+    for s, ayat in sorted(seen.items()):
+        top = max(ayat)
+        if len(ayat) != top or min(ayat) != 1:
+            missing = sorted(set(range(1, top + 1)) - ayat)
+            breaks.append((s, len(ayat), top, missing))
+    return counts, breaks
 
 
 def assign(order, starts):
@@ -244,10 +356,9 @@ def main():
     cur = con.cursor()
 
     verses = load_verses(cur)
+    check_script(verses)
     order = [(s, a) for s, a, _, _ in verses]
-    ayah_counts = {}
-    for s, a in order:
-        ayah_counts[s] = max(ayah_counts.get(s, 0), a)
+    ayah_counts, numbering_breaks = count_ayat(order)
 
     juz = assign(order, JUZ_STARTS)
     hizb = assign(order, HIZB_STARTS)
@@ -305,6 +416,14 @@ def main():
 
     print(f"surahs: {len(SURAHS)} | juz_boundaries: 30 | hizb_boundaries: 60 "
           f"| verses: {len(verses)} (ayat totaal {total})")
+    if numbering_breaks:
+        print("  LET OP: ayah-nummering niet aaneengesloten, ayah_count telt "
+              "wat er staat en niet het hoogste nummer:")
+        for n, got, top, missing in numbering_breaks:
+            gaps = ", ".join(str(m) for m in missing[:10])
+            more = f" (+{len(missing) - 10})" if len(missing) > 10 else ""
+            print(f"    sura {n}: {got} ayat, hoogste nummer {top}, "
+                  f"ontbreekt: {gaps}{more}")
     if deviations:
         for n, got, ref in deviations:
             print(f"  ayah_count sura {n}: corpus {got}, Hafs-referentie {ref}")

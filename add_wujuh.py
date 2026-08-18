@@ -3,10 +3,10 @@
 (Yahya ibn Sallam's Tasarif, al-Damaghani's Qamus, Ibn al-Jawzi's Nuzhat
 al-Acyun) and their resolved citations.
 
-One row per resolved citation: (work, headword, root, sense_nr, gloss,
-surah, ayah, word), so polysemy queries like "which wujuh does huda have,
-and which word of which verse attests which sense" run directly against
-the database.
+One row per (citation, verse) pair: (work, headword, root, sense_nr,
+gloss, surah, ayah, word), so polysemy queries like "which wujuh does
+huda have, and which word of which verse attests which sense" run
+directly against the database.
 
 The entry's root is inferred from the data itself: among the roots of the
 verses the entry cites, take the one that occurs in the most cited verses
@@ -38,24 +38,56 @@ made:
   multi_in_span   several candidates inside the cited span
   root_outside_quote  candidates exist, but none inside the cited span
 
-The last five leave word/corpus_id/form_ar NULL rather than guess.
+The last six leave word/corpus_id/form_ar NULL rather than guess. For
+entry_root_unknown and root_unverified `root_ar` is NULL as well: an
+untrustworthy root is not written out, because a stored root reads as a
+claim about the entry and would be counted as one.
 
 Confidence
 ----------
-`match_status` keeps the fine-grained provenance from the resolver; the
-coarse `confidence` column says how much weight a row may carry in counts:
+Three columns describe how solid a row is. `match_status` keeps the
+fine-grained provenance from the resolver. `candidate_count` is how many
+verses the resolver returned for that one citation, i.e. how many rows
+this table gives it - the breadth of a citation is thus visible in the
+data instead of hidden behind its first row. `confidence` combines the
+two into how much weight a row may carry in counts.
 
-  high    unique, hint_resolved, prefix, cross_verse  - the quote was
-          located in exactly one place in the mushaf
-  medium  fuzzy, short_hint, edition_jk               - the quote was
-          reconstructed (word-overlap, sura hint, or the second edition)
-  low     ambiguous                                   - the quote occurs in
-          several verses and the work does not say which; every candidate
-          is listed, so these are candidates, not attestations, and should
-          be excluded from attestation counts
+The statuses differ in how the reference was obtained:
 
-Idempotent: drops and rebuilds the table. Requires resolved_citations.json
-(from resolve_citations.py and substantiate_jk.py).
+  located        unique, cross_verse, prefix, hint_resolved - the quoted
+                 words themselves were found in the mushaf
+  reconstructed  fuzzy, short_hint, edition_jk - the wording had to be
+                 approximated (word overlap, a sura hint, or the second
+                 edition), so the verse may be the wrong one
+  listed         ambiguous - the quote occurs in several verses and the
+                 work does not say which, so every match is listed
+
+But the status alone does not say where a citation landed: a hint or a
+prefix match regularly leaves two or three verses standing, and a
+citation pointing at one verse is stronger evidence than one pointing at
+three. Confidence is therefore capped by candidate_count:
+
+  1 verse     high  (located) / medium (reconstructed) / low (listed)
+  2-3 verses  medium at best
+  4+ verses   low
+
+So `high` means the quoted words were found and in exactly one place;
+`medium` means the verse is likely but not settled; `low` rows are
+candidates rather than attestations and should be excluded from
+attestation counts. cross_verse and composite are exempt from the cap:
+their several verses are the consecutive parts of one quote, not
+alternatives to choose between.
+
+Note that resolve_citations.py truncates very long candidate lists (at
+ten verses at the time of writing), so candidate_count is what reached
+this table, which for the widest ambiguous citations is a lower bound.
+This script itself drops nothing: every reference it is given becomes a
+row.
+
+Idempotent: builds every row first, then drops and rebuilds the table.
+A run that yields no rows at all reports that and leaves the existing
+table alone. Requires resolved_citations.json (from resolve_citations.py
+and substantiate_jk.py).
 """
 
 import difflib
@@ -68,14 +100,32 @@ from pathlib import Path
 HERE = Path(__file__).parent
 
 # statuses from resolve_citations.py / substantiate_jk.py that carry usable
-# verse references; 'ambiguous' rows list every verse containing the quoted
-# phrase, which for wujuh purposes is what the author's "and its likes" intends
-CONFIDENCE = {
+# verse references, with the best confidence each may reach; 'ambiguous' rows
+# list every verse containing the quoted phrase, which for wujuh purposes is
+# what the author's "and its likes" intends, but never as an attestation
+BEST_CONFIDENCE = {
     "unique": "high", "hint_resolved": "high", "prefix": "high",
     "cross_verse": "high", "composite": "high",
     "fuzzy": "medium", "short_hint": "medium", "edition_jk": "medium",
     "ambiguous": "low",
 }
+
+# statuses whose several verses are the parts of one continuous quote instead
+# of alternatives; for them a high candidate_count is not uncertainty
+SPAN_STATUSES = {"cross_verse", "composite"}
+
+TIERS = ("high", "medium", "low")
+
+
+def confidence(status, n_candidates):
+    """How much weight one row may carry: the status' ceiling, lowered when
+    the citation left several verses standing (see the module docstring)."""
+    best = BEST_CONFIDENCE[status]
+    if status in SPAN_STATUSES or n_candidates <= 1:
+        return best
+    cap = "medium" if n_candidates <= 3 else "low"
+    return max(best, cap, key=TIERS.index)
+
 
 DIACRITICS = re.compile(r"[ً-ٰٟۖ-ۭـ۟]")
 
@@ -259,12 +309,14 @@ def load_stem_ids(cur):
     return ids
 
 
-def locate_word(verse, root, head, qnorm):
+def locate_word(verse, root, trusted, qnorm):
     """Return (word_nr, word_status) for the word of this verse the wajh is
-    about. Never guesses: ambiguity leaves the word unset."""
+    about. Never guesses: ambiguity leaves the word unset. `trusted` is
+    root_trusted() for the entry, computed once by the caller because it also
+    decides whether the root itself is written out."""
     if not root:
         return None, "entry_root_unknown"
-    if not root_trusted(root, head):
+    if not trusted:
         return None, "root_unverified"
     cands = sorted(verse.roots_by_word.get(root, ()))
     if not cands:
@@ -294,23 +346,17 @@ def main():
     resolved = json.loads((HERE / "sources" / "resolved_citations.json")
                           .read_text(encoding="utf-8"))
 
-    cur.execute("DROP TABLE IF EXISTS wujuh")
-    cur.execute("""CREATE TABLE wujuh (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        work TEXT, headword TEXT, root_ar TEXT,
-        sense_nr INTEGER, gloss TEXT,
-        quote TEXT, surah INTEGER, ayah INTEGER,
-        word INTEGER, corpus_id INTEGER, form_ar TEXT,
-        match_status TEXT, confidence TEXT, word_status TEXT)""")
-
+    # everything is built before the table is touched, so a run that yields
+    # nothing (an empty or unusable resolved_citations.json) leaves the
+    # previous table in place instead of replacing it with an empty one
     rows = []
-    n_entries = entries_with_root = 0
+    n_entries = entries_with_root = entries_root_trusted = 0
     for work, entries in resolved.items():
         for e in entries:
             refs = []
             for sense in e["senses"]:
                 for q in sense["quotes"]:
-                    if q["status"] in CONFIDENCE:
+                    if q["status"] in BEST_CONFIDENCE:
                         refs += [tuple(map(int, r.split(":"))) for r in q["refs"]]
             if not refs:
                 continue
@@ -318,30 +364,53 @@ def main():
             root, _cov = infer_root(e["headword"], refs, verse_roots)
             if root:
                 entries_with_root += 1
+            # an unverified root is an artefact of the cited verses (particle
+            # entries have no root at all), so it drives nothing and is not
+            # written out either
+            trusted = bool(root) and root_trusted(root, e["headword"])
+            entries_root_trusted += 1 if trusted else 0
+            stored_root = root if trusted else None
             for sense in e["senses"]:
                 for q in sense["quotes"]:
-                    if q["status"] not in CONFIDENCE:
+                    if q["status"] not in BEST_CONFIDENCE:
                         continue
                     qnorm = clean_quote(normalize(q["quote"]))
+                    n_cand = len(q["refs"])
+                    conf = confidence(q["status"], n_cand)
                     for ref in q["refs"]:
                         s, a = map(int, ref.split(":"))
                         verse = verses.get((s, a))
                         if verse is None:
                             continue
-                        word, wstatus = locate_word(
-                            verse, root, e["headword"], qnorm)
+                        word, wstatus = locate_word(verse, root, trusted, qnorm)
                         rows.append((
-                            work, e["headword"], root, sense["nr"],
+                            work, e["headword"], stored_root, sense["nr"],
                             sense["gloss"], q["quote"], s, a,
                             word,
-                            stem_ids.get((s, a, word, root)) if word else None,
+                            stem_ids.get((s, a, word, stored_root)) if word else None,
                             verse.words.get(word) if word else None,
-                            q["status"], CONFIDENCE[q["status"]], wstatus))
+                            q["status"], n_cand, conf, wstatus))
 
+    if not rows:
+        con.close()
+        raise SystemExit("no citations with usable verse references in "
+                         "sources/resolved_citations.json; wujuh table left "
+                         "untouched (re-run resolve_citations.py)")
+
+    cur.execute("DROP TABLE IF EXISTS wujuh")
+    cur.execute("""CREATE TABLE wujuh (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        work TEXT, headword TEXT, root_ar TEXT,
+        sense_nr INTEGER, gloss TEXT,
+        quote TEXT, surah INTEGER, ayah INTEGER,
+        word INTEGER, corpus_id INTEGER, form_ar TEXT,
+        match_status TEXT, candidate_count INTEGER,
+        confidence TEXT, word_status TEXT)""")
     cur.executemany(
         "INSERT INTO wujuh (work, headword, root_ar, sense_nr, gloss, quote,"
-        " surah, ayah, word, corpus_id, form_ar, match_status, confidence,"
-        " word_status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+        " surah, ayah, word, corpus_id, form_ar, match_status,"
+        " candidate_count, confidence, word_status)"
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
 
     cur.execute("CREATE INDEX IF NOT EXISTS idx_wujuh_root ON wujuh(root_ar)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_wujuh_verse ON wujuh(surah, ayah)")
@@ -349,14 +418,15 @@ def main():
     con.commit()
 
     linked = sum(1 for r in rows if r[8] is not None)
-    conf = Counter(r[12] for r in rows)
+    multi = sum(1 for r in rows if r[12] > 1)
+    conf = Counter(r[13] for r in rows)
     cur.execute("SELECT COUNT(DISTINCT root_ar) FROM wujuh WHERE root_ar IS NOT NULL")
-    print(f"entries with resolved citations: {n_entries}, "
-          f"root inferred: {entries_with_root}")
-    print(f"wujuh rows (citation-level): {len(rows)}, "
-          f"linked to a word: {linked} ({linked / len(rows):.1%})")
-    print("confidence: " + ", ".join(f"{k} {conf[k]}"
-                                     for k in ("high", "medium", "low")))
+    print(f"entries with resolved citations: {n_entries}, root inferred: "
+          f"{entries_with_root}, of which trusted: {entries_root_trusted}")
+    print(f"wujuh rows (citation x verse): {len(rows)}, "  # rows is non-empty here
+          f"linked to a word: {linked} ({linked / len(rows):.1%}), "
+          f"from citations with several candidate verses: {multi}")
+    print("confidence: " + ", ".join(f"{k} {conf[k]}" for k in TIERS))
     print("distinct roots covered:", cur.fetchone()[0])
     con.close()
 
