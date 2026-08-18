@@ -34,8 +34,10 @@ bag-of-words overlap and no verification. That substantiated 91 quotes of
 which about 97% named a verse the quote does not occur in; 36 of them
 collapsed onto 17:69 alone because the editorial word 'wa-fiha' overlapped
 with a JK quote. Re-measured on the same input, the chain above substantiates
-6 quotes / 8 references, all six of them checked by hand against the verse
-text and correct, and 17:69 no longer appears. Few and right beats many and
+7 quotes / 9 references, every one of them checked by hand against the verse
+text and correct, and 17:69 no longer appears. The JK edition is Ibn
+al-Jawzi's, but its quotes serve as evidence for all four works, since the
+same verses recur across the genre. Few and right beats many and
 wrong: the rest stay 'no_match'/'too_short', which downstream code handles.
 
 Updates sources/resolved_citations.json in place; re-running over an

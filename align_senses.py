@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Lay canonical sense ids across the three wujuh works (`sense_alignment`).
+"""Lay canonical sense ids across the four wujuh works (`sense_alignment`).
 
 `wujuh.sense_nr` is numbered per work, so Yahya ibn Sallam's first wajh of
 huda ("bayanan") and Ibn al-Jawzi's first ("al-bayan") are two unrelated
 rows even though they are the same wajh. That makes the historically
 interesting question unanswerable: which wujuh does the whole tradition
-carry (four centuries, three independent authors) and which are the
+carry (four centuries, four independent authors) and which are the
 private property of one author?
 
 This script clusters the senses of one root across works and gives every

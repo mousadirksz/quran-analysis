@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Build the `wujuh` table in quran.db from the three parsed classical works
-(Yahya ibn Sallam's Tasarif, al-Damaghani's Qamus, Ibn al-Jawzi's Nuzhat
-al-Acyun) and their resolved citations.
+"""Build the `wujuh` table in quran.db from the four parsed classical works
+(Yahya ibn Sallam's Tasarif, Abu Hilal al-Askari's Wujuh wa-l-Naza'ir,
+al-Damaghani's Qamus, Ibn al-Jawzi's Nuzhat al-Acyun) and their resolved
+citations.
 
 One row per (citation, verse) pair: (work, headword, root, sense_nr,
 gloss, surah, ayah, word), so polysemy queries like "which wujuh does
