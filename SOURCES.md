@@ -125,7 +125,39 @@ whose headers name only the sura; and al-Muntajib al-Hamadhani (d. 643 AH),
 *al-Farid fi i'rab al-Quran* (`0650AH`, `Sham19Y0147312-ara1`), which is
 organised thematically. Both are parseable with more work.
 
-## 5. Reference data with no external source
+## 5. Extended Quranic Treebank — syntax
+
+The syntactic layer at token level: which word is the faacil of which verb,
+which the mafcul, which the khabar — the analysis the classical icrab works
+argue out in prose, as a structure that can be queried.
+
+| | |
+|---|---|
+| **Work** | Extended Quranic Treebank (EQTB) |
+| **Published** | 5 August 2025, DOI [10.1016/j.dib.2025.111940](https://doi.org/10.1016/j.dib.2025.111940) |
+| **Obtained from** | https://github.com/NoorBayan/Quranic, file `corpus/Quranic.rar` (also on [Mendeley Data](https://data.mendeley.com/datasets/rk96pn66m4/1)) |
+| **File in this repo** | `sources/treebank_eqtb.tsv.gz` |
+| **Licence** | MIT |
+| **Loaded by** | `parse_treebank.py` → table `syntax` |
+
+The published file holds 51 columns; 14 are kept here — the token identity
+needed to join, the relation labels, the head reference and the constituent
+label. The morphological columns are deliberately **not** loaded: lemma, root,
+POS and features come from the same Quranic Arabic Corpus lineage as section 1,
+and loading them again would put two morphology layers in one database. What is
+taken is what this database lacks. Values are unaltered; the file was converted
+from UTF-16 to UTF-8 and gzipped.
+
+Every one of the 128,219 tokens that corresponds to written text joins a corpus
+segment, with nothing unmatched on either side — the treebank uses the corpus'
+own (surah:ayah:word:segment) addressing. Beside those it posits 11,157
+elements that the grammarians read into the text but which are not written,
+6,674 of them the damir mustatir: the implied "you" that is the faacil of *qul*
+in 112:1, and so on. Those carry `is_implicit = 1` and no location, since
+counting kalimat with and without them gives two different and defensible
+totals.
+
+## 6. Reference data with no external source
 
 `add_metadata.py` builds `surahs`, `juz_boundaries`, `hizb_boundaries` and
 `verses`. The ayah counts and the verse text are derived from `corpus`. The sura

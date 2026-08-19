@@ -562,6 +562,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
+| `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
 `SOURCES.md` records the provenance of every source: what it is, where it was

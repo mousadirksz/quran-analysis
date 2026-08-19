@@ -733,6 +733,30 @@ def irab_passages(cur, args):
             f"({covered / EXPECTED_AYAHS * 100:.0f}%, the rest raise no question he treats)")
 
 
+@check("syntax tokens")
+def syntax_tokens(cur, args):
+    """Every written token must join a corpus segment and every segment must
+    have one: the treebank uses the corpus' own addressing, so a gap means the
+    two came from different versions, not that coverage is partial. Implicit
+    tokens (the damir mustatir and other posited elements) legitimately have
+    neither location nor corpus_id."""
+    require_tables(cur, "syntax")
+    expect_none(cur, "written syntax token without a corpus segment",
+                "SELECT tid FROM syntax WHERE is_implicit=0 AND corpus_id IS NULL")
+    expect_none(cur, "corpus segment without a syntax token",
+                "SELECT c.id FROM corpus c WHERE NOT EXISTS"
+                " (SELECT 1 FROM syntax s WHERE s.corpus_id = c.id)")
+    expect_none(cur, "implicit token carrying a location",
+                "SELECT tid FROM syntax WHERE is_implicit=1 AND corpus_id IS NOT NULL")
+    expect_none(cur, "head pointing outside its own sentence",
+                "SELECT s.tid FROM syntax s JOIN syntax h ON h.tid = s.head_tid"
+                " WHERE h.sentence_id != s.sentence_id")
+    written = cur.execute("SELECT COUNT(*) FROM syntax WHERE is_implicit=0").fetchone()[0]
+    implicit = cur.execute("SELECT COUNT(*) FROM syntax WHERE is_implicit=1").fetchone()[0]
+    return (f"{written:,} written tokens all linked to corpus, "
+            f"{implicit:,} implicit tokens posited by the treebank")
+
+
 def report(outcome, name, text):
     """Print one result; multi-line details are indented under the first."""
     head, *rest = str(text).splitlines()
