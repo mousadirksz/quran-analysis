@@ -530,6 +530,52 @@ klasse `article_lam` vouwt één korte klinker weg om ٱلَّذِينَ tegen �
 te kunnen leggen — de enige plek waar een korte klinker als notatie wordt
 behandeld.
 
+### Wat dit voor de vormleer betekent
+
+Het lesboek telt vormen uit het corpus, en het corpus ontleedt Ḥafṣ. Dat is een
+feit over het gereedschap: **beide riwaayaat zijn de Qoeraan**, allebei
+mutawātir, en waar ze verschillen is de ene lezing niet de correctie van de
+andere. De vraag is dus symmetrisch — welke vormen staan in de ene riwaaya en
+niet in de andere — en beide kanten hebben een antwoord.
+
+Op 67 farsh-plaatsen verschilt de **wazn**. Niet op het niveau van de vijftien
+vormen: het gaat aan weerskanten om I, II, III, IV, V, VI en VIII, en geen van
+beide riwaayaat mist een wazn die de ander heeft. Wél op het niveau van
+wortel-en-vorm samen, en dan aan allebei de kanten:
+
+- **elf wortel-vormparen alleen in Warsh** (22 plaatsen): حزن IV, عقد III,
+  سوي V, صلح VI, كذب IV, لقف V, وهن II, سقط VI, هجر IV, صعر III, ظهر V
+- **twaalf alleen in Ḥafṣ** (16 plaatsen): لقف I, وهن IV, عمي II, بدل IV,
+  سقط III, سحت IV, صعر II, نكس II, سمع V, نشا II, زلق IV, حضض VI
+
+Vier wortels staan in beide lijsten — لقف، وهن، سقط، صعر — omdat de wortel maar
+op één plaats voorkomt en juist die plaats verschillend gelezen wordt. Vier van
+de Warsh-lezingen staan met assimilatie geschreven (تَظَّهَّرُونَ = تتظهّرون).
+
+Bij drie wortels — سحت، زلق، نشا — leest Warsh een werkwoord van vorm I waar
+Ḥafṣ IV of II leest. Die tellen in de linkerlijst niet mee omdat vorm I van die
+wortels ook in Ḥafṣ voorkomt, maar uitsluitend als naamwoord (السُّحْت،
+زَلَقًا، النَّشْأة). Gaat de vraag over werkwoorden en niet over wortels, dan is
+het antwoord veertien.
+
+Belangrijker nog dan de vormen is de **bāb**. Binnen vorm I onderscheiden de
+zes abwāb zich door één klinker, en juist daar lopen de riwaayaat uiteen — op
+34 plaatsen. De grammatici noemen bāb 6 naar حَسِبَ / يَحْسِبُ, en Ḥafṣ leest
+dat werkwoord يَحْسَبُ, wat bāb 4 is. **Bij een gave wortel staat bāb 6 dus wel in
+Warsh en niet in Ḥafṣ — 28 keer, en met precies het werkwoord waaraan de bāb
+zijn naam ontleent.** (In Ḥafṣ ontbreekt hij niet helemaal: وَرِثَ /
+يَرِثُ is bāb 6, maar dat is een *mithāl* waarbij de wāw wegvalt.) En bāb 5,
+die in Ḥafṣ maar één werkwoord heeft (كَبُرَ, 8×), krijgt er in Warsh een
+tweede bij: فَمَكُثَ in 27:22.
+
+Dat maakt het lesboek op één punt scherper dan het was. De zin "de Quran leest
+يَحْسَبُ" was waar, maar bedoelde "de Ḥafṣ-tekst leest" — en een leerboek dat
+over "de Qoeraan" telt hoort te zeggen welke riwaaya het telt.
+
+`riwaya_sarf.py --only` drukt beide richtingen af en `--bab` de abwāb;
+hoofdstuk 8 van `docs/sarf-nl.md` legt ze uit. De Warsh-vorm is daar de lezing van dit project — het corpus ontleedt
+Warsh niet — maar de vraag of die vorm in Ḥafṣ voorkomt is een query.
+
 `docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om
 nagelopen te worden. Zes riwaayaat staan wel in de tabel `riwayat` maar hun
 tekst niet in de repo; zie `SOURCES.md` voor waarom.

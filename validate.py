@@ -135,6 +135,12 @@ INFLATION_WARN = 2.0
 CAP_HINT_WIDTH = 5         # citations this wide sharing one width smell
                            # of truncation
 
+# A checkout writes files in whatever order it likes, so a parse can land a
+# fraction of a second after the resolution built from it without anything
+# being stale. The content comparison above catches real staleness; the
+# timestamps only need to catch a re-run, which is never this close.
+MTIME_SLACK = 2.0          # seconds
+
 CHECKS = []
 
 
@@ -362,7 +368,7 @@ def resolved_citations_current(cur, args):
         if (n_e, n_q) != (r_e, r_q):
             stale.append(f"{work}: parsed {n_e:,} entries/{n_q:,} quotes but "
                          f"resolved {r_e:,}/{r_q:,}")
-        elif path.stat().st_mtime > RESOLVED.stat().st_mtime:
+        elif path.stat().st_mtime > RESOLVED.stat().st_mtime + MTIME_SLACK:
             stale.append(f"{work}: {path.name} ({stamp(path)}) is newer than "
                          f"{RESOLVED.name} ({stamp(RESOLVED)})")
         counted.append(f"{work} {r_e:,}/{r_q:,}")
