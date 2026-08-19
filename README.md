@@ -459,6 +459,12 @@ it. Hafs and Warsh are riwayat, and they belong to two different qiraa'at:
 Hafs from Aasim al-Kufi (d. 127), Warsh from Naafi' al-Madani (d. 169). The
 comparison here is therefore between qiraa'at, not within one.
 
+Both are the Quran, and the tables below are symmetric: `riwaya_a` and
+`riwaya_b` are two transmissions of one text, not a text and its variants.
+Where this repository can say more about the Hafs side than the Warsh side —
+the corpus annotates Hafs only — that is a property of the available data and
+carries no claim about the two readings.
+
 `riwayat` — 8 rows, the transmissions King Fahd Glorious Quran Printing
 Complex publishes, two per qari:
 
@@ -639,7 +645,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `compare_riwayat.py` | aligns the Hafs and Warsh texts word by word and builds `riwayat` and `riwaya_diff`; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
-| `riwaya_sarf.py` | which (root, form) pairs Warsh uses that the Hafs corpus has nowhere; `--markdown` prints the table in `docs/sarf-nl.md` ch. 8 |
+| `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus |
@@ -777,7 +783,10 @@ which is the honest choice but means the table cannot answer what that word
 would be.
 
 **Two riwayat is not the qiraa'at.** `riwaya_diff` compares Hafs and Warsh, one
-transmission each from two of the seven readers. It says nothing about Qaaloon
+transmission each from two of the seven readers. Both are mutawatir and neither
+is the baseline; the morphological layers of this database describe Hafs only,
+because that is what the corpus annotates, and `riwaya_sarf.py` is where the
+consequences of that are worked out in both directions. It says nothing about Qaaloon
 or Shu'ba, and nothing about the five readers whose text is not here. Roughly 5%
 of the `farsh` rows are estimated to be spelling rather than reading;
 `docs/hafs-warsh.md` names the residues that are known.

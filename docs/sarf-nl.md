@@ -1,6 +1,12 @@
 # Ṣarf — de vormleer van het Arabisch
 
-*Een lesboek, met de voorbeelden en tellingen ontleend aan de Quran zelf.*
+*Een lesboek, met de voorbeelden en tellingen ontleend aan de Qoeraan zelf.*
+
+*Over welke tekst geteld wordt: de morfologische gegevens in dit boek komen uit
+een corpus dat de riwaaya van Ḥafṣ ontleedt. Waar dat verschil maakt — en dat
+doet het, bij de abwāb en bij een handvol vormen — staat het erbij, met wat de
+riwaaya van Warsh daar leest. Beide zijn de Qoeraan; dat de ene in een database
+staat en de andere niet is een eigenschap van het gereedschap.*
 
 ---
 
@@ -277,7 +283,7 @@ Bāb 3 vereist meestal een keelletter (ء ه ع ح غ خ) als *ʿayn* of *lām*.
 is bijzonder: die drukt een blijvende eigenschap uit (كَرُمَ, "hij was
 edelmoedig") en is daarom nooit overgankelijk.
 
-#### De abwāb zoals de Quran ze gebruikt
+#### De abwāb zoals de Qoeraan ze gebruikt (riwaaya van Ḥafṣ)
 
 De tabel hierboven is de leerboekvorm. Hieronder dezelfde zes *abwāb* met
 werkwoorden die werkelijk in de Quran staan, met het aantal voorkomens. De
@@ -310,27 +316,28 @@ Twee dingen vallen op.
 aard: hij drukt een blijvende eigenschap uit en is nooit overgankelijk, dus
 komt hij zelden voor in verhalend of gebiedend proza.
 
-**Bāb 6 komt bij gave wortels niet voor.** De leerboeken geven
-حَسِبَ / يَحْسِبُ als voorbeeld — en de tekst die dit corpus ontleedt leest
-يَحْسَبُ, met een *fatḥa*, en dat is bāb 4.
+**Bāb 6 hangt aan de riwaaya.** De leerboeken geven حَسِبَ / يَحْسِبُ als
+voorbeeld van deze bāb. In de riwaaya van Ḥafṣ, waaruit deze tabel is geteld,
+leest dat werkwoord يَحْسَبُ — met een *fatḥa*, en dat is bāb 4. **In de
+riwaaya van Warsh leest het يَحْسِبُ**, op alle 28 plaatsen waar het in de
+tegenwoordige tijd staat.
 
-Maar let op de woorden "de tekst die dit corpus ontleedt". Dat is de riwaaya
-van Ḥafṣ. **Warsh leest wél يَحْسِبُ**, op alle 28 plaatsen waar dit werkwoord
-in de tegenwoordige tijd staat — dus in de riwaaya van Warsh doet bāb 6 zich
-bij een gave wortel wel voor, en nog wel met precies het werkwoord waaraan de
-grammatici hem hun naam gaven. Wie een leerboek naast een moesḥaf legt, moet
-weten welke van de twee hij voor zich heeft.
+Bij een gave wortel staat bāb 6 dus wel in Warsh en niet in Ḥafṣ, en nog wel
+met precies het werkwoord waaraan de grammatici hem hun naam gaven. Beide
+lezingen zijn Qoeraan; wat dit betekent is niet dat de ene tekst iets mist,
+maar dat een leerboek dat over "de Qoeraan" spreekt moet zeggen welke riwaaya
+het telt. Dit boek telt Ḥafṣ, en zegt het hier.
 
-Ook in Ḥafṣ ontbreekt bāb 6 overigens niet volledig: hij komt voor bij een
-*mithāl* wāwie, وَرِثَ / يَرِثُ ("erven", 19:6 يَرِثُنِي), waar de wāw in de
+Bāb 6 ontbreekt in Ḥafṣ overigens niet volledig: hij komt voor bij een *mithāl*
+wāwie, وَرِثَ / يَرِثُ ("erven", 19:6 يَرِثُنِي), waar de wāw in de
 tegenwoordige tijd wegvalt. De tabel hierboven telt alleen gave wortels, en
 daar is hij leeg.
 
 #### De abwāb en de riwaayaat
 
 De *bāb* hangt aan één klinker, en juist die klinker is waar riwaayaat uiteen
-kunnen lopen. Op 34 plaatsen leest Warsh een kaal drieletterig werkwoord in
-een andere *bāb* dan Ḥafṣ:
+kunnen lopen. Op 34 plaatsen staat een kaal drieletterig werkwoord in Ḥafṣ in
+een andere *bāb* dan in Warsh:
 
 | Wortel | Ḥafṣ | Warsh | Plaatsen | Voorbeeld |
 |---|---|---|--:|---|
@@ -341,10 +348,13 @@ een andere *bāb* dan Ḥafṣ:
 | عتل | bāb 2 ٱعْتِلُوهُ | bāb 1 ٱعْتُلُوهُ | 1 | 44:47 |
 | برق | bāb 4 بَرِقَ | bāb 3 بَرَقَ | 1 | 75:7 |
 
-Twee daarvan raken de tabel hierboven rechtstreeks. حسب vult bāb 6, die bij
-gave wortels leeg stond. En مكث geeft bāb 5 een tweede werkwoord naast كَبُرَ:
-Ḥafṣ leest فَمَكَثَ (27:22), Warsh فَمَكُثَ — precies het patroon فَعُلَ dat
-een blijvende toestand uitdrukt, hier "hij bleef".
+Twee daarvan raken de tabel hierboven rechtstreeks. حسب vult in Warsh bāb 6,
+die bij gave wortels in Ḥafṣ leeg blijft. En مكث geeft bāb 5 in Warsh een
+tweede werkwoord naast كَبُرَ: Ḥafṣ leest فَمَكَثَ (27:22), Warsh فَمَكُثَ —
+precies het patroon فَعُلَ dat een blijvende toestand uitdrukt, hier "hij
+bleef". Andersom kent Ḥafṣ geen bāb die Warsh mist: op dit niveau loopt de
+asymmetrie één kant op, en dat is een waarneming over deze zes wortels, geen
+uitspraak over de twee riwaayaat.
 
 `python3 riwaya_sarf.py --bab` drukt deze lijst af. De *bāb* aan Warsh-zijde is
 de lezing van dit project, van de vocalisatie afgelezen; het corpus ontleedt
@@ -412,81 +422,106 @@ voor.
 > Dat vorm IV domineert past bij de inhoud: het is de causatieve vorm —
 > neerzenden, doen geloven, tot leven wekken.
 
-#### Wat de riwaaya van Warsh toevoegt
+#### Vormen die maar in één riwaaya staan
 
-De tellingen hierboven komen uit het corpus, en het corpus ontleedt één
-riwaaya: die van Ḥafṣ. Een *farsh*-verschil kan de wazn van een woord
-veranderen — Ḥafṣ leest تَلْقَفُ (vorm I) waar Warsh تَلَقَّفُ (vorm V) leest —
-dus de vraag is gerechtvaardigd: zet Warsh een wortel in een vorm die de
-Ḥafṣ-tekst nergens gebruikt?
+Eerst iets wat dit hele hoofdstuk raakt. De tellingen hierboven komen uit het
+corpus, en het corpus ontleedt één riwaaya: die van Ḥafṣ. Dat is een feit over
+het gereedschap, niet over de tekst. **Ḥafṣ en Warsh zijn allebei de Qoeraan**,
+allebei mutawātir, allebei klassiek Arabisch; waar ze verschillen is de ene
+lezing niet de correctie van de andere. Wie hieronder "alleen in Warsh" leest
+moet daar dus niet "afwijking" bij denken, en bij "alleen in Ḥafṣ" evenmin.
 
-Op twee niveaus, en de antwoorden verschillen.
+Een farsh-verschil kan de wazn van een woord veranderen: 7:117 is تَلْقَفُ in
+Ḥafṣ en تَلَقَّفُ in Warsh, vorm I tegenover vorm V. De vraag is dan welke
+vormen in de ene riwaaya staan en in de andere niet — en die vraag heeft twee
+kanten, die allebei een antwoord hebben.
 
-**Als vraag naar de vijftien vormen: nee.** Op de 67 plaatsen waar de wazn
-verandert gebruikt Warsh de vormen I, II, III, IV, V, VI en VIII — stuk voor
-stuk vormen die de Qoeraan in Ḥafṣ al ruimschoots kent. Er komt geen wazn met
-de riwaaya de Qoeraan binnen, en er verdwijnt er geen. De tabel hierboven
-("De taal vormt vijftien patronen, de Qoeraan gebruikt er elf") blijft dus
-staan zoals hij staat.
+**Als vraag naar de vijftien vormen: geen van beide mist er een.** Op de 67
+plaatsen waar de wazn verschilt gaat het om de vormen I, II, III, IV, V, VI en
+VIII, aan weerskanten. Er komt geen wazn de Qoeraan binnen met een riwaaya en
+er verdwijnt er geen. De tabel hierboven — vijftien patronen in de taal, elf in
+de Qoeraan — geldt voor allebei.
 
-**Als vraag naar wortel-en-vorm samen: ja, elf keer.** Op 22 plaatsen zet
-Warsh een wortel in een vorm die het Ḥafṣ-corpus nergens heeft, in geen enkele
-woordsoort:
+**Als vraag naar wortel-en-vorm samen: allebei hebben ze iets wat de ander
+niet heeft.** Elf wortel-vormparen staan alleen in Warsh, twaalf alleen in
+Ḥafṣ, geteld over alle woordsoorten:
 
-| Vers | Wortel | Ḥafṣ leest | vorm | Warsh-vorm | Warsh leest |
+**Alleen in de riwaaya van Warsh** — 22 plaatsen, 11 wortel-vormparen
+
+| Vers | Wortel | Ḥafṣ leest | vorm | Warsh leest | vorm |
 |---|---|---|---|---|---|
-| 3:176 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
-| 4:33 | عقد | عَقَدَتۡ | I | **III** | عَٰقَدَتَ |
-| 4:42 | سوي | تُسَوَّىٰ | I | **V** | تَسَّوّ۪ىٰ |
-| 4:128 | صلح | يُصۡلِحَا | IV | **VI** | يَّصَّٰلَحَا |
-| 5:41 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
-| 6:33 | كذب | يُكَذِّبُونَكَ | II | **IV** | يُكْذِبُونَكَۖ |
-| 6:33 | حزن | لَيَحۡزُنُكَ | I | **IV** | لَيُحْزِنُكَ |
-| 7:117 | لقف | تَلۡقَفُ | I | **V** | تَلَقَّفُ |
-| 8:18 | وهن | مُوهِنُ | IV | **II** | مُوَهِّنٞ |
-| 10:65 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
-| 12:13 | حزن | لَيَحۡزُنُنِيٓ | I | **IV** | لَيُحْزِنُنِيَ |
-| 19:25 | سقط | تُسَٰقِطۡ | III | **VI** | تَسَّٰقَطْ |
-| 20:69 | لقف | تَلۡقَفۡ | I | **V** | تَلَقَّفْ |
-| 23:67 | هجر | تَهۡجُرُونَ | I | **IV** | تُهْجِرُونَۖ |
-| 26:45 | لقف | تَلۡقَفُ | I | **V** | تَلَقَّفُ |
-| 31:18 | صعر | تُصَعِّرۡ | II | **III** | تُصَٰعِرْ |
-| 31:23 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
-| 33:4 | ظهر | تُظَٰهِرُونَ | III | **V** | تَظَّهَّرُونَ |
-| 36:76 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
-| 58:2 | ظهر | يُظَٰهِرُونَ | III | **V** | يَظَّهَّرُونَ |
-| 58:3 | ظهر | يُظَٰهِرُونَ | III | **V** | يَظَّهَّرُونَ |
-| 58:10 | حزن | لِيَحۡزُنَ | I | **IV** | لِيُحْزِنَ |
+| 3:176 | حزن | يَحۡزُنكَ | I | يُحْزِنكَ | **IV** |
+| 4:33 | عقد | عَقَدَتۡ | I | عَٰقَدَتَ | **III** |
+| 4:42 | سوي | تُسَوَّىٰ | I | تَسَّوّ۪ىٰ | **V** |
+| 4:128 | صلح | يُصۡلِحَا | IV | يَّصَّٰلَحَا | **VI** |
+| 5:41 | حزن | يَحۡزُنكَ | I | يُحْزِنكَ | **IV** |
+| 6:33 | كذب | يُكَذِّبُونَكَ | II | يُكْذِبُونَكَۖ | **IV** |
+| 6:33 | حزن | لَيَحۡزُنُكَ | I | لَيُحْزِنُكَ | **IV** |
+| 7:117 | لقف | تَلۡقَفُ | I | تَلَقَّفُ | **V** |
+| 8:18 | وهن | مُوهِنُ | IV | مُوَهِّنٞ | **II** |
+| 10:65 | حزن | يَحۡزُنكَ | I | يُحْزِنكَ | **IV** |
+| 12:13 | حزن | لَيَحۡزُنُنِيٓ | I | لَيُحْزِنُنِيَ | **IV** |
+| 19:25 | سقط | تُسَٰقِطۡ | III | تَسَّٰقَطْ | **VI** |
+| 20:69 | لقف | تَلۡقَفۡ | I | تَلَقَّفْ | **V** |
+| 23:67 | هجر | تَهۡجُرُونَ | I | تُهْجِرُونَۖ | **IV** |
+| 26:45 | لقف | تَلۡقَفُ | I | تَلَقَّفُ | **V** |
+| 31:18 | صعر | تُصَعِّرۡ | II | تُصَٰعِرْ | **III** |
+| 31:23 | حزن | يَحۡزُنكَ | I | يُحْزِنكَ | **IV** |
+| 33:4 | ظهر | تُظَٰهِرُونَ | III | تَظَّهَّرُونَ | **V** |
+| 36:76 | حزن | يَحۡزُنكَ | I | يُحْزِنكَ | **IV** |
+| 58:2 | ظهر | يُظَٰهِرُونَ | III | يَظَّهَّرُونَ | **V** |
+| 58:3 | ظهر | يُظَٰهِرُونَ | III | يَظَّهَّرُونَ | **V** |
+| 58:10 | حزن | لِيَحۡزُنَ | I | لِيُحْزِنَ | **IV** |
 
-Elf verschillende wortel-vormparen: حزن IV, عقد III, سوي V, صلح VI, كذب IV,
-لقف V, وهن II, سقط VI, هجر IV, صعر III en ظهر V. Van deze is وهن II geen
-werkwoord maar een ism fāʿil: Ḥafṣ leest مُوهِنُ (van vorm IV), Warsh
-مُوَهِّنٌ (van vorm II).
+**Alleen in de riwaaya van Ḥafṣ** — 16 plaatsen, 12 wortel-vormparen
 
-Let op de assimilatie in vier ervan. تَظَّهَّرُونَ, يَصَّالَحَا, تَسَّاقَطْ en
-تَسَّوَّىٰ zijn تتظهّرون، يتصالحا، تتساقط en تتسوّى: de tāʾ van vorm V en VI
-gaat op in de eerste wortelletter en wordt als shadda geschreven. Wie de vorm
-wil herkennen moet die assimilatie eerst terugdraaien — precies de vaardigheid
-uit hoofdstuk 4.
+| Vers | Wortel | Ḥafṣ leest | vorm | Warsh leest | vorm |
+|---|---|---|---|---|---|
+| 7:117, 20:69, 26:45 | لقف | تَلۡقَفُ | **I** | تَلَقَّفُ | V |
+| 8:18 | وهن | مُوهِنُ | **IV** | مُوَهِّنٞ | II |
+| 11:28 | عمي | فَعُمِّيَتۡ | **II** | فَعَمِيَتْ | I |
+| 18:81, 66:5, 68:32 | بدل | يُبۡدِلَهُمَا | **IV** | يُّبَدِّلَهُمَا | II |
+| 19:25 | سقط | تُسَٰقِطۡ | **III** | تَسَّٰقَطْ | VI |
+| 20:61 | سحت | فَيُسۡحِتَكُم | **IV** | فَيَسْحَتَكُم | I |
+| 31:18 | صعر | تُصَعِّرۡ | **II** | تُصَٰعِرْ | III |
+| 36:68 | نكس | نُنَكِّسۡهُ | **II** | نَنكُسْهُ | I |
+| 37:8 | سمع | يَسَّمَّعُونَ | **V** | يَسْمَعُونَ | I |
+| 43:18 | نشا | يُنَشَّؤُاْ | **II** | يَّنشَؤُاْ | I |
+| 68:51 | زلق | لَيُزۡلِقُونَكَ | **IV** | لَيَزْلِقُونَكَ | I |
+| 89:18 | حضض | تَحَٰٓضُّونَ | **VI** | تَحُضُّونَ | I |
+
+Vier wortels staan in beide lijsten — لقف، وهن، سقط، صعر. Dat is geen fout in
+de telling: bij die vier komt de wortel in beide riwaayaat maar op één plaats
+voor, en die ene plaats wordt verschillend gelezen. Ḥafṣ heeft er dan een vorm
+die Warsh nergens heeft en Warsh een die Ḥafṣ nergens heeft, allebei op precies
+dat woord.
+
+Let op de assimilatie in vier van de Warsh-lezingen. تَظَّهَّرُونَ, يَصَّالَحَا,
+تَسَّاقَطْ en تَسَّوَّىٰ zijn تتظهّرون، يتصالحا، تتساقط en تتسوّى: de tāʾ van
+vorm V en VI gaat op in de eerste wortelletter en wordt als shadda geschreven.
+Wie de vorm wil herkennen moet die assimilatie eerst terugdraaien — precies de
+vaardigheid uit hoofdstuk 4.
 
 **Drie randgevallen.** Bij سحت (20:61), زلق (68:51) en نشا (43:18) leest Warsh
-een werkwoord van vorm I waar Ḥafṣ vorm IV of II leest. Die staan hierboven
-niet, omdat vorm I van die wortels in Ḥafṣ wél voorkomt — maar alleen als
+een werkwoord van vorm I waar Ḥafṣ IV of II leest. Die staan in de linkerlijst
+niet, omdat vorm I van die wortels ook in Ḥafṣ voorkomt — maar alleen als
 naamwoord: السُّحْت، زَلَقًا، النَّشْأة en نَاشِئَة. Als *werkwoord* zijn
-يَسْحَتُ، يَزْلِقُ en يَنْشَؤُا nieuw. Wie de vraag stelt over werkwoorden en
-niet over wortels, telt dus veertien in plaats van elf.
+يَسْحَتُ، يَزْلِقُ en يَنْشَؤُا alleen in Warsh te vinden. Wie de vraag stelt
+over werkwoorden en niet over wortels, telt dus veertien in plaats van elf.
 
-**Waar dit vandaan komt.** De Ḥafṣ-vorm in de tabel komt uit het corpus. De
-Warsh-vorm is de lezing van dit project, woord voor woord van de vocalisatie
-afgelezen: het corpus ontleedt Warsh niet en geen bron geeft die vorm. Wat wél
-controleerbaar is, is de kolom die telt — of die wortel in die vorm in Ḥafṣ
-voorkomt is een query, geen oordeel. `riwaya_sarf.py` drukt de tabel af en doet
-die controle; `riwaya_sarf.py --new` toont alleen wat Ḥafṣ niet heeft.
+**Waar dit vandaan komt.** De Ḥafṣ-vorm komt uit het corpus. De Warsh-vorm is
+de lezing van dit project, woord voor woord van de vocalisatie afgelezen: het
+corpus ontleedt Warsh niet en geen bron geeft die vorm. Dat de ene kant uit een
+database komt en de andere met de hand is gelezen zegt iets over de beschikbare
+gegevens en niets over de twee lezingen. Controleerbaar is in beide richtingen
+de telling zelf — of die wortel in die vorm in de Ḥafṣ-tekst voorkomt is een
+query. `riwaya_sarf.py --only` drukt beide lijsten af.
 
 Eén kanttekening bij de Ḥafṣ-kolom: het corpus schrijft geen `verb_form` bij
 vorm I, dus een leeg veld leest hier als I. Dat klopt overal behalve bij 4:42,
 waar تُسَوَّىٰ vorm II in de lijdende vorm is en het corpus niets invult. Voor
-de conclusie maakt het niet uit: vorm V van سوي ontbreekt in Ḥafṣ hoe dan ook.
+de conclusie maakt het niet uit: vorm V van سوي staat hoe dan ook alleen in
+Warsh.
 
 ### Rubāʿī
 
@@ -1359,6 +1394,6 @@ verhouden, en welke uitgangen dat oplevert. Dat is een tweede boek.
 kunnen worden gereproduceerd met `python3 analyses.py`; de paradigmatabellen
 met `python3 sarf_examples.py`. De morfologische gegevens komen uit het
 Quranic Arabic Corpus, dat één riwaaya ontleedt: die van Ḥafṣ. Waar dat
-verschil maakt — welke vormen Warsh toevoegt — staat het in hoofdstuk 8, met
-`python3 riwaya_sarf.py` als controle. Zie `SOURCES.md` voor de volledige
+verschil maakt — welke vormen en abwāb maar in één van beide riwaayaat staan —
+staat het in hoofdstuk 8, met `python3 riwaya_sarf.py` als controle. Zie `SOURCES.md` voor de volledige
 verantwoording.*

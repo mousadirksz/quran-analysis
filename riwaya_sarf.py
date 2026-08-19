@@ -35,7 +35,7 @@ Hafs text and present in Warsh, 28 times. And the fifth bab, which the Hafs
 text uses for one verb only, gains a second in Warsh at 27:22.
 
   python3 riwaya_sarf.py              the full table
-  python3 riwaya_sarf.py --new        only what Hafs does not have
+  python3 riwaya_sarf.py --only       the forms peculiar to one riwaya, both ways
   python3 riwaya_sarf.py --bab        the bab differences within form I
   python3 riwaya_sarf.py --markdown   the table as it appears in the textbook
 """
@@ -46,6 +46,7 @@ import sqlite3
 import unicodedata
 from pathlib import Path
 
+from add_metadata import repair_markers
 from riwaya_translit import key
 
 HERE = Path(__file__).parent
@@ -118,7 +119,9 @@ VOWELS = set("auiAUIN")
 
 
 def shape(word):
-    return "".join(ch for ch in key(word) if ch not in VOWELS)
+    # the words view passes the corpus' leftover Buckwalter markers through
+    # unmapped, so repair them before the word can be matched on its letters
+    return "".join(ch for ch in key(repair_markers(word)) if ch not in VOWELS)
 
 
 def word_pair(cur, surah, ayah, root):
@@ -134,6 +137,31 @@ def word_pair(cur, surah, ayah, root):
         if shape(a) in want:
             return a, b
     return None, None
+
+
+def only_in_hafs(cur, data):
+    """(root, form) pairs the Hafs text has and the Warsh text has not.
+
+    The mirror of the n_hafs column, and it has to be computed differently:
+    nothing annotates Warsh, so the test is whether every place that root
+    stands in that form in Hafs is a place where Warsh reads it otherwise.
+    Where that holds, the form leaves the text with the riwaya."""
+    elsewhere = {}
+    changed = {}
+    for r in data:
+        changed.setdefault(r["root"], set()).add((r["surah"], r["ayah"]))
+    for r in data:
+        if r["hafs"] == "I":
+            places = cur.execute(
+                "SELECT surah, ayah FROM corpus WHERE root_ar = ? AND verb_form IS NULL"
+                " AND pos IS NOT NULL", (r["root"],)).fetchall()
+        else:
+            places = cur.execute("SELECT surah, ayah FROM corpus WHERE root_ar = ?"
+                                 " AND verb_form = ?", (r["root"], r["hafs"])).fetchall()
+        rest = [p for p in places if tuple(p) not in changed[r["root"]]]
+        if not rest:
+            elsewhere.setdefault((r["root"], r["hafs"]), []).append(r)
+    return elsewhere
 
 
 def rows(cur):
@@ -154,7 +182,8 @@ def rows(cur):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--new", action="store_true", help="only the unattested forms")
+    ap.add_argument("--only", "--new", action="store_true", dest="only",
+                    help="the forms peculiar to one riwaya, in both directions")
     ap.add_argument("--bab", action="store_true",
                     help="the bab differences within form I")
     ap.add_argument("--markdown", action="store_true", help="print the textbook table")
@@ -181,32 +210,66 @@ def main():
 
     data = rows(cur)
     new = [r for r in data if r["n_hafs"] == 0]
+    mirror = only_in_hafs(cur, data)
 
     if args.markdown:
-        print("| Vers | Wortel | Ḥafṣ leest | vorm | Warsh-vorm | Warsh leest |")
+        print("**Alleen in de riwaaya van Warsh** — %d plaatsen, %d wortel-vormparen\n"
+              % (len(new), len({(r["root"], r["warsh"]) for r in new})))
+        print("| Vers | Wortel | Ḥafṣ leest | vorm | Warsh leest | vorm |")
         print("|---|---|---|---|---|---|")
         for r in sorted(new, key=lambda x: (x["surah"], x["ayah"])):
-            print("| %d:%d | %s | %s | %s | **%s** | %s |"
+            print("| %d:%d | %s | %s | %s | %s | **%s** |"
                   % (r["surah"], r["ayah"], r["root"], r["pair"][0] or "",
-                     r["hafs"], r["warsh"], r["pair"][1] or ""))
+                     r["hafs"], r["pair"][1] or "", r["warsh"]))
+        print("\n**Alleen in de riwaaya van Ḥafṣ** — %d plaatsen, %d wortel-vormparen\n"
+              % (sum(len(v) for v in mirror.values()), len(mirror)))
+        print("| Vers | Wortel | Ḥafṣ leest | vorm | Warsh leest | vorm |")
+        print("|---|---|---|---|---|---|")
+        for (root, form), rs in sorted(mirror.items(),
+                                       key=lambda x: (x[1][0]["surah"], x[1][0]["ayah"])):
+            r = rs[0]
+            plaatsen = ", ".join("%d:%d" % (x["surah"], x["ayah"]) for x in rs)
+            print("| %s | %s | %s | **%s** | %s | %s |"
+                  % (plaatsen, root, r["pair"][0] or "", form,
+                     r["pair"][1] or "", r["warsh"]))
         conn.close()
         return
 
-    shown = new if args.new else data
+    if args.only:
+        print("Vormen die maar in een van beide riwaayaat staan.")
+        print("Beide zijn Qoeraan; dit is geen lijst van afwijkingen.\n")
+        print("alleen in Warsh (%d plaatsen, %d wortel-vormparen):"
+              % (len(new), len({(r["root"], r["warsh"]) for r in new})))
+        for r in sorted(new, key=lambda x: (x["surah"], x["ayah"])):
+            print("  %-9s %-6s Hafs %-4s -> Warsh %-4s   %s | %s"
+                  % ("%d:%d" % (r["surah"], r["ayah"]), r["root"], r["hafs"],
+                     r["warsh"], r["pair"][0] or "", r["pair"][1] or ""))
+        print("\nalleen in Hafs (%d plaatsen, %d wortel-vormparen):"
+              % (sum(len(v) for v in mirror.values()), len(mirror)))
+        for (root, form), rs in sorted(mirror.items(),
+                                       key=lambda x: (x[1][0]["surah"], x[1][0]["ayah"])):
+            r = rs[0]
+            plaatsen = ", ".join("%d:%d" % (x["surah"], x["ayah"]) for x in rs)
+            print("  %-9s %-6s Hafs %-4s -> Warsh %-4s   %s | %s"
+                  % (plaatsen, root, form, r["warsh"],
+                     r["pair"][0] or "", r["pair"][1] or ""))
+        conn.close()
+        return
+
     print("%-9s %-6s %-6s %-6s %s" % ("vers", "wortel", "hafs", "warsh", "in hafs"))
-    for r in sorted(shown, key=lambda x: (x["surah"], x["ayah"])):
+    for r in sorted(data, key=lambda x: (x["surah"], x["ayah"])):
         print("%-9s %-6s %-6s %-6s %5d%s"
               % ("%d:%d" % (r["surah"], r["ayah"]), r["root"], r["hafs"], r["warsh"],
                  r["n_hafs"], "   <-- niet in Hafs" if r["n_hafs"] == 0 else ""))
-    print("\n%d plaatsen waar de wazn verandert; %d daarvan zetten de wortel in een"
+    print("\n%d plaatsen waar de wazn verschilt. %d daarvan zetten een wortel in een"
           % (len(data), len(new)))
-    print("vorm die het Hafs-corpus nergens heeft (%d verschillende wortel-vormparen)."
+    print("vorm die de Hafs-tekst nergens heeft (%d wortel-vormparen); omgekeerd staan"
           % len({(r["root"], r["warsh"]) for r in new}))
+    print("%d wortel-vormparen alleen in Hafs. Geen van beide riwaayaat kent een wazn"
+          % len(mirror))
     order = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
-    forms_w = sorted({r["warsh"] for r in data}, key=order.index)
-    print("Warsh gebruikt hier de vormen %s: geen enkele wazn komt met de riwaya"
-          % ", ".join(forms_w))
-    print("de Quran binnen of verlaat hem.")
+    print("die de ander mist: het zijn aan weerskanten de vormen %s."
+          % ", ".join(sorted({r["warsh"] for r in data}, key=order.index)))
     conn.close()
 
 
