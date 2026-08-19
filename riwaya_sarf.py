@@ -26,8 +26,17 @@ whether the pair is attested is a query, not a judgment -- so the claim that
 matters, "this form does not occur in Hafs", is checkable even where the
 reading of the Warsh form is disputed.
 
+Beside the wazn there is the *bab*: within form I the six abwab differ only
+in the vowel on the ayn, and a farsh difference can move a verb from one to
+another. BAB lists those. Two of them matter to the textbook. The grammars
+name the sixth bab after hasiba / yahsibu, and Hafs reads that verb yahsabu,
+which is the fourth -- so with a sound root the sixth bab is absent from the
+Hafs text and present in Warsh, 28 times. And the fifth bab, which the Hafs
+text uses for one verb only, gains a second in Warsh at 27:22.
+
   python3 riwaya_sarf.py              the full table
   python3 riwaya_sarf.py --new        only what Hafs does not have
+  python3 riwaya_sarf.py --bab        the bab differences within form I
   python3 riwaya_sarf.py --markdown   the table as it appears in the textbook
 """
 
@@ -70,6 +79,27 @@ WAZN = [
     (68, 51, "زلق", "I"), (84, 12, "صلي", "II"), (89, 18, "حضض", "I"),
     # not a verb: Hafs reads the participle of IV, Warsh that of II
     (8, 18, "وهن", "II"),
+]
+
+# Form I keeps its wazn but not its bab: the vowel on the ayn is what the six
+# abwab of the thulathi mujarrad are told apart by, and a farsh difference can
+# move a verb from one to another. (verse, root, bab in Hafs, bab in Warsh)
+BAB = [
+    (2, 273, "حسب", 4, 6), (3, 78, "حسب", 4, 6), (3, 169, "حسب", 4, 6),
+    (3, 178, "حسب", 4, 6), (3, 180, "حسب", 4, 6), (3, 188, "حسب", 4, 6),
+    (7, 30, "حسب", 4, 6), (8, 59, "حسب", 4, 6), (14, 42, "حسب", 4, 6),
+    (14, 47, "حسب", 4, 6), (18, 18, "حسب", 4, 6), (18, 104, "حسب", 4, 6),
+    (23, 55, "حسب", 4, 6), (24, 11, "حسب", 4, 6), (24, 15, "حسب", 4, 6),
+    (24, 39, "حسب", 4, 6), (24, 57, "حسب", 4, 6), (25, 44, "حسب", 4, 6),
+    (27, 88, "حسب", 4, 6), (33, 20, "حسب", 4, 6), (43, 37, "حسب", 4, 6),
+    (43, 80, "حسب", 4, 6), (58, 18, "حسب", 4, 6), (59, 14, "حسب", 4, 6),
+    (63, 4, "حسب", 4, 6), (90, 5, "حسب", 4, 6), (90, 7, "حسب", 4, 6),
+    (104, 3, "حسب", 4, 6),
+    (3, 157, "موت", 1, 4), (3, 158, "موت", 1, 4),   # maata / mitta, ajwaf
+    (27, 22, "مكث", 1, 5),                          # makatha / makutha
+    (43, 57, "صدد", 2, 1),                          # yasiddoena / yasoeddoena
+    (44, 47, "عتل", 2, 1),                          # i'tiloehoe / u'tuloehoe
+    (75, 7, "برق", 4, 3),                           # bariqa / baraqa
 ]
 
 
@@ -125,11 +155,30 @@ def rows(cur):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--new", action="store_true", help="only the unattested forms")
+    ap.add_argument("--bab", action="store_true",
+                    help="the bab differences within form I")
     ap.add_argument("--markdown", action="store_true", help="print the textbook table")
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     cur = conn.cursor()
+
+    if args.bab:
+        by = {}
+        for surah, ayah, root, h, w in BAB:
+            by.setdefault((root, h, w), []).append("%d:%d" % (surah, ayah))
+        print("%-6s %-6s %-7s %5s  %s" % ("wortel", "hafs", "warsh", "n", "plaatsen"))
+        for (root, h, w), places in sorted(by.items(), key=lambda x: -len(x[1])):
+            print("%-6s baab %-1d baab %-1d %5d  %s"
+                  % (root, h, w, len(places),
+                     ", ".join(places[:6]) + (" ..." if len(places) > 6 else "")))
+        six = sum(1 for *_, w in BAB if w == 6)
+        print("\n%d plaatsen waar de baab verschilt; %d daarvan zetten een gave"
+              % (len(BAB), six))
+        print("wortel in baab 6, die de Hafs-tekst bij gave wortels niet gebruikt.")
+        conn.close()
+        return
+
     data = rows(cur)
     new = [r for r in data if r["n_hafs"] == 0]
 

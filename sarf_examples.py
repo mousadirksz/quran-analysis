@@ -250,7 +250,11 @@ def abwab(cur, markdown=False, per_bab=3):
         examples = found[key][:per_bab]
         if not examples:
             if markdown:
-                print(f"| {num} | {pattern} | — | — | — | niet aangetroffen |")
+                # the scan covers sound roots only, and one riwaya: bab 6 is
+                # empty here but does occur in Hafs with a mithal (waritha /
+                # yarithu) and in Warsh with a sound one (hasiba / yahsibu)
+                print(f"| {num} | {pattern} | — | — | — | "
+                      "niet bij gave wortels |")
             continue
         for root, m, i, n in examples:
             if markdown:

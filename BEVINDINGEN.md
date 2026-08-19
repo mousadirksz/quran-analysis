@@ -549,8 +549,21 @@ wortels in Ḥafṣ wel voorkomt, maar uitsluitend als naamwoord (السُّحْ
 زَلَقًا، النَّشْأة). Als de vraag over werkwoorden gaat en niet over wortels,
 is het antwoord dus veertien.
 
-`riwaya_sarf.py` drukt de tabel af; hoofdstuk 8 van `docs/sarf-nl.md` legt hem
-uit. De Warsh-vorm is daar de lezing van dit project — het corpus ontleedt
+Belangrijker nog dan de vormen is de **bāb**. Binnen vorm I onderscheiden de
+zes abwāb zich door één klinker, en juist daar lopen de riwaayaat uiteen — op
+34 plaatsen. De grammatici noemen bāb 6 naar حَسِبَ / يَحْسِبُ, en Ḥafṣ leest
+dat werkwoord يَحْسَبُ, wat bāb 4 is. **In Ḥafṣ komt bāb 6 bij een gave wortel
+dus niet voor; in Warsh wel, 28 keer, en met precies het werkwoord waaraan de
+bāb zijn naam ontleent.** (In Ḥafṣ ontbreekt hij niet helemaal: وَرِثَ /
+يَرِثُ is bāb 6, maar dat is een *mithāl* waarbij de wāw wegvalt.) En bāb 5,
+die in Ḥafṣ maar één werkwoord heeft (كَبُرَ, 8×), krijgt er in Warsh een
+tweede bij: فَمَكُثَ in 27:22.
+
+Dat maakt het lesboek op één punt scherper dan het was. De zin "de Quran leest
+يَحْسَبُ" was waar, maar bedoelde "de Ḥafṣ-tekst leest".
+
+`riwaya_sarf.py` drukt beide tabellen af (`--bab` voor de abwāb); hoofdstuk 8
+van `docs/sarf-nl.md` legt ze uit. De Warsh-vorm is daar de lezing van dit project — het corpus ontleedt
 Warsh niet — maar de vraag of die vorm in Ḥafṣ voorkomt is een query.
 
 `docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om

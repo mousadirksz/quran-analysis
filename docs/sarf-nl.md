@@ -283,7 +283,9 @@ De tabel hierboven is de leerboekvorm. Hieronder dezelfde zes *abwāb* met
 werkwoorden die werkelijk in de Quran staan, met het aantal voorkomens. De
 *bāb* is hier niet overgenomen uit een woordenboek maar afgelezen uit de
 tekst: van elk gaaf werkwoord in de kale vorm zijn de verleden en de
-tegenwoordige tijd opgezocht en is de klinker op de *ʿayn* uitgelezen.
+tegenwoordige tijd opgezocht en is de klinker op de *ʿayn* uitgelezen — uit de
+riwaaya van Ḥafṣ, want dat is de tekst die het corpus ontleedt. Dat maakt bij
+bāb 5 en 6 verschil, zoals hieronder blijkt.
 
 | Bāb | Patroon | Wortel | Māḍī | Muḍāriʿ | In de Quran |
 |---|---|---|---|---|---|
@@ -300,7 +302,7 @@ tegenwoordige tijd opgezocht en is de klinker op de *ʿayn* uitgelezen.
 | 4 | فَعِلَ / يَفْعَلُ | عمل | عَمِلَ | يَعْمَلْ | 276× |
 | 4 | فَعِلَ / يَفْعَلُ | سمع | سَمِعَ | يَسْمَعُ | 78× |
 | 5 | فَعُلَ / يَفْعُلُ | كبر | كَبُرَ | يَكْبُرُ | 8× |
-| 6 | فَعِلَ / يَفْعِلُ | — | — | — | niet aangetroffen |
+| 6 | فَعِلَ / يَفْعِلُ | — | — | — | niet bij gave wortels |
 
 Twee dingen vallen op.
 
@@ -308,11 +310,45 @@ Twee dingen vallen op.
 aard: hij drukt een blijvende eigenschap uit en is nooit overgankelijk, dus
 komt hij zelden voor in verhalend of gebiedend proza.
 
-**Bāb 6 komt bij gave wortels helemaal niet voor.** De leerboeken geven
-حَسِبَ / يَحْسِبُ als voorbeeld, maar de Quran leest يَحْسَبُ — met een
-*fatḥa*, en dat is bāb 4. Beide lezingen bestaan in de taal; de Quran kiest
-consequent de ene. Wie dit boek gebruikt om de Quran te lezen, kan bāb 6 dus
-gerust als laatste leren.
+**Bāb 6 komt bij gave wortels niet voor.** De leerboeken geven
+حَسِبَ / يَحْسِبُ als voorbeeld — en de tekst die dit corpus ontleedt leest
+يَحْسَبُ, met een *fatḥa*, en dat is bāb 4.
+
+Maar let op de woorden "de tekst die dit corpus ontleedt". Dat is de riwaaya
+van Ḥafṣ. **Warsh leest wél يَحْسِبُ**, op alle 28 plaatsen waar dit werkwoord
+in de tegenwoordige tijd staat — dus in de riwaaya van Warsh doet bāb 6 zich
+bij een gave wortel wel voor, en nog wel met precies het werkwoord waaraan de
+grammatici hem hun naam gaven. Wie een leerboek naast een moesḥaf legt, moet
+weten welke van de twee hij voor zich heeft.
+
+Ook in Ḥafṣ ontbreekt bāb 6 overigens niet volledig: hij komt voor bij een
+*mithāl* wāwie, وَرِثَ / يَرِثُ ("erven", 19:6 يَرِثُنِي), waar de wāw in de
+tegenwoordige tijd wegvalt. De tabel hierboven telt alleen gave wortels, en
+daar is hij leeg.
+
+#### De abwāb en de riwaayaat
+
+De *bāb* hangt aan één klinker, en juist die klinker is waar riwaayaat uiteen
+kunnen lopen. Op 34 plaatsen leest Warsh een kaal drieletterig werkwoord in
+een andere *bāb* dan Ḥafṣ:
+
+| Wortel | Ḥafṣ | Warsh | Plaatsen | Voorbeeld |
+|---|---|---|--:|---|
+| حسب | bāb 4 يَحْسَبُ | bāb 6 يَحْسِبُ | 28 | 2:273, 104:3 |
+| موت | bāb 1 مُتُّمْ | bāb 4 مِتُّمْ | 2 | 3:157, 3:158 |
+| مكث | bāb 1 مَكَثَ | bāb 5 مَكُثَ | 1 | 27:22 |
+| صدد | bāb 2 يَصِدُّونَ | bāb 1 يَصُدُّونَ | 1 | 43:57 |
+| عتل | bāb 2 ٱعْتِلُوهُ | bāb 1 ٱعْتُلُوهُ | 1 | 44:47 |
+| برق | bāb 4 بَرِقَ | bāb 3 بَرَقَ | 1 | 75:7 |
+
+Twee daarvan raken de tabel hierboven rechtstreeks. حسب vult bāb 6, die bij
+gave wortels leeg stond. En مكث geeft bāb 5 een tweede werkwoord naast كَبُرَ:
+Ḥafṣ leest فَمَكَثَ (27:22), Warsh فَمَكُثَ — precies het patroon فَعُلَ dat
+een blijvende toestand uitdrukt, hier "hij bleef".
+
+`python3 riwaya_sarf.py --bab` drukt deze lijst af. De *bāb* aan Warsh-zijde is
+de lezing van dit project, van de vocalisatie afgelezen; het corpus ontleedt
+Warsh niet.
 
 ### Thulāthī mazīd — de uitgebreide vormen
 
