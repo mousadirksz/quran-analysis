@@ -714,6 +714,25 @@ def word_glosses(cur, args):
     return f"all {EXPECTED_WORDS:,} words glossed, {distinct:,} distinct glosses"
 
 
+@check("irab passages")
+def irab_passages(cur, args):
+    """Al-Nahhas comments on the verses that raise a syntactic question, not on
+    every verse, so partial coverage is expected and is reported rather than
+    asserted. What must hold is that every passage names a verse that exists."""
+    require_tables(cur, "irab")
+    expect_none(cur, "irab passage naming no verse in corpus",
+                "SELECT i.surah, i.ayah FROM irab i WHERE NOT EXISTS"
+                " (SELECT 1 FROM corpus c WHERE c.surah=i.surah AND c.ayah=i.ayah)")
+    expect_none(cur, "empty irab passage",
+                "SELECT surah, ayah FROM irab WHERE passage IS NULL OR TRIM(passage)=''")
+    expect_none(cur, "unknown irab work",
+                "SELECT DISTINCT work FROM irab WHERE work NOT IN ('nahhas')")
+    covered = cur.execute("SELECT COUNT(DISTINCT surah || ':' || ayah) FROM irab").fetchone()[0]
+    rows = cur.execute("SELECT COUNT(*) FROM irab").fetchone()[0]
+    return (f"{rows:,} passages covering {covered:,} of {EXPECTED_AYAHS:,} verses "
+            f"({covered / EXPECTED_AYAHS * 100:.0f}%, the rest raise no question he treats)")
+
+
 def report(outcome, name, text):
     """Print one result; multi-line details are indented under the first."""
     head, *rest = str(text).splitlines()

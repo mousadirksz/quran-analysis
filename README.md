@@ -561,7 +561,13 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
+| `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
+
+`SOURCES.md` records the provenance of every source: what it is, where it was
+obtained, which edition, under what licence, which script loads it into which
+table, and — separately — what this project derived rather than sourced. Read it
+before citing any figure from this database.
 
 `BEVINDINGEN.md` (Dutch) is the analytical companion to this file: what the
 data turned out to say. Word counting under two definitions, what does and does
