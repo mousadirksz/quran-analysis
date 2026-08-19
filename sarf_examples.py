@@ -179,10 +179,161 @@ def show(cur, t, roots, markdown, per_type=2):
             break
 
 
+# ---------------------------------------------------------------- de abwab
+
+FATHA, KASRA, DAMMA = "\u064e", "\u0650", "\u064f"
+VOWEL_NAME = {FATHA: "a", KASRA: "i", DAMMA: "u"}
+
+BAB_NAMES = {
+    ("a", "u"): ("1", "فَعَلَ / يَفْعُلُ"),
+    ("a", "i"): ("2", "فَعَلَ / يَفْعِلُ"),
+    ("a", "a"): ("3", "فَعَلَ / يَفْعَلُ"),
+    ("i", "a"): ("4", "فَعِلَ / يَفْعَلُ"),
+    ("u", "u"): ("5", "فَعُلَ / يَفْعُلُ"),
+    ("i", "i"): ("6", "فَعِلَ / يَفْعِلُ"),
+}
+
+
+def ayn_vowel(form, root):
+    """The vowel on the second root letter, which is what the bab turns on.
+
+    Walks the root letters through the written form in order, so that prefixes
+    and the letters of the pattern do not shift the count."""
+    pos, found = 0, []
+    for i, ch in enumerate(form):
+        if pos < 3 and ch == root[pos]:
+            found.append(i)
+            pos += 1
+    if len(found) < 2:
+        return None
+    j = found[1]
+    return VOWEL_NAME.get(form[j + 1]) if j + 1 < len(form) else None
+
+
+def bare_3ms(cur, root, aspect):
+    r = cur.execute(
+        "SELECT form_ar FROM corpus WHERE root_ar=? AND pos='V' AND aspect=?"
+        " AND person='3' AND gender='M' AND number='S' AND verb_form IS NULL"
+        " AND IFNULL(voice,'ACT')='ACT' ORDER BY surah, ayah LIMIT 1",
+        (root, aspect)).fetchone()
+    return r[0] if r else None
+
+
+def abwab(cur, markdown=False, per_bab=3):
+    """Group the sound form-I roots into the six abwab by their vowels.
+
+    Only salim roots are classified: in a weak root the vowel of the cayn is
+    obscured by the very changes chapter 9 describes, so reading a bab off it
+    would be guesswork."""
+    found = {k: [] for k in BAB_NAMES}
+    # fetchall first: bare_3ms runs on the same cursor, and iterating a cursor
+    # while re-executing it silently truncates the outer result set
+    candidates = cur.execute(
+        "SELECT root_ar, COUNT(*) n FROM corpus WHERE pos='V' AND verb_form IS NULL"
+        " AND LENGTH(root_ar)=3 AND root_ar != '' GROUP BY root_ar ORDER BY n DESC"
+    ).fetchall()
+    for root, n in candidates:
+        if classify(root) != "salim":
+            continue
+        m, i = bare_3ms(cur, root, "PERF"), bare_3ms(cur, root, "IMPF")
+        if not (m and i):
+            continue
+        vm, vi = ayn_vowel(m, root), ayn_vowel(i, root)
+        if (vm, vi) in found:
+            found[(vm, vi)].append((root, repair_markers(m), repair_markers(i), n))
+
+    if markdown:
+        print("| Bāb | Patroon | Wortel | Māḍī | Muḍāriʿ | In de Quran |")
+        print("|---|---|---|---|---|---|")
+    for key in sorted(BAB_NAMES, key=lambda k: BAB_NAMES[k][0]):
+        num, pattern = BAB_NAMES[key]
+        examples = found[key][:per_bab]
+        if not examples:
+            if markdown:
+                print(f"| {num} | {pattern} | — | — | — | niet aangetroffen |")
+            continue
+        for root, m, i, n in examples:
+            if markdown:
+                print(f"| {num} | {pattern} | {root} | {m} | {i} | {n}× |")
+            else:
+                print(f"  bab {num} {pattern:<16} {root:<5} {m:<12} {i:<12} {n}x")
+    return found
+
+
+# ------------------------------------------------------- de verbale vormen
+
+# Every pattern the language forms, whether or not the Quran uses it. The
+# example is filled from the corpus where the form occurs; the ones the Quran
+# does not use carry an example from the language, marked as such.
+FORMS = [
+    ("I", "فَعَلَ", "grondvorm", None),
+    ("II", "فَعَّلَ", "intensief, causatief", None),
+    ("III", "فَاعَلَ", "gericht op een ander", None),
+    ("IV", "أَفْعَلَ", "causatief", None),
+    ("V", "تَفَعَّلَ", "wederkerend van II", None),
+    ("VI", "تَفَاعَلَ", "wederkerend van III", None),
+    ("VII", "ٱنْفَعَلَ", "lijdend, vanzelf", None),
+    ("VIII", "ٱفْتَعَلَ", "wederkerend, voor zichzelf", None),
+    ("IX", "ٱفْعَلَّ", "kleuren en gebreken", None),
+    ("X", "ٱسْتَفْعَلَ", "vragen om, achten als", None),
+    ("XI", "ٱفْعَالَّ", "versterkte kleur", "ٱحْمَارَّ — diep rood worden"),
+    ("XII", "ٱفْعَوْعَلَ", "intensief", None),
+    ("XIII", "ٱفْعَوَّلَ", "intensief", "ٱجْلَوَّذَ — voortjagen"),
+    ("XIV", "ٱفْعَنْلَلَ", "zeldzaam", "ٱقْعَنْسَسَ — achteroverleunen"),
+    ("XV", "ٱفْعَنْلَى", "zeldzaam", "ٱسْلَنْقَىٰ — op de rug liggen"),
+]
+
+
+def verb_forms(cur, markdown=False):
+    if markdown:
+        print("| Vorm | Patroon | Betekenis (hoofdlijn) | Voorbeeld | Vers | Aantal |")
+        print("|---|---|---|---|---|---|")
+    for form, pattern, sense, fallback in FORMS:
+        where = "verb_form IS NULL" if form == "I" else "verb_form = ?"
+        args = () if form == "I" else (form,)
+        row = cur.execute(
+            "SELECT lemma_ar, surah, ayah, COUNT(*) OVER () FROM corpus"
+            f" WHERE pos='V' AND {where} AND lemma_ar != ''"
+            " ORDER BY surah, ayah LIMIT 1", args).fetchone()
+        total = cur.execute(
+            f"SELECT COUNT(*) FROM corpus WHERE pos='V' AND {where}", args).fetchone()[0]
+        if row and total:
+            example, ref, n = repair_markers(row[0]), f"{row[1]}:{row[2]}", f"{total}×"
+        else:
+            example, ref, n = (fallback or "—"), "—", "niet in de Quran"
+        if markdown:
+            print(f"| {form} | {pattern} | {sense} | {example} | {ref} | {n} |")
+        else:
+            print(f"  {form:<5} {pattern:<14} {example:<22} {ref:<8} {n}")
+
+
+def quadriliteral(cur, markdown=False):
+    if markdown:
+        print("| Vorm | Patroon | Voorbeeld | Vers | Aantal |")
+        print("|---|---|---|---|---|")
+    rows = cur.execute(
+        "SELECT lemma_ar, root_ar, surah, ayah, COUNT(*) n FROM corpus"
+        " WHERE pos='V' AND LENGTH(root_ar)=4 AND lemma_ar != ''"
+        " GROUP BY root_ar ORDER BY n DESC LIMIT 6").fetchall()
+    for lemma, root, s, a, n in rows:
+        if markdown:
+            print(f"| mujarrad | فَعْلَلَ | {repair_markers(lemma)} ({root}) | {s}:{a} | {n}× |")
+        else:
+            print(f"  {root:<6} {repair_markers(lemma):<14} {s}:{a}  {n}x")
+    if markdown:
+        for pattern, ex in (("تَفَعْلَلَ", "تَدَحْرَجَ — rollen"),
+                            ("ٱفْعَنْلَلَ", "ٱحْرَنْجَمَ — samendrommen"),
+                            ("ٱفْعَلَلَّ", "ٱطْمَأَنَّ — tot rust komen")):
+            print(f"| mazīd | {pattern} | {ex} | — | zie hieronder |")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     markdown = "--markdown" in sys.argv
     cur = sqlite3.connect(DB).cursor()
+    if args and args[0] in ("abwab", "forms", "quad"):
+        {"abwab": abwab, "forms": verb_forms, "quad": quadriliteral}[args[0]](cur, markdown)
+        return
     by_type = roots_by_type(cur)
     wanted = args or TYPES
     for t in wanted:

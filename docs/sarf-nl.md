@@ -277,6 +277,43 @@ Bāb 3 vereist meestal een keelletter (ء ه ع ح غ خ) als *ʿayn* of *lām*.
 is bijzonder: die drukt een blijvende eigenschap uit (كَرُمَ, "hij was
 edelmoedig") en is daarom nooit overgankelijk.
 
+#### De abwāb zoals de Quran ze gebruikt
+
+De tabel hierboven is de leerboekvorm. Hieronder dezelfde zes *abwāb* met
+werkwoorden die werkelijk in de Quran staan, met het aantal voorkomens. De
+*bāb* is hier niet overgenomen uit een woordenboek maar afgelezen uit de
+tekst: van elk gaaf werkwoord in de kale vorm zijn de verleden en de
+tegenwoordige tijd opgezocht en is de klinker op de *ʿayn* uitgelezen.
+
+| Bāb | Patroon | Wortel | Māḍī | Muḍāriʿ | In de Quran |
+|---|---|---|---|---|---|
+| 1 | فَعَلَ / يَفْعُلُ | كفر | كَفَرَ | يَكْفُرُ | 289× |
+| 1 | فَعَلَ / يَفْعُلُ | خلق | خَلَقَ | يَخْلُقُ | 184× |
+| 1 | فَعَلَ / يَفْعُلُ | عبد | عَبَدَ | يَعْبُدُ | 122× |
+| 2 | فَعَلَ / يَفْعِلُ | ظلم | ظَلَمَ | يَظْلِمُ | 110× |
+| 2 | فَعَلَ / يَفْعِلُ | رجع | رَجَعَ | يَرْجِعُ | 79× |
+| 2 | فَعَلَ / يَفْعِلُ | غفر | غَفَرَ | يَغْفِرُ | 65× |
+| 3 | فَعَلَ / يَفْعَلُ | جعل | جَعَلَ | يَجْعَلَ | 340× |
+| 3 | فَعَلَ / يَفْعَلُ | فعل | فَعَلَ | يَفْعَلُ | 88× |
+| 3 | فَعَلَ / يَفْعَلُ | بعث | بَعَثَ | يَبْعَثُ | 52× |
+| 4 | فَعِلَ / يَفْعَلُ | علم | عَلِمَ | يَعْلَمُ | 382× |
+| 4 | فَعِلَ / يَفْعَلُ | عمل | عَمِلَ | يَعْمَلْ | 276× |
+| 4 | فَعِلَ / يَفْعَلُ | سمع | سَمِعَ | يَسْمَعُ | 78× |
+| 5 | فَعُلَ / يَفْعُلُ | كبر | كَبُرَ | يَكْبُرُ | 8× |
+| 6 | فَعِلَ / يَفْعِلُ | — | — | — | niet aangetroffen |
+
+Twee dingen vallen op.
+
+**Bāb 5 is zeldzaam** — één werkwoord, كَبُرَ, acht keer. Dat past bij zijn
+aard: hij drukt een blijvende eigenschap uit en is nooit overgankelijk, dus
+komt hij zelden voor in verhalend of gebiedend proza.
+
+**Bāb 6 komt bij gave wortels helemaal niet voor.** De leerboeken geven
+حَسِبَ / يَحْسِبُ als voorbeeld, maar de Quran leest يَحْسَبُ — met een
+*fatḥa*, en dat is bāb 4. Beide lezingen bestaan in de taal; de Quran kiest
+consequent de ene. Wie dit boek gebruikt om de Quran te lezen, kan bāb 6 dus
+gerust als laatste leren.
+
 ### Thulāthī mazīd — de uitgebreide vormen
 
 | Vorm | Patroon | Betekenis (hoofdlijn) | Voorbeeld |
@@ -294,6 +331,41 @@ edelmoedig") en is daarom nooit overgankelijk.
 De betekenissen zijn richtinggevend, niet absoluut: een woordenboek blijft
 nodig.
 
+#### Alle vormen, met en zonder Quran
+
+De taal vormt vijftien patronen. De Quran gebruikt er elf. Hieronder alle
+vijftien: waar de Quran de vorm kent staat een voorbeeld uit de tekst met
+vindplaats en aantal, en waar niet staat een voorbeeld uit de taal.
+
+| Vorm | Patroon | Betekenis (hoofdlijn) | Voorbeeld | Vers | Aantal |
+|---|---|---|---|---|---|
+| I | فَعَلَ | grondvorm | عَبَدَ | 1:5 | 12347× |
+| II | فَعَّلَ | intensief, causatief | نَزَّلَ | 2:23 | 1300× |
+| III | فَاعَلَ | gericht op een ander | يُخَٰدِعُ | 2:9 | 334× |
+| IV | أَفْعَلَ | causatief | أَنْعَمَ | 1:7 | 3487× |
+| V | تَفَعَّلَ | wederkerend van II | تَلَقَّىٰٓ | 2:37 | 414× |
+| VI | تَفَاعَلَ | wederkerend van III | تَشَٰبَهَ | 2:70 | 77× |
+| VII | ٱنْفَعَلَ | lijdend, vanzelf | ٱنفَجَرَتْ | 2:60 | 51× |
+| VIII | ٱفْتَعَلَ | wederkerend, voor zichzelf | ٱشْتَرَىٰ | 2:16 | 963× |
+| IX | ٱفْعَلَّ | kleuren en gebreken | ٱبْيَضَّتْ | 3:106 | 5× |
+| X | ٱسْتَفْعَلَ | vragen om, achten als | ٱسْتَعِينُ | 1:5 | 369× |
+| XI | ٱفْعَالَّ | versterkte kleur | ٱحْمَارَّ — diep rood worden | — | niet in de Quran |
+| XII | ٱفْعَوْعَلَ | intensief | ٱطْمَأَنَّ | 2:260 | 9× |
+| XIII | ٱفْعَوَّلَ | intensief | ٱجْلَوَّذَ — voortjagen | — | niet in de Quran |
+| XIV | ٱفْعَنْلَلَ | zeldzaam | ٱقْعَنْسَسَ — achteroverleunen | — | niet in de Quran |
+| XV | ٱفْعَنْلَى | zeldzaam | ٱسْلَنْقَىٰ — op de rug liggen | — | niet in de Quran |
+
+De vier ontbrekende vormen — XI, XIII, XIV en XV — zijn ook buiten de Quran
+zeldzaam; XIII tot XV komen in de hele klassieke literatuur maar bij een
+handvol wortels voor. Vorm XI (ٱفْعَالَّ) is de versterkte tegenhanger van IX:
+waar ٱحْمَرَّ "rood worden" is, is ٱحْمَارَّ "diep rood worden". De Quran heeft
+wel IX (ٱبْيَضَّتْ، ٱسْوَدَّتْ in 3:106) maar niet XI.
+
+Let op vorm XII in de tabel: het aangetroffen voorbeeld ٱطْمَأَنَّ komt van een
+vierletterige wortel (طمأن) en wordt in dit corpus als XII geannoteerd. De
+zuivere drieletterige XII (ٱخْشَوْشَنَ, "ruw worden") komt in de Quran niet
+voor.
+
 > **In de Quran**
 >
 > De verdeling over de vormen is scheef. Vorm IV is met 4.585 voorkomens
@@ -308,6 +380,25 @@ nodig.
 
 **Mujarrad**: فَعْلَلَ — دَحْرَجَ.
 **Mazīd**: تَفَعْلَلَ (تَدَحْرَجَ), ٱفْعَنْلَلَ, ٱفْعَلَلَّ (ٱطْمَأَنَّ).
+
+De vierletterige werkwoorden die de Quran gebruikt, met hun voorkomens:
+
+| Vorm | Patroon | Voorbeeld | Vers | Aantal |
+|---|---|---|---|---|
+| mujarrad | فَعْلَلَ | وَسْوَسَ (وسوس) | 7:20 | 4× |
+| mujarrad | فَعْلَلَ | زُلْزِلُ (زلزل) | 2:214 | 3× |
+| mujarrad | فَعْلَلَ | بُعْثِرَ (بعثر) | 82:4 | 2× |
+| mujarrad | فَعْلَلَ | كُبْكِبُ (كبكب) | 26:94 | 1× |
+| mujarrad | فَعْلَلَ | تَقْشَعِرُّ (قشعر) | 39:23 | 1× |
+| mujarrad | فَعْلَلَ | عَسْعَسَ (عسعس) | 81:17 | 1× |
+| mazīd | تَفَعْلَلَ | تَدَحْرَجَ — rollen | — | zie hieronder |
+| mazīd | ٱفْعَنْلَلَ | ٱحْرَنْجَمَ — samendrommen | — | zie hieronder |
+| mazīd | ٱفْعَلَلَّ | ٱطْمَأَنَّ — tot rust komen | — | zie hieronder |
+
+Merk op hoeveel van deze wortels een verdubbelde klankkern hebben —
+وَسْوَسَ، زَلْزَلَ، حَصْحَصَ، دَمْدَمَ، عَسْعَسَ. Dat herhalende karakter is
+typisch voor de vierletterige vorm en draagt vaak iets intensiefs of
+klanknabootsends.
 
 ## 9. Indeling 4: gaaf of zwak
 
