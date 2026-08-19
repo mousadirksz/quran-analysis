@@ -565,6 +565,10 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
+`docs/sarf-nl.md` is a textbook of Arabic morphology (sarf) in Dutch, in twenty
+chapters from the definition of a word to i'lal, with its examples and counts
+drawn from this database. An English version is planned.
+
 `SOURCES.md` records the provenance of every source: what it is, where it was
 obtained, which edition, under what licence, which script loads it into which
 table, and — separately — what this project derived rather than sourced. Read it
