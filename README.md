@@ -512,6 +512,33 @@ so 2,240 of its rows contain characters that are not Arabic script, where
 `verses.text_ar` has them repaired to the Quranic annotation signs they stand
 for.
 
+## Coverage — what the database knows about a given verse
+
+Each layer covers a different part of the mushaf, and the differences are
+large. Absence from a layer means this database has nothing to say, not that
+there is nothing to say. `python3 analyses.py dekking` prints this table from
+the database itself.
+
+| Layer | Verses | Coverage | What falls outside |
+|---|--:|--:|---|
+| `word_glosses` | 6,236 | 100% | nothing — every written word has a gloss |
+| `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
+| `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
+| `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
+| `riwaya_diff`, `kind='farsh'` | 489 | 8% | the verses where Hafs and Warsh read alike |
+
+Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
+the particles, the pronouns, and the names the corpus leaves unanalysed. There
+are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
+
+**Layers that do not exist here at all**, and would have to come from elsewhere:
+
+- a translation of the Quran — the glosses are word-by-word help, deliberately literal, and read poorly as running text
+- tafsir of any kind
+- a sense label per occurrence: the wujuh works cite example verses, they do not annotate exhaustively, and mining al-Tabari for the rest was measured at ~35% precision and rejected
+- the six other riwayat, and any qiraa outside those of Aasim and Naafi'
+- the counts that differ per riwaya — verse numbering, the ahzab — which are the Hafs values throughout
+
 ## Data quality
 
 `validate.py` runs 24 checks over the finished database and is the last step of
@@ -684,6 +711,11 @@ far below the standard the rest of this layer is held to, so no tafsir is used.
 
 ## Known limitations
 
+Most of what follows concerns the `wujuh` layer, because it is the layer with
+the most ways to be misread. For what each layer does and does not cover, see
+**Coverage** above; for what a source states versus what this project derived,
+see `SOURCES.md`.
+
 **The wujuh layer only labels the verses the authors themselves quote.** It is
 evidence for a sense, not a full sense-annotation of the Quran. The 450 roots
 covered occur 38,785 times in the corpus; only 6,530 of those occurrences (17%)
@@ -729,3 +761,27 @@ and the parser leans on fallbacks there; al-Askari lists his wujuh in running
 prose in about a dozen entries, where nothing is parsed rather than guessed.
 `kalima_type` and `wazifa` are derived from the corpus' own tagging and inherit
 its analytical choices, which are one defensible reading among several.
+
+**Al-Nahhas is one grammarian, and an early one.** The `irab` table holds his
+argument, not a consensus: where he weighs the Basrans against the Kufans, both
+positions are in the passage and neither is marked as settled. He is also
+selective by design — a verse absent from the table is one he saw no question
+in, which is itself a judgment.
+
+**The treebank is an analysis.** `syntax` gives one dependency parse per verse,
+including 11,157 elements the grammarians read into the text but that are not
+written. Those are defensible readings, not observations; the *khabar mahdhuf*
+is posited as an empty position without reconstructing which word was left out,
+which is the honest choice but means the table cannot answer what that word
+would be.
+
+**Two riwayat is not the qiraa'at.** `riwaya_diff` compares Hafs and Warsh, one
+transmission each from two of the seven readers. It says nothing about Qaaloon
+or Shu'ba, and nothing about the five readers whose text is not here. Roughly 5%
+of the `farsh` rows are estimated to be spelling rather than reading;
+`docs/hafs-warsh.md` names the residues that are known.
+
+**The `verses.text_ar` column is a reconstruction.** It is the corpus' segment
+forms joined back together, not an independently sourced mushaf text. The only
+mushaf texts in this repository are the two riwaya CSVs under `sources/`, and
+they are not what `verses` is built from.

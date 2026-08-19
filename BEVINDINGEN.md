@@ -356,6 +356,25 @@ op bronnen te baseren is.
 
 ## 9. Wat er bewust niet in zit
 
+Eerst het overzicht: elke laag dekt een ander deel van de mushaf, en die
+verschillen zijn groot. Dat een vers in een laag ontbreekt betekent dat de
+database er niets over zegt — niet dat er niets over te zeggen valt.
+`analyses.py dekking` drukt deze tabel af uit de database zelf.
+
+| laag | verzen | dekking | wat erbuiten valt |
+|---|--:|--:|---|
+| `word_glosses` | 6.236 | 100% | niets: elk geschreven woord is geglosseerd |
+| `syntax` (EQTB) | 6.236 | 100% | niets, maar het is één ontleding, geen feit |
+| `irab` (al-Nahhas) | 5.108 | 82% | de 1.128 verzen waar hij geen vraag ziet |
+| `wujuh` | 3.635 | 58% | verzen die geen van de vier werken citeert — en binnen een gedekt vers alleen het geciteerde woord |
+| `riwaya_diff`, farsh | 489 | 8% | verzen waar Hafs en Warsh gelijk lezen |
+
+Binnen het corpus zelf dragen 27.947 van de 77.915 stems geen root (36%): de
+partikels, de voornaamwoorden en de namen die het corpus onontleed laat. Van de
+1.642 unieke roots heeft 450 (27%) een ingang in een wujuh-werk.
+
+Waar helemaal geen laag voor is:
+
 - **Sense-labels per voorkomen.** De klassieke werken citeren voorbeeldverzen,
   geen uitputtende dekking: 17% van de voorkomens van polyseme roots is
   gelabeld. Tafsir-mining op al-Tabari is geprototypeerd en **gemeten op ~35%
@@ -369,6 +388,13 @@ op bronnen te baseren is.
   volledige wujuh-tekst.
 - **Betekenisverschillen binnen één woordsoort** die de klassieke werken niet
   behandelen. De database kent alleen wat een bron zegt.
+- **Een vertaling van de Qoeraan.** De Engelse glossen zijn woord-voor-woord
+  hulp, bewust letterlijk; als lopende tekst lezen ze slecht en als vertaling
+  moeten ze niet gepresenteerd worden.
+- **Tafsir**, in welke vorm dan ook.
+- **De zes andere riwaayaat**, en elke qiraa-a buiten die van Aasim en Naafi3.
+  Ook de tellingen die per riwaaya verschillen — de versnummering, de ahzaab —
+  staan er alleen in de Hafs-vorm in.
 
 ## 10. Syntaxis en wat er niet staat (`syntax`)
 

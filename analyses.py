@@ -448,6 +448,61 @@ def riwayat(c):
         print("    %-8s %-18s %s" % ("%d:%d" % (s, a), fa, fb or "(ontbreekt)"))
 
 
+def dekking(c):
+    head("Dekking: wat weet de database wel en niet")
+    verses = one(c, "SELECT COUNT(*) FROM verses")
+    print("  Elke laag dekt een ander deel van de mushaf. Wat hier niet staat,")
+    print("  weet de database niet -- het is geen aanwijzing dat er niets is.\n")
+    print("  laag                    verzen    dekking   wat er buiten valt")
+    rows = [
+        ("word_glosses", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM word_glosses",
+         "niets: elk geschreven woord is geglosseerd"),
+        ("syntax (EQTB)", "SELECT COUNT(DISTINCT c.surah || ':' || c.ayah) FROM syntax s"
+                          " JOIN corpus c ON c.id = s.corpus_id",
+         "niets, maar het is een analyse, geen feit"),
+        ("irab (al-Nahhas)", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM irab",
+         "verzen waar hij geen vraag ziet"),
+        ("wujuh", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM wujuh",
+         "verzen die geen van de vier werken citeert"),
+        ("riwaya_diff (farsh)", "SELECT COUNT(DISTINCT surah || ':' || ayah_a)"
+                                " FROM riwaya_diff WHERE kind = 'farsh'",
+         "verzen waar Hafs en Warsh gelijk lezen"),
+    ]
+    for label, sql, gap in rows:
+        try:
+            n = one(c, sql)
+        except Exception:
+            print("  %-22s %8s" % (label, "n.v.t."))
+            continue
+        print("  %-22s %6s   %5.1f%%    %s" % (label, format(n, ","), n / verses * 100, gap))
+
+    print("\n  Binnen het corpus zelf:")
+    stems = one(c, "SELECT COUNT(*) FROM corpus WHERE segment_type = 'STEM'")
+    noroot = one(c, "SELECT COUNT(*) FROM corpus WHERE segment_type = 'STEM' AND root IS NULL")
+    print("    %6s van %s stems zonder root (%.1f%%) -- partikels, voornaamwoorden"
+          % (format(noroot, ","), format(stems, ","), noroot / stems * 100))
+    print("       en de namen die het corpus onontleedbaar laat")
+    print("    %6s unieke roots, %s unieke lemma's"
+          % (format(one(c, "SELECT COUNT(DISTINCT root_ar) FROM corpus"
+                          " WHERE root_ar IS NOT NULL"), ","),
+             format(one(c, "SELECT COUNT(DISTINCT lemma_ar) FROM corpus"
+                          " WHERE lemma_ar IS NOT NULL"), ",")))
+    wr = one(c, "SELECT COUNT(DISTINCT root_ar) FROM wujuh WHERE root_ar IS NOT NULL")
+    print("    %6s van die roots heeft een wujuh-ingang (%.1f%%)"
+          % (format(wr, ","), wr / one(c, "SELECT COUNT(DISTINCT root_ar) FROM corpus"
+                                          " WHERE root_ar IS NOT NULL") * 100))
+
+    print("\n  Waar helemaal geen laag voor is:")
+    for line in ("een vertaling van de Qoeraan (de glossen zijn woord-voor-woord",
+                 "  hulp, geen vertaling)",
+                 "tafsir",
+                 "een sense-label per voorkomen: de wujuh-werken citeren",
+                 "  voorbeeldverzen, ze dekken niet af",
+                 "de zes andere riwaayaat, en de qiraa-aat buiten Aasim en Naafi3",
+                 "de aantallen die per riwaaya verschillen (verzen, ahzaab)"):
+        print("    %s%s" % ("" if line.startswith("  ") else "- ", line))
+
+
 ANALYSES = {
     "basics": basics,
     "kalima": kalima,
@@ -464,6 +519,7 @@ ANALYSES = {
     "wujuh-juz-amma": wujuh_juz_amma,
     "referents": referents,
     "riwayat": riwayat,
+    "dekking": dekking,
 }
 
 
