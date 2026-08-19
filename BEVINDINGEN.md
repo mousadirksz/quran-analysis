@@ -38,10 +38,12 @@ segment een zelfstandig grammaticaal woord is.
 muqatta'at-reeksen, die in geen van de drie klassen vallen). De 77.429 zijn
 rasm-eenheden, geen kalimat.
 
-Kanttekening: de *damir mustatir* telt niet mee. In يَكْتُبُ zit volgens de
-grammatici een verborgen هُوَ, maar die is *muqaddar*, niet geschreven — de
-corpus annoteert alleen wat er staat. Zichtbare onderwerpssuffixen
-(كَتَبُوا۟ = fi'l + waw al-jama'a) tellen wel als aparte kalimat.
+Er is nog een derde antwoord. De *damir mustatir* — het هُوَ dat volgens de
+grammatici in يَكْتُبُ verborgen zit — is *muqaddar*: verondersteld, niet
+geschreven. De corpus annoteert alleen wat er staat, maar de treebank (deel 10)
+poneert die elementen wel. Tel je ze mee zoals de grammatici doen, dan komt de
+Quran op **139.376 kalimat**. Zichtbare onderwerpssuffixen
+(كَتَبُوا۟ = fi'l + waw al-jama'a) tellen in alle drie de tellingen mee.
 
 ### Verdeling over de drie klassen
 
@@ -367,3 +369,57 @@ op bronnen te baseren is.
   volledige wujuh-tekst.
 - **Betekenisverschillen binnen één woordsoort** die de klassieke werken niet
   behandelen. De database kent alleen wat een bron zegt.
+
+## 10. Syntaxis en wat er niet staat (`syntax`)
+
+De laag die zegt welk woord *fa'il* is van welk werkwoord, welk *maf'ul*, welk
+*khabar* — de analyse die de klassieke *i'rab*-werken in proza uitvechten, hier
+als bevraagbare structuur. 139.376 tokens over 11.693 syntactische zinnen, elk
+met zijn relatielabel en een verwijzing naar zijn hoofd.
+
+| Relatie | Arabisch | Voorkomens |
+|---|---|---|
+| link | متعلق | 14.093 |
+| root | — | 13.646 |
+| gen | مجرور | 12.961 |
+| Obj | مفعول به | 10.627 |
+| Subj | فاعل | 10.520 |
+| Poss | مضاف إليه | 9.805 |
+| conj | معطوف | 5.217 |
+
+### De weggelaten elementen
+
+Het interessantste zit in wat er *niet* staat: 11.157 elementen die de
+grammatici in de tekst lezen maar die niet geschreven zijn. De treebank maakt
+daarbij een principieel onderscheid.
+
+**Benoemd waar het eenduidig is** (6.673). De *damir mustatir* wordt met vorm en
+al ingevuld: (هُوَ) 3.878x, (أَنْتَ) 1.414x, (نحْنُ) 582x, (هِيَ) 371x,
+(أنا) 355x. Dat kan ook — يَكْتُبُ kan morfologisch niets anders verbergen dan
+هُوَ.
+
+**Alleen als positie waar de reconstructie een oordeel vergt** (4.484), met een
+anonieme plaatshouder:
+
+| Rol | Aantal |
+|---|---|
+| خبر | 1.417 |
+| صفة | 756 |
+| حال | 684 |
+| root (weggelaten hoofdpredicaat) | 437 |
+| صلة | 307 |
+| مفعول به | 193 |
+| خبر إنّ | 152 |
+| مفعول مطلق | 93 |
+
+De *khabar mahdhuf* is daarmee wél geponeerd maar niet gereconstrueerd. Bij
+1:2 ٱلْحَمْدُ لِلَّهِ staat ٱلْحَمْد als root, dan een lege خبر-positie, en de
+لِ hangt daaraan als **متعلق** — precies de relatie waar het grammaticaal om
+gaat. Welk woord is weggelaten laat de treebank open, en terecht: de Basriers
+neigen naar een *ism fa'il* (كائن، مستقر), de Koefiers naar een werkwoord
+(استقر). Een zoekopdracht op die woorden levert nul geponeerde tokens op — het
+is consequent doorgevoerd.
+
+Dat maakt deze laag complementair aan al-Nahhas' prozacommentaar uit deel 4:
+de treebank geeft de structuur van elk vers, al-Nahhas het argument bij de
+verzen waar iets te betwisten valt.

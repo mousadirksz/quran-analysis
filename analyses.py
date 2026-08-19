@@ -297,6 +297,44 @@ def surah_coverage(c, limit=10):
 
 # ---------------------------------------------------------------- wujuh layer
 
+def syntax(c):
+    head("Syntaxis: relaties en weggelaten elementen")
+    written = one(c, "SELECT COUNT(*) FROM syntax WHERE is_implicit = 0")
+    implicit = one(c, "SELECT COUNT(*) FROM syntax WHERE is_implicit = 1")
+    named = one(c, "SELECT COUNT(*) FROM syntax WHERE is_implicit = 1 AND token_ar != '(*)'")
+    print("  geschreven tokens   %8s" % format(written, ","))
+    print("  geponeerd, benoemd  %8s" % format(named, ","))
+    print("  geponeerd, positie  %8s" % format(implicit - named, ","))
+    print("  totaal              %8s" % format(written + implicit, ","))
+    print("\n  De drie verdedigbare antwoorden op 'hoeveel woorden':")
+    print("    %8s geschreven woorden (rasm-eenheden)" % format(one(c, "SELECT COUNT(*) FROM words"), ","))
+    print("    %8s kalimat zoals geschreven" % format(
+        one(c, "SELECT COUNT(*) FROM corpus WHERE kalima_type != 'muqattaat'"), ","))
+    print("    %8s kalimat inclusief de muqaddar-elementen" % format(written + implicit, ","))
+
+    print("\n  meest voorkomende relaties (geschreven tokens):")
+    for r, ar, n in c.execute("SELECT rel_label, rel_label_ar, COUNT(*) n FROM syntax"
+                              " WHERE is_implicit = 0 AND rel_label IS NOT NULL"
+                              " GROUP BY rel_label ORDER BY n DESC LIMIT 8"):
+        print("    %-10s %-14s %6s" % (r, ar or "", format(n, ",")))
+
+    print("\n  benoemd geponeerd (damir mustatir en verwanten):")
+    for f, ar, n in c.execute("SELECT token_ar, rel_label_ar, COUNT(*) n FROM syntax"
+                              " WHERE is_implicit = 1 AND token_ar != '(*)'"
+                              " GROUP BY token_ar ORDER BY n DESC LIMIT 6"):
+        print("    %-12s %-14s %6s" % (f, ar or "", format(n, ",")))
+
+    print("\n  positie geponeerd zonder het woord in te vullen:")
+    for r, ar, n in c.execute("SELECT rel_label, rel_label_ar, COUNT(*) n FROM syntax"
+                              " WHERE is_implicit = 1 AND token_ar = '(*)'"
+                              " GROUP BY rel_label ORDER BY n DESC LIMIT 8"):
+        print("    %-10s %-14s %6s" % (r, ar or "", format(n, ",")))
+    print("\n  De khabar mahdhuf is geponeerd maar niet gereconstrueerd: geen enkel")
+    print("  geponeerd token is kain, mustaqarr of istaqarra, waar de grammatici")
+    print("  onderling over verschillen. Voorbeeld 1:2 al-hamdu li-llah: al-hamd is")
+    print("  root, (*) is khabar, en de li- hangt daaraan als mutacalliq.")
+
+
 def wujuh(c):
     head("Wujuh-laag")
     for w, n, e, r in c.execute("SELECT work, COUNT(*), COUNT(DISTINCT headword),"
@@ -369,6 +407,7 @@ ANALYSES = {
     "juz": juz,
     "juz-amma": juz_amma,
     "surah-coverage": surah_coverage,
+    "syntax": syntax,
     "wujuh": wujuh,
     "wujuh-juz-amma": wujuh_juz_amma,
     "referents": referents,
