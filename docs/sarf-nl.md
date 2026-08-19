@@ -477,6 +477,257 @@ en achteraan als een *nāqiṣ*. Tegenwoordige tijd يَقِي, gebiedende wijs 
 *Maqrūn* (2e en 3e zwak), zoals طَوَى: gedraagt zich vooral als een *nāqiṣ*;
 de middenletter blijft meestal gespaard.
 
+
+### 10.3 De paradigma's uit de Quran zelf
+
+Hieronder voor elk van de acht wortelsoorten de vormen die de Quran werkelijk
+attesteert, met vindplaats. De tabellen zijn niet bedacht maar gegenereerd:
+`python3 sarf_examples.py --markdown` haalt ze uit de database, en wie een
+vorm natrekt vindt hem op de genoemde plaats.
+
+Twee dingen om te weten bij het lezen. Er staat telkens de **volledige
+geschreven vorm**, dus inclusief een eventueel voorvoegsel — waar de Quran een
+vorm alleen mét وَ of فَ kent, staat die zo in de tabel; de generator geeft de
+voorkeur aan een voorvoegselloze vindplaats waar die bestaat. En: **geen enkele
+wortel vult het hele paradigma.** Dat is geen tekortkoming van de tabel maar
+een eigenschap van de tekst — welke cellen gevuld zijn, zegt iets over hoe de
+Quran spreekt. كَانَ haalt 25 cellen, مَسَّ maar 6.
+
+#### Sālim — gaaf
+
+**علم** — عَلِمَ · 425× in de Quran, 16 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | عَلِمَ | 2:60 | يَعْلَمُ | 2:77 | — |  |
+| zij (v. enk.) | عَلِمَتِ | 37:158 | تَعْلَمُ | 4:113 | — |  |
+| zij (m. mv.) | عَلِمُوا۟ | 2:102 | يَعْلَمُونَ | 2:13 | — |  |
+| jij (m.) | عَلِمْتَهُۥ | 5:116 | تَعْلَمْ | 2:106 | وَٱعْلَمْ | 2:260 |
+| jullie (m.) | عَلِمْتُمُ | 2:65 | تَعْلَمُونَ | 2:22 | ٱعْلَمُوٓا۟ | 5:98 |
+| ik | عَلِمْتُ | 28:38 | أَعْلَمُ | 2:30 | — |  |
+| wij | عَلِمْنَا | 12:51 | نَعْلَمُ | 3:167 | — |  |
+
+**جعل** — جَعَلَ · 340× in de Quran, 14 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | جَعَلَ | 2:22 | يَجْعَلَ | 3:176 | — |  |
+| zij (v. enk.) | جَعَلَتْهُ | 51:42 | — |  | — |  |
+| zij (m. mv.) | جَعَلُوا۟ | 13:16 | يَجْعَلُونَ | 2:19 | — |  |
+| jij (m.) | — |  | تَجْعَلْنَا | 7:47 | ٱجْعَلْ | 2:126 |
+| jullie (m.) | جَعَلْتُمُ | 16:91 | تَجْعَلُوا۟ | 2:22 | ٱجْعَلُوا۟ | 12:62 |
+| ik | وَجَعَلْتُ | 74:12 | أَجْعَلْ | 18:95 | — |  |
+| wij | جَعَلْنَا | 2:125 | نَّجْعَلَ | 18:48 | — |  |
+
+#### Mahmūz — met hamza
+
+**امن** — أَمِنَ · 558× in de Quran, 8 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | أَمِنَ | 2:283 | يَأْمَنُ | 7:99 | — |  |
+| zij (m. mv.) | أَفَأَمِنُوا۟ | 7:99 | يَأْمَنُوكُمْ | 4:91 | — |  |
+| jij (m.) | — |  | تَأْمَنْهُ | 3:75 | — |  |
+| jullie (m.) | أَمِنتُمْ | 2:196 | — |  | — |  |
+| ik | أَمِنتُكُمْ | 12:64 | ءَامَنُكُمْ | 12:64 | — |  |
+
+**اخذ** — أَخَذَ · 260× in de Quran, 14 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | أَخَذَ | 3:81 | يَأْخُذَهُمْ | 16:46 | — |  |
+| zij (v. enk.) | أَخَذَتْهُ | 2:206 | تَأْخُذُهُۥ | 2:255 | — |  |
+| zij (m. mv.) | — |  | يَأْخُذُوا۟ | 7:145 | — |  |
+| zij (v. mv.) | وَأَخَذْنَ | 4:21 | — |  | — |  |
+| jij (m.) | — |  | تَأْخُذْ | 20:94 | خُذِ | 7:199 |
+| jullie (m.) | أَخَذْتُمْ | 8:68 | تَأْخُذُوا۟ | 2:229 | خُذُوا۟ | 2:63 |
+| ik | أَخَذْتُهُمْ | 13:32 | — |  | — |  |
+| wij | أَخَذْنَا | 2:63 | نَّأْخُذَ | 12:79 | — |  |
+
+#### Muḍaʿʿaf — verdubbeld
+
+**ضلل** — ضَلَّ · 117× in de Quran, 9 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | ضَلَّ | 2:108 | يَضِلُّ | 6:117 | — |  |
+| zij (v. enk.) | — |  | تَضِلَّ | 2:282 | — |  |
+| zij (m. mv.) | ضَلُّوا۟ | 4:167 | يَضِلُّونَ | 38:26 | — |  |
+| jullie (m.) | — |  | تَضِلُّوا۟ | 4:44 | — |  |
+| ik | ضَلَلْتُ | 6:56 | أَضِلُّ | 34:50 | — |  |
+| wij | ضَلَلْنَا | 32:10 | — |  | — |  |
+
+**حيي** — أَحْيَا · 71× in de Quran, 7 cellen geattesteerd · vorm IV
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | أَحْيَٰهُمْ | 2:243 | يُحْيِيكُمْ | 2:28 | — |  |
+| jij (m.) | وَأَحْيَيْتَنَا | 40:11 | تُحْىِ | 2:260 | — |  |
+| ik | — |  | أُحْىِۦ | 2:258 | — |  |
+| wij | أَحْيَيْنَٰهَا | 36:33 | نُحْىِۦ | 15:23 | — |  |
+
+#### Mithāl — eerste letter zwak
+
+**وجد** — وَجَدَ · 106× in de Quran, 13 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | وَجَدَ | 3:37 | يَجِدْ | 2:196 | — |  |
+| zij (v. enk.) | — |  | تَجِدُ | 3:30 | — |  |
+| zij tweeën (m.) | فَوَجَدَا | 18:65 | — |  | — |  |
+| zij (m. mv.) | وَجَدُوا۟ | 12:65 | يَجِدُوا۟ | 4:65 | — |  |
+| jij (m.) | — |  | تَجِدَ | 4:52 | — |  |
+| jullie (m.) | وَجَدتُّمُوهُمْ | 4:89 | تَجِدُوهُ | 2:110 | — |  |
+| ik | وَجَدتُّ | 27:23 | أَجِدُ | 6:145 | — |  |
+| wij | وَجَدْنَا | 5:104 | نَجِدْ | 20:115 | — |  |
+
+**وعد** — وَعَدَ · 76× in de Quran, 10 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | وَعَدَ | 4:95 | يَعِدُكُمُ | 2:268 | — |  |
+| zij tweeën (v.) | — |  | أَتَعِدَانِنِىٓ | 46:17 | — |  |
+| zij (m. mv.) | وَعَدُوهُ | 9:77 | — |  | — |  |
+| jij (m.) | وَعَدتَّنَا | 3:194 | تَعِدُنَآ | 7:70 | وَعِدْهُمْ | 17:64 |
+| ik | وَوَعَدتُّكُمْ | 14:22 | — |  | — |  |
+| wij | وَعَدْنَٰهُ | 28:61 | نَعِدُهُمْ | 10:46 | — |  |
+
+#### Ajwaf — tweede letter zwak
+
+**قول** — قَالَ · 1620× in de Quran, 23 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | قَالَ | 2:30 | يَقُولُ | 2:8 | — |  |
+| zij (v. enk.) | قَالَتِ | 3:35 | تَقُولَ | 39:56 | — |  |
+| zij tweeën (m.) | قَالَا | 7:23 | يَقُولَآ | 2:102 | — |  |
+| zij tweeën (v.) | قَالَتَا | 28:23 | — |  | — |  |
+| zij (m. mv.) | قَالُوٓا۟ | 2:11 | يَقُولُونَ | 2:79 | — |  |
+| zij (v. mv.) | قُلْنَ | 12:51 | — |  | — |  |
+| jij (m.) | قُلْتَ | 5:116 | تَقُولُ | 3:124 | قُلْ | 2:80 |
+| jij (v.) | — |  | — |  | فَقُولِىٓ | 19:26 |
+| jullie tweeën | — |  | — |  | فَقُولَا | 20:44 |
+| jullie (m.) | قُلْتُمْ | 2:55 | تَقُولُونَ | 2:80 | قُولُوٓا۟ | 2:136 |
+| jullie (v.) | — |  | — |  | وَقُلْنَ | 33:32 |
+| ik | قُلْتُهُۥ | 5:116 | أَقُل | 2:33 | — |  |
+| wij | قُلْنَا | 2:34 | نَقُولُ | 6:22 | — |  |
+
+**كون** — كَانَ · 1358× in de Quran, 25 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | كَانَ | 2:75 | يَكُونَ | 2:150 | — |  |
+| zij (v. enk.) | كَانَتْ | 2:94 | تَكُونَ | 2:193 | — |  |
+| zij tweeën (m.) | كَانَا | 2:36 | يَكُونَا | 2:282 | — |  |
+| zij tweeën (v.) | كَانَتَا | 4:176 | — |  | — |  |
+| zij (m. mv.) | كَانُوا۟ | 2:10 | يَكُونُوا۟ | 9:18 | — |  |
+| zij (v. mv.) | كُنَّ | 2:228 | يَكُنَّ | 49:11 | — |  |
+| jij (m.) | كُنتَ | 2:143 | تَكُونَنَّ | 2:147 | كُن | 2:117 |
+| jij (v.) | كُنتِ | 12:29 | — |  | كُونِى | 21:69 |
+| jullie tweeën | — |  | تَكُونَا | 7:20 | — |  |
+| jullie (m.) | كُنتُمْ | 2:23 | تَكُونُوٓا۟ | 2:41 | كُونُوا۟ | 2:65 |
+| jullie (v.) | كُنتُنَّ | 33:28 | — |  | — |  |
+| ik | كُنتُ | 4:73 | أَكُونَ | 2:67 | — |  |
+| wij | كُنَّا | 4:97 | نَكُن | 4:141 | — |  |
+
+#### Nāqiṣ — derde letter zwak
+
+**اتي** — أَتَى · 535× in de Quran, 19 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | أَتَىٰهُمْ | 6:34 | يَأْتِيَنَّكُم | 2:38 | — |  |
+| zij (v. enk.) | أَتَتْكُمُ | 6:40 | تَأْتِينَآ | 2:118 | — |  |
+| zij tweeën (m.) | أَتَيَآ | 18:77 | يَأْتِيَٰنِهَا | 4:16 | — |  |
+| zij (m. mv.) | أَتَوا۟ | 3:188 | يَأْتُوكُمْ | 2:85 | — |  |
+| zij (v. mv.) | أَتَيْنَ | 4:25 | يَأْتِينَكَ | 2:260 | — |  |
+| jij (m.) | أَتَيْتَ | 2:145 | تَأْتِيَنَا | 7:129 | ٱئْتِنَا | 6:71 |
+| jullie tweeën (m.) | — |  | — |  | ٱئْتِيَا | 41:11 |
+| jullie (m.) | — |  | تَأْتُوا۟ | 2:189 | ٱئْتُونِى | 10:79 |
+| ik | — |  | ءَاتِيكُم | 20:10 | — |  |
+| wij | أَتَيْنَا | 21:47 | نَأْتِ | 2:106 | — |  |
+
+**راي** — رَءَا · 315× in de Quran, 15 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | أَرَىٰكُم | 3:152 | يَرَى | 2:165 | — |  |
+| zij (v. enk.) | رَأَتْهُم | 25:12 | تَرَ | 25:45 | — |  |
+| zij (m. mv.) | رَأَوُا۟ | 10:54 | يَرَوْنَ | 2:165 | — |  |
+| zij (v. mv.) | رَأَيْنَهُۥٓ | 12:31 | — |  | — |  |
+| jij (m.) | رَأَيْتَ | 4:61 | تَرَ | 2:243 | — |  |
+| jij (v.) | — |  | تَرَيِنَّ | 19:26 | — |  |
+| jullie (m.) | رَأَيْتُمُوهُ | 3:143 | تَرَوْنَهُمْ | 7:27 | — |  |
+| ik | رَأَيْتُ | 12:4 | أَرَىٰكَ | 4:105 | — |  |
+| wij | — |  | نَرَى | 2:55 | — |  |
+
+#### Lafīf mafrūq — eerste en derde zwak
+
+**وقي** — وَقَىٰ · 182× in de Quran, 5 cellen geattesteerd
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | فَوَقَىٰهُ | 40:45 | — |  | — |  |
+| zij (v. enk.) | — |  | تَقِيكُمُ | 16:81 | — |  |
+| jij (m.) | — |  | تَقِ | 40:9 | وَقِنَا | 2:201 |
+| jullie (m.) | — |  | — |  | قُوٓا۟ | 66:6 |
+
+**ولي** — تَوَلَّىٰ · 109× in de Quran, 7 cellen geattesteerd · vorm V
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | تَوَلَّىٰ | 2:205 | يَتَوَلَّىٰ | 3:23 | — |  |
+| zij (m. mv.) | تَوَلَّوْا۟ | 2:137 | يَتَوَلَّوْنَ | 5:43 | — |  |
+| jij (m.) | — |  | — |  | تَوَلَّ | 27:28 |
+| jullie (m.) | تَوَلَّيْتُم | 2:64 | تَوَلَّوْا۟ | 8:20 | — |  |
+
+#### Lafīf maqrūn — tweede en derde zwak
+
+**سوي** — ٱسْتَوَىٰٓ · 50× in de Quran, 9 cellen geattesteerd · vorm VIII
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | ٱسْتَوَىٰٓ | 2:29 | يَسْتَوِى | 4:95 | — |  |
+| zij (v. enk.) | وَٱسْتَوَتْ | 11:44 | تَسْتَوِى | 13:16 | — |  |
+| zij tweeën (m.) | — |  | يَسْتَوِيَانِ | 11:24 | — |  |
+| zij (m. mv.) | — |  | يَسْتَوُۥنَ | 9:19 | — |  |
+| jij (m.) | ٱسْتَوَيْتَ | 23:28 | — |  | — |  |
+| jullie (m.) | ٱسْتَوَيْتُمْ | 43:13 | لِتَسْتَوُۥا۟ | 43:13 | — |  |
+
+**اوي** — ءَاوَىٰٓ · 14× in de Quran, 5 cellen geattesteerd · vorm IV
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | ءَاوَىٰٓ | 12:69 | — |  | — |  |
+| zij (v. enk.) | — |  | تُـْٔوِيهِ | 70:13 | — |  |
+| zij (m. mv.) | ءَاوَوا۟ | 8:72 | — |  | — |  |
+| jij (m.) | — |  | وَتُـْٔوِىٓ | 33:51 | — |  |
+| wij | وَءَاوَيْنَٰهُمَآ | 23:50 | — |  | — |  |
+
+Bij de laatste twee soorten valt op dat de Quran de kale vorm nauwelijks
+gebruikt: van وقي staan er maar vijf cellen in vorm I, van سوي één. Waar dat
+zo is, toont de generator het paradigma van de vorm waarin de wortel wél
+veelvuldig voorkomt — één vorm tegelijk, zodat de tabel één paradigma blijft.
+De zwakke-letterverschijnselen zijn daar even goed zichtbaar: تَوَلَّىٰ toont
+dezelfde ى-behandeling als een gewone *nāqiṣ*, en ٱسْتَوَيْتُمْ dezelfde
+inkorting.
+
+Let bij het doornemen op deze dingen:
+
+- **Sālim** (علم، جعل): niets bijzonders — de klinker van de derde
+  wortelletter wordt een *sukūn* zodra de uitgang met een medeklinker begint.
+- **Mahmūz** (امن، اخذ): let op أَخَذَ → خُذْ, waar de hamza in de
+  gebiedende wijs verdwijnt.
+- **Muḍaʿʿaf** (ضلل، مسس): verdubbeld waar het kan, gescheiden waar het moet.
+- **Mithāl** (وجد، وعد): de و verdwijnt in de tegenwoordige tijd —
+  وَعَدَ maar يَعِدُ.
+- **Ajwaf** (قول، كون): قَالَ maar قُلْتُ, en de *ḍamma* verraadt de و;
+  vergelijk بِعْتُ met zijn *kasra* van de ي.
+- **Nāqiṣ** (اتي، راي): de eindletter valt weg onder *jazm* en bij de
+  meervoudsuitgang.
+- **Lafīf mafrūq** (وقي): de gebiedende wijs قِ is één letter — het kortste
+  woord van het Arabisch; in de Quran staat het meervoud قُوٓا۟ (66:6).
+
 ---
 
 # Deel III — Het naamwoord

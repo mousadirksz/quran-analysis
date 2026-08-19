@@ -565,6 +565,8 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
+| `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus |
+
 `docs/sarf-nl.md` is a textbook of Arabic morphology (sarf) in Dutch, in twenty
 chapters from the definition of a word to i'lal, with its examples and counts
 drawn from this database. An English version is planned.
