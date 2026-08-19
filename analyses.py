@@ -297,6 +297,44 @@ def surah_coverage(c, limit=10):
 
 # ---------------------------------------------------------------- wujuh layer
 
+def syntax(c):
+    head("Syntaxis: relaties en weggelaten elementen")
+    written = one(c, "SELECT COUNT(*) FROM syntax WHERE is_implicit = 0")
+    implicit = one(c, "SELECT COUNT(*) FROM syntax WHERE is_implicit = 1")
+    named = one(c, "SELECT COUNT(*) FROM syntax WHERE is_implicit = 1 AND token_ar != '(*)'")
+    print("  geschreven tokens   %8s" % format(written, ","))
+    print("  geponeerd, benoemd  %8s" % format(named, ","))
+    print("  geponeerd, positie  %8s" % format(implicit - named, ","))
+    print("  totaal              %8s" % format(written + implicit, ","))
+    print("\n  De drie verdedigbare antwoorden op 'hoeveel woorden':")
+    print("    %8s geschreven woorden (rasm-eenheden)" % format(one(c, "SELECT COUNT(*) FROM words"), ","))
+    print("    %8s kalimat zoals geschreven" % format(
+        one(c, "SELECT COUNT(*) FROM corpus WHERE kalima_type != 'muqattaat'"), ","))
+    print("    %8s kalimat inclusief de muqaddar-elementen" % format(written + implicit, ","))
+
+    print("\n  meest voorkomende relaties (geschreven tokens):")
+    for r, ar, n in c.execute("SELECT rel_label, rel_label_ar, COUNT(*) n FROM syntax"
+                              " WHERE is_implicit = 0 AND rel_label IS NOT NULL"
+                              " GROUP BY rel_label ORDER BY n DESC LIMIT 8"):
+        print("    %-10s %-14s %6s" % (r, ar or "", format(n, ",")))
+
+    print("\n  benoemd geponeerd (damir mustatir en verwanten):")
+    for f, ar, n in c.execute("SELECT token_ar, rel_label_ar, COUNT(*) n FROM syntax"
+                              " WHERE is_implicit = 1 AND token_ar != '(*)'"
+                              " GROUP BY token_ar ORDER BY n DESC LIMIT 6"):
+        print("    %-12s %-14s %6s" % (f, ar or "", format(n, ",")))
+
+    print("\n  positie geponeerd zonder het woord in te vullen:")
+    for r, ar, n in c.execute("SELECT rel_label, rel_label_ar, COUNT(*) n FROM syntax"
+                              " WHERE is_implicit = 1 AND token_ar = '(*)'"
+                              " GROUP BY rel_label ORDER BY n DESC LIMIT 8"):
+        print("    %-10s %-14s %6s" % (r, ar or "", format(n, ",")))
+    print("\n  De khabar mahdhuf is geponeerd maar niet gereconstrueerd: geen enkel")
+    print("  geponeerd token is kain, mustaqarr of istaqarra, waar de grammatici")
+    print("  onderling over verschillen. Voorbeeld 1:2 al-hamdu li-llah: al-hamd is")
+    print("  root, (*) is khabar, en de li- hangt daaraan als mutacalliq.")
+
+
 def wujuh(c):
     head("Wujuh-laag")
     for w, n, e, r in c.execute("SELECT work, COUNT(*), COUNT(DISTINCT headword),"
@@ -358,6 +396,113 @@ def referents(c, lemma="إِنسَٰن"):
         print("  %-8s %-11s %s" % ("%d:%d" % (s, a), wk, g))
 
 
+def riwayat(c):
+    head("Riwaayaat: Hafs tegenover Warsh")
+    print("  Een qiraa-a is de lezing van een qaari-; een riwaaya is de")
+    print("  overlevering daarvan door een leerling. Hafs en Warsh horen bij")
+    print("  twee verschillende qiraa-aat:\n")
+    # fetchall first: the inner query below runs on the same connection and
+    # would otherwise reset this cursor after the first row
+    for qe, qa, qd in c.execute("SELECT DISTINCT qari_en, qari_ar, qari_died_ah"
+                                " FROM riwayat ORDER BY qari_died_ah").fetchall():
+        namen = [r[0] for r in c.execute(
+            "SELECT riwaya_en FROM riwayat WHERE qari_en = ? ORDER BY riwaya_died_ah",
+            (qe,))]
+        print("    %-20s %-16s d. %3d AH   %s" % (qe, qa, qd, " en ".join(namen)))
+
+    total = one(c, "SELECT COUNT(*) FROM riwaya_diff")
+    print("\n  %s plaatsen waar de twee teksten uiteenlopen, gesorteerd naar"
+          % format(total, ","))
+    print("  wat het verschil is:\n")
+    for kind, n in c.execute("SELECT kind, COUNT(*) n FROM riwaya_diff"
+                             " GROUP BY kind ORDER BY n DESC"):
+        print("    %-12s %6s   %4.1f%%" % (kind, format(n, ","), n / total * 100))
+
+    print("\n  klassen binnen usul en notatie:")
+    for cls, kind, n in c.execute(
+            "SELECT class, kind, COUNT(*) n FROM riwaya_diff"
+            " WHERE kind IN ('usul','notatie') GROUP BY class"
+            " ORDER BY n DESC LIMIT 8"):
+        print("    %-24s %-8s %6s" % (cls.split("+")[0], kind, format(n, ",")))
+
+    farsh = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE kind = 'farsh'")
+    ayat = one(c, "SELECT COUNT(DISTINCT surah || ':' || ayah_a) FROM riwaya_diff"
+                  " WHERE kind = 'farsh'")
+    suwar = one(c, "SELECT COUNT(DISTINCT surah) FROM riwaya_diff WHERE kind = 'farsh'")
+    print("\n  farsh al-huroef: %s plaatsen in %s ayaat, %s soerahs"
+          % (format(farsh, ","), format(ayat, ","), suwar))
+    print("  (usul geldt overal waar de voorwaarde zich voordoet; farsh is per woord)")
+
+    print("\n  soerahs met de meeste farsh-verschillen:")
+    for s, nm, n in c.execute(
+            "SELECT d.surah, sr.name_ar, COUNT(*) n FROM riwaya_diff d"
+            " JOIN surahs sr ON sr.number = d.surah WHERE d.kind = 'farsh'"
+            " GROUP BY d.surah ORDER BY n DESC LIMIT 6"):
+        print("    %3d %-12s %4s" % (s, nm, n))
+
+    print("\n  een greep uit de farsh-verschillen:")
+    for s, a, fa, fb in c.execute(
+            "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"
+            " WHERE kind = 'farsh' AND surah IN (1,2,3,43,57,72)"
+            " ORDER BY surah, ayah_a LIMIT 10"):
+        print("    %-8s %-18s %s" % ("%d:%d" % (s, a), fa, fb or "(ontbreekt)"))
+
+
+def dekking(c):
+    head("Dekking: wat weet de database wel en niet")
+    verses = one(c, "SELECT COUNT(*) FROM verses")
+    print("  Elke laag dekt een ander deel van de mushaf. Wat hier niet staat,")
+    print("  weet de database niet -- het is geen aanwijzing dat er niets is.\n")
+    print("  laag                    verzen    dekking   wat er buiten valt")
+    rows = [
+        ("word_glosses", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM word_glosses",
+         "niets: elk geschreven woord is geglosseerd"),
+        ("syntax (EQTB)", "SELECT COUNT(DISTINCT c.surah || ':' || c.ayah) FROM syntax s"
+                          " JOIN corpus c ON c.id = s.corpus_id",
+         "niets, maar het is een analyse, geen feit"),
+        ("irab (al-Nahhas)", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM irab",
+         "verzen waar hij geen vraag ziet"),
+        ("wujuh", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM wujuh",
+         "verzen die geen van de vier werken citeert"),
+        ("riwaya_diff (farsh)", "SELECT COUNT(DISTINCT surah || ':' || ayah_a)"
+                                " FROM riwaya_diff WHERE kind = 'farsh'",
+         "verzen waar Hafs en Warsh gelijk lezen"),
+    ]
+    for label, sql, gap in rows:
+        try:
+            n = one(c, sql)
+        except Exception:
+            print("  %-22s %8s" % (label, "n.v.t."))
+            continue
+        print("  %-22s %6s   %5.1f%%    %s" % (label, format(n, ","), n / verses * 100, gap))
+
+    print("\n  Binnen het corpus zelf:")
+    stems = one(c, "SELECT COUNT(*) FROM corpus WHERE segment_type = 'STEM'")
+    noroot = one(c, "SELECT COUNT(*) FROM corpus WHERE segment_type = 'STEM' AND root IS NULL")
+    print("    %6s van %s stems zonder root (%.1f%%) -- partikels, voornaamwoorden"
+          % (format(noroot, ","), format(stems, ","), noroot / stems * 100))
+    print("       en de namen die het corpus onontleedbaar laat")
+    print("    %6s unieke roots, %s unieke lemma's"
+          % (format(one(c, "SELECT COUNT(DISTINCT root_ar) FROM corpus"
+                          " WHERE root_ar IS NOT NULL"), ","),
+             format(one(c, "SELECT COUNT(DISTINCT lemma_ar) FROM corpus"
+                          " WHERE lemma_ar IS NOT NULL"), ",")))
+    wr = one(c, "SELECT COUNT(DISTINCT root_ar) FROM wujuh WHERE root_ar IS NOT NULL")
+    print("    %6s van die roots heeft een wujuh-ingang (%.1f%%)"
+          % (format(wr, ","), wr / one(c, "SELECT COUNT(DISTINCT root_ar) FROM corpus"
+                                          " WHERE root_ar IS NOT NULL") * 100))
+
+    print("\n  Waar helemaal geen laag voor is:")
+    for line in ("een vertaling van de Qoeraan (de glossen zijn woord-voor-woord",
+                 "  hulp, geen vertaling)",
+                 "tafsir",
+                 "een sense-label per voorkomen: de wujuh-werken citeren",
+                 "  voorbeeldverzen, ze dekken niet af",
+                 "de zes andere riwaayaat, en de qiraa-aat buiten Aasim en Naafi3",
+                 "de aantallen die per riwaaya verschillen (verzen, ahzaab)"):
+        print("    %s%s" % ("" if line.startswith("  ") else "- ", line))
+
+
 ANALYSES = {
     "basics": basics,
     "kalima": kalima,
@@ -369,9 +514,12 @@ ANALYSES = {
     "juz": juz,
     "juz-amma": juz_amma,
     "surah-coverage": surah_coverage,
+    "syntax": syntax,
     "wujuh": wujuh,
     "wujuh-juz-amma": wujuh_juz_amma,
     "referents": referents,
+    "riwayat": riwayat,
+    "dekking": dekking,
 }
 
 

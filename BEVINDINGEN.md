@@ -38,10 +38,12 @@ segment een zelfstandig grammaticaal woord is.
 muqatta'at-reeksen, die in geen van de drie klassen vallen). De 77.429 zijn
 rasm-eenheden, geen kalimat.
 
-Kanttekening: de *damir mustatir* telt niet mee. In يَكْتُبُ zit volgens de
-grammatici een verborgen هُوَ, maar die is *muqaddar*, niet geschreven — de
-corpus annoteert alleen wat er staat. Zichtbare onderwerpssuffixen
-(كَتَبُوا۟ = fi'l + waw al-jama'a) tellen wel als aparte kalimat.
+Er is nog een derde antwoord. De *damir mustatir* — het هُوَ dat volgens de
+grammatici in يَكْتُبُ verborgen zit — is *muqaddar*: verondersteld, niet
+geschreven. De corpus annoteert alleen wat er staat, maar de treebank (deel 10)
+poneert die elementen wel. Tel je ze mee zoals de grammatici doen, dan komt de
+Quran op **139.376 kalimat**. Zichtbare onderwerpssuffixen
+(كَتَبُوا۟ = fi'l + waw al-jama'a) tellen in alle drie de tellingen mee.
 
 ### Verdeling over de drie klassen
 
@@ -249,13 +251,16 @@ als نَسْتَعِينُ en ٱلضَّآلِّينَ meteen zwaar.
 De bandbreedte is smal (71–88%): élke soera is voor ruim zeven tiende
 herkenbaar, want het grammaticale skelet is overal hetzelfde.
 
-## 6. Is de rijkste djoez de beste? (`juz`)
+## 6. Is de lexicaal meest gevarieerde djoez de nuttigste start? (`juz`)
 
 Nee — en dit is de contra-intuïtiefste bevinding van deze analyse.
 
-Op **lexicale rijkdom** wint djoez 29 (Tabarak, soera 67–77) nipt van Djoez
-Amma: 537 tegen 529 roots. De laatste twee djoez zijn de rijkste van alle
-dertig; de midden-djoez (10, 11, 24) de armste met ~370 roots.
+Op **lexicale variatie** telt djoez 29 (Tabarak, soera 67–77) nipt meer unieke
+roots dan Djoez Amma: 537 tegen 529. De laatste twee djoez tellen er de meeste
+van alle dertig; de midden-djoez (10, 11, 24) de minste met ~370. Dat verschil
+is een eigenschap van het register: korte, opeenvolgende soera's introduceren
+per woord vaker een nieuwe root dan doorlopend verhalend proza, dat een
+kernvocabulaire herneemt.
 
 Maar meet je **transferwaarde** — welk deel van de héle Quran je met dat
 vocabulaire dekt — dan kantelt de ranglijst compleet:
@@ -270,10 +275,10 @@ vocabulaire dekt — dan kantelt de ranglijst compleet:
 | **30 (Amma)** | 849 | **83,2%** | **0,098%** |
 
 **Djoez Amma staat op transferwaarde helemaal onderaan** — dankzij, niet
-ondanks, zijn 849 lemma's. Rijkdom betekende hier vooral: veel zeldzame
-woorden, en die dragen weinig bij aan het begrijpen van de rest. Het rendement
-per geleerd lemma is er het laagst van alle dertig; de "saaie" repetitieve
-midden-djoez leveren per woord ~35% meer op.
+ondanks, zijn 849 lemma's. Veel van dat vocabulaire komt zelden elders voor, en
+draagt dus weinig bij aan het lezen van de rest. Het rendement per geleerd
+lemma is er het laagst van alle dertig; de midden-djoez, waar een kleiner
+kernvocabulaire vaker terugkeert, leveren per woord ~35% meer op.
 
 De eerlijke relativering: de bandbreedte is slechts 83–87%. Elke djoez geeft
 grofweg hetzelfde fundament. Het verschil tussen de "beste" en "slechtste"
@@ -351,6 +356,25 @@ op bronnen te baseren is.
 
 ## 9. Wat er bewust niet in zit
 
+Eerst het overzicht: elke laag dekt een ander deel van de mushaf, en die
+verschillen zijn groot. Dat een vers in een laag ontbreekt betekent dat de
+database er niets over zegt — niet dat er niets over te zeggen valt.
+`analyses.py dekking` drukt deze tabel af uit de database zelf.
+
+| laag | verzen | dekking | wat erbuiten valt |
+|---|--:|--:|---|
+| `word_glosses` | 6.236 | 100% | niets: elk geschreven woord is geglosseerd |
+| `syntax` (EQTB) | 6.236 | 100% | niets, maar het is één ontleding, geen feit |
+| `irab` (al-Nahhas) | 5.108 | 82% | de 1.128 verzen waar hij geen vraag ziet |
+| `wujuh` | 3.635 | 58% | verzen die geen van de vier werken citeert — en binnen een gedekt vers alleen het geciteerde woord |
+| `riwaya_diff`, farsh | 489 | 8% | verzen waar Hafs en Warsh gelijk lezen |
+
+Binnen het corpus zelf dragen 27.947 van de 77.915 stems geen root (36%): de
+partikels, de voornaamwoorden en de namen die het corpus onontleed laat. Van de
+1.642 unieke roots heeft 450 (27%) een ingang in een wujuh-werk.
+
+Waar helemaal geen laag voor is:
+
 - **Sense-labels per voorkomen.** De klassieke werken citeren voorbeeldverzen,
   geen uitputtende dekking: 17% van de voorkomens van polyseme roots is
   gelabeld. Tafsir-mining op al-Tabari is geprototypeerd en **gemeten op ~35%
@@ -364,3 +388,148 @@ op bronnen te baseren is.
   volledige wujuh-tekst.
 - **Betekenisverschillen binnen één woordsoort** die de klassieke werken niet
   behandelen. De database kent alleen wat een bron zegt.
+- **Een vertaling van de Qoeraan.** De Engelse glossen zijn woord-voor-woord
+  hulp, bewust letterlijk; als lopende tekst lezen ze slecht en als vertaling
+  moeten ze niet gepresenteerd worden.
+- **Tafsir**, in welke vorm dan ook.
+- **De zes andere riwaayaat**, en elke qiraa-a buiten die van Aasim en Naafi3.
+  Ook de tellingen die per riwaaya verschillen — de versnummering, de ahzaab —
+  staan er alleen in de Hafs-vorm in.
+
+## 10. Syntaxis en wat er niet staat (`syntax`)
+
+De laag die zegt welk woord *fa'il* is van welk werkwoord, welk *maf'ul*, welk
+*khabar* — de analyse die de klassieke *i'rab*-werken in proza uitvechten, hier
+als bevraagbare structuur. 139.376 tokens over 11.693 syntactische zinnen, elk
+met zijn relatielabel en een verwijzing naar zijn hoofd.
+
+| Relatie | Arabisch | Voorkomens |
+|---|---|---|
+| link | متعلق | 14.093 |
+| root | — | 13.646 |
+| gen | مجرور | 12.961 |
+| Obj | مفعول به | 10.627 |
+| Subj | فاعل | 10.520 |
+| Poss | مضاف إليه | 9.805 |
+| conj | معطوف | 5.217 |
+
+### De weggelaten elementen
+
+Het interessantste zit in wat er *niet* staat: 11.157 elementen die de
+grammatici in de tekst lezen maar die niet geschreven zijn. De treebank maakt
+daarbij een principieel onderscheid.
+
+**Benoemd waar het eenduidig is** (6.673). De *damir mustatir* wordt met vorm en
+al ingevuld: (هُوَ) 3.878x, (أَنْتَ) 1.414x, (نحْنُ) 582x, (هِيَ) 371x,
+(أنا) 355x. Dat kan ook — يَكْتُبُ kan morfologisch niets anders verbergen dan
+هُوَ.
+
+**Alleen als positie waar de reconstructie een oordeel vergt** (4.484), met een
+anonieme plaatshouder:
+
+| Rol | Aantal |
+|---|---|
+| خبر | 1.417 |
+| صفة | 756 |
+| حال | 684 |
+| root (weggelaten hoofdpredicaat) | 437 |
+| صلة | 307 |
+| مفعول به | 193 |
+| خبر إنّ | 152 |
+| مفعول مطلق | 93 |
+
+De *khabar mahdhuf* is daarmee wél geponeerd maar niet gereconstrueerd. Bij
+1:2 ٱلْحَمْدُ لِلَّهِ staat ٱلْحَمْد als root, dan een lege خبر-positie, en de
+لِ hangt daaraan als **متعلق** — precies de relatie waar het grammaticaal om
+gaat. Welk woord is weggelaten laat de treebank open, en terecht: de Basriers
+neigen naar een *ism fa'il* (كائن، مستقر), de Koefiers naar een werkwoord
+(استقر). Een zoekopdracht op die woorden levert nul geponeerde tokens op — het
+is consequent doorgevoerd.
+
+Dat maakt deze laag complementair aan al-Nahhas' prozacommentaar uit deel 4:
+de treebank geeft de structuur van elk vers, al-Nahhas het argument bij de
+verzen waar iets te betwisten valt.
+
+## 11. Riwaayaat: Hafs tegenover Warsh (`riwayat`)
+
+Een **qiraa-a** is de lezing van een qaari-; een **riwaaya** is de overlevering
+daarvan door een van zijn leerlingen. Dat onderscheid is niet cosmetisch: Hafs
+en Warsh zijn riwaayaat uit **twee verschillende qiraa-aat**, Hafs `عن` Aasim
+al-Koefie en Warsh `عن` Naafi3 al-Madanie. Een vergelijking Hafs–Shu3ba zou een
+vergelijking bínnen één qiraa-a zijn; Hafs–Warsh is er een tussen twee.
+
+| qaari- | | overleden | riwaayaat |
+|---|---|---|---|
+| Ibn Kathir al-Makkie | ابن كثير المكي | 120 AH | al-Bazzie, Qoenboel |
+| Aasim al-Koefie | عاصم الكوفي | 127 AH | Hafs, Shu3ba |
+| Aboe 3Amr al-Basrie | أبو عمرو البصري | 154 AH | al-Doerie, al-Soesie |
+| Naafi3 al-Madanie | نافع المدني | 169 AH | Warsh, Qaaloen |
+
+### Letters vergelijken meet het verkeerde
+
+De eerste poging vergeleek de twee teksten letter voor letter. Dat leverde 1.497
+verschilplaatsen op, waarvan een filter de alif-gevallen wegsneed — en daarmee
+1:4 مَٰلِكِ / مَلِكِ, precies het bekendste verschil dat er is.
+
+De fout zat dieper dan het filter. De twee mushaf-tradities **schrijven dezelfde
+klank anders**: dolk-alif tegenover geschreven alif, kleine waw tegenover waw,
+twee glyph-vormen voor elke tanwien, andere hamza-zetels, een ander teken voor
+de wasl-alif. Wie letters vergelijkt meet spelling. Bij 1:4 is de rasm in beide
+tradities identiek (م ل ك); het verschil zit in een diacritisch teken.
+
+Daarom wordt elk woord nu eerst omgezet naar een fonemische transcriptie en
+worden díe vergeleken. Dat meet de recitatie, en dat is wat een farsh-verschil
+is. De drie tanwien-paren in die omzetting zijn niet geraden maar getoetst: elk
+Hafs-woord met een van de zes tanwien-tekens is naast de Buckwalter-vorm van
+hetzelfde woord in het corpus gelegd, en elk teken loste op naar precies één van
+F / N / K, zonder uitzondering (8.547 gevallen; de twee glyph-vormen per
+tanwien blijken 733 tegen 2.900 fathataan, 576 tegen 1.806 dammataan en 599
+tegen 1.933 kasrataan).
+
+### Wat er dan overblijft
+
+8.581 plaatsen waar de teksten uiteenlopen, gesorteerd naar wat het verschil ís:
+
+| soort | plaatsen | |
+|---|--:|---|
+| usul | 4.643 | een regel die geldt waar zijn voorwaarde zich voordoet: silat al-miem, naql, de behandeling van de hamza, de geopende yaa al-idaafa |
+| notatie | 3.297 | dezelfde recitatie, andere tekens |
+| **farsh** | **564** | wat geen regel verklaart: het verschil per woord |
+| uitgesloten | 77 | verschoven woordgrens, uitlijningsartefact, de losse letters |
+
+De 564 farsh-plaatsen zijn 468 woordparen in 489 ayaat, verspreid over 84
+soerahs. Al-Baqara heeft er de meeste (41), dan Aal 3Imraan (29) en al-An3aam
+(26).
+
+Dat het overgrote deel *usul* is, is zelf het resultaat. Waar mensen "Hafs en
+Warsh verschillen" zeggen, gaat het meestal over een handvol woorden; wat de
+teksten werkelijk uit elkaar houdt zijn regels die honderden keren toeslaan.
+Silat al-miem alleen al — عَلَيْهِمْ dat als عَلَيْهِمُو wordt verbonden — is
+819 plaatsen. Eén regel, 819 keer.
+
+### Verschillen die wél per woord zijn
+
+| | Hafs | Warsh |
+|---|---|---|
+| 1:4 | مَٰلِكِ | مَلِكِ |
+| 2:9 | يَخۡدَعُونَ | يُخَٰدِعُونَ |
+| 2:132 | وَوَصَّىٰ | وَأَوْصىٰ |
+| 3:146 | قَٰتَلَ | قُتِلَ |
+| 43:19 | عِبَٰدُ | عِندَ |
+| 57:24 | هُوَ | *(ontbreekt)* |
+| 72:28 | عَدَدَۢا | عَدَداٗ |
+
+57:24 is het enige geval waar een heel woord aan één kant ontbreekt.
+
+### Wat er niet klopt
+
+Ongeveer 5% van de farsh-lijst is vermoedelijk nog spelling en geen lezing. De
+twee tekens die de wasl-alif markeren staan in 0,7% van de gevallen op een
+hamzat qat3, waardoor woorden als إذ en إلى als kandidaat binnenkomen. En de
+klasse `article_lam` vouwt één korte klinker weg om ٱلَّذِينَ tegen اَ۬لذِينَ
+te kunnen leggen — de enige plek waar een korte klinker als notatie wordt
+behandeld.
+
+`docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om
+nagelopen te worden. Zes riwaayaat staan wel in de tabel `riwayat` maar hun
+tekst niet in de repo; zie `SOURCES.md` voor waarom.

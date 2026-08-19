@@ -54,6 +54,16 @@ MARKER_RE = re.compile(
     r"|الثامن|التاسع|العاشر|الحادي|الحادى)( عشر)?\s*:"
 )
 QUOTE_RE = re.compile(r"\{([^{}]+)\}")
+# Some entries close with wujuh the author did not count himself: "and some
+# have appended an eleventh wajh, saying: al-din means the Quran", followed by
+# its own citation. Without this the appended citation is absorbed into the
+# last counted sense, which put 107:1 under 'al-cadad' where it belongs to
+# 'al-Quran'. Occurs 16 times, in Ibn al-Jawzi only.
+APPENDED_RE = re.compile(r"(?:و?قد )?أ?ألحق\s+(?:بعضهم|بعض\s+\S+(?:\s+\S+)?)"
+                         r"[^:.]{0,60}?(?=[:.]|\s+وه[وي]|\s+فقال)")
+# what introduces the meaning inside an appended block
+APPENDED_GLOSS_RE = re.compile(r"(?:فقالوا|فقال|وهو|وهي)\s*:?\s*(.{2,80}?)"
+                               r"(?:[،.]| ومنه| فمنه| قوله| كقوله|$)")
 SURA_HINT_RE = re.compile(r"(?:و?في|من) (?:سورة )?([ء-ي]+(?: عمران)?)\s*:? ?\{")
 
 
@@ -88,15 +98,48 @@ def parse_entry(headword, body):
             run.append((decl_end, 1, decl_end))
             run.append((start, 2, end))
             expect = 3
+    appended = APPENDED_RE.search(body, run[-1][0] if run else 0)
+    body_end = appended.start() if appended else len(body)
     for idx, (start, n, end) in enumerate(run):
-        stop = run[idx + 1][0] if idx + 1 < len(run) else len(body)
+        stop = run[idx + 1][0] if idx + 1 < len(run) else body_end
         span = body[end:stop]
         gm = re.match(r"\s*(.{2,80}?)(?:[،.]| ومنه| فمنه| قوله| كقوله|$)", span)
         gloss = gm.group(1).strip(" .،") if gm else None
         quotes = [q.strip() for q in QUOTE_RE.findall(span)]
         suras = SURA_HINT_RE.findall(span)
         senses.append({"nr": n, "gloss": gloss, "quotes": quotes, "suras": suras})
+    if appended:
+        senses += parse_appended(body[appended.end():], len(senses), headword)
     return {"headword": headword.strip(), "declared": declared, "senses": senses}
+
+
+def parse_appended(block, counted, headword):
+    """Senses the author appends on someone else's authority, continuing the
+    numbering. One appended wajh runs on from the introduction; two or three
+    are themselves marked (ahaduhuma / wa-l-thani), so split on those."""
+    subs = [(mm.start(), mm.end()) for mm in MARKER_RE.finditer(block)]
+    spans = []
+    if subs:
+        for i, (start, end) in enumerate(subs):
+            stop = subs[i + 1][0] if i + 1 < len(subs) else len(block)
+            spans.append(block[end:stop])
+    else:
+        spans.append(block)
+    out = []
+    for i, span in enumerate(spans):
+        gm = APPENDED_GLOSS_RE.search(span) or re.match(
+            r"\s*(.{2,80}?)(?:[،.]| ومنه| فمنه| قوله| كقوله|$)", span)
+        gloss = gm.group(1).strip(" .،:") if gm else None
+        if gloss:
+            # the appended wajh restates the headword before its meaning
+            # ("and al-ifk: the idols"); keep only the meaning
+            head = re.escape(headword.strip("() \"").lstrip("ال"))
+            gloss = re.sub(r"^و?(?:ال)?" + head + r"\s*[:\s]\s*", "", gloss)
+            gloss = re.sub(r"^و?ال\S+\s*:\s*", "", gloss).strip(" .،:") or None
+        out.append({"nr": counted + i + 1, "gloss": gloss,
+                    "quotes": [q.strip() for q in QUOTE_RE.findall(span)],
+                    "suras": SURA_HINT_RE.findall(span), "appended": True})
+    return out
 
 
 def main():

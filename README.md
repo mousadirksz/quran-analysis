@@ -452,6 +452,53 @@ a cluster is only extended by a sense alignable with every sense already in it.
 | `juz_boundaries` | 30 | `juz`, `start_surah`, `start_ayah`, `end_surah`, `end_ayah`; the ends are derived from the next juz' start |
 | `hizb_boundaries` | 60 | the same for the 60 ahzab, with the `juz` each belongs to |
 
+### Tables `riwayat` and `riwaya_diff` — the two transmissions compared
+
+A *qiraa* is the reading of a qari; a *riwaya* is one pupil's transmission of
+it. Hafs and Warsh are riwayat, and they belong to two different qiraa'at:
+Hafs from Aasim al-Kufi (d. 127), Warsh from Naafi' al-Madani (d. 169). The
+comparison here is therefore between qiraa'at, not within one.
+
+`riwayat` — 8 rows, the transmissions King Fahd Glorious Quran Printing
+Complex publishes, two per qari:
+
+| Column | Meaning |
+|---|---|
+| `code` | `hafs`, `warsh`, `qaloon`, `bazzi`, `qumbul`, `doori`, `soosi`, `shouba` |
+| `riwaya_ar`, `riwaya_en`, `riwaya_died_ah` | the transmitter |
+| `qari_ar`, `qari_en`, `qari_died_ah` | the reader he transmits from |
+| `region` | where the riwaya is read today |
+| `kfgqpc_version`, `source_date` | the version of the complex's data package; the date only for the two loaded here |
+| `in_database` | 1 for `hafs` and `warsh`, the two whose text is in `sources/` |
+
+`riwaya_diff` — 8,581 rows, one per place where the Hafs and Warsh texts
+diverge. Because the two mushaf traditions write the same sound with different
+signs, the comparison is not a text diff: each word is transliterated first
+(`riwaya_translit.py`) and the transliterations are compared, which measures
+the recitation rather than the orthography.
+
+| Column | Meaning |
+|---|---|
+| `riwaya_a`, `riwaya_b` | `hafs` and `warsh`; both are `riwayat.code` |
+| `surah` | sura, shared |
+| `ayah_a`, `ayah_b` | the verse number in each — they differ in 50 suras, so both are kept |
+| `form_a`, `form_b` | the word as each mushaf writes it; empty on one side where a word is absent |
+| `translit_a`, `translit_b` | the comparison keys the classification ran on |
+| `class` | the specific rule that explains the difference, or `farsh_candidate` where none does |
+| `kind` | `usul`, `notatie`, `farsh` or `uitgesloten` (below) |
+
+| `kind` | Rows | What it is |
+|---|--:|---|
+| `usul` | 4,643 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, the ya of idafa. Real differences, but not word-specific |
+| `notatie` | 3,297 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
+| `farsh` | 564 | *farsh al-huruf*: what no rule explains — the word-by-word differences, in 489 verses across 84 suras |
+| `uitgesloten` | 77 | set aside on review: a moved word boundary, an alignment artefact, the disconnected letters |
+
+Differences of vowel length and of short vowels are deliberately never folded
+away, which is why `maalik` / `malik` at 1:4 is `farsh` and not notation.
+About 5% of the `farsh` rows are estimated to be spelling rather than reading;
+`docs/hafs-warsh.md` names the residues that are known.
+
 ### Views
 
 | View | Content |
@@ -465,9 +512,36 @@ so 2,240 of its rows contain characters that are not Arabic script, where
 `verses.text_ar` has them repaired to the Quranic annotation signs they stand
 for.
 
+## Coverage — what the database knows about a given verse
+
+Each layer covers a different part of the mushaf, and the differences are
+large. Absence from a layer means this database has nothing to say, not that
+there is nothing to say. `python3 analyses.py dekking` prints this table from
+the database itself.
+
+| Layer | Verses | Coverage | What falls outside |
+|---|--:|--:|---|
+| `word_glosses` | 6,236 | 100% | nothing — every written word has a gloss |
+| `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
+| `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
+| `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
+| `riwaya_diff`, `kind='farsh'` | 489 | 8% | the verses where Hafs and Warsh read alike |
+
+Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
+the particles, the pronouns, and the names the corpus leaves unanalysed. There
+are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
+
+**Layers that do not exist here at all**, and would have to come from elsewhere:
+
+- a translation of the Quran — the glosses are word-by-word help, deliberately literal, and read poorly as running text
+- tafsir of any kind
+- a sense label per occurrence: the wujuh works cite example verses, they do not annotate exhaustively, and mining al-Tabari for the rest was measured at ~35% precision and rejected
+- the six other riwayat, and any qiraa outside those of Aasim and Naafi'
+- the counts that differ per riwaya — verse numbering, the ahzab — which are the Hafs values throughout
+
 ## Data quality
 
-`validate.py` runs 19 checks over the finished database and is the last step of
+`validate.py` runs 24 checks over the finished database and is the last step of
 `build.py`. On the committed database, 17 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
@@ -556,11 +630,32 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 19 checks over the finished database (optional step) |
+| `validate.py` | 24 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
+| `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
+| `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
+| `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
+| `compare_riwayat.py` | aligns the Hafs and Warsh texts word by word and builds `riwayat` and `riwaya_diff`; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
+| `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
+
+| `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus |
+
+`docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
+classification with its counts, and every farsh difference with its verse.
+It is generated by `compare_riwayat.py --markdown`, so it is never edited by
+hand.
+
+`docs/sarf-nl.md` is a textbook of Arabic morphology (sarf) in Dutch, in twenty
+chapters from the definition of a word to i'lal, with its examples and counts
+drawn from this database. An English version is planned.
+
+`SOURCES.md` records the provenance of every source: what it is, where it was
+obtained, which edition, under what licence, which script loads it into which
+table, and — separately — what this project derived rather than sourced. Read it
+before citing any figure from this database.
 
 `BEVINDINGEN.md` (Dutch) is the analytical companion to this file: what the
 data turned out to say. Word counting under two definitions, what does and does
@@ -616,6 +711,11 @@ far below the standard the rest of this layer is held to, so no tafsir is used.
 
 ## Known limitations
 
+Most of what follows concerns the `wujuh` layer, because it is the layer with
+the most ways to be misread. For what each layer does and does not cover, see
+**Coverage** above; for what a source states versus what this project derived,
+see `SOURCES.md`.
+
 **The wujuh layer only labels the verses the authors themselves quote.** It is
 evidence for a sense, not a full sense-annotation of the Quran. The 450 roots
 covered occur 38,785 times in the corpus; only 6,530 of those occurrences (17%)
@@ -661,3 +761,27 @@ and the parser leans on fallbacks there; al-Askari lists his wujuh in running
 prose in about a dozen entries, where nothing is parsed rather than guessed.
 `kalima_type` and `wazifa` are derived from the corpus' own tagging and inherit
 its analytical choices, which are one defensible reading among several.
+
+**Al-Nahhas is one grammarian, and an early one.** The `irab` table holds his
+argument, not a consensus: where he weighs the Basrans against the Kufans, both
+positions are in the passage and neither is marked as settled. He is also
+selective by design — a verse absent from the table is one he saw no question
+in, which is itself a judgment.
+
+**The treebank is an analysis.** `syntax` gives one dependency parse per verse,
+including 11,157 elements the grammarians read into the text but that are not
+written. Those are defensible readings, not observations; the *khabar mahdhuf*
+is posited as an empty position without reconstructing which word was left out,
+which is the honest choice but means the table cannot answer what that word
+would be.
+
+**Two riwayat is not the qiraa'at.** `riwaya_diff` compares Hafs and Warsh, one
+transmission each from two of the seven readers. It says nothing about Qaaloon
+or Shu'ba, and nothing about the five readers whose text is not here. Roughly 5%
+of the `farsh` rows are estimated to be spelling rather than reading;
+`docs/hafs-warsh.md` names the residues that are known.
+
+**The `verses.text_ar` column is a reconstruction.** It is the corpus' segment
+forms joined back together, not an independently sourced mushaf text. The only
+mushaf texts in this repository are the two riwaya CSVs under `sources/`, and
+they are not what `verses` is built from.

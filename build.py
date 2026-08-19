@@ -61,6 +61,7 @@ STEPS = [
     ("add_damair_lemmas.py", True, ()),
     ("add_wazifa.py", True, ()),
     ("add_metadata.py", False, ()),
+    ("add_translation.py", False, ("sources/word_glosses_en.tsv",)),
     ("parse_tasarif.py", True, ("sources/tasarif.txt",)),
     ("parse_damaghani.py", True, ("sources/damaghani_qamus.txt",)),
     ("parse_ibnjawzi.py", True, ("sources/ibnjawzi_nuzhat.txt",)),
@@ -68,6 +69,10 @@ STEPS = [
     # checks for its own source text and reports what it needs, so no input is
     # declared here.
     ("parse_askari.py", False, ()),
+    ("parse_irab.py", False, ("sources/nahhas_irab.txt",)),
+    ("parse_treebank.py", False, ("sources/treebank_eqtb.tsv.gz",)),
+    ("compare_riwayat.py", False, ("sources/riwaya_hafs.csv",
+                                   "sources/riwaya_warsh.csv")),
     ("resolve_citations.py", True, ()),
     ("substantiate_jk.py", True, ("sources/ibnjawzi_nuzhat_jk.txt",)),
     ("add_wujuh.py", True, ()),
