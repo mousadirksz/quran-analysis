@@ -396,6 +396,58 @@ def referents(c, lemma="إِنسَٰن"):
         print("  %-8s %-11s %s" % ("%d:%d" % (s, a), wk, g))
 
 
+def riwayat(c):
+    head("Riwaayaat: Hafs tegenover Warsh")
+    print("  Een qiraa-a is de lezing van een qaari-; een riwaaya is de")
+    print("  overlevering daarvan door een leerling. Hafs en Warsh horen bij")
+    print("  twee verschillende qiraa-aat:\n")
+    # fetchall first: the inner query below runs on the same connection and
+    # would otherwise reset this cursor after the first row
+    for qe, qa, qd in c.execute("SELECT DISTINCT qari_en, qari_ar, qari_died_ah"
+                                " FROM riwayat ORDER BY qari_died_ah").fetchall():
+        namen = [r[0] for r in c.execute(
+            "SELECT riwaya_en FROM riwayat WHERE qari_en = ? ORDER BY riwaya_died_ah",
+            (qe,))]
+        print("    %-20s %-16s d. %3d AH   %s" % (qe, qa, qd, " en ".join(namen)))
+
+    total = one(c, "SELECT COUNT(*) FROM riwaya_diff")
+    print("\n  %s plaatsen waar de twee teksten uiteenlopen, gesorteerd naar"
+          % format(total, ","))
+    print("  wat het verschil is:\n")
+    for kind, n in c.execute("SELECT kind, COUNT(*) n FROM riwaya_diff"
+                             " GROUP BY kind ORDER BY n DESC"):
+        print("    %-12s %6s   %4.1f%%" % (kind, format(n, ","), n / total * 100))
+
+    print("\n  klassen binnen usul en notatie:")
+    for cls, kind, n in c.execute(
+            "SELECT class, kind, COUNT(*) n FROM riwaya_diff"
+            " WHERE kind IN ('usul','notatie') GROUP BY class"
+            " ORDER BY n DESC LIMIT 8"):
+        print("    %-24s %-8s %6s" % (cls.split("+")[0], kind, format(n, ",")))
+
+    farsh = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE kind = 'farsh'")
+    ayat = one(c, "SELECT COUNT(DISTINCT surah || ':' || ayah_a) FROM riwaya_diff"
+                  " WHERE kind = 'farsh'")
+    suwar = one(c, "SELECT COUNT(DISTINCT surah) FROM riwaya_diff WHERE kind = 'farsh'")
+    print("\n  farsh al-huroef: %s plaatsen in %s ayaat, %s soerahs"
+          % (format(farsh, ","), format(ayat, ","), suwar))
+    print("  (usul geldt overal waar de voorwaarde zich voordoet; farsh is per woord)")
+
+    print("\n  soerahs met de meeste farsh-verschillen:")
+    for s, nm, n in c.execute(
+            "SELECT d.surah, sr.name_ar, COUNT(*) n FROM riwaya_diff d"
+            " JOIN surahs sr ON sr.number = d.surah WHERE d.kind = 'farsh'"
+            " GROUP BY d.surah ORDER BY n DESC LIMIT 6"):
+        print("    %3d %-12s %4s" % (s, nm, n))
+
+    print("\n  een greep uit de farsh-verschillen:")
+    for s, a, fa, fb in c.execute(
+            "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"
+            " WHERE kind = 'farsh' AND surah IN (1,2,3,43,57,72)"
+            " ORDER BY surah, ayah_a LIMIT 10"):
+        print("    %-8s %-18s %s" % ("%d:%d" % (s, a), fa, fb or "(ontbreekt)"))
+
+
 ANALYSES = {
     "basics": basics,
     "kalima": kalima,
@@ -411,6 +463,7 @@ ANALYSES = {
     "wujuh": wujuh,
     "wujuh-juz-amma": wujuh_juz_amma,
     "referents": referents,
+    "riwayat": riwayat,
 }
 
 

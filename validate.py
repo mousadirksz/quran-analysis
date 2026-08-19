@@ -757,6 +757,64 @@ def syntax_tokens(cur, args):
             f"{implicit:,} implicit tokens posited by the treebank")
 
 
+@check("riwaya differences")
+def riwaya_differences(cur, args):
+    """Every difference must name two riwayat that the riwayat table knows,
+    sit in a real verse, and carry a kind. The two spot checks are the ones a
+    silent regression in the transliterator would break first: 1:4 maalik /
+    malik must be farsh (it is a difference of vowel length, and folding those
+    away is exactly the mistake this comparison is built to avoid), and the
+    sila of the mim must never be farsh (it is a rule, not a word)."""
+    require_tables(cur, "riwaya_diff", "riwayat")
+    expect_none(cur, "difference naming an unknown riwaya",
+                "SELECT id FROM riwaya_diff WHERE riwaya_a NOT IN"
+                " (SELECT code FROM riwayat) OR riwaya_b NOT IN"
+                " (SELECT code FROM riwayat)")
+    expect_none(cur, "difference outside the mushaf",
+                "SELECT d.id FROM riwaya_diff d WHERE NOT EXISTS"
+                " (SELECT 1 FROM corpus c WHERE c.surah = d.surah"
+                "  AND c.ayah = d.ayah_a)")
+    expect_none(cur, "difference without a kind",
+                "SELECT id FROM riwaya_diff WHERE kind IS NULL OR kind = ''"
+                " OR kind = 'onbekend'")
+    expect_none(cur, "difference where both sides are the same word",
+                "SELECT id FROM riwaya_diff WHERE form_a = form_b")
+    expect_none(cur, "sila of the mim classed as farsh",
+                "SELECT id FROM riwaya_diff WHERE class LIKE 'sila_mim%'"
+                " AND kind = 'farsh'")
+    row = cur.execute("SELECT kind FROM riwaya_diff WHERE surah=1 AND ayah_a=4"
+                      " AND riwaya_a='hafs'").fetchone()
+    if not row or row[0] != "farsh":
+        raise Failed("1:4 maalik/malik is %s, expected farsh"
+                     % (row[0] if row else "absent"))
+    kinds = dict(cur.execute("SELECT kind, COUNT(*) FROM riwaya_diff GROUP BY kind"))
+    total = sum(kinds.values())
+    return ("%s differences: %s"
+            % (format(total, ","),
+               ", ".join("%s %s" % (format(n, ","), k)
+                         for k, n in sorted(kinds.items(), key=lambda x: -x[1]))))
+
+
+@check("riwayat and their qurra")
+def riwayat_readers(cur, args):
+    """A riwaya is one pupil's transmission of a qari's qiraa, so every row
+    must name both, and each qari must have exactly the two transmitters the
+    canonical set gives him. Only the riwayat marked in_database have a source
+    file here."""
+    require_tables(cur, "riwayat")
+    expect_none(cur, "riwaya without a qari",
+                "SELECT code FROM riwayat WHERE qari_ar IS NULL OR qari_en IS NULL"
+                " OR qari_died_ah IS NULL")
+    expect_none(cur, "qari without exactly two riwayat",
+                "SELECT qari_en FROM riwayat GROUP BY qari_en HAVING COUNT(*) != 2")
+    expect_none(cur, "transmitter said to have died before the reader he cites",
+                "SELECT code FROM riwayat WHERE riwaya_died_ah <= qari_died_ah")
+    loaded = cur.execute("SELECT COUNT(*) FROM riwayat WHERE in_database=1").fetchone()[0]
+    total = cur.execute("SELECT COUNT(*) FROM riwayat").fetchone()[0]
+    qurra = cur.execute("SELECT COUNT(DISTINCT qari_en) FROM riwayat").fetchone()[0]
+    return f"{total} riwayat from {qurra} qurra, {loaded} of them compared here"
+
+
 def report(outcome, name, text):
     """Print one result; multi-line details are indented under the first."""
     head, *rest = str(text).splitlines()

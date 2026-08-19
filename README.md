@@ -452,6 +452,53 @@ a cluster is only extended by a sense alignable with every sense already in it.
 | `juz_boundaries` | 30 | `juz`, `start_surah`, `start_ayah`, `end_surah`, `end_ayah`; the ends are derived from the next juz' start |
 | `hizb_boundaries` | 60 | the same for the 60 ahzab, with the `juz` each belongs to |
 
+### Tables `riwayat` and `riwaya_diff` — the two transmissions compared
+
+A *qiraa* is the reading of a qari; a *riwaya* is one pupil's transmission of
+it. Hafs and Warsh are riwayat, and they belong to two different qiraa'at:
+Hafs from Aasim al-Kufi (d. 127), Warsh from Naafi' al-Madani (d. 169). The
+comparison here is therefore between qiraa'at, not within one.
+
+`riwayat` — 8 rows, the transmissions King Fahd Glorious Quran Printing
+Complex publishes, two per qari:
+
+| Column | Meaning |
+|---|---|
+| `code` | `hafs`, `warsh`, `qaloon`, `bazzi`, `qumbul`, `doori`, `soosi`, `shouba` |
+| `riwaya_ar`, `riwaya_en`, `riwaya_died_ah` | the transmitter |
+| `qari_ar`, `qari_en`, `qari_died_ah` | the reader he transmits from |
+| `region` | where the riwaya is read today |
+| `kfgqpc_version`, `source_date` | the version of the complex's data package; the date only for the two loaded here |
+| `in_database` | 1 for `hafs` and `warsh`, the two whose text is in `sources/` |
+
+`riwaya_diff` — 8,581 rows, one per place where the Hafs and Warsh texts
+diverge. Because the two mushaf traditions write the same sound with different
+signs, the comparison is not a text diff: each word is transliterated first
+(`riwaya_translit.py`) and the transliterations are compared, which measures
+the recitation rather than the orthography.
+
+| Column | Meaning |
+|---|---|
+| `riwaya_a`, `riwaya_b` | `hafs` and `warsh`; both are `riwayat.code` |
+| `surah` | sura, shared |
+| `ayah_a`, `ayah_b` | the verse number in each — they differ in 50 suras, so both are kept |
+| `form_a`, `form_b` | the word as each mushaf writes it; empty on one side where a word is absent |
+| `translit_a`, `translit_b` | the comparison keys the classification ran on |
+| `class` | the specific rule that explains the difference, or `farsh_candidate` where none does |
+| `kind` | `usul`, `notatie`, `farsh` or `uitgesloten` (below) |
+
+| `kind` | Rows | What it is |
+|---|--:|---|
+| `usul` | 4,643 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, the ya of idafa. Real differences, but not word-specific |
+| `notatie` | 3,297 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
+| `farsh` | 564 | *farsh al-huruf*: what no rule explains — the word-by-word differences, in 489 verses across 84 suras |
+| `uitgesloten` | 77 | set aside on review: a moved word boundary, an alignment artefact, the disconnected letters |
+
+Differences of vowel length and of short vowels are deliberately never folded
+away, which is why `maalik` / `malik` at 1:4 is `farsh` and not notation.
+About 5% of the `farsh` rows are estimated to be spelling rather than reading;
+`docs/hafs-warsh.md` names the residues that are known.
+
 ### Views
 
 | View | Content |
@@ -467,7 +514,7 @@ for.
 
 ## Data quality
 
-`validate.py` runs 19 checks over the finished database and is the last step of
+`validate.py` runs 24 checks over the finished database and is the last step of
 `build.py`. On the committed database, 17 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
@@ -556,16 +603,23 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 19 checks over the finished database (optional step) |
+| `validate.py` | 24 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
+| `compare_riwayat.py` | aligns the Hafs and Warsh texts word by word and builds `riwayat` and `riwaya_diff`; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
+| `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus |
+
+`docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
+classification with its counts, and every farsh difference with its verse.
+It is generated by `compare_riwayat.py --markdown`, so it is never edited by
+hand.
 
 `docs/sarf-nl.md` is a textbook of Arabic morphology (sarf) in Dutch, in twenty
 chapters from the definition of a word to i'lal, with its examples and counts

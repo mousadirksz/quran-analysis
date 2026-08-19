@@ -423,3 +423,87 @@ is consequent doorgevoerd.
 Dat maakt deze laag complementair aan al-Nahhas' prozacommentaar uit deel 4:
 de treebank geeft de structuur van elk vers, al-Nahhas het argument bij de
 verzen waar iets te betwisten valt.
+
+## 11. Riwaayaat: Hafs tegenover Warsh (`riwayat`)
+
+Een **qiraa-a** is de lezing van een qaari-; een **riwaaya** is de overlevering
+daarvan door een van zijn leerlingen. Dat onderscheid is niet cosmetisch: Hafs
+en Warsh zijn riwaayaat uit **twee verschillende qiraa-aat**, Hafs `عن` Aasim
+al-Koefie en Warsh `عن` Naafi3 al-Madanie. Een vergelijking Hafs–Shu3ba zou een
+vergelijking bínnen één qiraa-a zijn; Hafs–Warsh is er een tussen twee.
+
+| qaari- | | overleden | riwaayaat |
+|---|---|---|---|
+| Ibn Kathir al-Makkie | ابن كثير المكي | 120 AH | al-Bazzie, Qoenboel |
+| Aasim al-Koefie | عاصم الكوفي | 127 AH | Hafs, Shu3ba |
+| Aboe 3Amr al-Basrie | أبو عمرو البصري | 154 AH | al-Doerie, al-Soesie |
+| Naafi3 al-Madanie | نافع المدني | 169 AH | Warsh, Qaaloen |
+
+### Letters vergelijken meet het verkeerde
+
+De eerste poging vergeleek de twee teksten letter voor letter. Dat leverde 1.497
+verschilplaatsen op, waarvan een filter de alif-gevallen wegsneed — en daarmee
+1:4 مَٰلِكِ / مَلِكِ, precies het bekendste verschil dat er is.
+
+De fout zat dieper dan het filter. De twee mushaf-tradities **schrijven dezelfde
+klank anders**: dolk-alif tegenover geschreven alif, kleine waw tegenover waw,
+twee glyph-vormen voor elke tanwien, andere hamza-zetels, een ander teken voor
+de wasl-alif. Wie letters vergelijkt meet spelling. Bij 1:4 is de rasm in beide
+tradities identiek (م ل ك); het verschil zit in een diacritisch teken.
+
+Daarom wordt elk woord nu eerst omgezet naar een fonemische transcriptie en
+worden díe vergeleken. Dat meet de recitatie, en dat is wat een farsh-verschil
+is. De drie tanwien-paren in die omzetting zijn niet geraden maar getoetst: elk
+Hafs-woord met een van de zes tanwien-tekens is naast de Buckwalter-vorm van
+hetzelfde woord in het corpus gelegd, en elk teken loste op naar precies één van
+F / N / K, zonder uitzondering (8.547 gevallen; de twee glyph-vormen per
+tanwien blijken 733 tegen 2.900 fathataan, 576 tegen 1.806 dammataan en 599
+tegen 1.933 kasrataan).
+
+### Wat er dan overblijft
+
+8.581 plaatsen waar de teksten uiteenlopen, gesorteerd naar wat het verschil ís:
+
+| soort | plaatsen | |
+|---|--:|---|
+| usul | 4.643 | een regel die geldt waar zijn voorwaarde zich voordoet: silat al-miem, naql, de behandeling van de hamza, de geopende yaa al-idaafa |
+| notatie | 3.297 | dezelfde recitatie, andere tekens |
+| **farsh** | **564** | wat geen regel verklaart: het verschil per woord |
+| uitgesloten | 77 | verschoven woordgrens, uitlijningsartefact, de losse letters |
+
+De 564 farsh-plaatsen zijn 468 woordparen in 489 ayaat, verspreid over 84
+soerahs. Al-Baqara heeft er de meeste (41), dan Aal 3Imraan (29) en al-An3aam
+(26).
+
+Dat het overgrote deel *usul* is, is zelf het resultaat. Waar mensen "Hafs en
+Warsh verschillen" zeggen, gaat het meestal over een handvol woorden; wat de
+teksten werkelijk uit elkaar houdt zijn regels die honderden keren toeslaan.
+Silat al-miem alleen al — عَلَيْهِمْ dat als عَلَيْهِمُو wordt verbonden — is
+819 plaatsen. Eén regel, 819 keer.
+
+### Verschillen die wél per woord zijn
+
+| | Hafs | Warsh |
+|---|---|---|
+| 1:4 | مَٰلِكِ | مَلِكِ |
+| 2:9 | يَخۡدَعُونَ | يُخَٰدِعُونَ |
+| 2:132 | وَوَصَّىٰ | وَأَوْصىٰ |
+| 3:146 | قَٰتَلَ | قُتِلَ |
+| 43:19 | عِبَٰدُ | عِندَ |
+| 57:24 | هُوَ | *(ontbreekt)* |
+| 72:28 | عَدَدَۢا | عَدَداٗ |
+
+57:24 is het enige geval waar een heel woord aan één kant ontbreekt.
+
+### Wat er niet klopt
+
+Ongeveer 5% van de farsh-lijst is vermoedelijk nog spelling en geen lezing. De
+twee tekens die de wasl-alif markeren staan in 0,7% van de gevallen op een
+hamzat qat3, waardoor woorden als إذ en إلى als kandidaat binnenkomen. En de
+klasse `article_lam` vouwt één korte klinker weg om ٱلَّذِينَ tegen اَ۬لذِينَ
+te kunnen leggen — de enige plek waar een korte klinker als notatie wordt
+behandeld.
+
+`docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om
+nagelopen te worden. Zes riwaayaat staan wel in de tabel `riwayat` maar hun
+tekst niet in de repo; zie `SOURCES.md` voor waarom.

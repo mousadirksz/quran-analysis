@@ -71,6 +71,8 @@ STEPS = [
     ("parse_askari.py", False, ()),
     ("parse_irab.py", False, ("sources/nahhas_irab.txt",)),
     ("parse_treebank.py", False, ("sources/treebank_eqtb.tsv.gz",)),
+    ("compare_riwayat.py", False, ("sources/riwaya_hafs.csv",
+                                   "sources/riwaya_warsh.csv")),
     ("resolve_citations.py", True, ()),
     ("substantiate_jk.py", True, ("sources/ibnjawzi_nuzhat_jk.txt",)),
     ("add_wujuh.py", True, ()),

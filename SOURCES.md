@@ -166,6 +166,68 @@ are the standard Hafs values, carried in the script as constants; the ayah
 counts derived from the corpus are checked against an independent Hafs reference
 list in the same script, and agree exactly.
 
+## 7. Two riwayat — King Fahd Glorious Quran Printing Complex
+
+The text of two transmissions, for the comparison in `riwaya_diff`.
+
+| | |
+|---|---|
+| **Work** | KFGQPC Uthmanic Hafs Data v0.18 (2021-10-25) and KFGQPC Uthmanic Warsh Data v0.10 (2021-08-05) |
+| **Publisher** | King Fahd Glorious Quran Printing Complex, al-Madinah al-Munawwarah |
+| **Published at** | https://qurancomplex.gov.sa/en/techquran/dev/ |
+| **Obtained from** | https://github.com/thetruetruth/quran-data-kfgqpc, a verbatim republication of the complex's own packages |
+| **Files in this repo** | `sources/riwaya_hafs.csv`, `sources/riwaya_warsh.csv` (as distributed), `sources/riwaya_kfgqpc_release_notes.txt` (the complex's own release notes for both, verbatim) |
+| **Licence** | none stated for the data — see below |
+| **Loaded by** | `compare_riwayat.py` → tables `riwayat`, `riwaya_diff` |
+
+**That the mirror is the genuine package** can be checked without trusting the
+mirror. Each narration folder carries the complex's own release note, naming
+the version, the date, the changelog and the column specification; the data
+files are titled `KFGQPC Uthmanic Hafs v18 Data` and `KFGQPC Uthmanic Warsh
+v10 Data` internally. Both notes are reproduced here.
+
+**That the Hafs text is the standard one** was checked against a source this
+project already had. Stripping both to their consonantal skeleton and ignoring
+word boundaries, the KFGQPC Hafs text and the Quranic Arabic Corpus text of
+section 1 agree on 6,234 of 6,236 verses. The two exceptions, 12:39 and 12:41,
+are the spelling of صاحبي — dagger alif against written alif, an orthographic
+choice of the corpus, not a difference of text.
+
+**On the licence.** The GitHub repository carries no licence file. The data
+files carry no copyright or terms notice of any kind. The only explicit
+statement the complex attaches to this material is embedded in the *fonts*
+that ship beside the data, in the `name` table of the TTF:
+
+> ELECTRONIC END-USER LICENSE AGREEMENT … Copyright (c) 2010 by King Fahd
+> Glorious Quran Printing Complex (KFGQPC), AlMadinah AlMunawarrah, Kingdom of
+> Saudi Arabia. All Rights Reserved. … Permission is hereby granted, Free of
+> Cost, to any person obtaining a copy of this Font accompanying this license,
+> the rights to Use, Copy, Distribute, subject to the following conditions:
+> 1. The Font Software cannot be Sold, Modified, Altered, Translated, Reverse
+> Engineered, Decompiled, Disassembled, Reproduced or Attempted to discover
+> the Source Code of this Font in no means. …
+
+(Hafs font: ISBN 978-603-8010-15-0, accession 1430/7278. Warsh font: ISBN
+978-603-8010-07-5, accession 1430/7270, copyright 2008.) That agreement says
+*Font* throughout; it governs the typeface software, not the text files. The
+complex's own terms page for the developer data could not be retrieved when
+this was written, so **no licence is claimed for the two CSV files here** — they
+are redistributed unmodified, with their origin named, and the release notes
+alongside them. Anyone republishing them further should check the complex's
+current terms.
+
+The Quranic text itself is not an authored work of the complex. What an edition
+can carry is the editorial layer: the orthographic choices, and above all the
+`page`, `line_start` and `line_end` columns and the transliterated sura names.
+Nothing in `riwaya_diff` uses those columns.
+
+**The other six riwayat** — Qaaloon, al-Bazzi, Qunbul, al-Doori, al-Soosi and
+Shuba — are published in the same place and in the same format, and are listed
+in the `riwayat` table with `in_database = 0`. Their text is not in this
+repository. Note that the complex's release notes file al-Bazzi and Qunbul
+under Abu Amr al-Basri; they transmit from Ibn Kathir al-Makki, and the
+`riwayat` table records the corrected relation.
+
 ---
 
 ## Licences
@@ -192,6 +254,9 @@ because a source states them. Each is reproducible from the scripts named.
 | `wujuh.word` / `corpus_id` | the token within the cited verse that carries the entry's root and falls inside the quoted span | `add_wujuh.py` |
 | `wujuh.confidence` | derived from `match_status` and the number of candidate verses for that citation | `add_wujuh.py` |
 | `sense_alignment.canonical_id` | senses of one root clustered across works on gloss similarity and shared cited verses | `align_senses.py` |
+| `riwaya_diff.translit_a` / `translit_b` | a phonemic transliteration of each word, so that two mushaf orthographies can be compared on what they say rather than on how they spell it | `riwaya_translit.py` |
+| `riwaya_diff.class` / `kind` | which rule of recitation or of notation explains a difference, and therefore whether it is usul, notation or farsh; no source states this classification | `compare_riwayat.py` |
+| `riwayat.qari_*` | which reader each transmitter transmits from, and the death dates; standard reference data, corrected against the complex's own release notes | `compare_riwayat.py` |
 
 Two consequences worth stating plainly. First, a `wujuh` row asserts that a
 named scholar assigned a meaning and cited a verse; that a given verse is the
