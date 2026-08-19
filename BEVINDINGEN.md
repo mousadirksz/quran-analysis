@@ -249,13 +249,16 @@ als نَسْتَعِينُ en ٱلضَّآلِّينَ meteen zwaar.
 De bandbreedte is smal (71–88%): élke soera is voor ruim zeven tiende
 herkenbaar, want het grammaticale skelet is overal hetzelfde.
 
-## 6. Is de rijkste djoez de beste? (`juz`)
+## 6. Is de lexicaal meest gevarieerde djoez de nuttigste start? (`juz`)
 
 Nee — en dit is de contra-intuïtiefste bevinding van deze analyse.
 
-Op **lexicale rijkdom** wint djoez 29 (Tabarak, soera 67–77) nipt van Djoez
-Amma: 537 tegen 529 roots. De laatste twee djoez zijn de rijkste van alle
-dertig; de midden-djoez (10, 11, 24) de armste met ~370 roots.
+Op **lexicale variatie** telt djoez 29 (Tabarak, soera 67–77) nipt meer unieke
+roots dan Djoez Amma: 537 tegen 529. De laatste twee djoez tellen er de meeste
+van alle dertig; de midden-djoez (10, 11, 24) de minste met ~370. Dat verschil
+is een eigenschap van het register: korte, opeenvolgende soera's introduceren
+per woord vaker een nieuwe root dan doorlopend verhalend proza, dat een
+kernvocabulaire herneemt.
 
 Maar meet je **transferwaarde** — welk deel van de héle Quran je met dat
 vocabulaire dekt — dan kantelt de ranglijst compleet:
@@ -270,10 +273,10 @@ vocabulaire dekt — dan kantelt de ranglijst compleet:
 | **30 (Amma)** | 849 | **83,2%** | **0,098%** |
 
 **Djoez Amma staat op transferwaarde helemaal onderaan** — dankzij, niet
-ondanks, zijn 849 lemma's. Rijkdom betekende hier vooral: veel zeldzame
-woorden, en die dragen weinig bij aan het begrijpen van de rest. Het rendement
-per geleerd lemma is er het laagst van alle dertig; de "saaie" repetitieve
-midden-djoez leveren per woord ~35% meer op.
+ondanks, zijn 849 lemma's. Veel van dat vocabulaire komt zelden elders voor, en
+draagt dus weinig bij aan het lezen van de rest. Het rendement per geleerd
+lemma is er het laagst van alle dertig; de midden-djoez, waar een kleiner
+kernvocabulaire vaker terugkeert, leveren per woord ~35% meer op.
 
 De eerlijke relativering: de bandbreedte is slechts 83–87%. Elke djoez geeft
 grofweg hetzelfde fundament. Het verschil tussen de "beste" en "slechtste"
