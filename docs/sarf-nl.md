@@ -376,6 +376,82 @@ voor.
 > Dat vorm IV domineert past bij de inhoud: het is de causatieve vorm —
 > neerzenden, doen geloven, tot leven wekken.
 
+#### Wat de riwaaya van Warsh toevoegt
+
+De tellingen hierboven komen uit het corpus, en het corpus ontleedt één
+riwaaya: die van Ḥafṣ. Een *farsh*-verschil kan de wazn van een woord
+veranderen — Ḥafṣ leest تَلْقَفُ (vorm I) waar Warsh تَلَقَّفُ (vorm V) leest —
+dus de vraag is gerechtvaardigd: zet Warsh een wortel in een vorm die de
+Ḥafṣ-tekst nergens gebruikt?
+
+Op twee niveaus, en de antwoorden verschillen.
+
+**Als vraag naar de vijftien vormen: nee.** Op de 67 plaatsen waar de wazn
+verandert gebruikt Warsh de vormen I, II, III, IV, V, VI en VIII — stuk voor
+stuk vormen die de Qoeraan in Ḥafṣ al ruimschoots kent. Er komt geen wazn met
+de riwaaya de Qoeraan binnen, en er verdwijnt er geen. De tabel hierboven
+("De taal vormt vijftien patronen, de Qoeraan gebruikt er elf") blijft dus
+staan zoals hij staat.
+
+**Als vraag naar wortel-en-vorm samen: ja, elf keer.** Op 22 plaatsen zet
+Warsh een wortel in een vorm die het Ḥafṣ-corpus nergens heeft, in geen enkele
+woordsoort:
+
+| Vers | Wortel | Ḥafṣ leest | vorm | Warsh-vorm | Warsh leest |
+|---|---|---|---|---|---|
+| 3:176 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
+| 4:33 | عقد | عَقَدَتۡ | I | **III** | عَٰقَدَتَ |
+| 4:42 | سوي | تُسَوَّىٰ | I | **V** | تَسَّوّ۪ىٰ |
+| 4:128 | صلح | يُصۡلِحَا | IV | **VI** | يَّصَّٰلَحَا |
+| 5:41 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
+| 6:33 | كذب | يُكَذِّبُونَكَ | II | **IV** | يُكْذِبُونَكَۖ |
+| 6:33 | حزن | لَيَحۡزُنُكَ | I | **IV** | لَيُحْزِنُكَ |
+| 7:117 | لقف | تَلۡقَفُ | I | **V** | تَلَقَّفُ |
+| 8:18 | وهن | مُوهِنُ | IV | **II** | مُوَهِّنٞ |
+| 10:65 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
+| 12:13 | حزن | لَيَحۡزُنُنِيٓ | I | **IV** | لَيُحْزِنُنِيَ |
+| 19:25 | سقط | تُسَٰقِطۡ | III | **VI** | تَسَّٰقَطْ |
+| 20:69 | لقف | تَلۡقَفۡ | I | **V** | تَلَقَّفْ |
+| 23:67 | هجر | تَهۡجُرُونَ | I | **IV** | تُهْجِرُونَۖ |
+| 26:45 | لقف | تَلۡقَفُ | I | **V** | تَلَقَّفُ |
+| 31:18 | صعر | تُصَعِّرۡ | II | **III** | تُصَٰعِرْ |
+| 31:23 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
+| 33:4 | ظهر | تُظَٰهِرُونَ | III | **V** | تَظَّهَّرُونَ |
+| 36:76 | حزن | يَحۡزُنكَ | I | **IV** | يُحْزِنكَ |
+| 58:2 | ظهر | يُظَٰهِرُونَ | III | **V** | يَظَّهَّرُونَ |
+| 58:3 | ظهر | يُظَٰهِرُونَ | III | **V** | يَظَّهَّرُونَ |
+| 58:10 | حزن | لِيَحۡزُنَ | I | **IV** | لِيُحْزِنَ |
+
+Elf verschillende wortel-vormparen: حزن IV, عقد III, سوي V, صلح VI, كذب IV,
+لقف V, وهن II, سقط VI, هجر IV, صعر III en ظهر V. Van deze is وهن II geen
+werkwoord maar een ism fāʿil: Ḥafṣ leest مُوهِنُ (van vorm IV), Warsh
+مُوَهِّنٌ (van vorm II).
+
+Let op de assimilatie in vier ervan. تَظَّهَّرُونَ, يَصَّالَحَا, تَسَّاقَطْ en
+تَسَّوَّىٰ zijn تتظهّرون، يتصالحا، تتساقط en تتسوّى: de tāʾ van vorm V en VI
+gaat op in de eerste wortelletter en wordt als shadda geschreven. Wie de vorm
+wil herkennen moet die assimilatie eerst terugdraaien — precies de vaardigheid
+uit hoofdstuk 4.
+
+**Drie randgevallen.** Bij سحت (20:61), زلق (68:51) en نشا (43:18) leest Warsh
+een werkwoord van vorm I waar Ḥafṣ vorm IV of II leest. Die staan hierboven
+niet, omdat vorm I van die wortels in Ḥafṣ wél voorkomt — maar alleen als
+naamwoord: السُّحْت، زَلَقًا، النَّشْأة en نَاشِئَة. Als *werkwoord* zijn
+يَسْحَتُ، يَزْلِقُ en يَنْشَؤُا nieuw. Wie de vraag stelt over werkwoorden en
+niet over wortels, telt dus veertien in plaats van elf.
+
+**Waar dit vandaan komt.** De Ḥafṣ-vorm in de tabel komt uit het corpus. De
+Warsh-vorm is de lezing van dit project, woord voor woord van de vocalisatie
+afgelezen: het corpus ontleedt Warsh niet en geen bron geeft die vorm. Wat wél
+controleerbaar is, is de kolom die telt — of die wortel in die vorm in Ḥafṣ
+voorkomt is een query, geen oordeel. `riwaya_sarf.py` drukt de tabel af en doet
+die controle; `riwaya_sarf.py --new` toont alleen wat Ḥafṣ niet heeft.
+
+Eén kanttekening bij de Ḥafṣ-kolom: het corpus schrijft geen `verb_form` bij
+vorm I, dus een leeg veld leest hier als I. Dat klopt overal behalve bij 4:42,
+waar تُسَوَّىٰ vorm II in de lijdende vorm is en het corpus niets invult. Voor
+de conclusie maakt het niet uit: vorm V van سوي ontbreekt in Ḥafṣ hoe dan ook.
+
 ### Rubāʿī
 
 **Mujarrad**: فَعْلَلَ — دَحْرَجَ.
@@ -1244,6 +1320,9 @@ verhouden, en welke uitgangen dat oplevert. Dat is een tweede boek.
 ---
 
 *De tellingen in dit boek zijn afgeleid uit de database van dit project en
-kunnen worden gereproduceerd met `python3 analyses.py`. De morfologische
-gegevens komen uit het Quranic Arabic Corpus; zie `SOURCES.md` voor de
-volledige verantwoording.*
+kunnen worden gereproduceerd met `python3 analyses.py`; de paradigmatabellen
+met `python3 sarf_examples.py`. De morfologische gegevens komen uit het
+Quranic Arabic Corpus, dat één riwaaya ontleedt: die van Ḥafṣ. Waar dat
+verschil maakt — welke vormen Warsh toevoegt — staat het in hoofdstuk 8, met
+`python3 riwaya_sarf.py` als controle. Zie `SOURCES.md` voor de volledige
+verantwoording.*

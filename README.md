@@ -639,6 +639,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `compare_riwayat.py` | aligns the Hafs and Warsh texts word by word and builds `riwayat` and `riwaya_diff`; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
+| `riwaya_sarf.py` | which (root, form) pairs Warsh uses that the Hafs corpus has nowhere; `--markdown` prints the table in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus |

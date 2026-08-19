@@ -530,6 +530,29 @@ klasse `article_lam` vouwt één korte klinker weg om ٱلَّذِينَ tegen �
 te kunnen leggen — de enige plek waar een korte klinker als notatie wordt
 behandeld.
 
+### Wat dit voor de vormleer betekent
+
+Het lesboek telt vormen uit het corpus, en het corpus ontleedt Ḥafṣ. Op 67 van
+de farsh-plaatsen verandert de **wazn** van het woord. Levert dat vormen op die
+de Qoeraan in Ḥafṣ niet kent?
+
+Niet op het niveau van de vijftien vormen: Warsh gebruikt hier I, II, III, IV,
+V, VI en VIII, alle zeven al ruim aanwezig in Ḥafṣ. Wél op het niveau van
+wortel-en-vorm samen: **22 plaatsen, elf verschillende wortel-vormparen** die
+het Ḥafṣ-corpus in geen enkele woordsoort heeft — حزن IV, عقد III, سوي V,
+صلح VI, كذب IV, لقف V, وهن II, سقط VI, هجر IV, صعر III en ظهر V. Vier daarvan
+staan met assimilatie geschreven (تَظَّهَّرُونَ = تتظهّرون).
+
+Bij drie wortels — سحت، زلق، نشا — leest Warsh een werkwoord van vorm I waar
+Ḥafṣ IV of II leest. Die tellen hierboven niet mee omdat vorm I van die
+wortels in Ḥafṣ wel voorkomt, maar uitsluitend als naamwoord (السُّحْت،
+زَلَقًا، النَّشْأة). Als de vraag over werkwoorden gaat en niet over wortels,
+is het antwoord dus veertien.
+
+`riwaya_sarf.py` drukt de tabel af; hoofdstuk 8 van `docs/sarf-nl.md` legt hem
+uit. De Warsh-vorm is daar de lezing van dit project — het corpus ontleedt
+Warsh niet — maar de vraag of die vorm in Ḥafṣ voorkomt is een query.
+
 `docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om
 nagelopen te worden. Zes riwaayaat staan wel in de tabel `riwayat` maar hun
 tekst niet in de repo; zie `SOURCES.md` voor waarom.
