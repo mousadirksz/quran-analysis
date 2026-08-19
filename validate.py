@@ -691,6 +691,29 @@ def metadata_verses(cur, args):
     return f"all {EXPECTED_AYAHS:,} corpus verses covered"
 
 
+@check("word glosses")
+def word_glosses(cur, args):
+    """The glosses come from the same corpus project as the morphology, so a
+    word without one, or a gloss naming no word, means the two drifted apart —
+    not a coverage shortfall to be reported as a percentage."""
+    require_tables(cur, "word_glosses")
+    expect(cur.execute("SELECT COUNT(*) FROM word_glosses").fetchone()[0],
+           EXPECTED_WORDS, "gloss rows")
+    expect_none(cur, "gloss naming no word in corpus",
+                "SELECT g.surah, g.ayah, g.word FROM word_glosses g WHERE NOT"
+                " EXISTS (SELECT 1 FROM corpus c WHERE c.surah=g.surah"
+                " AND c.ayah=g.ayah AND c.word=g.word)")
+    expect_none(cur, "word without a gloss",
+                "SELECT DISTINCT c.surah, c.ayah, c.word FROM corpus c WHERE"
+                " NOT EXISTS (SELECT 1 FROM word_glosses g WHERE g.surah=c.surah"
+                " AND g.ayah=c.ayah AND g.word=c.word)")
+    expect_none(cur, "empty gloss",
+                "SELECT surah, ayah, word FROM word_glosses"
+                " WHERE gloss_en IS NULL OR TRIM(gloss_en)=''")
+    distinct = cur.execute("SELECT COUNT(DISTINCT gloss_en) FROM word_glosses").fetchone()[0]
+    return f"all {EXPECTED_WORDS:,} words glossed, {distinct:,} distinct glosses"
+
+
 def report(outcome, name, text):
     """Print one result; multi-line details are indented under the first."""
     head, *rest = str(text).splitlines()

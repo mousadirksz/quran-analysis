@@ -560,6 +560,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
+| `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
 `BEVINDINGEN.md` (Dutch) is the analytical companion to this file: what the

@@ -61,6 +61,7 @@ STEPS = [
     ("add_damair_lemmas.py", True, ()),
     ("add_wazifa.py", True, ()),
     ("add_metadata.py", False, ()),
+    ("add_translation.py", False, ("sources/word_glosses_en.tsv",)),
     ("parse_tasarif.py", True, ("sources/tasarif.txt",)),
     ("parse_damaghani.py", True, ("sources/damaghani_qamus.txt",)),
     ("parse_ibnjawzi.py", True, ("sources/ibnjawzi_nuzhat.txt",)),
