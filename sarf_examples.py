@@ -133,6 +133,30 @@ def busiest_form(cur, root):
     return r[0] if r else None
 
 
+def render(par, head, plain, markdown):
+    """Print one paradigm: the persons the Quran attests, over the three
+    tenses. Rows the text does not attest are left out rather than filled in,
+    which is the whole point of teaching from the text."""
+    if markdown:
+        print("\n" + head + "\n")
+        print("| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |")
+        print("|---|---|---|---|---|---|---|")
+    else:
+        print("\n" + plain)
+    for pgn in PGN_ORDER:
+        perf, impf, impv = (par.get((a, pgn)) for a in ("PERF", "IMPF", "IMPV"))
+        if not (perf or impf or impv):
+            continue
+        cell = lambda x, i: (x[i] if x else ("—" if i == 0 else ""))
+        if markdown:
+            print(f"| {PGN_NL[pgn]} | {cell(perf,0)} | {cell(perf,1)}"
+                  f" | {cell(impf,0)} | {cell(impf,1)}"
+                  f" | {cell(impv,0)} | {cell(impv,1)} |")
+        else:
+            print(f"    {PGN_NL[pgn]:<18} {cell(perf,0):<14}"
+                  f" {cell(impf,0):<14} {cell(impv,0)}")
+
+
 def show(cur, t, roots, markdown, per_type=2):
     title = TYPE_NL[t]
     print(("\n### " + title) if markdown else ("\n" + "=" * 62 + "\n" + title))
@@ -151,29 +175,10 @@ def show(cur, t, roots, markdown, per_type=2):
             continue
         lemma = lemma_of(cur, root, form)
         cells = sum(1 for _ in par)
-        if markdown:
-            note = f" · vorm {form}" if form else ""
-            print(f"\n**{root}** — {lemma} · {total}× in de Quran, "
-                  f"{cells} cellen geattesteerd{note}\n")
-            print("| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |")
-            print("|---|---|---|---|---|---|---|")
-        else:
-            print(f"\n  {root}  ({lemma})  {total}x, {cells} cellen"
-                  + (f", vorm {form}" if form else ""))
-        for pgn in PGN_ORDER:
-            perf = par.get(("PERF", pgn))
-            impf = par.get(("IMPF", pgn))
-            impv = par.get(("IMPV", pgn))
-            if not (perf or impf or impv):
-                continue
-            cell = lambda x, i: (x[i] if x else ("—" if i == 0 else ""))
-            if markdown:
-                print(f"| {PGN_NL[pgn]} | {cell(perf,0)} | {cell(perf,1)}"
-                      f" | {cell(impf,0)} | {cell(impf,1)}"
-                      f" | {cell(impv,0)} | {cell(impv,1)} |")
-            else:
-                print(f"    {PGN_NL[pgn]:<18} {cell(perf,0):<14}"
-                      f" {cell(impf,0):<14} {cell(impv,0)}")
+        note = f" · vorm {form}" if form else ""
+        head = f"**{root}** — {lemma} · {total}× in de Quran, {cells} cellen geattesteerd{note}"
+        plain = f"  {root}  ({lemma})  {total}x, {cells} cellen" + (f", vorm {form}" if form else "")
+        render(par, head, plain, markdown)
         shown += 1
         if shown >= per_type:
             break
@@ -219,7 +224,7 @@ def bare_3ms(cur, root, aspect):
     return r[0] if r else None
 
 
-def abwab(cur, markdown=False, per_bab=3):
+def bab_roots(cur):
     """Group the sound form-I roots into the six abwab by their vowels.
 
     Only salim roots are classified: in a weak root the vowel of the cayn is
@@ -241,6 +246,88 @@ def abwab(cur, markdown=False, per_bab=3):
         vm, vi = ayn_vowel(m, root), ayn_vowel(i, root)
         if (vm, vi) in found:
             found[(vm, vi)].append((root, repair_markers(m), repair_markers(i), n))
+    return found
+
+
+def fullest(cur, roots, form=None):
+    """Of these roots, the one the Quran conjugates most fully: first by how
+    many of the three tenses it attests at all, then by how many persons."""
+    best = None
+    for root, n in roots:
+        par = paradigm(cur, root, form)
+        if not par:
+            continue
+        score = (len({a for a, _ in par}), len(par))
+        if best is None or score > best[0]:
+            best = (score, root, n, par)
+    return best
+
+
+ATTESTED_FORMS = ["II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XII"]
+
+
+def form_paradigms(cur, markdown=False):
+    """One conjugation per derived form, from the root the Quran conjugates
+    most fully in it. Form I has the paradigms of chapter 10 and the six abwab
+    below; these are the mazid patterns, whose prefix vowel (yu-, not ya-) and
+    whose imperative are what the learner needs to see side by side."""
+    for form in ATTESTED_FORMS:
+        roots = cur.execute(
+            "SELECT root_ar, COUNT(*) n FROM corpus WHERE pos='V' AND verb_form=?"
+            " AND root_ar IS NOT NULL AND root_ar != '' GROUP BY root_ar"
+            " ORDER BY n DESC LIMIT 15", (form,)).fetchall()
+        # a sound root shows the pattern of the form; a weak one shows the
+        # pattern plus the changes of chapter 9 on top of it, which is not
+        # what this table is for. Fall back only when no sound root carries
+        # the form well enough to be worth printing.
+        sound = [(r, n) for r, n in roots if classify(r) == "salim"]
+        best = fullest(cur, sound, form)
+        if not best or best[0][0] < 2:
+            best = fullest(cur, roots, form) or best
+        if not best:
+            continue
+        (_, cells), root, n, par = best
+        total = cur.execute("SELECT COUNT(*) FROM corpus WHERE pos='V' AND verb_form=?",
+                            (form,)).fetchone()[0]
+        lemma = lemma_of(cur, root, form)
+        kind = TYPE_NL[classify(root)].split(" — ")[0]
+        head = (f"**Vorm {form} — {root}** · {lemma} · {kind} · {n}× voor deze "
+                f"wortel, {total}× voor de vorm · {cells} cellen")
+        plain = (f"  vorm {form}  {root} ({lemma}, {kind})  {n}x van {total}x, "
+                 f"{cells} cellen")
+        render(par, head, plain, markdown)
+
+
+def bab_paradigms(cur, markdown=False):
+    """One conjugation per bab of form I, from the sound root the Quran
+    conjugates most fully in that bab. Bab 6 has no sound root in this text,
+    so it is shown with the mithal that does carry it."""
+    found = bab_roots(cur)
+    for key in sorted(BAB_NAMES, key=lambda k: BAB_NAMES[k][0]):
+        num, pattern = BAB_NAMES[key]
+        roots = [(r, n) for r, _m, _i, n in found[key]][:10]
+        note = ""
+        if not roots:
+            # waritha / yarithu is bab 6 but a mithal: the waw drops in the
+            # present, which is why the sound-root scan cannot see it
+            roots, note = [("ورث", 0)], " · mithāl, geen gave wortel in deze tekst"
+        best = fullest(cur, roots)
+        if not best:
+            continue
+        (_, cells), root, n, par = best
+        lemma = lemma_of(cur, root)
+        head = f"**Bāb {num} — {pattern} — {root}** · {lemma} · {cells} cellen{note}"
+        plain = f"  bab {num}  {pattern}  {root} ({lemma})  {cells} cellen{note}"
+        render(par, head, plain, markdown)
+
+
+def abwab(cur, markdown=False, per_bab=3):
+    """Group the sound form-I roots into the six abwab by their vowels.
+
+    Only salim roots are classified: in a weak root the vowel of the cayn is
+    obscured by the very changes chapter 9 describes, so reading a bab off it
+    would be guesswork."""
+    found = bab_roots(cur)
 
     if markdown:
         print("| Bāb | Patroon | Wortel | Māḍī | Muḍāriʿ | In de Quran |")
@@ -335,8 +422,10 @@ def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     markdown = "--markdown" in sys.argv
     cur = sqlite3.connect(DB).cursor()
-    if args and args[0] in ("abwab", "forms", "quad"):
-        {"abwab": abwab, "forms": verb_forms, "quad": quadriliteral}[args[0]](cur, markdown)
+    modes = {"abwab": abwab, "forms": verb_forms, "quad": quadriliteral,
+             "form-paradigms": form_paradigms, "bab-paradigms": bab_paradigms}
+    if args and args[0] in modes:
+        modes[args[0]](cur, markdown)
         return
     by_type = roots_by_type(cur)
     wanted = args or TYPES
