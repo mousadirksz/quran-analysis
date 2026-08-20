@@ -971,11 +971,6 @@ Let bij het doornemen op deze dingen:
 - **Lafīf mafrūq** (وقي): de gebiedende wijs قِ is één letter — het kortste
   woord van het Arabisch; in de Quran staat het meervoud قُوٓا۟ (66:6).
 
----
-
-# Deel III — Het naamwoord
-
-
 ### 10.4 De zes abwāb vervoegd
 
 Hoofdstuk 8 gaf de zes *abwāb* met hun voorbeelden. Hier is elke bāb
@@ -1178,6 +1173,10 @@ hoofdstuk 8.
 
 De vormen XI, XIII, XIV en XV ontbreken hier omdat ze in de Qoeraan niet
 voorkomen; hoofdstuk 8 geeft er voorbeelden uit de taal bij.
+
+---
+
+# Deel III — Het naamwoord
 
 ## 11. Mushtaqqāt — de afgeleide naamwoorden
 
