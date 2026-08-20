@@ -283,6 +283,9 @@ Bāb 3 vereist meestal een keelletter (ء ه ع ح غ خ) als *ʿayn* of *lām*.
 is bijzonder: die drukt een blijvende eigenschap uit (كَرُمَ, "hij was
 edelmoedig") en is daarom nooit overgankelijk.
 
+Elke bāb staat in **10.4** volledig doorvervoegd, met verleden tijd,
+tegenwoordige tijd en gebiedende wijs naast elkaar.
+
 #### De abwāb zoals de Qoeraan ze gebruikt (riwaaya van Ḥafṣ)
 
 De tabel hierboven is de leerboekvorm. Hieronder dezelfde zes *abwāb* met
@@ -375,7 +378,7 @@ Warsh niet.
 | X | ٱسْتَفْعَلَ | vragen om, achten als | ٱسْتَغْفَرَ (om vergeving vragen) |
 
 De betekenissen zijn richtinggevend, niet absoluut: een woordenboek blijft
-nodig.
+nodig. Elke vorm die de Qoeraan gebruikt staat in **10.5** doorvervoegd.
 
 #### Alle vormen, met en zonder Quran
 
@@ -721,7 +724,9 @@ de middenletter blijft meestal gespaard.
 Hieronder voor elk van de acht wortelsoorten de vormen die de Quran werkelijk
 attesteert, met vindplaats. De tabellen zijn niet bedacht maar gegenereerd:
 `python3 sarf_examples.py --markdown` haalt ze uit de database, en wie een
-vorm natrekt vindt hem op de genoemde plaats.
+vorm natrekt vindt hem op de genoemde plaats. Dezelfde generator levert de
+paradigma's per bāb (`bab-paradigms`) en per vorm (`form-paradigms`) in 10.4
+en 10.5.
 
 Twee dingen om te weten bij het lezen. Er staat telkens de **volledige
 geschreven vorm**, dus inclusief een eventueel voorvoegsel — waar de Quran een
@@ -969,6 +974,210 @@ Let bij het doornemen op deze dingen:
 ---
 
 # Deel III — Het naamwoord
+
+
+### 10.4 De zes abwāb vervoegd
+
+Hoofdstuk 8 gaf de zes *abwāb* met hun voorbeelden. Hier is elke bāb
+doorvervoegd, met de wortel die de Qoeraan er het volledigst in gebruikt: de
+verleden tijd, de tegenwoordige tijd en de gebiedende wijs naast elkaar, zodat
+te zien is wat de klinker op de *ʿayn* door het hele paradigma heen doet.
+
+**Bāb 1 — فَعَلَ / يَفْعُلُ — كفر** · كَفَرَ · 15 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | كَفَرَ | 2:102 | يَكْفُرُ | 2:99 | — |  |
+| zij (v. enk.) | فَكَفَرَتْ | 16:112 | — |  | — |  |
+| zij (m. mv.) | كَفَرُوا۟ | 2:6 | يَكْفُرُونَ | 2:61 | — |  |
+| jij (m.) | أَكَفَرْتَ | 18:37 | تَكْفُرْ | 2:102 | ٱكْفُرْ | 59:16 |
+| jullie (m.) | كَفَرْتُم | 9:66 | تَكْفُرُونَ | 2:28 | وَٱكْفُرُوٓا۟ | 3:72 |
+| ik | كَفَرْتُ | 14:22 | أَكْفُرُ | 27:40 | — |  |
+| wij | كَفَرْنَا | 14:9 | نَّكْفُرَ | 34:33 | — |  |
+
+**Bāb 2 — فَعَلَ / يَفْعِلُ — حمل** · حَمَلَ · 12 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | حَمَلَ | 20:111 | يَحْمِلُ | 20:100 | — |  |
+| zij (v. enk.) | حَمَلَتْ | 6:146 | تَحْمِلُهُ | 2:248 | — |  |
+| zij (m. mv.) | — |  | يَحْمِلُونَ | 6:31 | — |  |
+| zij (v. mv.) | — |  | يَحْمِلْنَهَا | 33:72 | — |  |
+| jij (m.) | حَمَلْتَهُۥ | 2:286 | تَحْمِلْ | 2:286 | ٱحْمِلْ | 11:40 |
+| ik | — |  | أَحْمِلُكُمْ | 9:92 | — |  |
+| wij | حَمَلْنَا | 17:3 | وَلْنَحْمِلْ | 29:12 | — |  |
+
+**Bāb 3 — فَعَلَ / يَفْعَلُ — جعل** · جَعَلَ · 14 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | جَعَلَ | 2:22 | يَجْعَلَ | 3:176 | — |  |
+| zij (v. enk.) | جَعَلَتْهُ | 51:42 | — |  | — |  |
+| zij (m. mv.) | جَعَلُوا۟ | 13:16 | يَجْعَلُونَ | 2:19 | — |  |
+| jij (m.) | — |  | تَجْعَلْنَا | 7:47 | ٱجْعَلْ | 2:126 |
+| jullie (m.) | جَعَلْتُمُ | 16:91 | تَجْعَلُوا۟ | 2:22 | ٱجْعَلُوا۟ | 12:62 |
+| ik | وَجَعَلْتُ | 74:12 | أَجْعَلْ | 18:95 | — |  |
+| wij | جَعَلْنَا | 2:125 | نَّجْعَلَ | 18:48 | — |  |
+
+**Bāb 4 — فَعِلَ / يَفْعَلُ — علم** · عَلِمَ · 16 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | عَلِمَ | 2:60 | يَعْلَمُ | 2:77 | — |  |
+| zij (v. enk.) | عَلِمَتِ | 37:158 | تَعْلَمُ | 4:113 | — |  |
+| zij (m. mv.) | عَلِمُوا۟ | 2:102 | يَعْلَمُونَ | 2:13 | — |  |
+| jij (m.) | عَلِمْتَهُۥ | 5:116 | تَعْلَمْ | 2:106 | وَٱعْلَمْ | 2:260 |
+| jullie (m.) | عَلِمْتُمُ | 2:65 | تَعْلَمُونَ | 2:22 | ٱعْلَمُوٓا۟ | 5:98 |
+| ik | عَلِمْتُ | 28:38 | أَعْلَمُ | 2:30 | — |  |
+| wij | عَلِمْنَا | 12:51 | نَعْلَمُ | 3:167 | — |  |
+
+**Bāb 5 — فَعُلَ / يَفْعُلُ — كبر** · كَبُرَ · 4 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | كَبُرَ | 6:35 | يَكْبُرُ | 17:51 | — |  |
+| zij (v. enk.) | كَبُرَتْ | 18:5 | — |  | — |  |
+| zij (m. mv.) | — |  | يَكْبَرُوا۟ | 4:6 | — |  |
+
+**Bāb 6 — فَعِلَ / يَفْعِلُ — ورث** · وَرِثَ · 6 cellen · mithāl, geen gave wortel in deze tekst
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | وَوَرِثَهُۥٓ | 4:11 | يَرِثُهَآ | 4:176 | — |  |
+| zij (m. mv.) | وَرِثُوا۟ | 7:169 | يَرِثُونَ | 7:100 | — |  |
+| jullie (m.) | — |  | تَرِثُوا۟ | 4:19 | — |  |
+| wij | — |  | نَرِثُ | 19:40 | — |  |
+
+Twee dingen vallen op. **Bāb 5 is nauwelijks te vervoegen** — كَبُرَ vult vier
+cellen en heeft geen gebiedende wijs, wat past bij een bāb die een blijvende
+eigenschap uitdrukt: daar geef je geen bevel toe. En **bāb 6 heeft in deze
+tekst geen gave wortel**, dus staat hij hier met een *mithāl*, وَرِثَ / يَرِثُ,
+waar de wāw in de tegenwoordige tijd wegvalt. Zie hoofdstuk 8 voor wat de
+riwaaya van Warsh hier leest.
+
+### 10.5 De uitgebreide vormen vervoegd
+
+Dezelfde oefening voor de *mazīd*-vormen. Per vorm de wortel die de Qoeraan er
+het volledigst in gebruikt, bij voorkeur een gave wortel — want een zwakke laat
+naast het patroon van de vorm ook de veranderingen uit hoofdstuk 9 zien, en dat
+maakt de tabel troebel. Waar geen gave wortel de vorm draagt, staat de
+wortelsoort erbij.
+
+**Vorm II — سبح** · سَبَّحَ · Sālim · 42× voor deze wortel, 1300× voor de vorm · 10 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | سَبَّحَ | 57:1 | يُسَبِّحُ | 17:44 | — |  |
+| zij (v. enk.) | — |  | تُسَبِّحُ | 17:44 | — |  |
+| zij (m. mv.) | وَسَبَّحُوا۟ | 32:15 | يُسَبِّحُونَ | 21:20 | — |  |
+| zij (v. mv.) | — |  | يُسَبِّحْنَ | 21:79 | — |  |
+| jij (m.) | — |  | — |  | سَبِّحِ | 87:1 |
+| jullie (m.) | — |  | تُسَبِّحُونَ | 68:28 | سَبِّحُوا۟ | 19:11 |
+| wij | — |  | نُسَبِّحُ | 2:30 | — |  |
+
+**Vorm III — قتل** · قَٰتَلَ · Sālim · 54× voor deze wortel, 334× voor de vorm · 10 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | قَٰتَلَ | 3:146 | يُقَٰتِلْ | 4:74 | — |  |
+| zij (v. enk.) | — |  | تُقَٰتِلُ | 3:13 | — |  |
+| zij (m. mv.) | قَٰتَلُوكُمْ | 2:191 | يُقَٰتِلُونَكُمْ | 2:190 | — |  |
+| jij (m.) | — |  | — |  | فَقَٰتِلْ | 4:84 |
+| jullie tweeën (m.) | — |  | — |  | فَقَٰتِلَآ | 5:24 |
+| jullie (m.) | — |  | تُقَٰتِلُوهُمْ | 2:191 | قَٰتِلُوا۟ | 3:167 |
+| wij | — |  | نُّقَٰتِلْ | 2:246 | — |  |
+
+**Vorm IV — شرك** · أَشْرَكَ · Sālim · 71× voor deze wortel, 3487× voor de vorm · 13 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | أَشْرَكَ | 7:173 | يُشْرِكْ | 4:48 | — |  |
+| zij (m. mv.) | أَشْرَكُوا۟ | 2:96 | يُشْرِكُونَ | 7:190 | — |  |
+| zij (v. mv.) | — |  | يُشْرِكْنَ | 60:12 | — |  |
+| jij (m.) | أَشْرَكْتَ | 39:65 | تُشْرِكْ | 22:26 | وَأَشْرِكْهُ | 20:32 |
+| jullie (m.) | أَشْرَكْتُمْ | 6:81 | تُشْرِكُوا۟ | 4:36 | — |  |
+| ik | — |  | أُشْرِكَ | 13:36 | — |  |
+| wij | أَشْرَكْنَا | 6:148 | نُشْرِكَ | 3:64 | — |  |
+
+**Vorm V — ربص** · تَرَبَّصْ · Sālim · 13× voor deze wortel, 414× voor de vorm · 7 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | — |  | وَيَتَرَبَّصُ | 9:98 | — |  |
+| zij (m. mv.) | — |  | يَتَرَبَّصُونَ | 4:141 | — |  |
+| zij (v. mv.) | — |  | يَتَرَبَّصْنَ | 2:228 | — |  |
+| jullie (m.) | وَتَرَبَّصْتُمْ | 57:14 | تَرَبَّصُونَ | 9:52 | تَرَبَّصُوا۟ | 52:31 |
+| wij | — |  | نَتَرَبَّصُ | 9:52 | — |  |
+
+**Vorm VI — نزع** · تَنَٰزَعُ · Sālim · 7× voor deze wortel, 77× voor de vorm · 4 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| zij (m. mv.) | فَتَنَٰزَعُوٓا۟ | 20:62 | يَتَنَٰزَعُونَ | 18:21 | — |  |
+| jullie (m.) | تَنَٰزَعْتُمْ | 4:59 | تَنَٰزَعُوا۟ | 8:46 | — |  |
+
+**Vorm VII — طلق** · ٱنطَلَقَ · Sālim · 9× voor deze wortel, 51× voor de vorm · 6 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | وَٱنطَلَقَ | 38:6 | يَنطَلِقُ | 26:13 | — |  |
+| zij tweeën (m.) | فَٱنطَلَقَا | 18:71 | — |  | — |  |
+| zij (m. mv.) | فَٱنطَلَقُوا۟ | 68:23 | — |  | — |  |
+| jullie (m.) | ٱنطَلَقْتُمْ | 48:15 | — |  | ٱنطَلِقُوٓا۟ | 77:29 |
+
+**Vorm VIII — تبع** · ٱتَّبَعَ · Sālim · 136× voor deze wortel, 963× voor de vorm · 16 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | ٱتَّبَعَنِ | 3:20 | يَتَّبِعُ | 2:143 | — |  |
+| zij (v. enk.) | وَٱتَّبَعَتْهُمْ | 52:21 | — |  | — |  |
+| zij (m. mv.) | ٱتَّبَعُوا۟ | 2:166 | يَتَّبِعُونَ | 4:27 | — |  |
+| jij (m.) | ٱتَّبَعْتَ | 2:120 | تَتَّبِعَ | 2:120 | ٱتَّبِعْ | 6:106 |
+| jullie tweeën | — |  | تَتَّبِعَآنِّ | 10:89 | — |  |
+| jullie (m.) | ٱتَّبَعْتُمْ | 7:90 | تَتَّبِعُوا۟ | 2:168 | ٱتَّبِعُوا۟ | 2:170 |
+| ik | وَٱتَّبَعْتُ | 12:38 | أَتَّبِعُ | 6:50 | — |  |
+| wij | وَٱتَّبَعْنَا | 3:53 | نَتَّبِعُ | 2:170 | — |  |
+
+**Vorm IX — بيض** · ٱبْيَضَّتْ · Ajwaf · 3× voor deze wortel, 5× voor de vorm · 2 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| zij (v. enk.) | ٱبْيَضَّتْ | 3:107 | تَبْيَضُّ | 3:106 | — |  |
+
+**Vorm X — غفر** · ٱسْتَغْفَرَ · Sālim · 40× voor deze wortel, 369× voor de vorm · 11 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | وَٱسْتَغْفَرَ | 4:64 | يَسْتَغْفِرِ | 4:110 | — |  |
+| zij (m. mv.) | فَٱسْتَغْفَرُوا۟ | 3:135 | يَسْتَغْفِرُونَ | 8:33 | — |  |
+| jij (m.) | أَسْتَغْفَرْتَ | 63:6 | تَسْتَغْفِرْ | 9:80 | ٱسْتَغْفِرْ | 9:80 |
+| jij (v.) | — |  | — |  | وَٱسْتَغْفِرِى | 12:29 |
+| jullie (m.) | — |  | تَسْتَغْفِرُونَ | 27:46 | ٱسْتَغْفِرُوا۟ | 11:3 |
+| ik | — |  | أَسْتَغْفِرُ | 12:98 | — |  |
+
+**Vorm XII — طمن** · ٱطْمَأَنَّ · Sālim · 9× voor deze wortel, 9× voor de vorm · 5 cellen
+
+| Persoon | Māḍī | Vers | Muḍāriʿ | Vers | Amr | Vers |
+|---|---|---|---|---|---|---|
+| hij | ٱطْمَأَنَّ | 22:11 | لِّيَطْمَئِنَّ | 2:260 | — |  |
+| zij (v. enk.) | — |  | تَطْمَئِنُّ | 13:28 | — |  |
+| zij (m. mv.) | وَٱطْمَأَنُّوا۟ | 10:7 | — |  | — |  |
+| jullie (m.) | ٱطْمَأْنَنتُمْ | 4:103 | — |  | — |  |
+
+Let bij het lezen op de klinker van het voorvoegsel. Vorm I heeft يَ-, maar de
+vormen II, III, IV en X hebben يُ-: يُسَبِّحُ، يُقَاتِلُ، يُشْرِكُ،
+يَسْتَغْفِرُ. Dat ene teken is vaak het snelste onderscheid tussen een kale en
+een uitgebreide vorm.
+
+Twee tabellen zijn mager, en dat is informatie. Vorm VI haalt vier cellen omdat
+de vorm zelf maar 77 keer voorkomt, en vorm IX twee, want die staat in totaal
+vijf keer in de tekst — allemaal kleuren, en allemaal bij een holle wortel, dus
+er is geen gave wortel om hem aan te leren. Vorm XII staat er met ٱطْمَأَنَّ,
+dat het corpus aan een vierletterige wortel toeschrijft; zie de opmerking in
+hoofdstuk 8.
+
+De vormen XI, XIII, XIV en XV ontbreken hier omdat ze in de Qoeraan niet
+voorkomen; hoofdstuk 8 geeft er voorbeelden uit de taal bij.
 
 ## 11. Mushtaqqāt — de afgeleide naamwoorden
 

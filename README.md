@@ -648,7 +648,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
-| `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus |
+| `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
 
 `docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
 classification with its counts, and every farsh difference with its verse.
