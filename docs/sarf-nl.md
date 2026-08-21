@@ -1482,6 +1482,18 @@ Aanpassingen bij het toevoegen:
 
 ---
 
+# Deel IV — Klank en spelling
+
+De vorige delen gingen over woordsoorten: het werkwoord, het naamwoord. Deze
+vier hoofdstukken gaan over iets anders — wat er met letters gebeurt zodra ze
+naast elkaar komen te staan, en hoe dat wordt opgeschreven. Ze gelden voor
+werkwoorden en naamwoorden gelijk, en daarom staan ze apart.
+
+*Iʿlāl* en *ibdāl* verklaren waarom قَالَ niet قَوَلَ is en waarom de wāw van
+وَرِثَ in يَرِثُ verdwijnt. *Waqf* verklaart waarom aan het eind van een vers
+iets anders klinkt dan er staat. En de *hamza* is de enige letter waarvan
+niet de klank maar de schrijfwijze een heel hoofdstuk nodig heeft.
+
 ## 17. Hamza — de spelling
 
 De **hamza** (هَمْزَة) is de lastigste letter van het Arabisch, niet in klank
