@@ -410,19 +410,39 @@ def riwayat(c):
             (qe,))]
         print("    %-20s %-16s d. %3d AH   %s" % (qe, qa, qd, " en ".join(namen)))
 
-    total = one(c, "SELECT COUNT(*) FROM riwaya_diff")
-    print("\n  %s plaatsen waar de twee teksten uiteenlopen, gesorteerd naar"
+    print("\n  Tien paren vergeleken, elk woord voor woord uitgelijnd:\n")
+    print("    paar                 qiraa-a   plaatsen")
+    for a, b, t, n in c.execute(
+            "SELECT riwaya_a, riwaya_b, pair_type, COUNT(*) n FROM riwaya_diff"
+            " GROUP BY riwaya_a, riwaya_b, pair_type ORDER BY n DESC").fetchall():
+        print("    %-20s %-9s %8s" % ("%s - %s" % (a, b), t, format(n, ",")))
+
+    print("\n  Binnen een qiraa-a tegenover tussen twee qiraa-aat:")
+    for t, n, pairs in c.execute(
+            "SELECT pair_type, COUNT(*), COUNT(DISTINCT riwaya_a || riwaya_b)"
+            " FROM riwaya_diff GROUP BY pair_type").fetchall():
+        print("    %-8s %8s plaatsen over %d paren, gemiddeld %s"
+              % (t, format(n, ","), pairs, format(n // pairs, ",")))
+    print("    Let op: dat gemiddelde zegt minder dan het lijkt. Hafs-Shu3ba")
+    print("    (595) en Bazzie-Qoenboel (184) zijn echt dicht bij elkaar, maar")
+    print("    Qaaloen-Warsh (6.157) en Doorie-Soesie (4.467) niet -- daar zit")
+    print("    het verschil in usul en in de schrijfwijze van de mushaf, niet")
+    print("    in de woorden. Alleen Hafs-Warsh is uitgesplitst.")
+
+    total = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE classified = 1")
+    print("\n  Hafs tegenover Warsh, %s plaatsen, gesorteerd naar wat het"
           % format(total, ","))
-    print("  wat het verschil is:\n")
+    print("  verschil is:\n")
     for kind, n in c.execute("SELECT kind, COUNT(*) n FROM riwaya_diff"
-                             " GROUP BY kind ORDER BY n DESC"):
+                             " WHERE classified = 1 GROUP BY kind"
+                             " ORDER BY n DESC").fetchall():
         print("    %-12s %6s   %4.1f%%" % (kind, format(n, ","), n / total * 100))
 
     print("\n  klassen binnen usul en notatie:")
     for cls, kind, n in c.execute(
             "SELECT class, kind, COUNT(*) n FROM riwaya_diff"
             " WHERE kind IN ('usul','notatie') GROUP BY class"
-            " ORDER BY n DESC LIMIT 8"):
+            " ORDER BY n DESC LIMIT 8").fetchall():
         print("    %-24s %-8s %6s" % (cls.split("+")[0], kind, format(n, ",")))
 
     farsh = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE kind = 'farsh'")
@@ -437,14 +457,14 @@ def riwayat(c):
     for s, nm, n in c.execute(
             "SELECT d.surah, sr.name_ar, COUNT(*) n FROM riwaya_diff d"
             " JOIN surahs sr ON sr.number = d.surah WHERE d.kind = 'farsh'"
-            " GROUP BY d.surah ORDER BY n DESC LIMIT 6"):
+            " GROUP BY d.surah ORDER BY n DESC LIMIT 6").fetchall():
         print("    %3d %-12s %4s" % (s, nm, n))
 
     print("\n  een greep uit de farsh-verschillen:")
     for s, a, fa, fb in c.execute(
             "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"
             " WHERE kind = 'farsh' AND surah IN (1,2,3,43,57,72)"
-            " ORDER BY surah, ayah_a LIMIT 10"):
+            " ORDER BY surah, ayah_a LIMIT 10").fetchall():
         print("    %-8s %-18s %s" % ("%d:%d" % (s, a), fa, fb or "(ontbreekt)"))
 
 

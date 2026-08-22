@@ -23,6 +23,19 @@ The verse division differs in 50 suras, so a join on (surah, ayah) breaks.
 Each sura is aligned on its word sequence instead, with difflib over the
 consonant skeleton, and the two ayah numbers are both recorded.
 
+**The classification holds for Hafs and Warsh only.** Its rules were written
+by reading what the Warsh mushaf does -- its signs for the wasl alif, its
+naql, its sila, its treatment of the hamza -- and checked against that pair.
+They do not transfer: the Doori and Soosi packages write the wasl alif as a
+bare vowelled alif, which those rules read as a difference in the text, and
+al-Soosi's idghaam kabir is a systematic feature no rule here knows. Running
+the classifier over those pairs produced thousands of "farsh" rows that are
+nothing of the sort. So every pair beside Hafs-Warsh is stored with its
+differences located but not labelled, `kind = 'ongeclassificeerd'`, and the
+raw count is all this database claims about it. That count is sound: it is a
+comparison of two texts, and it is what shows a within-qiraa pair sitting an
+order of magnitude closer than a between-qiraa one.
+
 What comes out is sorted into three kinds:
 
   usul       a rule of recitation that applies wherever its condition occurs:
@@ -55,8 +68,27 @@ from riwaya_translit import key
 
 HERE = Path(__file__).parent
 DB = HERE / "quran.db"
-SRC = {"hafs": HERE / "sources" / "riwaya_hafs.csv",
-       "warsh": HERE / "sources" / "riwaya_warsh.csv"}
+# code -> (file, sura column, ayah column). The Hafs package names its sura
+# column differently from the other seven; nothing else about them differs.
+SRC = {code: (HERE / "sources" / ("riwaya_%s.csv" % code),
+              "sora" if code == "hafs" else "sura_no", "aya_no")
+       for code in ("hafs", "warsh", "qaloon", "bazzi", "qumbul",
+                    "doori", "soosi", "shouba")}
+
+# Which pairs to compare, and why these. Every riwaya is put beside Hafs,
+# because that is the transmission most readers will know and it gives each
+# of the eight a comparison. Beside that, the three remaining pairs that sit
+# *within* one qiraa (Hafs-Shu'ba is already in the first set), because the
+# contrast between a within-qiraa pair and a between-qiraa one is the whole
+# point of having more than two: Hafs and Shu'ba transmit one reading, Hafs
+# and Warsh two different ones, and the counts say so plainly.
+# The one pair whose classification was built and reviewed; see the docstring
+CLASSIFIED_PAIR = ("hafs", "warsh")
+
+PAIRS = [("hafs", "warsh"), ("hafs", "qaloon"), ("hafs", "bazzi"),
+         ("hafs", "qumbul"), ("hafs", "doori"), ("hafs", "soosi"),
+         ("hafs", "shouba"),
+         ("qaloon", "warsh"), ("bazzi", "qumbul"), ("doori", "soosi")]
 DOC = HERE / "docs" / "hafs-warsh.md"
 
 # The eight riwayat King Fahd Glorious Quran Printing Complex publishes, with
@@ -82,7 +114,9 @@ RIWAYAT = [
     ("hafs", "حفص", "Hafs", 180, "عاصم الكوفي", "'Aasim al-Kufi", 127,
      "het grootste deel van de moslimwereld", "18"),
 ]
-SOURCE_DATE = {"hafs": "2021-10-25", "warsh": "2021-08-05"}
+SOURCE_DATE = {"hafs": "2021-10-25", "warsh": "2021-08-05", "qaloon": None,
+               "bazzi": None, "qumbul": None, "doori": None, "soosi": None,
+               "shouba": None}
 
 VOWELS = set("auiAUIN")
 LONG = str.maketrans("AUI", "aui")
@@ -156,10 +190,31 @@ def flat(rows):
             for w in re.split(r"[\s ]+", txt) if cons(w)]
 
 
-def sites():
+def qari_of(code):
+    for c, _ar, _en, _d, _qa, qe, _qd, _r, _v in RIWAYAT:
+        if c == code:
+            return qe
+    return None
+
+
+def pair_type(a, b):
+    """A pair sits within one qiraa when both transmit from the same qari."""
+    return "binnen" if qari_of(a) == qari_of(b) else "tussen"
+
+
+TEXTS = {}
+
+
+def text_of(code):
+    if code not in TEXTS:
+        path, sura_col, ayah_col = SRC[code]
+        TEXTS[code] = load(path, sura_col, ayah_col)
+    return TEXTS[code]
+
+
+def sites(a="hafs", b="warsh"):
     """Every place the two texts diverge, before classification."""
-    a_rows = load(SRC["hafs"], "sora", "aya_no")
-    b_rows = load(SRC["warsh"], "sura_no", "aya_no")
+    a_rows, b_rows = text_of(a), text_of(b)
     found = []
     for sura in range(1, 115):
         aw, bw = flat(a_rows[sura]), flat(b_rows[sura])
@@ -171,7 +226,7 @@ def sites():
                     x, y = aw[i1 + k], bw[j1 + k]
                     if key(x[1]) != key(y[1]):
                         found.append(dict(sura=sura, ah=x[0], aw=y[0], tag="replace",
-                                          hafs=x[1], warsh=y[1]))
+                                          a=x[1], b=y[1]))
             else:
                 ha = [w for _, w in aw[i1:i2]]
                 wa = [w for _, w in bw[j1:j2]]
@@ -183,10 +238,10 @@ def sites():
                 if tag == "replace" and len(ha) == len(wa) > 1:
                     for h, w in zip(ha, wa):
                         found.append(dict(sura=sura, ah=ah, aw=aa, tag=tag,
-                                          hafs=h, warsh=w))
+                                          a=h, b=w))
                 else:
                     found.append(dict(sura=sura, ah=ah, aw=aa, tag=tag,
-                                      hafs=" ".join(ha), warsh=" ".join(wa)))
+                                      a=" ".join(ha), b=" ".join(wa)))
     return found
 
 
@@ -298,7 +353,7 @@ def second_look(row):
     the data rather than as a list of copied words, so the judgment is visible
     and reversible.
     """
-    h, w = row["hafs"].strip(), row["warsh"].strip()
+    h, w = row["a"].strip(), row["b"].strip()
     th, tw = row["th"], row["tw"]
     if " " in h or " " in w:
         return "reviewed:alignment_or_word_split"
@@ -318,10 +373,10 @@ def second_look(row):
     return None
 
 
-def classified():
-    rows = sites()
+def classified(a="hafs", b="warsh"):
+    rows = sites(a, b)
     for r in rows:
-        r["th"], r["tw"] = key(r["hafs"]), key(r["warsh"])
+        r["th"], r["tw"] = key(r["a"]), key(r["b"])
         if r["tag"] != "replace":
             r["cls"] = "word_" + r["tag"]
         else:
@@ -351,20 +406,45 @@ def write(conn, rows):
     cur.execute("DROP TABLE IF EXISTS riwaya_diff")
     cur.execute("""CREATE TABLE riwaya_diff (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        riwaya_a TEXT, riwaya_b TEXT, surah INTEGER, ayah_a INTEGER, ayah_b INTEGER,
+        riwaya_a TEXT, riwaya_b TEXT, pair_type TEXT, classified INTEGER,
+        surah INTEGER, ayah_a INTEGER, ayah_b INTEGER,
         form_a TEXT, form_b TEXT, translit_a TEXT, translit_b TEXT,
         class TEXT, kind TEXT)""")
-    for r in rows:
-        base = r["cls"].split("+")[0]
-        cur.execute("INSERT INTO riwaya_diff (riwaya_a, riwaya_b, surah, ayah_a,"
-                    " ayah_b, form_a, form_b, translit_a, translit_b, class, kind)"
-                    " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                    ("hafs", "warsh", r["sura"], r["ah"], r["aw"],
-                     r["hafs"].strip(), r["warsh"].strip(), r["th"], r["tw"],
-                     r["cls"], KIND.get(base, ("onbekend", ""))[0]))
+    for a, b in PAIRS:
+        known = (a, b) == CLASSIFIED_PAIR
+        for r in rows[(a, b)]:
+            base = r["cls"].split("+")[0]
+            cur.execute(
+                "INSERT INTO riwaya_diff (riwaya_a, riwaya_b, pair_type,"
+                " classified, surah, ayah_a, ayah_b, form_a, form_b,"
+                " translit_a, translit_b, class, kind)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (a, b, pair_type(a, b), 1 if known else 0,
+                 r["sura"], r["ah"], r["aw"], r["a"].strip(), r["b"].strip(),
+                 r["th"] if known else None, r["tw"] if known else None,
+                 r["cls"] if known else None,
+                 KIND.get(base, ("onbekend", ""))[0] if known
+                 else "ongeclassificeerd"))
     cur.execute("CREATE INDEX idx_riwaya_diff_verse ON riwaya_diff(surah, ayah_a)")
     cur.execute("CREATE INDEX idx_riwaya_diff_kind ON riwaya_diff(kind)")
+    cur.execute("CREATE INDEX idx_riwaya_diff_pair ON riwaya_diff(riwaya_a, riwaya_b)")
     conn.commit()
+
+
+def summary(rows):
+    """One line per pair: how far apart the two transmissions are."""
+    out = []
+    for a, b in PAIRS:
+        n = len(rows[(a, b)])
+        if (a, b) == CLASSIFIED_PAIR:
+            cnt = collections.Counter(
+                KIND.get(r["cls"].split("+")[0], ("onbekend",))[0]
+                for r in rows[(a, b)])
+            out.append((a, b, pair_type(a, b), n, cnt["farsh"], cnt["usul"],
+                        cnt["notatie"]))
+        else:
+            out.append((a, b, pair_type(a, b), n, None, None, None))
+    return out
 
 
 def markdown(conn, rows):
@@ -372,14 +452,38 @@ def markdown(conn, rows):
     names = dict(cur.execute("SELECT number, name_ar FROM surahs")) \
         if cur.execute("SELECT name FROM sqlite_master WHERE name='surahs'").fetchone() \
         else {}
-    farsh = [r for r in rows if KIND.get(r["cls"].split("+")[0], ("", ""))[0] == "farsh"]
-    counts = collections.Counter(r["cls"].split("+")[0] for r in rows)
+    main_rows = rows[("hafs", "warsh")]
+    farsh = [r for r in main_rows
+             if KIND.get(r["cls"].split("+")[0], ("", ""))[0] == "farsh"]
+    counts = collections.Counter(r["cls"].split("+")[0] for r in main_rows)
     out = ["# Hafs tegenover Warsh\n",
            "*Gegenereerd door `compare_riwayat.py --markdown`; niet met de hand "
            "bijwerken. Twee riwaayaat uit twee verschillende qiraa-aat: Hafs "
-           "`عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie.*\n",
-           "## Klassen\n",
-           "| klasse | soort | plaatsen | wat het is |", "|---|---|--:|---|"]
+           "`عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie. Beide zijn "
+           "Qoeraan; dit is geen lijst van afwijkingen.*\n",
+           "## Alle vergeleken paren\n",
+           "| Paar | | Plaatsen | farsh | usul | notatie |",
+           "|---|---|--:|--:|--:|--:|"]
+    dash = lambda v: format(v, ",") if v is not None else "—"
+    for a, b, kind, total, f, u, n in summary(rows):
+        out.append("| %s – %s | %s qiraa-a | %s | %s | %s | %s |"
+                   % (a, b, "binnen een" if kind == "binnen" else "tussen twee",
+                      format(total, ","), dash(f), dash(u), dash(n)))
+    out.append("")
+    out.append("Het verschil tussen die twee soorten paren is de reden om meer "
+               "dan twee riwaayaat te vergelijken: twee overleveringen van "
+               "*dezelfde* qaari- liggen een orde van grootte dichter bij "
+               "elkaar dan twee van verschillende qurraa-.\n")
+    out.append("De kolommen farsh, usul en notatie staan alleen bij Hafs-Warsh "
+               "ingevuld. De classificatie is op dat paar gebouwd en nagelopen "
+               "en gaat niet mee naar de andere: de pakketten van Doorie en "
+               "Soesie schrijven de wasl-alif anders, en de idghaam kabier van "
+               "al-Soesie is een systematisch kenmerk dat geen regel hier kent. "
+               "Wat die paren wel geven is de telling, en die is een "
+               "tekstvergelijking en geen oordeel.\n")
+    out.append("## Hafs – Warsh in detail\n")
+    out.append("| klasse | soort | plaatsen | wat het is |")
+    out.append("|---|---|--:|---|")
     for cls, n in counts.most_common():
         soort, uitleg = KIND.get(cls, ("onbekend", ""))
         out.append("| `%s` | %s | %d | %s |" % (cls, soort, n, uitleg))
@@ -387,8 +491,9 @@ def markdown(conn, rows):
     out.append("Verschillen in klinkerlengte en korte klinkers zijn met opzet "
                "niet weggevouwen: `maalik` / `malik` in 1:4 is precies zo'n "
                "verschil en dat is farsh.\n")
-    out.append("## Farsh al-huroef: %d plaatsen, %d woordparen, %d ayaat, %d soerahs\n"
-               % (len(farsh), len({(r["hafs"].strip(), r["warsh"].strip()) for r in farsh}),
+    out.append("### Farsh al-huroef: %d plaatsen, %d woordparen, %d ayaat, %d soerahs\n"
+               % (len(farsh),
+                  len({(r["a"].strip(), r["b"].strip()) for r in farsh}),
                   len({(r["sura"], r["ah"]) for r in farsh}),
                   len({r["sura"] for r in farsh})))
     out.append("| soerah:ayah | Hafs | Warsh |")
@@ -396,7 +501,7 @@ def markdown(conn, rows):
     for r in sorted(farsh, key=lambda x: (x["sura"], x["ah"])):
         out.append("| %d:%d %s | %s | %s |"
                    % (r["sura"], r["ah"], names.get(r["sura"], ""),
-                      r["hafs"].strip() or "—", r["warsh"].strip() or "—"))
+                      r["a"].strip() or "—", r["b"].strip() or "—"))
     DOC.parent.mkdir(exist_ok=True)
     DOC.write_text("\n".join(out) + "\n", encoding="utf-8")
     return len(out)
@@ -408,26 +513,27 @@ def main():
                     help="also rewrite docs/hafs-warsh.md")
     args = ap.parse_args()
 
-    for path in SRC.values():
+    for path, _s, _a in SRC.values():
         if not path.exists():
             sys.exit("ontbreekt: %s" % path)
 
-    rows = classified()
+    rows = {}
+    for a, b in PAIRS:
+        rows[(a, b)] = classified(a, b)
+
     conn = sqlite3.connect(DB)
     write(conn, rows)
 
-    counts = collections.Counter(KIND.get(r["cls"].split("+")[0], ("onbekend",))[0]
-                                 for r in rows)
-    farsh = [r for r in rows if KIND.get(r["cls"].split("+")[0], ("",))[0] == "farsh"]
-    print("riwaya_diff: %s plaatsen waar Hafs en Warsh uiteenlopen"
-          % format(len(rows), ","))
-    for kind in ("farsh", "usul", "notatie", "uitgesloten", "onbekend"):
-        if counts.get(kind):
-            print("  %-12s %s" % (kind, format(counts[kind], ",")))
-    print("  farsh: %s woordparen in %s ayaat, %s soerahs"
-          % (len({(r["hafs"].strip(), r["warsh"].strip()) for r in farsh}),
-             len({(r["sura"], r["ah"]) for r in farsh}),
-             len({r["sura"] for r in farsh})))
+    total = sum(len(v) for v in rows.values())
+    print("riwaya_diff: %s plaatsen over %d paren" % (format(total, ","), len(PAIRS)))
+    print("  %-16s %-9s %8s %7s %7s %8s"
+          % ("paar", "qiraa-a", "plaatsen", "farsh", "usul", "notatie"))
+    dash = lambda v: format(v, ",") if v is not None else "—"
+    for a, b, kind, tot, f, u, n in summary(rows):
+        print("  %-16s %-9s %8s %7s %7s %8s"
+              % ("%s-%s" % (a, b), kind, format(tot, ","), dash(f), dash(u),
+                 dash(n)))
+    print("  (alleen hafs-warsh is geclassificeerd; zie de docstring)")
     if args.markdown:
         print("  docs/hafs-warsh.md: %d regels" % markdown(conn, rows))
     conn.close()

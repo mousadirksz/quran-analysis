@@ -1,8 +1,27 @@
 # Hafs tegenover Warsh
 
-*Gegenereerd door `compare_riwayat.py --markdown`; niet met de hand bijwerken. Twee riwaayaat uit twee verschillende qiraa-aat: Hafs `عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie.*
+*Gegenereerd door `compare_riwayat.py --markdown`; niet met de hand bijwerken. Twee riwaayaat uit twee verschillende qiraa-aat: Hafs `عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie. Beide zijn Qoeraan; dit is geen lijst van afwijkingen.*
 
-## Klassen
+## Alle vergeleken paren
+
+| Paar | | Plaatsen | farsh | usul | notatie |
+|---|---|--:|--:|--:|--:|
+| hafs – warsh | tussen twee qiraa-a | 8,581 | 564 | 4,643 | 3,297 |
+| hafs – qaloon | tussen twee qiraa-a | 5,116 | — | — | — |
+| hafs – bazzi | tussen twee qiraa-a | 10,073 | — | — | — |
+| hafs – qumbul | tussen twee qiraa-a | 10,038 | — | — | — |
+| hafs – doori | tussen twee qiraa-a | 4,887 | — | — | — |
+| hafs – soosi | tussen twee qiraa-a | 9,001 | — | — | — |
+| hafs – shouba | binnen een qiraa-a | 595 | — | — | — |
+| qaloon – warsh | binnen een qiraa-a | 6,157 | — | — | — |
+| bazzi – qumbul | binnen een qiraa-a | 184 | — | — | — |
+| doori – soosi | binnen een qiraa-a | 4,467 | — | — | — |
+
+Het verschil tussen die twee soorten paren is de reden om meer dan twee riwaayaat te vergelijken: twee overleveringen van *dezelfde* qaari- liggen een orde van grootte dichter bij elkaar dan twee van verschillende qurraa-.
+
+De kolommen farsh, usul en notatie staan alleen bij Hafs-Warsh ingevuld. De classificatie is op dat paar gebouwd en nagelopen en gaat niet mee naar de andere: de pakketten van Doorie en Soesie schrijven de wasl-alif anders, en de idghaam kabier van al-Soesie is een systematisch kenmerk dat geen regel hier kent. Wat die paren wel geven is de telling, en die is een tekstvergelijking en geen oordeel.
+
+## Hafs – Warsh in detail
 
 | klasse | soort | plaatsen | wat het is |
 |---|---|--:|---|
@@ -31,7 +50,7 @@
 
 Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: `maalik` / `malik` in 1:4 is precies zo'n verschil en dat is farsh.
 
-## Farsh al-huroef: 564 plaatsen, 468 woordparen, 489 ayaat, 84 soerahs
+### Farsh al-huroef: 564 plaatsen, 468 woordparen, 489 ayaat, 84 soerahs
 
 | soerah:ayah | Hafs | Warsh |
 |---|---|---|
