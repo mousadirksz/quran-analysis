@@ -530,6 +530,45 @@ klasse `article_lam` vouwt één korte klinker weg om ٱلَّذِينَ tegen �
 te kunnen leggen — de enige plek waar een korte klinker als notatie wordt
 behandeld.
 
+### Acht riwaayaat, tien paren
+
+Alle acht de riwaayaat die het mujammaʿ uitgeeft staan nu in de repo, en tien
+paren zijn woord voor woord uitgelijnd: elke riwāya naast Ḥafṣ, plus de drie
+overige paren die *binnen* één qirāʾa vallen.
+
+| paar | | plaatsen |
+|---|---|--:|
+| Ḥafṣ – al-Bazzī | tussen twee qirāʾāt | 10.073 |
+| Ḥafṣ – Qunbul | tussen | 10.038 |
+| Ḥafṣ – al-Sūsī | tussen | 9.001 |
+| Ḥafṣ – Warsh | tussen | 8.581 |
+| Qālūn – Warsh | **binnen één qirāʾa** | 6.157 |
+| Ḥafṣ – Qālūn | tussen | 5.116 |
+| Ḥafṣ – al-Dūrī | tussen | 4.887 |
+| al-Dūrī – al-Sūsī | **binnen** | 4.467 |
+| Ḥafṣ – Shuʿba | **binnen** | 595 |
+| al-Bazzī – Qunbul | **binnen** | 184 |
+
+De verwachting was dat twee overleveringen van dezelfde qārīʾ dichter bij
+elkaar liggen. Bij twee paren klopt dat spectaculair — Ḥafṣ–Shuʿba (595) en
+al-Bazzī–Qunbul (184) zijn een orde van grootte kleiner dan welk paar tussen
+twee qirāʾāt ook. Bij de andere twee klopt het niet: Qālūn–Warsh haalt 6.157.
+
+Steekproeven zeggen waarom. Wat Qālūn van Warsh scheidt is *uṣūl* en
+schrijfwijze — Warsh' naql (اَ۬لَارْضِ tegenover اِ۬لْأَرْضِ) en zijn
+verzachting van de hamza (يُوتِ tegenover يُؤْتِ) — en niet andere woorden. Bij
+al-Dūrī–al-Sūsī is het de idghām kabīr van al-Sūsī (يَرۡزُقكُّم tegenover
+يَرۡزُقُكُم). Het getal meet dus hoe verschillend twee pakketten geschréven
+zijn, en dat mengt farsh, uṣūl en mushaf-conventie door elkaar.
+
+**Alleen Ḥafṣ–Warsh is uitgesplitst.** De classificatieregels zijn gebouwd door
+te lezen wat de Warsh-mushaf doet, en ze verhuizen niet: losgelaten op
+Ḥafṣ–al-Sūsī leverden ze bijna 5.000 "farsh"-rijen op die vrijwel allemaal
+idghām of schrijfwijze waren. De andere negen paren staan daarom met hun
+verschillen gelokaliseerd maar niet gelabeld (`kind = 'ongeclassificeerd'`).
+Dat is geen bewering dat er niets systematisch in zit — het is de weigering er
+een te doen zonder het werk.
+
 ### Wat dit voor de vormleer betekent
 
 Het lesboek telt vormen uit het corpus, en het corpus ontleedt Ḥafṣ. Dat is een

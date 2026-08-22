@@ -452,7 +452,7 @@ a cluster is only extended by a sense alignable with every sense already in it.
 | `juz_boundaries` | 30 | `juz`, `start_surah`, `start_ayah`, `end_surah`, `end_ayah`; the ends are derived from the next juz' start |
 | `hizb_boundaries` | 60 | the same for the 60 ahzab, with the `juz` each belongs to |
 
-### Tables `riwayat` and `riwaya_diff` — the two transmissions compared
+### Tables `riwayat` and `riwaya_diff` — eight transmissions compared
 
 A *qiraa* is the reading of a qari; a *riwaya* is one pupil's transmission of
 it. Hafs and Warsh are riwayat, and they belong to two different qiraa'at:
@@ -466,7 +466,8 @@ the corpus annotates Hafs only — that is a property of the available data and
 carries no claim about the two readings.
 
 `riwayat` — 8 rows, the transmissions King Fahd Glorious Quran Printing
-Complex publishes, two per qari:
+Complex publishes, two per qari; all eight are in `sources/` and all eight are
+compared:
 
 | Column | Meaning |
 |---|---|
@@ -475,23 +476,58 @@ Complex publishes, two per qari:
 | `qari_ar`, `qari_en`, `qari_died_ah` | the reader he transmits from |
 | `region` | where the riwaya is read today |
 | `kfgqpc_version`, `source_date` | the version of the complex's data package; the date only for the two loaded here |
-| `in_database` | 1 for `hafs` and `warsh`, the two whose text is in `sources/` |
+| `in_database` | 1 for all eight; their text is in `sources/riwaya_*.csv` |
 
-`riwaya_diff` — 8,581 rows, one per place where the Hafs and Warsh texts
-diverge. Because the two mushaf traditions write the same sound with different
+`riwaya_diff` — 59,099 rows over **ten pairs**, one per place where two texts
+diverge. Because the mushaf traditions write the same sound with different
 signs, the comparison is not a text diff: each word is transliterated first
 (`riwaya_translit.py`) and the transliterations are compared, which measures
 the recitation rather than the orthography.
 
+The pairs are every riwaya beside Hafs, plus the three remaining pairs that
+sit *within* one qiraa (Hafs–Shu'ba is already in the first set).
+
 | Column | Meaning |
 |---|---|
-| `riwaya_a`, `riwaya_b` | `hafs` and `warsh`; both are `riwayat.code` |
+| `riwaya_a`, `riwaya_b` | both are `riwayat.code` |
+| `pair_type` | `binnen` when both transmit from the same qari, `tussen` otherwise |
+| `classified` | 1 only for Hafs–Warsh; see below |
 | `surah` | sura, shared |
-| `ayah_a`, `ayah_b` | the verse number in each — they differ in 50 suras, so both are kept |
+| `ayah_a`, `ayah_b` | the verse number in each riwaya's own division — sura 5 runs to 120 in Hafs and 122 in the Qaaloon package, so both are kept |
 | `form_a`, `form_b` | the word as each mushaf writes it; empty on one side where a word is absent |
-| `translit_a`, `translit_b` | the comparison keys the classification ran on |
-| `class` | the specific rule that explains the difference, or `farsh_candidate` where none does |
-| `kind` | `usul`, `notatie`, `farsh` or `uitgesloten` (below) |
+| `translit_a`, `translit_b` | the comparison keys the classification ran on; NULL where there is no classification |
+| `class` | the rule that explains the difference, or `farsh_candidate` where none does; NULL for the unclassified pairs |
+| `kind` | `usul`, `notatie`, `farsh`, `uitgesloten`, or `ongeclassificeerd` |
+
+**Only Hafs–Warsh is classified.** Those rules were written by reading what the
+Warsh mushaf does and were checked against that pair; they do not transfer. The
+Doori and Soosi packages write the wasl alif as a bare vowelled alif, which the
+rules read as a difference in the text, and al-Soosi's idghaam kabir is a
+systematic feature no rule here knows — running the classifier over those pairs
+produced thousands of "farsh" rows that were nothing of the sort. The other
+nine pairs therefore carry their differences located but not labelled. The
+count itself is sound: it is a comparison of two texts.
+
+| Pair | | Places |
+|---|---|--:|
+| hafs – bazzi | between two qiraa'at | 10,073 |
+| hafs – qumbul | between | 10,038 |
+| hafs – soosi | between | 9,001 |
+| hafs – warsh | between | 8,581 |
+| qaloon – warsh | **within one qiraa** | 6,157 |
+| hafs – qaloon | between | 5,116 |
+| hafs – doori | between | 4,887 |
+| doori – soosi | **within** | 4,467 |
+| hafs – shouba | **within** | 595 |
+| bazzi – qumbul | **within** | 184 |
+
+Two of the four within-qiraa pairs are an order of magnitude closer than any
+between-qiraa pair, and two are not. Sampling says why: what separates Qaaloon
+from Warsh, and al-Doori from al-Soosi, is usul and mushaf convention — Warsh's
+naql and his softening of the hamza, al-Soosi's idghaam kabir — rather than
+different words. The number measures how differently two packages are written,
+which mixes farsh, usul and convention, and only for Hafs–Warsh have those been
+separated.
 
 | `kind` | Rows | What it is |
 |---|--:|---|
@@ -531,7 +567,7 @@ the database itself.
 | `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
 | `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
 | `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
-| `riwaya_diff`, `kind='farsh'` | 489 | 8% | the verses where Hafs and Warsh read alike |
+| `riwaya_diff`, `kind='farsh'` | 489 | 8% | the verses where Hafs and Warsh read alike — and the nine other pairs are located but not classified |
 
 Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
 the particles, the pronouns, and the names the corpus leaves unanalysed. There
@@ -542,7 +578,7 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 - a translation of the Quran — the glosses are word-by-word help, deliberately literal, and read poorly as running text
 - tafsir of any kind
 - a sense label per occurrence: the wujuh works cite example verses, they do not annotate exhaustively, and mining al-Tabari for the rest was measured at ~35% precision and rejected
-- the six other riwayat, and any qiraa outside those of Aasim and Naafi'
+- the three readers whose riwayat are not here (Hamza, al-Kisa'i, Abu Ja'far), and any reading outside the canonical seven
 - the counts that differ per riwaya — verse numbering, the ahzab — which are the Hafs values throughout
 
 ## Data quality
@@ -643,7 +679,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
-| `compare_riwayat.py` | aligns the Hafs and Warsh texts word by word and builds `riwayat` and `riwaya_diff`; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
+| `compare_riwayat.py` | aligns ten pairs of riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies Hafs–Warsh; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
@@ -782,11 +818,15 @@ is posited as an empty position without reconstructing which word was left out,
 which is the honest choice but means the table cannot answer what that word
 would be.
 
-**Two riwayat is not the qiraa'at.** `riwaya_diff` compares Hafs and Warsh, one
-transmission each from two of the seven readers. Both are mutawatir and neither
-is the baseline; the morphological layers of this database describe Hafs only,
-because that is what the corpus annotates, and `riwaya_sarf.py` is where the
-consequences of that are worked out in both directions. It says nothing about Qaaloon
+**Eight riwayat is not the qiraa'at.** `riwaya_diff` compares eight
+transmissions from four of the seven readers — Nafi', Ibn Kathir, Abu 'Amr and
+'Asim. Hamza, al-Kisa'i and Abu Ja'far are absent, as are the shawadhdh. All
+eight are mutawatir and none is the baseline; the morphological layers of this
+database describe Hafs only, because that is what the corpus annotates, and
+`riwaya_sarf.py` is where the consequences of that are worked out in both
+directions. And of the ten pairs only Hafs–Warsh is classified: `kind` on any
+other pair is `ongeclassificeerd`, not a claim that nothing systematic is
+there. It says nothing about Qaaloon
 or Shu'ba, and nothing about the five readers whose text is not here. Roughly 5%
 of the `farsh` rows are estimated to be spelling rather than reading;
 `docs/hafs-warsh.md` names the residues that are known.

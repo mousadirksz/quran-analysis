@@ -166,17 +166,17 @@ are the standard Hafs values, carried in the script as constants; the ayah
 counts derived from the corpus are checked against an independent Hafs reference
 list in the same script, and agree exactly.
 
-## 7. Two riwayat — King Fahd Glorious Quran Printing Complex
+## 7. Eight riwayat — King Fahd Glorious Quran Printing Complex
 
-The text of two transmissions, for the comparison in `riwaya_diff`.
+The text of eight transmissions, for the comparisons in `riwaya_diff`.
 
 | | |
 |---|---|
-| **Work** | KFGQPC Uthmanic Hafs Data v0.18 (2021-10-25) and KFGQPC Uthmanic Warsh Data v0.10 (2021-08-05) |
+| **Work** | KFGQPC Uthmanic Data packages: Hafs v0.18 (2021-10-25), Warsh v0.10 (2021-08-05), Qaaloon v0.10, al-Bazzi v0.07, Qunbul v0.07, al-Doori v0.09, al-Soosi v0.09, Shu'ba v0.08 |
 | **Publisher** | King Fahd Glorious Quran Printing Complex, al-Madinah al-Munawwarah |
 | **Published at** | https://qurancomplex.gov.sa/en/techquran/dev/ |
 | **Obtained from** | https://github.com/thetruetruth/quran-data-kfgqpc, a verbatim republication of the complex's own packages |
-| **Files in this repo** | `sources/riwaya_hafs.csv`, `sources/riwaya_warsh.csv` (as distributed), `sources/riwaya_kfgqpc_release_notes.txt` (the complex's own release notes for both, verbatim) |
+| **Files in this repo** | `sources/riwaya_hafs.csv`, `riwaya_warsh.csv`, `riwaya_qaloon.csv`, `riwaya_bazzi.csv`, `riwaya_qumbul.csv`, `riwaya_doori.csv`, `riwaya_soosi.csv`, `riwaya_shouba.csv` (as distributed), `sources/riwaya_kfgqpc_release_notes.txt` (the complex's own release notes for Hafs and Warsh, verbatim) |
 | **Licence** | none stated for the data — see below |
 | **Loaded by** | `compare_riwayat.py` → tables `riwayat`, `riwaya_diff` |
 
@@ -221,12 +221,19 @@ can carry is the editorial layer: the orthographic choices, and above all the
 `page`, `line_start` and `line_end` columns and the transliterated sura names.
 Nothing in `riwaya_diff` uses those columns.
 
-**The other six riwayat** — Qaaloon, al-Bazzi, Qunbul, al-Doori, al-Soosi and
-Shuba — are published in the same place and in the same format, and are listed
-in the `riwayat` table with `in_database = 0`. Their text is not in this
-repository. Note that the complex's release notes file al-Bazzi and Qunbul
-under Abu Amr al-Basri; they transmit from Ibn Kathir al-Makki, and the
-`riwayat` table records the corrected relation.
+**All eight are here**, in the same format from the same source. Note that the
+complex's release notes file al-Bazzi and Qunbul under Abu Amr al-Basri; they
+transmit from Ibn Kathir al-Makki, and the `riwayat` table records the
+corrected relation.
+
+**What is compared and what is claimed.** Ten pairs are aligned word by word:
+each riwaya beside Hafs, plus the three remaining pairs within one qiraa. Only
+Hafs-Warsh is classified into usul, notation and farsh. That classification was
+built by reading the Warsh mushaf and checked against that pair, and it does not
+transfer -- the Doori and Soosi packages write the wasl alif differently, and
+al-Soosi's idghaam kabir is a systematic feature the rules do not know. For the
+other nine pairs this database locates the differences and counts them, and
+claims nothing about what kind they are.
 
 ---
 

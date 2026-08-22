@@ -776,10 +776,16 @@ def riwaya_differences(cur, args):
                 "SELECT id FROM riwaya_diff WHERE riwaya_a NOT IN"
                 " (SELECT code FROM riwayat) OR riwaya_b NOT IN"
                 " (SELECT code FROM riwayat)")
+    # ayah_a is numbered in riwaya_a's own division, and the riwayat divide
+    # the verses differently -- sura 5 runs to 120 in Hafs and to 122 in the
+    # Qaaloon package -- so only the Hafs side can be checked against corpus
     expect_none(cur, "difference outside the mushaf",
-                "SELECT d.id FROM riwaya_diff d WHERE NOT EXISTS"
-                " (SELECT 1 FROM corpus c WHERE c.surah = d.surah"
+                "SELECT d.id FROM riwaya_diff d WHERE d.riwaya_a = 'hafs'"
+                " AND NOT EXISTS (SELECT 1 FROM corpus c WHERE c.surah = d.surah"
                 "  AND c.ayah = d.ayah_a)")
+    expect_none(cur, "difference with an impossible reference",
+                "SELECT id FROM riwaya_diff WHERE surah NOT BETWEEN 1 AND 114"
+                " OR ayah_a < 1 OR ayah_b < 1")
     expect_none(cur, "difference without a kind",
                 "SELECT id FROM riwaya_diff WHERE kind IS NULL OR kind = ''"
                 " OR kind = 'onbekend'")
@@ -788,15 +794,29 @@ def riwaya_differences(cur, args):
     expect_none(cur, "sila of the mim classed as farsh",
                 "SELECT id FROM riwaya_diff WHERE class LIKE 'sila_mim%'"
                 " AND kind = 'farsh'")
+    expect_none(cur, "pair_type disagreeing with the qari of both riwayat",
+                "SELECT d.id FROM riwaya_diff d JOIN riwayat ra ON ra.code = d.riwaya_a"
+                " JOIN riwayat rb ON rb.code = d.riwaya_b WHERE d.pair_type !="
+                " CASE WHEN ra.qari_en = rb.qari_en THEN 'binnen' ELSE 'tussen' END")
+    # only the reviewed pair carries a classification; the rest must not
+    # pretend to one, since the rules were written for Warsh and do not travel
+    expect_none(cur, "unreviewed pair carrying a class",
+                "SELECT id FROM riwaya_diff WHERE classified = 0"
+                " AND (class IS NOT NULL OR kind != 'ongeclassificeerd')")
+    expect_none(cur, "reviewed pair missing its class",
+                "SELECT id FROM riwaya_diff WHERE classified = 1"
+                " AND (class IS NULL OR kind = 'ongeclassificeerd')")
     row = cur.execute("SELECT kind FROM riwaya_diff WHERE surah=1 AND ayah_a=4"
-                      " AND riwaya_a='hafs'").fetchone()
+                      " AND riwaya_a='hafs' AND riwaya_b='warsh'").fetchone()
     if not row or row[0] != "farsh":
         raise Failed("1:4 maalik/malik is %s, expected farsh"
                      % (row[0] if row else "absent"))
     kinds = dict(cur.execute("SELECT kind, COUNT(*) FROM riwaya_diff GROUP BY kind"))
     total = sum(kinds.values())
-    return ("%s differences: %s"
-            % (format(total, ","),
+    pairs = cur.execute("SELECT COUNT(*) FROM (SELECT DISTINCT riwaya_a, riwaya_b"
+                        " FROM riwaya_diff)").fetchone()[0]
+    return ("%s differences over %d pairs: %s"
+            % (format(total, ","), pairs,
                ", ".join("%s %s" % (format(n, ","), k)
                          for k, n in sorted(kinds.items(), key=lambda x: -x[1]))))
 
@@ -815,6 +835,10 @@ def riwayat_readers(cur, args):
                 "SELECT qari_en FROM riwayat GROUP BY qari_en HAVING COUNT(*) != 2")
     expect_none(cur, "transmitter said to have died before the reader he cites",
                 "SELECT code FROM riwayat WHERE riwaya_died_ah <= qari_died_ah")
+    expect_none(cur, "riwaya with a source file but no comparison",
+                "SELECT code FROM riwayat WHERE in_database = 1 AND code NOT IN"
+                " (SELECT riwaya_a FROM riwaya_diff UNION"
+                "  SELECT riwaya_b FROM riwaya_diff)")
     loaded = cur.execute("SELECT COUNT(*) FROM riwayat WHERE in_database=1").fetchone()[0]
     total = cur.execute("SELECT COUNT(*) FROM riwayat").fetchone()[0]
     qurra = cur.execute("SELECT COUNT(DISTINCT qari_en) FROM riwayat").fetchone()[0]

@@ -132,8 +132,11 @@ def word_pair(cur, surah, ayah, root):
         " AND c.ayah = w.ayah AND c.word = w.word WHERE w.surah = ? AND w.ayah = ?"
         " AND c.root_ar = ?", (surah, ayah, root))]
     want = {shape(f) for f in forms}
+    # riwaya_diff now holds ten pairs; this file is about Hafs and Warsh
     for a, b in cur.execute("SELECT form_a, form_b FROM riwaya_diff WHERE surah = ?"
-                            " AND ayah_a = ? AND kind = 'farsh'", (surah, ayah)):
+                            " AND ayah_a = ? AND kind = 'farsh'"
+                            " AND riwaya_a = 'hafs' AND riwaya_b = 'warsh'",
+                            (surah, ayah)):
         if shape(a) in want:
             return a, b
     return None, None
