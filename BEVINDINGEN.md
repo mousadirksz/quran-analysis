@@ -521,14 +521,37 @@ Silat al-miem alleen al — عَلَيْهِمْ dat als عَلَيْهِمُو 
 
 57:24 is het enige geval waar een heel woord aan één kant ontbreekt.
 
-### Wat er niet klopt
+### Wat er niet klopt, geteld in plaats van geschat
 
-Ongeveer 5% van de farsh-lijst is vermoedelijk nog spelling en geen lezing. De
-twee tekens die de wasl-alif markeren staan in 0,7% van de gevallen op een
-hamzat qat3, waardoor woorden als إذ en إلى als kandidaat binnenkomen. En de
-klasse `article_lam` vouwt één korte klinker weg om ٱلَّذِينَ tegen اَ۬لذِينَ
-te kunnen leggen — de enige plek waar een korte klinker als notatie wordt
-behandeld.
+Hier stond eerst "ongeveer 5% van de farsh-lijst is vermoedelijk nog spelling".
+Dat was een indruk van één keer doorlezen. Inmiddels zijn alle **468
+verschillende woordparen** stuk voor stuk beoordeeld en staan de oordelen in
+`farsh_review.tsv`, met een reden per paar.
+
+- **39 rijen (6,9%)** waren toch notatie en staan nu op `uitgesloten`: hamza's
+  op een andere zetel (`بِلِقَآيِٕ` / `بِلِقَآءِ`), naql-schrijfwijze
+  (`وَٱلۡأُذُنَ` / `وَالُاذْنَ`), een taqlīl-teken waar Ḥafṣ een klinker
+  schrijft, en twee uitlijningsartefacten waarvan er één acht rijen kostte.
+- **10 rijen (1,8%)** staan op `onzeker`, en het is allemaal hetzelfde woord:
+  ٱلَّٰتِي tegenover اُ۬لتِے. Warsh laat daar de dolk-alif weg, en of dat de
+  lezing is (*allatī*) of alleen de spelling van *allātī*, kan ik uit deze
+  bestanden niet opmaken. Dat blijft dus open staan in plaats van dat ik het
+  bij gebrek aan beter naar farsh schuif.
+- Wat overblijft is **515 farsh-rijen**.
+
+Waarom dit met de hand moest: ik heb twee keer geprobeerd de ruis met een regel
+te vangen, en allebei de keren vlagde die regel echte farsh. De eerste hield
+`كَلِمَتُ` / `كَلِمَٰتُ` voor madd-notatie — dat is enkelvoud tegenover
+meervoud. De tweede hield `ٱلۡبِرَّ` / `اَ۬لْبِرُّ` voor een wasl-kwestie — dat
+is een naamvalsverschil. Wat er hier als ruis uitziet ís vaak juist het
+verschil, en dan is lezen het enige gereedschap dat werkt.
+
+Twee oorzaken in de regels zelf blijven staan, nu als bekende onnauwkeurigheid
+en niet meer als onbekende: de wasl-tekens U+06EC en U+06EA staan in 0,7% van
+de gevallen op een hamzat qaṭʿ (`إذ`, `إلى`), en `article_lam` vouwt één korte
+klinker weg om ٱلَّذِينَ tegen اَ۬لذِينَ te kunnen leggen. Bijstellen zou de
+uitkomst van de handmatige lezing ongeldig maken — dan moet alles opnieuw —
+dus de lezing is nu het laatste woord en de regels staan eronder.
 
 ### Acht riwaayaat, tien paren
 

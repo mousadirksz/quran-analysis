@@ -497,7 +497,7 @@ sit *within* one qiraa (Hafs–Shu'ba is already in the first set).
 | `form_a`, `form_b` | the word as each mushaf writes it; empty on one side where a word is absent |
 | `translit_a`, `translit_b` | the comparison keys the classification ran on; NULL where there is no classification |
 | `class` | the rule that explains the difference, or `farsh_candidate` where none does; NULL for the unclassified pairs |
-| `kind` | `usul`, `notatie`, `farsh`, `uitgesloten`, or `ongeclassificeerd` |
+| `kind` | `usul`, `notatie`, `farsh`, `uitgesloten`, `onzeker`, or `ongeclassificeerd` |
 
 **Only Hafs–Warsh is classified.** Those rules were written by reading what the
 Warsh mushaf does and were checked against that pair; they do not transfer. The
@@ -533,13 +533,17 @@ separated.
 |---|--:|---|
 | `usul` | 4,643 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, the ya of idafa. Real differences, but not word-specific |
 | `notatie` | 3,297 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
-| `farsh` | 564 | *farsh al-huruf*: what no rule explains — the word-by-word differences, in 489 verses across 84 suras |
-| `uitgesloten` | 77 | set aside on review: a moved word boundary, an alignment artefact, the disconnected letters |
+| `farsh` | 515 | *farsh al-huruf*: what no rule explains — the word-by-word differences |
+| `uitgesloten` | 116 | set aside on review: a moved word boundary, an alignment artefact, the disconnected letters, and the 39 rows a reading of every pair found to be notation |
+| `onzeker` | 10 | read and not settled: allaatie / allatie, where Warsh omits the dagger alif |
 
 Differences of vowel length and of short vowels are deliberately never folded
 away, which is why `maalik` / `malik` at 1:4 is `farsh` and not notation.
-About 5% of the `farsh` rows are estimated to be spelling rather than reading;
-`docs/hafs-warsh.md` names the residues that are known.
+All 468 distinct word pairs in the farsh list have since been read one by one,
+and the verdicts live in `farsh_review.tsv` — one line per pair, with a reason.
+39 rows (6.9% of the 564 the rules produced) were notation after all and are
+now `uitgesloten`; 10 more are `onzeker`, all of them the same word. That
+replaces an earlier estimate of "about 5%" with a count.
 
 ### Views
 
@@ -681,6 +685,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `compare_riwayat.py` | aligns ten pairs of riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies Hafs–Warsh; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
+| `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
@@ -827,9 +832,9 @@ database describe Hafs only, because that is what the corpus annotates, and
 directions. And of the ten pairs only Hafs–Warsh is classified: `kind` on any
 other pair is `ongeclassificeerd`, not a claim that nothing systematic is
 there. It says nothing about Qaaloon
-or Shu'ba, and nothing about the five readers whose text is not here. Roughly 5%
-of the `farsh` rows are estimated to be spelling rather than reading;
-`docs/hafs-warsh.md` names the residues that are known.
+or Shu'ba, and nothing about the five readers whose text is not here. Every farsh word pair
+has been read and its verdict recorded in `farsh_review.tsv`; what could not
+be settled carries `kind = 'onzeker'` rather than being decided by default.
 
 **The `verses.text_ar` column is a reconstruction.** It is the corpus' segment
 forms joined back together, not an independently sourced mushaf text. The only
