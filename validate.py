@@ -806,6 +806,21 @@ def riwaya_differences(cur, args):
     expect_none(cur, "reviewed pair missing its class",
                 "SELECT id FROM riwaya_diff WHERE classified = 1"
                 " AND (class IS NULL OR kind = 'ongeclassificeerd')")
+    # a verdict in farsh_review.tsv that matches nothing is a leftover from an
+    # earlier run of the comparison, and would quietly stop excluding anything
+    review = HERE / "farsh_review.tsv"
+    if review.exists():
+        import csv as _csv
+        with open(review, encoding="utf-8") as fh:
+            reader = _csv.reader(fh, delimiter="\t")
+            next(reader, None)
+            stale = [r[0] for r in reader if len(r) >= 2 and not cur.execute(
+                "SELECT 1 FROM riwaya_diff WHERE riwaya_a='hafs' AND riwaya_b='warsh'"
+                " AND TRIM(form_a)=? AND TRIM(form_b)=? LIMIT 1",
+                (r[0], r[1])).fetchone()]
+        if stale:
+            raise Failed("farsh_review.tsv: %d verdicts match no difference, "
+                         "e.g. %s" % (len(stale), "; ".join(stale[:3])))
     row = cur.execute("SELECT kind FROM riwaya_diff WHERE surah=1 AND ayah_a=4"
                       " AND riwaya_a='hafs' AND riwaya_b='warsh'").fetchone()
     if not row or row[0] != "farsh":

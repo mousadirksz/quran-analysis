@@ -90,6 +90,7 @@ PAIRS = [("hafs", "warsh"), ("hafs", "qaloon"), ("hafs", "bazzi"),
          ("hafs", "shouba"),
          ("qaloon", "warsh"), ("bazzi", "qumbul"), ("doori", "soosi")]
 DOC = HERE / "docs" / "hafs-warsh.md"
+REVIEW = HERE / "farsh_review.tsv"
 
 # The eight riwayat King Fahd Glorious Quran Printing Complex publishes, with
 # the qari each transmits from. The complex's own release notes file al-Bazzi
@@ -168,6 +169,8 @@ KIND = {
     "reviewed:hamza_vowel_notation": ("uitgesloten", "hamza met taqliel-teken"),
     "reviewed:hamza_seat_notation": ("uitgesloten", "hamza op een andere zetel"),
     "reviewed:muqattaat": ("uitgesloten", "losse letters"),
+    "reviewed:hand": ("uitgesloten", "met de hand beoordeeld als notatie"),
+    "reviewed:onzeker": ("onzeker", "met de hand bekeken, niet beslist"),
 }
 
 
@@ -373,6 +376,34 @@ def second_look(row):
     return None
 
 
+def hand_verdicts():
+    """The verdicts of reading the farsh list pair by pair.
+
+    Rules ran over these rows already, and a rule cannot see what a reader
+    sees: two attempts to catch the residue automatically flagged
+    kalimatu / kalimaatu (singular against plural) and al-birra / al-birru
+    (a case ending) as mere notation. What looks like noise here -- a dagger
+    alif, a final vowel -- is often the farsh itself. So the last pass is a
+    person reading all 468 word pairs, and what that person decided lives in
+    farsh_review.tsv rather than in the code: one line per pair, with a
+    reason, so every verdict can be looked up and argued with.
+
+    Only two verdicts appear there. A pair is either notation after all, or
+    it could not be settled -- the six rows of allaatie / allatie, where the
+    Warsh mushaf leaves out the dagger alif and nothing here says whether
+    that is the reading or the spelling."""
+    out = {}
+    if not REVIEW.exists():
+        return out
+    with open(REVIEW, encoding="utf-8") as fh:
+        reader = csv.reader(fh, delimiter="\t")
+        next(reader, None)
+        for row in reader:
+            if len(row) >= 4:
+                out[(row[0], row[1])] = (row[2], row[3])
+    return out
+
+
 def classified(a="hafs", b="warsh"):
     rows = sites(a, b)
     for r in rows:
@@ -388,6 +419,16 @@ def classified(a="hafs", b="warsh"):
             again = second_look(r)
             if again:
                 r["cls"] = again
+    if (a, b) == CLASSIFIED_PAIR:
+        verdicts = hand_verdicts()
+        for r in rows:
+            if not (r["cls"].startswith("farsh_candidate")
+                    or r["cls"].startswith("word_")):
+                continue
+            v = verdicts.get((r["a"].strip(), r["b"].strip()))
+            if v:
+                r["cls"] = ("reviewed:hand" if v[0] == "geen-farsh"
+                            else "reviewed:onzeker")
     return rows
 
 
