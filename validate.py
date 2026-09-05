@@ -72,6 +72,7 @@ from datetime import datetime
 from pathlib import Path
 
 from add_metadata import repair_markers
+from compare_riwayat import IDGHAAM_KABIR, has_imala
 from add_wazifa import WAZIFA
 # BEST_CONFIDENCE keys are exactly the statuses add_wujuh.py turns into rows,
 # and SPAN_STATUSES those whose several verses are one quote instead of
@@ -800,14 +801,33 @@ def riwaya_differences(cur, args):
                 "SELECT d.id FROM riwaya_diff d JOIN riwayat ra ON ra.code = d.riwaya_a"
                 " JOIN riwayat rb ON rb.code = d.riwaya_b WHERE d.pair_type !="
                 " CASE WHEN ra.qari_en = rb.qari_en THEN 'binnen' ELSE 'tussen' END")
-    # only the reviewed pair carries a classification; the rest must not
-    # pretend to one, since the rules were written for Warsh and do not travel
-    expect_none(cur, "unreviewed pair carrying a class",
-                "SELECT id FROM riwaya_diff WHERE classified = 0"
-                " AND (class IS NOT NULL OR kind != 'ongeclassificeerd')")
-    expect_none(cur, "reviewed pair missing its class",
-                "SELECT id FROM riwaya_diff WHERE classified = 1"
-                " AND (class IS NULL OR kind = 'ongeclassificeerd')")
+    expect_none(cur, "difference without a class",
+                "SELECT id FROM riwaya_diff WHERE class IS NULL"
+                " OR translit_a IS NULL OR translit_b IS NULL")
+    # exactly one pair has been read word by word after the rules ran, and
+    # only that pair may carry the verdicts of farsh_review.tsv
+    expect_none(cur, "hand verdict on a pair that was not read",
+                "SELECT id FROM riwaya_diff WHERE reviewed = 0"
+                " AND class LIKE 'reviewed:hand%'")
+    read = cur.execute("SELECT DISTINCT riwaya_a || '-' || riwaya_b"
+                       " FROM riwaya_diff WHERE reviewed = 1").fetchall()
+    if [r[0] for r in read] != ["hafs-warsh"]:
+        raise Failed("pairs marked as read: %s (expected hafs-warsh alone)"
+                     % ", ".join(r[0] for r in read) or "none")
+    # idghaam kabiir is read off one riwaya against its sibling as control, so
+    # it can only ever be claimed for a riwaya the comparison knows applies it
+    applies = ", ".join("'" + r + "'" for r in sorted(IDGHAAM_KABIR))
+    expect_none(cur, "idghaam kabiir claimed for a riwaya without that rule",
+                "SELECT id FROM riwaya_diff WHERE class LIKE 'idghaam_kabir%'"
+                " AND riwaya_b NOT IN (" + applies + ")")
+    # imaala is read off the mark the mushaf writes, so every row called imaala
+    # has to carry one; a rule that drifted off its evidence shows up here
+    marked = [row for row in cur.execute(
+        "SELECT id, form_b FROM riwaya_diff WHERE class LIKE 'imaala%'")
+        if not has_imala(row[1])]
+    if marked:
+        raise Failed("%d rows called imaala carry no imaala mark, e.g. id %s"
+                     % (len(marked), marked[0][0]))
     # a verdict in farsh_review.tsv that matches nothing is a leftover from an
     # earlier run of the comparison, and would quietly stop excluding anything
     review = HERE / "farsh_review.tsv"
