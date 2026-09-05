@@ -690,6 +690,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name) |
 
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
+| `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `rel <label>`, `irab-book`, `irab-mabni` |
 
 `docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
 classification with its counts, and every farsh difference with its verse.
@@ -699,6 +700,16 @@ hand.
 `docs/sarf-nl.md` is a textbook of Arabic morphology (sarf) in Dutch, in twenty
 chapters from the definition of a word to i'lal, with its examples and counts
 drawn from this database. An English version is planned.
+
+`docs/nahw-nl.md` is its companion on syntax (nahw), in twenty-two chapters
+from i'rab and bina' to the sentence as a building block. Its relation counts
+come from the Extended Quranic Treebank and its case counts from the corpus.
+It closes on the 38 places where Hafs and Warsh read the i'rab ending itself
+differently -- the same consonants, two analyses of the sentence -- and those
+places recur throughout the book at the chapter each one belongs to. The
+`nahw book examples` check in `validate.py` reads the book back and looks
+every example up again, so a rebuild cannot leave it quoting figures the
+database no longer holds.
 
 `SOURCES.md` records the provenance of every source: what it is, where it was
 obtained, which edition, under what licence, which script loads it into which

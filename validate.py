@@ -64,12 +64,14 @@ import argparse
 import difflib
 import json
 import random
+import re
 import sqlite3
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
+from add_metadata import repair_markers
 from add_wazifa import WAZIFA
 # BEST_CONFIDENCE keys are exactly the statuses add_wujuh.py turns into rows,
 # and SPAN_STATUSES those whose several verses are one quote instead of
@@ -183,7 +185,7 @@ def placeholders(values):
 
 def require_tables(cur, *names):
     present = {r[0] for r in cur.execute(
-        "SELECT name FROM sqlite_master WHERE type='table'")}
+        "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
     missing = [n for n in names if n not in present]
     if missing:
         raise Skipped("table not built yet: " + ", ".join(missing))
@@ -858,6 +860,85 @@ def riwayat_readers(cur, args):
     total = cur.execute("SELECT COUNT(*) FROM riwayat").fetchone()[0]
     qurra = cur.execute("SELECT COUNT(DISTINCT qari_en) FROM riwayat").fetchone()[0]
     return f"{total} riwayat from {qurra} qurra, {loaded} of them compared here"
+
+
+@check("nahw book examples")
+def nahw_book(cur, args):
+    """Every example in docs/nahw-nl.md must still be in the database.
+
+    The book quotes the text twice over: as three-column example rows
+    (verse, word, what it hangs on) taken from the treebank, and as verses
+    quoted in running prose. Both are pasted in, so both go stale silently
+    when the database is rebuilt from a corrected source. This check reads
+    the book back and looks every one of them up again.
+
+    Verse quotes are compared without their vowels. The book writes them as
+    the mushaf does, but a quote inside a sentence is sometimes cut short of
+    a final vowel or a pause mark, and the point here is whether the words
+    are in that verse, not how they were typeset. The example rows are
+    compared literally, because those are pasted from the generator."""
+    book = HERE / "docs" / "nahw-nl.md"
+    if not book.exists():
+        raise Skipped("docs/nahw-nl.md is not here")
+    require_tables(cur, "syntax", "words")
+    text = book.read_text(encoding="utf-8")
+    written = {}
+    for surah, ayah, word, ar in cur.execute(
+            "SELECT surah, ayah, word, word_ar FROM words"):
+        written[(surah, ayah, word)] = repair_markers(ar)
+
+    def whole(surah, ayah, word):
+        return written.get((surah, ayah, word))
+
+    rows_bad, rows_n = [], 0
+    for line in text.splitlines():
+        m = re.match(r"^\| (\d+):(\d+) \| (\S+) \| (\S+) \|$", line)
+        if not m:
+            continue
+        surah, ayah, word, head = (int(m.group(1)), int(m.group(2)),
+                                   m.group(3), m.group(4))
+        rows_n += 1
+        found = cur.execute(
+            "SELECT s.word, h.surah, h.ayah, h.word FROM syntax s"
+            " LEFT JOIN syntax h ON h.tid = s.head_tid WHERE s.surah=?"
+            " AND s.ayah=? AND s.is_implicit=0 AND s.word IS NOT NULL",
+            (surah, ayah)).fetchall()
+        if not any(whole(surah, ayah, w) == word
+                   and (whole(hs, ha, hw) if hs else "\u2014") == head
+                   for w, hs, ha, hw in found):
+            rows_bad.append(line.strip())
+
+    verse = {}
+    for (surah, ayah, _), ar in written.items():
+        verse.setdefault((surah, ayah), set()).add(normalize(ar))
+    quotes_bad, quotes_n = [], 0
+    here = r"([\u0621-\u06ff][\u0600-\u06ff\s]*?)\s*\((\d+):(\d+)\)"
+    there = r"(\d+):(\d+)\s+([\u0621-\u06ff][\u0600-\u06ff\s*]*)"
+    for line in text.splitlines():
+        if line.startswith("|"):
+            continue
+        found = [(m.group(1), int(m.group(2)), int(m.group(3)))
+                 for m in re.finditer(here, line)]
+        found += [(m.group(3), int(m.group(1)), int(m.group(2)))
+                  for m in re.finditer(there, line)]
+        for phrase, surah, ayah in found:
+            if (surah, ayah) not in verse:
+                continue
+            hay = verse[(surah, ayah)]
+            for token in re.sub(r"[*_>|\u2014\u2013\-\u2026\u060c]", " ",
+                                phrase).split():
+                bare = normalize(token)
+                if not bare:
+                    continue
+                quotes_n += 1
+                if bare not in hay:
+                    quotes_bad.append(f"{surah}:{ayah} {token}")
+    if rows_bad or quotes_bad:
+        bad = rows_bad + quotes_bad
+        raise Failed(f"{len(bad)} example(s) in docs/nahw-nl.md are not in the "
+                     f"database: {'; '.join(bad[:3])}")
+    return (f"{rows_n} treebank example rows and {quotes_n} quoted words in "
+            f"docs/nahw-nl.md all found")
 
 
 def report(outcome, name, text):

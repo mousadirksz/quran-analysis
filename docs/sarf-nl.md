@@ -1606,7 +1606,8 @@ lijst woorden om te onthouden, maar een systeem waarmee de woordenschat zich
 grotendeels laat afleiden.
 
 Wat overblijft is de naḥw: hoe deze woorden zich in de zin tot elkaar
-verhouden, en welke uitgangen dat oplevert. Dat is een tweede boek.
+verhouden, en welke uitgangen dat oplevert. Dat is een tweede boek, en het
+staat naast dit boek: `docs/nahw-nl.md`.
 
 ---
 
