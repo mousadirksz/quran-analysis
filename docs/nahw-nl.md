@@ -27,18 +27,36 @@ Qoeraan. Dat bepaalt de volgorde: je leert eerst wat je duizenden keren
 tegenkomt, en je krijgt te horen wanneer iets zeldzaam is.
 
 **Het laat zien wat er níet staat.** De grammatici lezen dingen in de tekst
-die er niet geschreven staan — een onderwerp dat in het werkwoord zit, een
+die er niet geschreven staan — een fāʿil die in het werkwoord zelf zit, een
 ḫabar die je erbij moet denken. De treebank markeert die posities, 11.157 keer.
 Dit boek telt ze mee in plaats van ze weg te laten.
 
-**Het laat zien waar het onbeslist is.** Iʿrāb is een ontleding, geen feit. Op
-38 plaatsen lezen Ḥafṣ en Warsh de uitgang verschillend — dezelfde
-medeklinkers, een andere zinsbouw, en meestal een andere betekenis. Die
-gevallen staan niet achterin als curiosum maar door het hele boek heen, want er
-is geen beter bewijs dat een uitgang iets *doet*.
+**Het gebruikt echte voorbeelden waar een leerboek er meestal verzint.** Om te
+laten zien wat een uitgang doet, zet een leerboek twee zinnen naast elkaar die
+alleen in díe uitgang verschillen. Meestal zijn die twee zinnen zelf bedacht.
+Op 38 plaatsen levert de Qoeraan zo'n paar zelf: daar reciteren Ḥafṣ en Warsh
+één āya met een verschillende uitgang, en dan staan de twee ontledingen in de
+tekst zelf naast elkaar, zonder dat er iets bij verzonnen is.
 
-Dat laatste punt verdient één zin vooraf, om misverstand te voorkomen. Ḥafṣ en
-Warsh zijn allebei de Qoeraan. Waar ze verschillen is er geen goede en een
+Bij 34:17 leest Ḥafṣ وَهَلْ **نُجَازِي** إِلَّا **ٱلۡكَفُورَ**. Het werkwoord
+staat dan **mabnī li-l-maʿlūm**, de vorm waarin de handelende genoemd wordt, en
+dat is hier "Wij" — dezelfde spreker die net جَزَيْنَٰهُم zei. ٱلۡكَفُورَ krijgt
+een fatḥa als **mafʿūl bihi**, degene aan wie de handeling voltrokken wordt.
+Warsh leest وَهَلْ **يُجَازَىٰ** إِلَّا **ٱلۡكَفُورُ**: nu staat het werkwoord
+**mabnī li-l-majhūl**, de vorm waarin de handelende juist níet genoemd wordt.
+Er is dan geen mafʿūl bihi meer, en ٱلۡكَفُورُ schuift op naar de vrijgekomen
+plaats met de ḍamma die daarbij hoort — **nāʾib al-fāʿil**, de invaller voor de
+handelende.
+
+Over de ondankbare zeggen beide lezingen hetzelfde. Wat verschuift is waar de
+zin naar wijst: bij Ḥafṣ staat de Vergelder er nadrukkelijk in, bij Warsh valt
+Hij weg uit de zin — wat het Arabisch juist doet wanneer de handelende vanzelf
+spreekt — en blijft alleen de vergelding staan. Dat is precies de omzetting die
+hoofdstuk 12 uitlegt, en beide kanten ervan staan er echt. Zulke gevallen staan
+daarom niet achterin als curiosum maar bij het hoofdstuk waar ze thuishoren.
+
+Eén zin vooraf, om misverstand te voorkomen: Ḥafṣ en Warsh zijn allebei de
+Qoeraan. Waar ze verschillen is er geen goede en een
 foute lezing; er zijn twee overgeleverde lezingen, elk met een sluitende
 ontleding, en samen laten ze zien wat de Arabische zin allemaal aankan. Dat de
 ene in een database staat en de andere niet is een eigenschap van het
@@ -55,36 +73,36 @@ grootte.
 
 | Relatie | | Geschreven | Geponeerd | Wat het is | H. |
 |---|---|--:|--:|---|--:|
-| `Subj` | فاعل | 10.520 | 6.104 | onderwerp van het werkwoord | 11 |
-| `root` | root | 13.646 | 520 | kern van de zin | 5 |
-| `link` | متعلق | 14.093 | 2 | waar een jarr-groep aan hangt | 18 |
-| `gen` | مجرور | 12.961 | — | in de genitief | 17 |
-| `Obj` | مفعول به | 10.627 | 225 | lijdend voorwerp | 13 |
-| `Poss` | مضاف إليه | 9.805 | 2 | tweede lid van de idaafa | 17 |
-| `conj` | معطوف | 5.217 | 25 | nevenschikking | 19 |
-| `Pred` | خبر | 2.955 | 1.444 | gezegde van de naamwoordelijke zin | 6 |
-| `sub` | صلة | 4.039 | 310 | betrekkelijke bijzin | 20 |
-| `Adj` | صفة | 2.976 | 758 | bijvoeglijke bepaling | 19 |
-| `neg` | نفي | 2.112 | 5 | ontkenning | 20 |
-| `circ` | حال | 1.257 | 686 | toestandsbepaling | 15 |
-| `emph` | توكيد | 1.546 | — | versterking | 19 |
-| `subj<<in>>` | اسم إن | 1.542 | — | onderwerp na inna | 9 |
-| `pred<<in>>` | خبر إن | 1.304 | 154 | gezegde na inna | 9 |
-| `cond` | شرط | 1.434 | 6 | voorwaarde | 20 |
-| `rslt` | جواب الشرط | 1.224 | 33 | antwoord op de voorwaarde | 20 |
-| `Pass` | نائب فاعل | 826 | 255 | onderwerp van de lijdende vorm | 12 |
-| `pred <<kan>>` | خبر كان | 819 | 86 | gezegde na kaana | 8 |
-| `subj <<kan>>` | اسم كان | 716 | 81 | onderwerp na kaana | 8 |
-| `App` | بدل | 651 | 2 | bijstelling | 19 |
-| `intg` | استفهام | 595 | 3 | vraag | 20 |
-| `voc` | منادى | 489 | 5 | aanspreking | 14 |
-| `cert` | تحقيق | 423 | 1 | bevestiging | 20 |
-| `cog` | مفعول مطلق | 331 | 93 | innerlijk lijdend voorwerp | 14 |
-| `res` | حصر | 414 | — | beperking | 16 |
-| `Pro` | نهي | 387 | 1 | verbod | 20 |
-| `subj<<an>>` | اسم أن | 348 | — | onderwerp na anna | 9 |
-| `pred<<an>>` | خبر أن | 279 | 30 | gezegde na anna | 9 |
-| `sup` | زائد | 283 | — | toegevoegd partikel | 21 |
+| `Subj` | فاعل | 10.520 | 6.104 | de handelende; staat in rafʿ | 11 |
+| `root` | root | 13.646 | 520 | de kern waar de rest van de zin aan hangt | 5 |
+| `link` | متعلق | 14.093 | 2 | het woord waar een jarr-groep aan vasthangt | 18 |
+| `gen` | مجرور | 12.961 | — | wat na een voorzetsel of als tweede lid van een iḍāfa staat | 17 |
+| `Obj` | مفعول به | 10.627 | 225 | degene aan wie de handeling voltrokken wordt | 13 |
+| `Poss` | مضاف إليه | 9.805 | 2 | het bepalende lid van de iḍāfa, altijd majrūr | 17 |
+| `conj` | معطوف | 5.217 | 25 | aangehaakt met wa, fa, thumma; neemt de iʿrāb over | 19 |
+| `Pred` | خبر | 2.955 | 1.444 | wat er over de mubtadaʾ gezegd wordt | 6 |
+| `sub` | صلة | 4.039 | 310 | de zin die een betrekkelijk woord zijn inhoud geeft | 20 |
+| `Adj` | صفة | 2.976 | 758 | wat een eigenschap toekent en zijn woord in vier dingen volgt | 19 |
+| `neg` | نفي | 2.112 | 5 | het partikel dat ontkent | 20 |
+| `circ` | حال | 1.257 | 686 | de toestand waarin de handeling zich voltrekt | 15 |
+| `emph` | توكيد | 1.546 | — | herhaling die bevestigt | 19 |
+| `subj<<in>>` | اسم إن | 1.542 | — | wat إنّ in naṣb zet | 9 |
+| `pred<<in>>` | خبر إن | 1.304 | 154 | wat إنّ in rafʿ laat | 9 |
+| `cond` | شرط | 1.434 | 6 | wat als voorwaarde gesteld wordt | 20 |
+| `rslt` | جواب الشرط | 1.224 | 33 | wat er gebeurt als de voorwaarde ingaat | 20 |
+| `Pass` | نائب فاعل | 826 | 255 | wat de plaats van de fāʿil inneemt als die niet genoemd wordt | 12 |
+| `pred <<kan>>` | خبر كان | 819 | 86 |  | 8 |
+| `subj <<kan>>` | اسم كان | 716 | 81 |  | 8 |
+| `App` | بدل | 651 | 2 | het woord waar het eigenlijk om gaat, in plaats van het vorige | 19 |
+| `intg` | استفهام | 595 | 3 | het vraagpartikel | 20 |
+| `voc` | منادى | 489 | 5 | de aangesprokene, na يا | 14 |
+| `cert` | تحقيق | 423 | 1 | قد dat bevestigt | 20 |
+| `cog` | مفعول مطلق | 331 | 93 | de maṣdar van het werkwoord zelf, ter versterking | 14 |
+| `res` | حصر | 414 | — | إلّا na een ontkenning: alleen | 16 |
+| `Pro` | نهي | 387 | 1 | لا dat verbiedt | 20 |
+| `subj<<an>>` | اسم أن | 348 | — | wat أنّ in naṣb zet | 9 |
+| `pred<<an>>` | خبر أن | 279 | 30 | wat أنّ in rafʿ laat | 9 |
+| `sup` | زائد | 283 | — | een partikel dat er staat zonder iets te regeren | 21 |
 
 98 verdere labels met 3.297 plaatsen samen, waarvan 78 labels (1.730 plaatsen) een aparte naasikh benoemen: `subj <<lays>>`, `pred <<ka'ana>>`, `subj <<easaa>>` en zo voort.
 
@@ -103,8 +121,8 @@ klinken (**mabnī**).
 
 - **Muʿrab**: de meeste naamwoorden en de imperfecte werkwoordsvorm.
   ٱلْكِتَٰبُ / ٱلْكِتَٰبَ / ٱلْكِتَٰبِ — drie plaatsen, drie uitgangen.
-- **Mabnī**: de voornaamwoorden (هُوَ blijft هُوَ), de aanwijzende en
-  betrekkelijke woorden, de partikels, de verleden tijd, en de gebiedende wijs.
+- **Mabnī**: de ḍamāʾir (هُوَ blijft هُوَ), de aanwijzende en
+  ism mawṣūl, de partikels, de māḍī en de amr.
 
 Dat onderscheid is de eerste zeef. Wie zich afvraagt waarom een woord een
 bepaalde uitgang heeft, moet eerst weten of het die uitgang überhaupt kán
@@ -112,10 +130,9 @@ veranderen.
 
 > **Let op**
 >
-> Mabnī betekent niet dat het woord geen functie heeft. هُوَ kan een
-> onderwerp zijn en هُ een lijdend voorwerp; ze veranderen alleen niet van
-> vorm. De grammatici zeggen dan dat het woord *in de plaats van* een naamval
-> staat — **fī maḥall** — en dat begrip komt in hoofdstuk 5 terug.
+> Mabnī betekent niet dat het woord geen functie heeft. هُوَ kan fāʿil zijn
+> en هُ mafʿūl bihi; ze veranderen alleen niet van vorm. De grammatici zeggen
+> dan dat het woord *in de plaats van* een iʿrāb-positie staat — **fī maḥall** — en dat begrip komt in hoofdstuk 5 terug.
 
 ## 2. De vier posities
 
@@ -124,9 +141,9 @@ naamwoorden, de vierde voor werkwoorden.
 
 | Positie | Arabisch | Waar je het aan ziet | Wat het meestal betekent |
 |---|---|---|---|
-| **rafʿ** | رَفْع | ḍamma | onderwerp, gezegde |
-| **naṣb** | نَصْب | fatḥa | lijdend voorwerp, bepaling |
-| **jarr** | جَرّ | kasra | na een voorzetsel, tweede lid van een iḍāfa |
+| **rafʿ** | رَفْع | ḍamma | de fāʿil, de mubtadaʾ, de ḫabar |
+| **naṣb** | نَصْب | fatḥa | de mafʿūl, de ḥāl, de tamyīz |
+| **jarr** | جَرّ | kasra | na een voorzetsel, als muḍāf ilayhi |
 | **jazm** | جَزْم | sukūn | werkwoord na bepaalde partikels |
 
 Naamwoorden kennen rafʿ, naṣb en jarr; werkwoorden kennen rafʿ, naṣb en jazm.
@@ -140,7 +157,7 @@ Zo vaak komen ze voor in het corpus:
 | rafʿ | `NOM` | 8.954 |
 | naṣb | `ACC` | 10.331 |
 | jarr | `GEN` | 12.629 |
-| naṣb (werkwoord) | `SUBJ` | 1.330 |
+| naṣb van het werkwoord | `SUBJ` | 1.330 |
 | jazm | `JUS` | 1.418 |
 
 De genitief is de grootste, en dat is geen toeval: elk voorzetsel dwingt hem
@@ -164,7 +181,7 @@ gebruiken andere tekens voor dezelfde posities.
 Twee daarvan zijn valkuilen, en allebei komen ze veel voor.
 
 **Het gezonde vrouwelijke meervoud krijgt in naṣb een kasra, geen fatḥa.**
-ٱلصَّٰلِحَٰتِ is lijdend voorwerp met een kasra. Wie de kasra automatisch als
+ٱلصَّٰلِحَٰتِ is mafʿūl bihi met een kasra. Wie de kasra automatisch als
 jarr leest, ontleedt de zin verkeerd.
 
 **De ġayr munṣarif krijgt in jarr een fatḥa, geen kasra** — behalve na de
@@ -184,21 +201,20 @@ De klassieke naḥw draait om één idee: een uitgang komt niet uit de lucht
 vallen, er is iets dat hem veroorzaakt. Dat veroorzakende woord heet de
 **ʿāmil** (عَامِل, "werker").
 
-- Een werkwoord maakt zijn onderwerp *marfūʿ* en zijn lijdend voorwerp
-  *manṣūb*.
+- Een werkwoord maakt zijn fāʿil *marfūʿ* en zijn mafʿūl bihi *manṣūb*.
 - Een voorzetsel maakt het volgende woord *majrūr*.
 - Het eerste lid van een iḍāfa maakt het tweede *majrūr*.
-- إِنَّ maakt haar onderwerp *manṣūb* en haar gezegde *marfūʿ* — precies
+- إِنَّ maakt haar ism *manṣūb* en haar ḫabar *marfūʿ* — precies
   andersom dan je zou verwachten.
 
 Ontleden is daarom altijd twee vragen tegelijk: welke positie heeft dit woord,
 en wat veroorzaakt die. Het antwoord op de tweede vraag is wat een iʿrāb-boek
 opschrijft.
 
-## 5. Maḥall min al-iʿrāb — als een hele zin een naamval heeft
+## 5. Maḥall min al-iʿrāb — als een hele zin een positie inneemt
 
 Niet alleen woorden hebben een positie; hele zinnen kunnen er een hebben.
-ٱلَّذِى **قَالَ** heeft een bijzin die als geheel de plaats van een naamwoord
+ٱلَّذِى **قَالَ** heeft een ṣila die als geheel de plaats van een naamwoord
 inneemt. De grammatici zeggen dan dat de zin *fī maḥall* staat — in de plaats
 van rafʿ, naṣb of jarr.
 
@@ -242,9 +258,9 @@ erachter — het Arabisch staat dat toe wanneer de ḫabar een bepaling is.
 >
 > 2:177 لَّيْسَ **ٱلْبِرَّ** أَن تُوَلُّوا۟ وُجُوهَكُمْ, met een fatḥa in
 > Ḥafṣ. Dan is ٱلْبِرَّ de ḫabar van لَيْسَ en is *dat jullie je gezichten
-> wenden* het onderwerp. Warsh leest **ٱلْبِرُّ** met een ḍamma: dan is
-> vroomheid het onderwerp en de rest de ḫabar. Dezelfde woorden, en de vraag
-> wat waarover uitspraak doet, valt andersom uit.
+> wenden* het ism van لَيْسَ. Warsh leest **ٱلْبِرُّ** met een ḍamma: dan is
+> vroomheid het ism en de rest de ḫabar. Dezelfde woorden, en de vraag wat
+> waarover uitspraak doet, valt andersom uit.
 ## 7. Wat er niet staat: de weggelaten ḫabar
 
 De naamwoordelijke zin heeft twee delen, maar het Arabisch schrijft ze niet
@@ -277,8 +293,8 @@ De treebank markeert die lege plekken. Dit is hoe vaak, en op welke posities:
 11.157 geponeerde elementen in totaal, waarvan 6.673 met een woord ingevuld en 4.484 alleen als lege positie.
 
 Dat is één op de twaalf woorden van de Qoeraan dat *niet geschreven staat* en
-toch in de ontleding meetelt. De grootste groep — het weggelaten onderwerp —
-komt in hoofdstuk 11 aan de orde; die zit meestal in het werkwoord zelf. Hier
+toch in de ontleding meetelt. De grootste groep — de weggelaten fāʿil — komt
+in hoofdstuk 11 aan de orde; die zit meestal in het werkwoord zelf. Hier
 gaat het om de tweede groep: 1.444 keer een ḫabar die er niet staat.
 
 Drie standaardgevallen:
@@ -309,7 +325,7 @@ Het spiegelbeeld bestaat ook: een **weggelaten mubtadaʾ**. Bij
 > eraan voorafgaat.
 >
 > Beide lezingen vullen iets aan wat er niet staat; ze vullen alleen niet
-> hetzelfde aan. De fatḥa vraagt om een werkwoord, de ḍamma om een onderwerp.
+> hetzelfde aan. De fatḥa vraagt om een werkwoord, de ḍamma om een mubtadaʾ.
 > Wie vindt dat taqdīr willekeurig is, heeft hier het tegenbewijs: de klinker
 > bepaalt wélk woord je erbij moet denken.
 
@@ -328,7 +344,7 @@ De zusters van كان doen hetzelfde: لَيْسَ, أَصْبَحَ, أَمْس
 De treebank noemt de naasikh in het label zelf. Dit zijn de twintig die het
 vaakst regeren:
 
-| Naasikh | اسم (onderwerpspositie) | خبر (gezegdepositie) |
+| Naasikh | اسم | خبر |
 |---|--:|--:|
 | `in` | 1.542 | 1.458 |
 | `kan` | 797 | 905 |
@@ -382,21 +398,21 @@ alles in rafʿ.
 > fatḥa in Ḥafṣ: عاقبة is de ḫabar kāna, en ٱلسُّوٓأَىٰ het ism kāna in rafʿ —
 > "toen was het einde van hen die kwaad deden: het slechtste". Warsh leest
 > **عَٰقِبَةُ** met een ḍamma en draait het om: عاقبة is dan het ism, en
-> السوأى de ḫabar in naṣb. Het onderwerp en het gezegde wisselen van plaats.
+> السوأى de ḫabar in naṣb. Het ism en de ḫabar wisselen van plaats.
 >
 > 21:47 laat de andere schakelaar zien. Ḥafṣ: وَإِن كَانَ **مِثْقَالَ** حَبَّةٍ
 > — naṣb, dus كان is naasikh en مثقال is de ḫabar, met een weggelaten ism.
-> Warsh: **مِثْقَالُ** in rafʿ, dus كان is tāmma en مثقال is gewoon het
-> onderwerp: "en al is er [maar] het gewicht van een mosterdzaadje". Dezelfde
+> Warsh: **مِثْقَالُ** in rafʿ, dus كان is tāmma en مثقال is gewoon de
+> fāʿil: "en al is er [maar] het gewicht van een mosterdzaadje". Dezelfde
 > keuze staat op 31:16.
 
 ## 9. Inna en haar zusters
 
-إِنَّ doet het omgekeerde van كان: zij zet het onderwerp in **naṣb** en laat
-het gezegde in **rafʿ**.
+إِنَّ doet het omgekeerde van كان: zij zet in **naṣb** wat de mubtadaʾ was en
+laat in **rafʿ** wat de ḫabar was.
 
-ٱللَّهَ غَفُورٌ → إِنَّ ٱللَّهَ غَفُورٌ. Het onderwerp heet **ism inna**, het
-gezegde **ḫabar inna**.
+ٱللَّهَ غَفُورٌ → إِنَّ ٱللَّهَ غَفُورٌ. Het eerste deel heet **ism inna**, het
+tweede **ḫabar inna**.
 
 De zusters zijn أَنَّ, كَأَنَّ, لَٰكِنَّ, لَيْتَ en لَعَلَّ. Ze zijn alle zes
 partikels, geen werkwoorden, en ze zijn alle zes mabnī.
@@ -424,7 +440,7 @@ En de bijbehorende ḫabar:
 
 **إِنَّ tegenover أَنَّ.** Dezelfde letters, twee taken. إِنَّ met kasra begint
 een zelfstandige zin; أَنَّ met fatḥa maakt van de zin een naamwoord dat
-ergens in past — als onderwerp, als lijdend voorwerp, na een voorzetsel. De
+ergens in past — als mubtadaʾ, als mafʿūl bihi, na een voorzetsel. De
 vuistregel is dat je أنّ in het Nederlands met "dat" vertaalt en إنّ met niets.
 
 **De verlichte inna.** إِنَّ en أَنَّ kunnen hun shadda verliezen: إِنْ en
@@ -439,9 +455,9 @@ levert het volgende geval op.
 > "en het vijfde [getuigenis is] dat de toorn van Allah over haar is".
 >
 > Warsh leest وَٱلْخَٰمِسَةُ **أَنْ** **غَضِبَ** **ٱللَّهُ** عَلَيْهَا: أن
-> zonder shadda en zonder werking, غضب als *werkwoord* in de verleden tijd, en
+> zonder shadda en zonder werking, غضب als *fiʿl māḍī*, en
 > الله als fāʿil in rafʿ — "en het vijfde is dat Allah toornt over haar". Een
-> naamwoord wordt een werkwoord, een iḍāfa wordt een onderwerp, en het
+> naamwoord wordt een werkwoord, een iḍāfa wordt een fāʿil, en het
 > voorafgaande الخامسة verschuift van naṣb naar rafʿ.
 >
 > Vier woorden op rij, en de hele constructie kantelt mee. Dit is het beste
@@ -453,7 +469,7 @@ levert het volgende geval op.
 De derde groep die de naamwoordelijke zin verstoort zijn werkwoorden van
 menen en weten: ظَنَّ, حَسِبَ, زَعَمَ, رَأَى, عَلِمَ, وَجَدَ, جَعَلَ,
 ٱتَّخَذَ. Zij zetten **allebei** de delen in naṣb, en die worden dan hun
-eerste en tweede lijdend voorwerp.
+eerste en tweede mafʿūl bihi.
 
 زَيْدٌ قَائِمٌ → ظَنَنْتُ زَيْدًا قَائِمًا.
 
@@ -490,12 +506,12 @@ staat de **fāʿil** (فَاعِل), de handelende, altijd in rafʿ.
 
 Twee dingen die het Nederlands anders doet:
 
-**De volgorde is werkwoord–onderwerp.** Niet ٱللَّهُ خَلَقَ maar خَلَقَ
+**De volgorde is werkwoord–fāʿil.** Niet ٱللَّهُ خَلَقَ maar خَلَقَ
 ٱللَّهُ. Staat het naamwoord tóch voorop, dan is het een naamwoordelijke zin
 met een werkwoordelijke ḫabar, en dat is een ander accent — ongeveer het
 verschil tussen "Allah schiep" en "Allah, Hij is het die schiep".
 
-**Het werkwoord blijft enkelvoud bij een meervoudig onderwerp.** قَالَ
+**Het werkwoord blijft enkelvoud bij een meervoudige fāʿil.** قَالَ
 ٱلرِّجَالُ, niet قَالُوا۟ ٱلرِّجَالُ. Het werkwoord richt zich alleen naar het
 geslacht, niet naar het aantal, zolang het vóór de fāʿil staat.
 
@@ -513,34 +529,33 @@ Daarnaast poneert de treebank er 6.104 die niet geschreven staan — meer dan de
 helft van alle geponeerde elementen in de hele Qoeraan, en de grootste enkele
 post uit de tabel van hoofdstuk 7.
 
-De reden is eenvoudig: in قَالَ zit het onderwerp al. Het Arabisch schrijft
+De reden is eenvoudig: in قَالَ zit de fāʿil al. Het Arabisch schrijft
 geen los "hij". De grammatici zeggen dat de fāʿil een **ḍamīr mustatir** is —
-een verborgen voornaamwoord — en ze geven zelfs aan of het verplicht verborgen
+een verborgen ḍamīr — en ze geven zelfs aan of hij verplicht verborgen
 is (bij أَقُولُ kán er geen los أنا staan zonder nadruk) of facultatief (bij
 قَالَ mag هو erbij).
 
-ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ (1:6): het werkwoord is gebiedende wijs, de
-fāʿil is verplicht verborgen (*أنتَ*), نا is lijdend voorwerp, en
-ٱلصِّرَٰطَ het tweede lijdend voorwerp. Drie van de vier delen zijn zichtbaar;
-het onderwerp is dat niet.
+ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ (1:6): het werkwoord is een amr, de
+fāʿil is verplicht verborgen (*أنتَ*), نا is mafʿūl bihi en ٱلصِّرَٰطَ de
+tweede mafʿūl bihi. Drie van de vier delen zijn zichtbaar; de fāʿil niet.
 
 Voor wie leert ontleden is dit de belangrijkste gewoonte om aan te wennen:
 **wijs bij elk werkwoord de fāʿil aan, ook als er niets staat.** Zes van de
 tien keer staat er niets.
 
-## 12. Nāʾib al-fāʿil — de lijdende vorm
+## 12. Nāʾib al-fāʿil
 
-Wordt het werkwoord passief (hoofdstuk 12 van het ṣarf-boek: كُتِبَ,
-يُكْتَبُ), dan verdwijnt de fāʿil helemaal uit de zin. Het lijdend voorwerp
-schuift op naar zijn plaats en neemt zijn naamval over: het gaat van naṣb naar
-**rafʿ**. Het heet dan **nāʾib al-fāʿil** (نَائِب ٱلْفَاعِل), de
-plaatsvervanger van de handelende.
+Staat het werkwoord **mabnī li-l-majhūl** — de vorm waarin de handelende niet
+genoemd wordt (hoofdstuk 12 van het ṣarf-boek: كُتِبَ, يُكْتَبُ) — dan
+verdwijnt de fāʿil helemaal uit de zin. De mafʿūl bihi schuift op naar zijn
+plaats en neemt zijn iʿrāb over: van naṣb naar **rafʿ**. Hij heet dan
+**nāʾib al-fāʿil** (نَائِب ٱلْفَاعِل), de invaller voor de handelende.
 
 كَتَبَ ٱلرَّجُلُ ٱلْكِتَٰبَ → كُتِبَ ٱلْكِتَٰبُ.
 
-Dat de dader wegvalt is geen slordigheid maar de betekenis van de vorm: het
-Arabisch gebruikt de lijdende vorm juist wanneer de dader niet genoemd wordt of
-niet genoemd hoeft te worden. Een مِن قِبَلِ-constructie erbij zetten is een
+Dat de handelende wegvalt is geen slordigheid maar de betekenis van de vorm:
+het Arabisch grijpt naar de majhūl juist wanneer die niet genoemd wordt of niet
+genoemd hoeft te worden. Een مِن قِبَلِ-constructie erbij zetten is een
 moderne gewoonte, geen klassieke.
 
 826 geschreven plaatsen, en 255 geponeerde:
@@ -551,19 +566,19 @@ moderne gewoonte, geen klassieke.
 | 2:48 | عَدْلٌ | يُؤْخَذُ |
 | 2:61 | ٱلذِّلَّةُ | وَضُرِبَتْ |
 
-Staat er geen lijdend voorwerp om te promoveren, dan neemt iets anders die
+Staat er geen mafʿūl bihi om te promoveren, dan neemt iets anders die
 plaats in — een jarr-groep, een tijdsbepaling, een mafʿūl muṭlaq. In
 1:7 ٱلْمَغْضُوبِ **عَلَيْهِمْ** is de jarr-groep de nāʾib al-fāʿil bij het
-lijdend deelwoord.
+ism mafʿūl.
 
 > **In de riwaayaat**
 >
-> 34:17 is de lijdende vorm zelf het verschil. Ḥafṣ leest
-> وَهَلْ **نُجَٰزِىٓ** إِلَّا **ٱلْكَفُورَ** — actief, eerste persoon meervoud,
-> met الكفور als lijdend voorwerp in naṣb: "en vergelden Wij [zo] iemand
+> 34:17 is de majhūl zelf het verschil. Ḥafṣ leest
+> وَهَلْ **نُجَٰزِىٓ** إِلَّا **ٱلْكَفُورَ** — maʿlūm, eerste persoon meervoud,
+> met الكفور als mafʿūl bihi in naṣb: "en vergelden Wij [zo] iemand
 > anders dan de ondankbare?"
 >
-> Warsh leest وَهَلْ **يُجَٰزَىٰٓ** إِلَّا **ٱلْكَفُورُ** — lijdend, derde
+> Warsh leest وَهَلْ **يُجَٰزَىٰٓ** إِلَّا **ٱلْكَفُورُ** — majhūl, derde
 > persoon, met الكفور als nāʾib al-fāʿil in rafʿ: "en wordt [zo] iemand anders
 > vergolden dan de ondankbare?"
 >
@@ -572,10 +587,11 @@ lijdend deelwoord.
 > nadrukkelijk in ("Wij"); in de andere staat er alleen de vergelding. De
 > uitspraak over de ondankbare blijft dezelfde.
 
-## 13. Mafʿūl bihi — het lijdend voorwerp
+## 13. Mafʿūl bihi
 
-Het lijdend voorwerp staat in **naṣb**. Met 10.627 geschreven plaatsen is het
-na de fāʿil de grootste werkwoordsrelatie.
+De **mafʿūl bihi** (مَفْعُول بِهِ) is degene aan wie de handeling voltrokken
+wordt, en hij staat in **naṣb**. Met 10.627 geschreven plaatsen is hij na de
+fāʿil de grootste werkwoordsrelatie.
 
 | Vers | Woord | Hangt aan |
 |---|---|---|
@@ -588,20 +604,20 @@ na de fāʿil de grootste werkwoordsrelatie.
 
 Drie dingen die de tabel laat zien.
 
-**Het lijdend voorwerp kan een voornaamwoord zijn dat aan het werkwoord vastzit.**
-In ٱهْدِنَا is نا het lijdend voorwerp, mabnī, *fī maḥall naṣb*.
+**Hij kan een ḍamīr zijn die aan het werkwoord vastzit.**
+In ٱهْدِنَا is نا de mafʿūl bihi, mabnī, *fī maḥall naṣb*.
 
-**Het kan vooropgaan.** إِيَّاكَ نَعْبُدُ (1:5) zet het lijdend voorwerp vóór
+**Het kan vooropgaan.** إِيَّاكَ نَعْبُدُ (1:5) zet de mafʿūl bihi vóór
 het werkwoord. Dat kan alleen met de losse vorm إِيَّا + achtervoegsel, en het
 is nadrukkelijk: "U alleen aanbidden wij". De volgorde is hier de betekenis.
 
 **Het kan een hele zin zijn.** يَقُولُ **ءَامَنَّا** (2:8): de zin ءامنّا staat
-*fī maḥall naṣb* als lijdend voorwerp van قال. Zeggen neemt in het Arabisch
+*fī maḥall naṣb* als mafʿūl bihi van قال. Zeggen neemt in het Arabisch
 altijd een zin als voorwerp.
 
 ### Overgankelijk en onovergankelijk
 
-Niet elk werkwoord neemt een lijdend voorwerp. جَلَسَ, ذَهَبَ, نَامَ zijn
+Niet elk werkwoord neemt een mafʿūl bihi. جَلَسَ, ذَهَبَ, نَامَ zijn
 **lāzim** (لَازِم) — ze blijven bij hun fāʿil. Een deel van de vormen uit het
 ṣarf-boek bestaat juist om een lāzim werkwoord overgankelijk te maken: vorm II
 en vorm IV doen dat, en de bijbehorende vorm V en X draaien het weer terug.
@@ -613,13 +629,13 @@ en vorm IV doen dat, en de bijbehorende vorm V en X draaien het weer terug.
 > onovergankelijk en vrouwelijk ("opdat de weg van de misdadigers duidelijk
 > wórdt"), met سبيل als fāʿil. Warsh leest **سَبِيلَ** met een fatḥa: dan is
 > تستبين tweede persoon en overgankelijk ("opdat jij de weg van de misdadigers
-> duidelijk máákt"), met سبيل als lijdend voorwerp. Eén klinker beslist of het
+> duidelijk máákt"), met سبيل als mafʿūl bihi. Eén klinker beslist of het
 > werkwoord een voorwerp heeft.
 
 ### De ishtighāl
 
 Er is een constructie waarin een naamwoord vooropgaat terwijl het werkwoord
-daarna zijn eigen voorwerp al bij zich heeft, als voornaamwoord. Dan mag het
+daarna zijn eigen mafʿūl al bij zich heeft, als ḍamīr. Dan mag het
 vooropstaande woord óók in naṣb — veroorzaakt door een geschat werkwoord — of
 in rafʿ als mubtadaʾ. Die keuze heet **ishtighāl** (اِشْتِغَال, "bezig zijn"),
 en beide zijn correct.
@@ -636,13 +652,13 @@ en beide zijn correct.
 > وَٱلنُّجُومُ **مُسَخَّرَٰتٌۢ** — de eerste twee manṣūb (aangehaakt aan
 > سَخَّرَ eerder in het vers), maar النجوم in rafʿ met مسخّرات als ḫabar
 > ernaast. Warsh trekt de reeks door: **وَٱلنُّجُومَ مُسَخَّرَٰتٍۭ**, allebei
-> manṣūb, النجوم als vierde lijdend voorwerp en مسخّرات als ḥāl daarbij. Waar
+> manṣūb, النجوم als vierde mafʿūl bihi en مسخّرات als ḥāl daarbij. Waar
 > Ḥafṣ halverwege de opsomming naar een nieuwe zin overstapt, loopt Warsh door.
 
 ## 14. De andere mafāʿīl
 
 Het Arabisch kent vijf soorten mafʿūl. Alle vijf staan in naṣb; ze verschillen
-in wat ze over de handeling zeggen. Het lijdend voorwerp is er één van; dit
+in wat ze over de handeling zeggen. De mafʿūl bihi is er één van; dit
 zijn de andere vier.
 
 **Mafʿūl muṭlaq** (مَفْعُول مُطْلَق), de innerlijke: een maṣdar van hetzelfde
@@ -662,7 +678,7 @@ en 93 geponeerde.
 > 19:34 ذَٰلِكَ عِيسَى ٱبْنُ مَرْيَمَ ۚ **قَوْلَ** ٱلْحَقِّ. Ḥafṣ leest naṣb: een
 > mafʿūl muṭlaq bij een geschat *أقول* — "[ik zeg dat] als het ware woord".
 > Warsh leest **قَوْلُ** in rafʿ, en dan is het de ḫabar bij een herhaald
-> onderwerp: "dat is ʿĪsā de zoon van Maryam — het ware woord."
+> mubtadaʾ: "dat is ʿĪsā de zoon van Maryam — het ware woord."
 >
 > 10:23 doet hetzelfde: Ḥafṣ **مَّتَٰعَ** ٱلْحَيَوٰةِ ٱلدُّنْيَا als mafʿūl
 > muṭlaq of ẓarf, Warsh **مَّتَٰعُ** als ḫabar van een weggelaten mubtadaʾ.
@@ -693,7 +709,7 @@ mabnī op ḍamma wanneer hij een enkelvoudige eigennaam is of bepaald bedoeld.
 - يَٰٓأَيُّهَا ٱلنَّاسُ (2:21) — أيّها is mabnī op ḍamma *fī maḥall naṣb*, en
   ٱلنَّاسُ is er de ṣifa van, in rafʿ met de bouwvorm mee.
 
-De treebank telt 489 geschreven aansprekingen. Verreweg de meeste zijn
+De treebank telt 489 geschreven munādā's. Verreweg de meeste zijn
 رَبَّنَا en رَبِّ, allebei muḍāf en dus manṣūb:
 
 | Vers | Woord |
@@ -745,16 +761,18 @@ Na een telwoord van 11 tot 99 staat de tamyīz altijd enkelvoud en manṣūb:
 **Istithnāʾ** (اِسْتِثْنَاء) is uitzondering: إِلَّا, غَيْر, سِوَى, خَلَا,
 عَدَا, حَاشَا. De hoofdregel:
 
-- Is de zin bevestigend en het geheel genoemd, dan staat het uitgezonderde in
-  **naṣb**: قَامَ ٱلْقَوْمُ إِلَّا زَيْدًا.
-- Is de zin ontkennend en het geheel genoemd, dan mag het uitgezonderde naṣb
-  zijn óf de naamval van het geheel overnemen (**badal**).
-- Is het geheel níet genoemd — de zogenaamde **istithnāʾ mufarragh** — dan
-  krijgt het woord na إلّا de naamval die het zonder إلّا zou hebben. إلّا
-  werkt dan helemaal niet.
+- Is de zin bevestigend en de **mustathnā minhu** — het geheel waaruit
+  uitgezonderd wordt — genoemd, dan staat de **mustathnā** in **naṣb**:
+  قَامَ ٱلْقَوْمُ إِلَّا زَيْدًا.
+- Is de zin ontkennend en de mustathnā minhu genoemd, dan mag de mustathnā
+  naṣb zijn óf de iʿrāb van het geheel overnemen (**badal**).
+- Is de mustathnā minhu níet genoemd — de **istithnāʾ mufarragh** — dan krijgt
+  het woord na إلّا de iʿrāb die het zonder إلّا ook zou hebben. إلّا werkt dan
+  helemaal niet.
 
 Dat laatste geval is verreweg het vaakst, en het is meteen de **ḥaṣr**
-(حَصْر), de beperking: مَا … إِلَّا zegt "niet … behalve", oftewel "alleen".
+(حَصْر): مَا … إِلَّا zegt "niet … behalve", en snijdt zo alles weg behalve
+wat er na إلّا staat — "alleen".
 De treebank labelt die إلّا als `res`, 414 plaatsen:
 
 | Vers | Woordgroep |
@@ -763,12 +781,12 @@ De treebank labelt die إلّا als `res`, 414 plaatsen:
 | 2:26 | وَمَا يُضِلُّ بِهِۦٓ إِلَّا ٱلْفَٰسِقِينَ |
 | 2:99 | وَمَا يَكْفُرُ بِهَآ إِلَّا ٱلْفَٰسِقُونَ |
 
-Let op 2:26 tegenover 2:99: ٱلْفَٰسِقِينَ is manṣūb omdat het lijdend voorwerp
+Let op 2:26 tegenover 2:99: ٱلْفَٰسِقِينَ is manṣūb omdat het mafʿūl bihi
 van يُضِلُّ is, ٱلْفَٰسِقُونَ is marfūʿ omdat het fāʿil van يَكْفُرُ is.
-Dezelfde constructie, twee naamvallen, en إلّا heeft er geen van beide
+Dezelfde constructie, twee iʿrāb-posities, en إلّا heeft er geen van beide
 veroorzaakt. Dat is wat "mufarragh" betekent.
 
-Het echte uitgezonderde — `exp` — telt maar 193 plaatsen.
+De echte mustathnā — `exp` — telt maar 193 plaatsen.
 
 > **In de riwaayaat**
 >
@@ -794,7 +812,7 @@ Het echte uitgezonderde — `exp` — telt maar 193 plaatsen.
 
 ## 17. Jarr: het voorzetsel en de iḍāfa
 
-De genitief is met 12.629 plaatsen de grootste naamval van de Qoeraan, en er
+Jarr is met 12.629 plaatsen de grootste positie van de Qoeraan, en er
 zijn maar twee dingen die hem veroorzaken.
 
 **Het voorzetsel.** مِنْ, إِلَى, عَنْ, عَلَى, فِى, بِ, لِ, كَ, حَتَّى, en de
@@ -826,7 +844,7 @@ komt van het tweede lid.
 **Het gezonde mannelijke meervoud en de duaal verliezen hun nūn.**
 مُسْلِمُونَ + ٱلْمَدِينَةِ → مُسْلِمُو ٱلْمَدِينَةِ.
 
-**De muḍāf houdt zijn eigen naamval**, bepaald door zijn plaats in de zin. In
+**De muḍāf houdt zijn eigen iʿrāb**, bepaald door zijn plaats in de zin. In
 بِسْمِ ٱللَّهِ is اسم majrūr door بِ, en الله majrūr door de iḍāfa — twee
 kasra's met twee verschillende oorzaken.
 
@@ -834,7 +852,7 @@ kasra's met twee verschillende oorzaken.
 >
 > 2:184 is een iḍāfa die er in de ene lezing wel en in de andere niet is.
 > Ḥafṣ: وَعَلَى ٱلَّذِينَ يُطِيقُونَهُۥ **فِدْيَةٌ** **طَعَامُ** **مِسْكِينٍ**
-> — فدية met tanwīn is een uitgesteld onderwerp, طعام staat er als badal naast
+> — فدية met tanwīn is een uitgestelde mubtadaʾ, طعام staat er als badal naast
 > in rafʿ, en مسكين is enkelvoud: "en op wie het [maar net] aankan rust een
 > losprijs: het voeden van één behoeftige."
 >
@@ -847,19 +865,19 @@ kasra's met twee verschillende oorzaken.
 > terwijl het majrūr is. Dat is de ġayr munṣarif uit hoofdstuk 3, hier in het
 > wild.
 >
-> 8:18 laat de iḍāfa met een deelwoord zien. Ḥafṣ: إِنَّ ٱللَّهَ **مُوهِنُ**
+> 8:18 laat de iḍāfa met een ism fāʿil zien. Ḥafṣ: إِنَّ ٱللَّهَ **مُوهِنُ**
 > **كَيْدِ** ٱلْكَٰفِرِينَ — het ism fāʿil van vorm IV zonder tanwīn, dus in
 > iḍāfa met wat erop volgt: "verzwakker van de list der ongelovigen". Warsh:
 > **مُوَهِّنٌ** **كَيْدَ** — het ism fāʿil van vorm II *mét* tanwīn, en dan
-> werkt het als zijn werkwoord en neemt een lijdend voorwerp in naṣb: "hij die
+> werkt het als zijn werkwoord en neemt een mafʿūl bihi in naṣb: "hij die
 > de list der ongelovigen verzwakt". Het is de standaardregel van het
-> deelwoord: met tanwīn regeert het als werkwoord, zonder tanwīn als muḍāf.
+> ism fāʿil: met tanwīn regeert het als zijn werkwoord, zonder tanwīn als muḍāf.
 
 ### De ẓarf die op een zin uitkomt
 
 Een tijds- of plaatsbepaling die als muḍāf een hele zin bij zich krijgt in
 plaats van een naamwoord, mág mabnī worden op een fatḥa in plaats van zijn
-eigen naamval te tonen. De grammatici verschillen erover of dat verplicht is.
+eigen iʿrāb te tonen. De grammatici verschillen erover of dat verplicht is.
 
 > **In de riwaayaat**
 >
@@ -874,12 +892,12 @@ eigen naamval te tonen. De grammatici verschillen erover of dat verplicht is.
 ## 18. Taʿalluq — waar een jarr-groep aan hangt
 
 Een voorzetselgroep staat nooit op zichzelf. Hij hangt altijd ergens aan: aan
-een werkwoord, aan een deelwoord, aan een maṣdar, of — als er niets anders is
+een werkwoord, aan een ism fāʿil of ism mafʿūl, aan een maṣdar, of — als er niets anders is
 — aan een geschat woord. Dat aanhangen heet **taʿalluq** (تَعَلُّق), en het
 woord waar hij aan hangt de **mutaʿallaq**.
 
 Met 14.093 plaatsen is dit de grootste relatie in de hele treebank. Groter dan
-de fāʿil, groter dan het lijdend voorwerp. Wie Arabisch leest, is meer tijd
+de fāʿil, groter dan de mafʿūl bihi. Wie Arabisch leest, is meer tijd
 bezig met de vraag *waar hangt dit voorzetsel aan* dan met welke vraag ook.
 
 | Vers | Woord | Hangt aan |
@@ -904,19 +922,19 @@ een ṣifa is, spreken de grammatici van een **shibh al-jumla** (شِبْه ٱل
 naamwoord inneemt. فِى ٱلدَّارِ رَجُلٌ — "in het huis is een man", waarbij de
 jarr-groep de ḫabar is.
 
-## 19. De tawābiʿ — wat de naamval overneemt
+## 19. De tawābiʿ
 
-Vier soorten woorden hebben geen eigen naamval: ze nemen die van het woord
+Vier soorten woorden hebben geen eigen iʿrāb: ze nemen die van het woord
 ervóór over. Ze heten samen de **tawābiʿ** (تَوَابِع, "volgers").
 
 | | Arabisch | Wat het doet | Plaatsen |
 |---|---|---|--:|
-| **ṣifa** | صِفَة / نَعْت | eigenschap | 2.976 |
-| **ʿaṭf** | عَطْف | nevenschikking | 5.217 |
-| **tawkīd** | تَوْكِيد | versterking | 1.546 |
-| **badal** | بَدَل | vervanging | 651 |
+| **ṣifa** | صِفَة / نَعْت | kent een eigenschap toe | 2.976 |
+| **ʿaṭf** | عَطْف | haakt aan met wa, fa, thumma | 5.217 |
+| **tawkīd** | تَوْكِيد | herhaalt om te bevestigen | 1.546 |
+| **badal** | بَدَل | vervangt wat eraan voorafging | 651 |
 
-**De ṣifa** volgt het bepaalde woord in naamval, aantal, geslacht én
+**De ṣifa** volgt het bepaalde woord in iʿrāb, aantal, geslacht én
 bepaaldheid — vier dingen tegelijk. ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ (1:6): allebei
 manṣūb, allebei enkelvoud mannelijk, allebei met lidwoord.
 
@@ -928,7 +946,7 @@ manṣūb, allebei enkelvoud mannelijk, allebei met lidwoord.
 | 2:3 | ٱلَّذِينَ | لِّلْمُتَّقِينَ |
 
 **Het ʿaṭf** koppelt met وَ, فَ, ثُمَّ, أَوْ, بَلْ, لَٰكِنْ, أَمْ. Wat na het
-koppelwoord komt neemt de naamval van wat ervoor stond. Dat maakt het ʿaṭf tot
+koppelwoord komt neemt de iʿrāb van wat ervoor stond. Dat maakt het ʿaṭf tot
 de gevoeligste van de vier: verandert er één klinker, dan hangt het woord
 ineens aan iets anders.
 
@@ -983,8 +1001,8 @@ En bij het ʿaṭf:
 > mededeling.
 >
 > 38:84 قَالَ **فَٱلْحَقُّ** **وَٱلْحَقَّ** أَقُولُ. Ḥafṣ zet de twee naast
-> elkaar in verschillende naamvallen — de eerste rafʿ als mubtadaʾ, de tweede
-> naṣb als lijdend voorwerp van أقول. Warsh leest ze allebei in naṣb:
+> elkaar in verschillende posities — de eerste rafʿ als mubtadaʾ, de tweede
+> naṣb als mafʿūl bihi van أقول. Warsh leest ze allebei in naṣb:
 > **فَٱلْحَقَّ وَٱلْحَقَّ**, de eerste door een geschat werkwoord (*أُحِقُّ*).
 
 ### Naṣb ʿalā al-madḥ wa-l-dhamm
@@ -1008,9 +1026,9 @@ Een zin kan in het Arabisch de plaats van een woord innemen. Dat is wat
 hoofdstuk 5 *maḥall min al-iʿrāb* noemde, en dit hoofdstuk zet de gevallen op
 een rij.
 
-**De ṣila** (صِلَة), de zin na een betrekkelijk voornaamwoord. ٱلَّذِى,
+**De ṣila** (صِلَة), de zin na een **ism mawṣūl**. ٱلَّذِى,
 ٱلَّتِى, مَا, مَنْ nemen een zin bij zich die hen inhoud geeft. Die zin heeft
-zélf geen naamval — het betrekkelijk voornaamwoord heeft er een, en de ṣila
+zélf geen iʿrāb — de ism mawṣūl heeft er een, en de ṣila
 hoort erbij. 4.039 plaatsen, en 310 geponeerde.
 
 | Vers | Woord | Hangt aan |
@@ -1021,23 +1039,24 @@ hoort erbij. 4.039 plaatsen, en 310 geponeerde.
 | 2:6 | كَفَرُوا۟ | ٱلَّذِينَ |
 
 Onmisbaar bij de ṣila is de **ʿāʾid** (عَائِد), het terugverwijzende
-voornaamwoord: رَزَقْنَٰ**هُمْ** — de هم wijst terug naar ما. Zonder ʿāʾid
-hangt de bijzin nergens aan vast.
+ḍamīr: رَزَقْنَٰ**هُمْ** — de هم wijst terug naar ما. Zonder ʿāʾid
+hangt de ṣila nergens aan vast.
 
-**De voorwaardelijke zin.** إِنْ, مَنْ, مَا, إِذَا, لَوْ, كُلَّمَا nemen twee
-zinnen: de **sharṭ** (شَرْط, voorwaarde) en de **jawāb** (جَوَاب, antwoord).
+**De sharṭ-zin.** إِنْ, مَنْ, مَا, إِذَا, لَوْ, كُلَّمَا nemen twee zinnen: de
+**sharṭ** (شَرْط), wat gesteld wordt, en de **jawāb** (جَوَاب), wat er dan
+gebeurt.
 1.434 en 1.224 plaatsen.
 
-| Vers | Voorwaarde | Antwoord |
+| Vers | sharṭ | jawāb |
 |---|---|---|
 | 2:11 | وَإِذَا قِيلَ | قَالُوٓا۟ |
 | 2:14 | وَإِذَا لَقُوا۟ | قَالُوٓا۟ |
 | 2:17 | فَلَمَّآ أَضَآءَتْ | ذَهَبَ |
 | 2:20 | كُلَّمَآ أَضَآءَ | مَّشَوْا۟ |
 
-Bij de echte voorwaardelijke partikels — إِنْ, مَنْ, مَا, مَهْمَا, أَيْنَ,
-مَتَىٰ — staan beide werkwoorden in **jazm**. Bij إِذَا en لَوْ niet: die
-nemen een gewone verleden tijd.
+Bij de echte sharṭ-partikels — إِنْ, مَنْ, مَا, مَهْمَا, أَيْنَ, مَتَىٰ —
+staan beide werkwoorden in **jazm**. Bij إِذَا en لَوْ niet: die
+nemen een gewone māḍī.
 
 ### De uitgangen van het werkwoord
 
@@ -1047,7 +1066,7 @@ Het imperfectum is het enige muʿrab werkwoord, en het heeft drie posities.
 |---|---|---|--:|
 | **rafʿ** | er is geen partikel dat iets doet | ـُ | (rest) |
 | **naṣb** | na أَنْ, لَنْ, كَيْ, إِذَنْ, حَتَّىٰ, لَامُ ٱلتَّعْلِيلِ, فَاءُ ٱلسَّبَبِيَّةِ | ـَ | 1.330 |
-| **jazm** | na لَمْ, لَمَّا, لَا ٱلنَّاهِيَة, لَامُ ٱلْأَمْرِ, en in de voorwaardelijke zin | ـْ | 1.418 |
+| **jazm** | na لَمْ, لَمَّا, لَا ٱلنَّاهِيَة, لَامُ ٱلْأَمْرِ, en in de sharṭ-zin | ـْ | 1.418 |
 
 Bij de vijf werkwoorden (تَفْعَلَانِ, يَفْعَلَانِ, تَفْعَلُونَ, يَفْعَلُونَ,
 تَفْعَلِينَ) is de nūn het teken van rafʿ, en het wegvallen ervan het teken
@@ -1114,7 +1133,7 @@ geteld, en wie de wegwijzertabel vooraan optelt komt daarom niet op
 
 **4.484 geponeerde posities zijn leeg.** Van de 11.157 elementen die de
 treebank aanvult, is er bij 6.673 een woord ingevuld; bij de rest staat alleen
-dát er iets hoort. Meestal is dat een verborgen voornaamwoord waarover geen
+dát er iets hoort. Meestal is dat een verborgen ḍamīr waarover geen
 verschil van mening bestaat. Soms is het een ḫabar of een werkwoord waarover
 dat wel bestaat.
 
@@ -1146,15 +1165,15 @@ van deze twee groepen precies de vaardigheid is die hoofdstuk 1 vraagt.
 | Vers | Ḥafṣ | Warsh | Waarom geen iʿrāb |
 |---|---|---|---|
 | 7:143 | وَلَٰكِنِ | وَلَٰكِنُ | hulpklinker voor een waṣl-hamza (وَلَٰكِنِ ٱنظُرْ); لكن is mabnī |
-| 11:42 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang |
-| 12:5 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang |
+| 11:42 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
+| 12:5 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
 | 12:31 | وَقَالَتِ | وَقَالَتُ | hulpklinker voor een waṣl-hamza (وَقَالَتِ ٱخْرُجْ); de تْ is mabnī |
 | 15:54 | تُبَشِّرُونَ | تُبَشِّرُونِۖ | yāʾ zāʾida: de weggelaten yāʾ van تُبَشِّرُونَنِي |
-| 31:13 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang |
-| 31:16 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang |
-| 31:17 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang |
-| 37:102 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang |
-| 48:10 | عَلَيۡهُ | عَلَيْهِ | de klinker van het voornaamwoord هُ; ه is mabnī |
+| 31:13 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
+| 31:16 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
+| 31:17 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
+| 37:102 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
+| 48:10 | عَلَيۡهُ | عَلَيْهِ | de klinker van de ḍamīr هُ; die is mabnī |
 
 De overige 38 zijn wél iʿrāb: op elk van deze plaatsen lezen de twee
 riwaayaat een andere zinsbouw.
@@ -1173,7 +1192,7 @@ riwaayaat een andere zinsbouw.
 | 6:27 | وَنَكُونَ | وَنَكُونُ | 20 |
 | 6:55 | سَبِيلُ | سَبِيلَ | 13 — overgankelijk of niet |
 | 7:26 | وَلِبَاسُ | وَلِبَاسَ | 19 — ʿaṭf |
-| 8:18 | كَيۡدِ | كَيْدَ | 17 — deelwoord met of zonder tanwīn |
+| 8:18 | كَيۡدِ | كَيْدَ | 17 — ism fāʿil met of zonder tanwīn |
 | 10:23 | مَّتَٰعَ | مَّتَٰعُ | 14 — mafʿūl muṭlaq |
 | 11:71 | يَعۡقُوبَ | يَعْقُوبُۖ | 3 — ġayr munṣarif |
 | 13:4 | وَغَيۡرُ | وَغَيْرِ | 19 — ʿaṭf |
@@ -1228,7 +1247,7 @@ waar de opsomming aanhaakt).
 
 **De rest zijn losse gevallen**: een ġayr munṣarif (11:71), een ẓarf die mabnī
 wordt (5:119), een istithnāʾ tegenover een ṣifa (4:95), taqdīr van een
-werkwoord tegenover taqdīr van een onderwerp (36:5, 19:34, 10:23, 38:84,
+werkwoord tegenover taqdīr van een mubtadaʾ (36:5, 19:34, 10:23, 38:84,
 111:4), en tweemaal de ḫabar van لَيْسَ (2:177, 2:189).
 
 ### Waarom dit het boek afmaakt
@@ -1240,8 +1259,8 @@ daarna volgt de klinker.
 Deze 38 plaatsen laten het omgekeerde zien. Hier ligt de zin níet vast. De
 medeklinkers zijn identiek, de overlevering is aan beide kanten
 ononderbroken, en het is de klinker die bepaalt wat er staat: of الحق hier
-onderwerp is of voorwerp, of غاضب Allah is of Zijn toorn, of de maan het
-onderwerp van een nieuwe zin is of het voorwerp van een geschat werkwoord, of
+mubtadaʾ is of mafʿūl, of غاضب Allah is of Zijn toorn, of de maan de mubtadaʾ
+van een nieuwe zin is of de mafʿūl van een geschat werkwoord, of
 de wens van de verdoemden in 6:27 hun belofte omvat of ernaast staat.
 
 Dat is de sterkste illustratie die er bestaat van waar dit vak over gaat. De
@@ -1261,7 +1280,7 @@ Elke tabel is met een commando te reproduceren:
 | Tabel | Commando |
 |---|---|
 | de wegwijzertabel (vooraan, h. 21) | `python3 nahw_examples.py relations --markdown` |
-| naamvallen en wijzen (h. 2) | `python3 nahw_examples.py cases --markdown` |
+| de posities en de wijzen (h. 2) | `python3 nahw_examples.py cases --markdown` |
 | geponeerde elementen (h. 7) | `python3 nahw_examples.py muqaddar --markdown` |
 | de nawaasikh (h. 8) | `python3 nahw_examples.py nawasikh --markdown` |
 | voorbeelden van één relatie | `python3 nahw_examples.py rel Pred --markdown` |
@@ -1274,7 +1293,7 @@ herbouw dit boek niet stil laat citeren uit gegevens die er niet meer zijn.
 
 De zinsontleding komt uit de **Extended Quranic Treebank** (EQTB), die
 128.219 geschreven tokens ontleedt en er 11.157 aan poneert. De morfologie en
-de naamvalslabels komen uit het **Quranic Arabic Corpus**. Beide beschrijven
+de iʿrāb-labels komen uit het **Quranic Arabic Corpus**. Beide beschrijven
 de riwaaya van Ḥafṣ.
 
 De riwaaya-verschillen komen uit de mushaf-teksten van het King Fahd Complex,
