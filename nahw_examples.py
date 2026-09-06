@@ -25,32 +25,60 @@ from add_metadata import repair_markers
 
 DB = Path(__file__).parent / "quran.db"
 
-# The treebank labels a relation in English and in Arabic; the Dutch is this
-# project's, and follows the naming the sarf book already uses.
+# The treebank labels a relation in English and in Arabic. The Arabic name is
+# the one the book uses; what stands here is not a Dutch translation of it but
+# a sentence saying what that relation does, so the table teaches rather than
+# swaps one label for another.
 REL_NL = {
-    "link": "waar een jarr-groep aan hangt", "gen": "in de genitief",
-    "Obj": "lijdend voorwerp", "Subj": "onderwerp van het werkwoord",
-    "Poss": "tweede lid van de idaafa", "conj": "nevenschikking",
-    "sub": "betrekkelijke bijzin", "Adj": "bijvoeglijke bepaling",
-    "Pred": "gezegde van de naamwoordelijke zin", "neg": "ontkenning",
-    "emph": "versterking", "subj<<in>>": "onderwerp na inna",
-    "cond": "voorwaarde", "pred<<in>>": "gezegde na inna",
-    "circ": "toestandsbepaling", "rslt": "antwoord op de voorwaarde",
-    "Pass": "onderwerp van de lijdende vorm",
-    "pred <<kan>>": "gezegde na kaana", "subj <<kan>>": "onderwerp na kaana",
-    "App": "bijstelling", "intg": "vraag", "voc": "aanspreking",
-    "cert": "bevestiging", "res": "beperking", "Pro": "verbod",
-    "subj<<an>>": "onderwerp na anna", "cog": "innerlijk lijdend voorwerp",
-    "root": "kern van de zin", "NonRel": "geen relatie toegekend",
-    "pred<<an>>": "gezegde na anna", "sup": "toegevoegd partikel",
-    "Spec": "onderscheidende bepaling", "exp": "uitgezonderde",
-    "prev": "kaaf van de vergelijking", "fut": "toekomstpartikel",
-    "caus": "reden-laam", "prp": "doelbepaling", "impv": "gebiedende wijs",
-    "ret": "verbetering", "imrs": "antwoord op het bevel",
-    "inc": "aanhef", "amd": "tegenstelling", "exl": "opsomming",
-    "int": "verduidelijking", "sur": "verrassings-idhaa",
-    "exh": "aansporing", "avr": "afwijzing", "ans": "antwoord",
-    "state": "toelichting", "eq": "gelijkstelling", "Cpnd": "samenstelling",
+    "Subj": "de handelende; staat in rafʿ",
+    "Obj": "degene aan wie de handeling voltrokken wordt",
+    "Pred": "wat er over de mubtadaʾ gezegd wordt",
+    "link": "het woord waar een jarr-groep aan vasthangt",
+    "gen": "wat na een voorzetsel of als tweede lid van een iḍāfa staat",
+    "Poss": "het bepalende lid van de iḍāfa, altijd majrūr",
+    "conj": "aangehaakt met wa, fa, thumma; neemt de iʿrāb over",
+    "sub": "de zin die een ism mawṣūl zijn inhoud geeft",
+    "Adj": "wat een eigenschap toekent en zijn woord in vier dingen volgt",
+    "neg": "het partikel dat ontkent",
+    "circ": "de toestand waarin de handeling zich voltrekt",
+    "emph": "herhaling die bevestigt",
+    "subj<<in>>": "wat إنّ in naṣb zet",
+    "pred<<in>>": "wat إنّ in rafʿ laat",
+    "subj<<an>>": "wat أنّ in naṣb zet",
+    "pred<<an>>": "wat أنّ in rafʿ laat",
+    "cond": "wat als voorwaarde gesteld wordt",
+    "rslt": "wat er gebeurt als de voorwaarde ingaat",
+    "Pass": "wat de plaats van de fāʿil inneemt als die niet genoemd wordt",
+    "App": "het woord waar het eigenlijk om gaat, in plaats van het vorige",
+    "intg": "het vraagpartikel",
+    "voc": "de aangesprokene, na يا",
+    "cert": "قد dat bevestigt",
+    "res": "إلّا na een ontkenning: alleen",
+    "Pro": "لا dat verbiedt",
+    "cog": "de maṣdar van het werkwoord zelf, ter versterking",
+    "root": "de kern waar de rest van de zin aan hangt",
+    "sup": "een partikel dat er staat zonder iets te regeren",
+    "Spec": "wat een vage maat of hoeveelheid preciseert",
+    "exp": "wat van het geheel wordt uitgezonderd",
+    "prev": "de kāf van de vergelijking",
+    "fut": "سوف of سـ, dat naar de toekomst wijst",
+    "caus": "de lām die een reden geeft",
+    "prp": "de maṣdar die zegt waarom",
+    "impv": "de gebiedende vorm",
+    "ret": "بل, dat het voorgaande bijstelt",
+    "imrs": "wat volgt als aan het bevel gehoor wordt gegeven",
+    "inc": "waarmee de zin opent",
+    "amd": "لكن, dat tegenover het voorgaande zet",
+    "exl": "wat een opsomming uit elkaar legt",
+    "int": "wat het voorgaande verduidelijkt",
+    "sur": "إذا van de plotselinge wending",
+    "exh": "wat aanspoort",
+    "avr": "كلّا, dat afwijst",
+    "ans": "het antwoordpartikel",
+    "state": "wat toelicht",
+    "eq": "wat twee zaken gelijkstelt",
+    "Cpnd": "een samengestelde uitdrukking",
+    "NonRel": "geen relatie toegekend",
 }
 
 # The treebank spells the nawaasikh out in the label: `subj <<kan>>`,
@@ -138,7 +166,7 @@ def nawasikh(cur, markdown=False):
             d[slot] += n
     order = sorted(per.items(), key=lambda kv: -(kv[1]["subj"] + kv[1]["pred"]))
     if markdown:
-        print("| Naasikh | اسم (onderwerpspositie) | خبر (gezegdepositie) |")
+        print("| Naasikh | اسم | خبر |")
         print("|---|--:|--:|")
     for gov, d in order[:20]:
         print(("| `%s` | %s | %s |" if markdown else "  %-12s %6s %6s")
@@ -176,7 +204,7 @@ def cases(cur, markdown=False):
         n = cur.execute('SELECT COUNT(*) FROM corpus WHERE "case"=?', (label,)).fetchone()[0]
         print(("| %s | `%s` | %s |" if markdown else "  %-6s %-6s %8s")
               % (nl, label, num(n)))
-    for label, nl in (("SUBJ", "naṣb (werkwoord)"), ("JUS", "jazm")):
+    for label, nl in (("SUBJ", "naṣb van het werkwoord"), ("JUS", "jazm")):
         n = cur.execute("SELECT COUNT(*) FROM corpus WHERE mood=?", (label,)).fetchone()[0]
         print(("| %s | `%s` | %s |" if markdown else "  %-6s %-6s %8s")
               % (nl, label, num(n)))
@@ -248,13 +276,13 @@ def irab_diff(cur, markdown=False, mode="irab"):
 # carry one for another reason, and no string rule tells them apart from the
 # real endings: نَكُونَ and تُبَشِّرُونَ end alike, and so do اللَّهِ and عَلَيْهِ. So
 # they were read, like the farsh list itself, and named here with the reason.
-YAA_IDAAFA = "yāʾ al-iḍāfa: de bezitters-yāʾ in بُنَيَّ, geen naamvalsuitgang"
+YAA_IDAAFA = "yāʾ al-iḍāfa: de yāʾ die \"mijn\" zegt, geen iʿrāb-uitgang"
 NOT_IRAB = {
     "\u064a\u064e\u0670\u0628\u064f\u0646\u064e\u064a\u0651\u064e": YAA_IDAAFA,  # yaa bunayya, 6x
     "\u062a\u064f\u0628\u064e\u0634\u0651\u0650\u0631\u064f\u0648\u0646\u064e":  # tubashshiruuna 15:54
         "yāʾ zāʾida: de weggelaten yāʾ van تُبَشِّرُونَنِي",
     "\u0639\u064e\u0644\u064e\u064a\u06e1\u0647\u064f":  # 'alayhu 48:10
-        "de klinker van het voornaamwoord هُ; ه is mabnī",
+        "de klinker van de ḍamīr هُ; die is mabnī",
 }
 # Where each i'rab difference is discussed in docs/nahw-nl.md.
 IRAB_CH = {
@@ -263,7 +291,7 @@ IRAB_CH = {
     (4, 95): "16 — istithnāʾ", (5, 95): "17",
     (5, 119): "17 — de ẓarf op een zin", (6, 27): "20",
     (6, 55): "13 — overgankelijk of niet", (7, 26): "19 — ʿaṭf",
-    (8, 18): "17 — deelwoord met of zonder tanwīn", (10, 23): "14 — mafʿūl muṭlaq",
+    (8, 18): "17 — ism fāʿil met of zonder tanwīn", (10, 23): "14 — mafʿūl muṭlaq",
     (11, 71): "3 — ġayr munṣarif", (13, 4): "19 — ʿaṭf", (14, 2): "19 — badal",
     (16, 12): "13 — ishtighāl", (19, 34): "14",
     (21, 47): "8 — kāna nāqiṣa of tāmma", (23, 92): "19 — badal",
