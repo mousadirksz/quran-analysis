@@ -397,7 +397,7 @@ def referents(c, lemma="إِنسَٰن"):
 
 
 def riwayat(c):
-    head("Riwaayaat: Hafs tegenover Warsh")
+    head("Riwaayaat: acht overleveringen, tien paren")
     print("  Een qiraa-a is de lezing van een qaari-; een riwaaya is de")
     print("  overlevering daarvan door een leerling. Hafs en Warsh horen bij")
     print("  twee verschillende qiraa-aat:\n")
@@ -423,32 +423,48 @@ def riwayat(c):
             " FROM riwaya_diff GROUP BY pair_type").fetchall():
         print("    %-8s %8s plaatsen over %d paren, gemiddeld %s"
               % (t, format(n, ","), pairs, format(n // pairs, ",")))
-    print("    Let op: dat gemiddelde zegt minder dan het lijkt. Hafs-Shu3ba")
-    print("    (595) en Bazzie-Qoenboel (184) zijn echt dicht bij elkaar, maar")
-    print("    Qaaloen-Warsh (6.157) en Doorie-Soesie (4.467) niet -- daar zit")
-    print("    het verschil in usul en in de schrijfwijze van de mushaf, niet")
-    print("    in de woorden. Alleen Hafs-Warsh is uitgesplitst.")
+    print("    Let op: dat gemiddelde zegt minder dan het lijkt. Het aantal")
+    print("    plaatsen telt usul en schrijfwijze mee, en die lopen per paar")
+    print("    sterk uiteen. De kolom farsh hieronder is de vergelijkbare maat.")
 
-    total = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE classified = 1")
-    print("\n  Hafs tegenover Warsh, %s plaatsen, gesorteerd naar wat het"
+    print("\n  Per paar uitgesplitst naar wat het verschil is:\n")
+    print("    paar                 qiraa-a   plaatsen    farsh     usul  notatie")
+    for a, b, t, n, f, u, nt in c.execute(
+            "SELECT riwaya_a, riwaya_b, pair_type, COUNT(*),"
+            " SUM(kind='farsh'), SUM(kind='usul'), SUM(kind='notatie')"
+            " FROM riwaya_diff GROUP BY riwaya_a, riwaya_b, pair_type"
+            " ORDER BY SUM(kind='farsh')").fetchall():
+        print("    %-20s %-9s %8s %8s %8s %8s"
+              % ("%s - %s" % (a, b), t, format(n, ","), format(f, ","),
+                 format(u, ","), format(nt, ",")))
+    print("\n    Binnen een qiraa-a staat farsh laag (Bazzie-Qoenboel 35,")
+    print("    Doorie-Soesie 131); tussen twee qiraa-aat ligt het rond de 600.")
+    print("    Alleen Hafs-Warsh is daarna nog woord voor woord nagelezen, dus")
+    print("    de andere farsh-getallen zijn bovengrenzen.")
+
+    total = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE reviewed = 1")
+    print("\n  Hafs tegenover Warsh -- het paar dat na de regels ook woord")
+    print("  voor woord is nagelezen -- %s plaatsen, gesorteerd naar wat het"
           % format(total, ","))
     print("  verschil is:\n")
     for kind, n in c.execute("SELECT kind, COUNT(*) n FROM riwaya_diff"
-                             " WHERE classified = 1 GROUP BY kind"
+                             " WHERE reviewed = 1 GROUP BY kind"
                              " ORDER BY n DESC").fetchall():
         print("    %-12s %6s   %4.1f%%" % (kind, format(n, ","), n / total * 100))
 
-    print("\n  klassen binnen usul en notatie:")
+    print("\n  klassen binnen usul en notatie, over alle tien de paren:")
     for cls, kind, n in c.execute(
             "SELECT class, kind, COUNT(*) n FROM riwaya_diff"
             " WHERE kind IN ('usul','notatie') GROUP BY class"
-            " ORDER BY n DESC LIMIT 8").fetchall():
+            " ORDER BY n DESC LIMIT 10").fetchall():
         print("    %-24s %-8s %6s" % (cls.split("+")[0], kind, format(n, ",")))
+    print("    (silat al-miem is zo groot doordat al-Bazzie en Qoenboel hem")
+    print("     overal toepassen; idghaam kabier is al-Soesie alleen)")
 
-    farsh = one(c, "SELECT COUNT(*) FROM riwaya_diff WHERE kind = 'farsh'")
-    ayat = one(c, "SELECT COUNT(DISTINCT surah || ':' || ayah_a) FROM riwaya_diff"
-                  " WHERE kind = 'farsh'")
-    suwar = one(c, "SELECT COUNT(DISTINCT surah) FROM riwaya_diff WHERE kind = 'farsh'")
+    where = " WHERE kind = 'farsh' AND reviewed = 1"
+    farsh = one(c, "SELECT COUNT(*) FROM riwaya_diff" + where)
+    ayat = one(c, "SELECT COUNT(DISTINCT surah || ':' || ayah_a) FROM riwaya_diff" + where)
+    suwar = one(c, "SELECT COUNT(DISTINCT surah) FROM riwaya_diff" + where)
     print("\n  farsh al-huroef: %s plaatsen in %s ayaat, %s soerahs"
           % (format(farsh, ","), format(ayat, ","), suwar))
     print("  (usul geldt overal waar de voorwaarde zich voordoet; farsh is per woord)")
@@ -457,13 +473,14 @@ def riwayat(c):
     for s, nm, n in c.execute(
             "SELECT d.surah, sr.name_ar, COUNT(*) n FROM riwaya_diff d"
             " JOIN surahs sr ON sr.number = d.surah WHERE d.kind = 'farsh'"
+            " AND d.reviewed = 1"
             " GROUP BY d.surah ORDER BY n DESC LIMIT 6").fetchall():
         print("    %3d %-12s %4s" % (s, nm, n))
 
     print("\n  een greep uit de farsh-verschillen:")
     for s, a, fa, fb in c.execute(
             "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"
-            " WHERE kind = 'farsh' AND surah IN (1,2,3,43,57,72)"
+            " WHERE kind = 'farsh' AND reviewed = 1 AND surah IN (1,2,3,43,57,72)"
             " ORDER BY surah, ayah_a LIMIT 10").fetchall():
         print("    %-8s %-18s %s" % ("%d:%d" % (s, a), fa, fb or "(ontbreekt)"))
 
@@ -485,7 +502,8 @@ def dekking(c):
         ("wujuh", "SELECT COUNT(DISTINCT surah || ':' || ayah) FROM wujuh",
          "verzen die geen van de vier werken citeert"),
         ("riwaya_diff (farsh)", "SELECT COUNT(DISTINCT surah || ':' || ayah_a)"
-                                " FROM riwaya_diff WHERE kind = 'farsh'",
+                                " FROM riwaya_diff WHERE kind = 'farsh'"
+                                " AND reviewed = 1",
          "verzen waar Hafs en Warsh gelijk lezen"),
     ]
     for label, sql, gap in rows:
@@ -523,6 +541,117 @@ def dekking(c):
         print("    %s%s" % ("" if line.startswith("  ") else "- ", line))
 
 
+def mushaf(c):
+    """What the eight mushaf packages actually encode.
+
+    The riwaya comparison spent a long time measuring orthography instead of
+    recitation, and every time the reason was the same: a sign that means one
+    thing in one package and another thing in the next. This reads the eight
+    source files and counts the signs, so the claims the transliteration rests
+    on can be checked rather than believed."""
+    import collections
+    import re
+    import compare_riwayat as R
+
+    head("Mushaf-codering: wat de acht pakketten schrijven")
+    print("  De vergelijking meet recitatie, niet spelling. Dat lukt alleen")
+    print("  als de transliteratie weet wat elk teken in elk pakket doet.")
+    print("  Deze telling is waar die kennis vandaan komt.\n")
+
+    words = {}
+    for code in R.SRC:
+        words[code] = [w for s in R.text_of(code) for _a, txt in R.text_of(code)[s]
+                       for w in re.split(r"[\s ]+", txt) if w]
+
+    print("  Hamzat al-wasl: drie conventies, geen twee\n")
+    print("    riwaaya      letter ٱ   kale alif   qat3-zetels")
+    for code in R.SRC:
+        ws = words[code]
+        print("    %-12s %8s %11s %13s"
+              % (code, format(sum(w.count("\u0671") for w in ws), ","),
+                 format(sum(w.count("\u0627") for w in ws), ","),
+                 format(sum(w.count("\u0623") + w.count("\u0625") for w in ws), ",")))
+    print("\n    Qaaloon, al-Doorie en al-Soesie gebruiken de letter ٱ nul keer")
+    print("    en schrijven een kale alif met de klinker die de wasl zou")
+    print("    krijgen; Hafs en de Kufische pakketten gebruiken de letter,")
+    print("    Warsh zet er een teken boven.\n")
+
+    print("  De sukoen: twee codepoints voor hetzelfde teken\n")
+    print("    riwaaya      U+0652   U+06E1")
+    for code in R.SRC:
+        ws = words[code]
+        print("    %-12s %8s %8s"
+              % (code, format(sum(w.count("\u0652") for w in ws), ","),
+                 format(sum(w.count("\u06e1") for w in ws), ",")))
+
+    print("\n  Tekens die twee dingen doen, te scheiden aan wat eronder staat\n")
+    print("    riwaaya      na een klinker      na een kale letter")
+    print("                 (iqlaab / wasl)     (imaala / taqliel)")
+    for code in R.SRC:
+        after_vowel = after_letter = 0
+        for w in words[code]:
+            for i, ch in enumerate(w):
+                if ch not in R.IMALA_MARKS:
+                    continue
+                if i and w[i - 1] in R.VOWEL_SIGNS:
+                    after_vowel += 1
+                else:
+                    after_letter += 1
+        print("    %-12s %12s %20s"
+              % (code, format(after_vowel, ","), format(after_letter, ",")))
+    print("\n    U+06EA, U+06EC en U+06ED. Na een klinkerteken zijn het de")
+    print("    iqlaab- en wasl-markering; na een kale letter markeren ze")
+    print("    imaala en taqliel, en dat is recitatie en geen spelling.")
+
+    print("\n  De ring U+06DF zegt twee tegengestelde dingen\n")
+    print("    Elk woord dat met alif+ring begint, naast het woord dat Hafs")
+    print("    op diezelfde plaats schrijft:\n")
+    print("    vorm                  Hafs qat3   Hafs wasl   anders")
+    ring = collections.Counter()
+    import difflib
+    for code in ("warsh", "qaloon", "doori", "soosi"):
+        for sura in range(1, 115):
+            hw = R.flat(R.text_of("hafs")[sura], "hafs")
+            ow = R.flat(R.text_of(code)[sura], code)
+            hk = [R.cons(w, "hafs") for _, w in hw]
+            ok = [R.cons(w, code) for _, w in ow]
+            for t, i1, i2, j1, j2 in difflib.SequenceMatcher(
+                    None, hk, ok, autojunk=False).get_opcodes():
+                if t != "equal":
+                    continue
+                for k in range(i2 - i1):
+                    m = re.match(r"^\u0627([\u064b-\u0652]?)\u06df", ow[j1 + k][1])
+                    if not m:
+                        continue
+                    h = hw[i1 + k][1][:1]
+                    ring[("alif+klinker+ring" if m.group(1) else "alif+ring",
+                          "qat3" if h in "\u0623\u0625\u0622" else
+                          "wasl" if h == "\u0671" else "anders")] += 1
+    for shape in ("alif+ring", "alif+klinker+ring"):
+        print("    %-20s %9s %11s %8s"
+              % (shape, ring[(shape, "qat3")], ring[(shape, "wasl")],
+                 ring[(shape, "anders")]))
+    print("\n    Zonder uitzondering, en tegengesteld. De klinker ertussen is")
+    print("    het hele verschil.")
+
+    print("\n  Waar een wasl-alif kan staan (Hafs, alle %s)\n"
+          % format(sum(w.count("\u0671") for w in words["hafs"]), ","))
+    pos = collections.Counter()
+    for w in words["hafs"]:
+        for i, ch in enumerate(w):
+            if ch != "\u0671":
+                continue
+            before = "".join(x for x in w[:i] if x in R.HAMZA or x.isalpha())
+            pos[before or "(niets)"] += 1
+    for before, n in pos.most_common():
+        print("    voorafgegaan door %-10s %6s" % (before, format(n, ",")))
+    print("\n    Nooit een andere medeklinker dan die voorvoegsels; de")
+    print("    vraag-hamza stapelt er nog voor (أفب) maar is een zetel.")
+    print("    Dat is de grens die de transliteratie nodig had om قَال")
+    print("    (qaala met zijn eindklinker in een idghaam) niet als qal")
+    print("    te lezen.")
+
+
 ANALYSES = {
     "basics": basics,
     "kalima": kalima,
@@ -539,6 +668,7 @@ ANALYSES = {
     "wujuh-juz-amma": wujuh_juz_amma,
     "referents": referents,
     "riwayat": riwayat,
+    "mushaf": mushaf,
     "dekking": dekking,
 }
 

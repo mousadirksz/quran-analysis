@@ -23,18 +23,29 @@ The verse division differs in 50 suras, so a join on (surah, ayah) breaks.
 Each sura is aligned on its word sequence instead, with difflib over the
 consonant skeleton, and the two ayah numbers are both recorded.
 
-**The classification holds for Hafs and Warsh only.** Its rules were written
-by reading what the Warsh mushaf does -- its signs for the wasl alif, its
-naql, its sila, its treatment of the hamza -- and checked against that pair.
-They do not transfer: the Doori and Soosi packages write the wasl alif as a
-bare vowelled alif, which those rules read as a difference in the text, and
-al-Soosi's idghaam kabir is a systematic feature no rule here knows. Running
-the classifier over those pairs produced thousands of "farsh" rows that are
-nothing of the sort. So every pair beside Hafs-Warsh is stored with its
-differences located but not labelled, `kind = 'ongeclassificeerd'`, and the
-raw count is all this database claims about it. That count is sound: it is a
-comparison of two texts, and it is what shows a within-qiraa pair sitting an
-order of magnitude closer than a between-qiraa one.
+All ten pairs are classified. What differs between the packages is how they
+spell things, and that belongs in the transliteration rather than in the
+comparison: Qaaloon, al-Doori and al-Soosi write hamzat al-wasl as a plain
+alif carrying its vowel and never use the alef wasla letter, where Hafs and
+the other Kufi packages always do and Warsh marks it with a sign. Telling the
+transliteration which convention a file follows removes several thousand
+false differences per pair on its own.
+
+The features that belong to some riwayat and not others each have a class.
+al-Soosi's idghaam kabir takes the final vowel of a word into the next, which
+al-Doori -- the same qiraa from the same qari, without that rule -- is used as
+the control for, because a vowel that simply goes can as easily be a jazm.
+Imaala and taqliil are read off the marks the mushaf itself writes, which
+separate cleanly from the iqlaab and wasl markers by what they sit on. And
+`huwa` and `hiya` lose their vowel after a prefix in Qaaloon, al-Doori and
+al-Soosi and nowhere else.
+
+**One pair has also been read.** Rules classify; only Hafs-Warsh has had its
+farsh list gone through word by word afterwards, and the verdicts of that
+reading are in `farsh_review.tsv`. It struck 95 rows the rules had wrongly
+called farsh, 15 per cent of what they proposed. The other nine pairs carry
+the rule verdict alone, so their farsh figure is an upper bound and `reviewed`
+is 0.
 
 What comes out is sorted into three kinds:
 
@@ -64,7 +75,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-from riwaya_translit import key
+from riwaya_translit import PLAIN_WASL, key
 
 HERE = Path(__file__).parent
 DB = HERE / "quran.db"
@@ -82,8 +93,13 @@ SRC = {code: (HERE / "sources" / ("riwaya_%s.csv" % code),
 # contrast between a within-qiraa pair and a between-qiraa one is the whole
 # point of having more than two: Hafs and Shu'ba transmit one reading, Hafs
 # and Warsh two different ones, and the counts say so plainly.
-# The one pair whose classification was built and reviewed; see the docstring
-CLASSIFIED_PAIR = ("hafs", "warsh")
+# Every pair is classified by rule. Only this one has also been read pair by
+# pair afterwards, and only it carries the verdicts in farsh_review.tsv.
+REVIEWED_PAIR = ("hafs", "warsh")
+
+# A riwaya that applies idghaam kabiir, and the sibling transmission of the
+# same qiraa that does not, which serves as its control; see undo_idghaam.
+IDGHAAM_KABIR = {"soosi": "doori"}
 
 PAIRS = [("hafs", "warsh"), ("hafs", "qaloon"), ("hafs", "bazzi"),
          ("hafs", "qumbul"), ("hafs", "doori"), ("hafs", "soosi"),
@@ -144,6 +160,22 @@ MUQ = {"Aلم", "Aلر", "طسم", "Aلمر", "كهيعص", "حم", "يس", "ط�
 MUQATTAAT_SURAS = {2, 3, 7, 10, 11, 12, 13, 14, 15, 19, 20, 26, 27, 28, 29, 30,
                    31, 32, 36, 38, 40, 41, 42, 43, 44, 45, 46, 50, 68}
 HAMZA = set("ءأإؤئٓٔ")
+# These three signs each do two jobs, told apart by what they sit on. After a
+# vowel sign U+06ED is the iqlaab marker and U+06EA and U+06EC mark hamzat
+# al-wasl, and the transliteration resolves all three. After a bare letter
+# they mark imaala and taqliil, which are differences in the recitation and
+# not in the spelling. Warsh writes 1,689 of them, al-Soosi 1,208, al-Doori
+# 1,157; Hafs writes one. The transliteration ignores them, so they add no
+# differences of their own, and they are read here only to give a difference
+# that is there anyway its right name.
+IMALA_MARKS = "\u06ea\u06ec\u06ed"
+VOWEL_SIGNS = "\u064b\u064c\u064d\u064e\u064f\u0650\u0651\u0652"
+
+
+def has_imala(w):
+    """True when the word carries an imaala or taqliil mark on a letter."""
+    return any(c in IMALA_MARKS and (i == 0 or w[i - 1] not in VOWEL_SIGNS)
+               for i, c in enumerate(w))
 
 KIND = {
     "farsh_candidate": ("farsh", "verschil in de lezing zelf"),
@@ -154,6 +186,9 @@ KIND = {
     "naql_alif": ("notatie", "zwijgende alif na naql"),
     "sila_mim": ("usul", "silat al-miem: hoem verbonden als hoemoe"),
     "sila_ha": ("usul", "silat al-haa"),
+    "idghaam_kabir": ("usul", "idghaam kabier: klinker weg, volgende letter verdubbeld"),
+    "ha_iskan": ("usul", "hoewa en hiya zonder klinker na een voorvoegsel"),
+    "imaala": ("usul", "imaala of taqliel: de aa wordt naar de ee getrokken"),
     "yaa_idafa": ("usul", "yaa al-idaafa geopend"),
     "yaa_zaida": ("usul", "yaa zaa-ida hersteld"),
     "junction_vowel": ("usul", "hulpklinker bij wasl"),
@@ -174,8 +209,13 @@ KIND = {
 }
 
 
-def cons(w):
-    return "".join(c for c in key(w) if c not in VOWELS)
+def tr(w, code):
+    """Transliterate a word from one package, with that package's convention."""
+    return key(w, plain_wasl=code in PLAIN_WASL)
+
+
+def cons(w, code="hafs"):
+    return "".join(c for c in tr(w, code) if c not in VOWELS)
 
 
 def load(path, sura_col, ayah_col):
@@ -188,9 +228,9 @@ def load(path, sura_col, ayah_col):
     return out
 
 
-def flat(rows):
+def flat(rows, code="hafs"):
     return [(ayah, w) for ayah, txt in rows
-            for w in re.split(r"[\s ]+", txt) if cons(w)]
+            for w in re.split(r"[\s ]+", txt) if cons(w, code)]
 
 
 def qari_of(code):
@@ -218,18 +258,36 @@ def text_of(code):
 def sites(a="hafs", b="warsh"):
     """Every place the two texts diverge, before classification."""
     a_rows, b_rows = text_of(a), text_of(b)
+    # When b applies idghaam kabiir, every row carries the control riwaya's
+    # form of the same word so that a rule can be told from a jazm; when the
+    # control is a itself, the difference between the two already says it.
+    control = IDGHAAM_KABIR.get(b)
+    c_rows = text_of(control) if control and control != a else None
     found = []
     for sura in range(1, 115):
-        aw, bw = flat(a_rows[sura]), flat(b_rows[sura])
-        ak, bk = [cons(w) for _, w in aw], [cons(w) for _, w in bw]
+        aw, bw = flat(a_rows[sura], a), flat(b_rows[sura], b)
+        ak, bk = [cons(w, a) for _, w in aw], [cons(w, b) for _, w in bw]
+        ctrl = {}
+        if control:
+            if c_rows is None:
+                ctrl = {i: tr(w, a) for i, (_, w) in enumerate(aw)}
+            else:
+                cw = flat(c_rows[sura], control)
+                ck = [cons(w, control) for _, w in cw]
+                for t, p1, p2, q1, q2 in difflib.SequenceMatcher(
+                        None, ak, ck, autojunk=False).get_opcodes():
+                    if t == "equal":
+                        for k in range(p2 - p1):
+                            ctrl[p1 + k] = tr(cw[q1 + k][1], control)
         sm = difflib.SequenceMatcher(None, ak, bk, autojunk=False)
         for tag, i1, i2, j1, j2 in sm.get_opcodes():
             if tag == "equal":
                 for k in range(i2 - i1):
                     x, y = aw[i1 + k], bw[j1 + k]
-                    if key(x[1]) != key(y[1]):
+                    if tr(x[1], a) != tr(y[1], b):
                         found.append(dict(sura=sura, ah=x[0], aw=y[0], tag="replace",
-                                          a=x[1], b=y[1]))
+                                          a=x[1], b=y[1],
+                                          ctrl=ctrl.get(i1 + k)))
             else:
                 ha = [w for _, w in aw[i1:i2]]
                 wa = [w for _, w in bw[j1:j2]]
@@ -248,9 +306,58 @@ def sites(a="hafs", b="warsh"):
     return found
 
 
-def strip_usul(th, tw):
+def undo_idghaam(th, tw, ctrl=None):
+    """Reverse an idghaam kabiir in `tw`, or return None.
+
+    al-Soosi assimilates a vowelled consonant into the one that follows it,
+    across a word boundary as well as inside a word: the short vowel goes and
+    the following consonant doubles. `qiila lahum` becomes `qiil llahum`, so
+    one word loses its final vowel and the next gains a doubled first letter,
+    and both halves land here as separate differences.
+
+    It is a rule and not a word-by-word choice: of the 963 places where a
+    final short vowel goes, 879 have the doubled consonant on the next word,
+    and the 84 that do not are all miem before baa, where the assimilation is
+    incomplete and no shadda is written.
+
+    Only the losing half is recognised here, because only that half is
+    unambiguous. A word that merely *begins* with a doubled consonant is far
+    more often an ordinary idghaam saghiir that one mushaf writes with a
+    shadda and the other does not -- `man yaquulu` is written `yyaquulu` by
+    Qaaloon and `yaquulu` by Hafs, and both recite it the same way. That is
+    notation, and `gemination_notation` says so. Counting the receiving half
+    as a rule of its own would also count one assimilation twice.
+
+    Even the losing half needs a control, because a final short vowel that
+    goes can just as well be a jazm. At 2:284 it is: Hafs reads `fa-yaghfiru
+    ... wa-yu'adhdhibu` in raf', the others `fa-yaghfir ... wa-yu'adhdhib` in
+    jazm -- a farsh difference, and one of the most argued i'rab differences
+    in the Quran. Reading the next word does not settle it either: al-Soosi
+    assimilates the raa of `fa-yaghfir` into the laam of `li-man` as well, so
+    the trace of the rule and the trace of the jazm look alike.
+
+    The control is al-Doori. He transmits the same qiraa from the same qari
+    and does not apply idghaam kabiir, so a vowel that goes in al-Soosi and
+    stays in al-Doori is the rule, and one that goes in both belongs to Abu
+    'Amr's reading. Over the whole Quran that splits 958 against 5, and the
+    five are exactly the places a reader would name: 2:284 twice, 19:6
+    `wa-yarith`, 4:81 `bayyat`, and 27:66 `bal`."""
+    if ctrl is not None and tw == th[:-1] and th[-1:] in ("a", "u", "i") \
+       and ctrl != tw:
+        return th                                  # the vowel the rule took
+    for i, ch in enumerate(th):                    # the same, inside one word
+        if ch in "aui" and i + 1 < len(th) and th[i + 1] not in "auiAUIN" \
+           and th[:i] + th[i + 1] + th[i + 1:] == tw:
+            return th
+    return None
+
+
+def strip_usul(th, tw, ctrl=None):
     """Remove the suffix-level usul features; returns (th, tw, tags)."""
     tags = []
+    undone = undo_idghaam(th, tw, ctrl)
+    if undone is not None:
+        return th, undone, ["idghaam_kabir"]
     if tw.endswith("U") and tw[:-1].endswith("م") and th.endswith("م"):
         tw = tw[:-1]; tags.append("sila_mim")
     if not tags and len(th) > 1 and th[-2] == "ه" and len(tw) > 1 \
@@ -264,19 +371,28 @@ def strip_usul(th, tw):
         tw = th; tags.append("yaa_idafa")
     if not tags and len(tw) == len(th) + 1 and tw[:-1] == th and tw[-1] in "aui":
         tw = th; tags.append("naql")
+    # huwa and hiya lose their vowel after a prefixed particle: wa-hwa, fa-hya
+    if not tags and re.sub("ه[ui]([wy])a$", r"ه\g<1>a", th) == tw != th:
+        tw = th; tags.append("ha_iskan")
     return th, tw, tags
 
 
-def classify(th, tw):
+def classify(th, tw, ctrl=None, raw_b=""):
     if th == tw:
         return "identical"
-    th, tw, tags = strip_usul(th, tw)
+    th, tw, tags = strip_usul(th, tw, ctrl)
     if th == tw:
         return tags[0]
     suffix = "+" + tags[0] if tags else ""
     for v in "aui":
         if th == "'" + v + tw or tw == "'" + v + th:
             return "wasl_notation" + suffix
+    # imaala first: where the mushaf marks it, a yaa against an alif is the
+    # vowel being read differently and not two ways of writing one sound
+    if has_imala(raw_b) and (fold_mq(th) == fold_mq(tw)
+                             or fold_len(fold_mq(th)) == fold_len(fold_mq(tw))
+                             or fold_fy(th) == fold_fy(tw)):
+        return "imaala" + suffix
     if fold_gem(th) == fold_gem(tw):
         return "gemination_notation" + suffix
     if fold_art(th) == fold_art(tw) or fold_art(fold_gem(th)) == fold_art(fold_gem(tw)):
@@ -287,7 +403,10 @@ def classify(th, tw):
             fold_mq(th) == fold_mq(tw)
             or fold_len(fold_mq(th)) == fold_len(fold_mq(tw))
             or vowels_only_dropped(fold_mq(th), fold_mq(tw))):
-        return "maqsura_notation" + suffix
+        # the same word, written with alif maqsura on one side and yaa on the
+        # other -- but where the mushaf also marks imaala, the yaa is there
+        # because the vowel is read differently, and that is not notation
+        return ("imaala" if has_imala(raw_b) else "maqsura_notation") + suffix
     if fold_iv(th) == fold_iv(tw):
         return "unwritten_vowel" + suffix
     if fold_sil(th) == fold_sil(tw):
@@ -311,7 +430,10 @@ def classify(th, tw):
     if fold_nq(th) == fold_nq(tw):
         return "naql_alif" + suffix
     if len(th) == len(tw) and th[:-1] == tw[:-1] and th[-1] in "aui" \
-       and tw[-1] in "aui" and re.sub("[aui]", "", th) in JUNCTION:
+       and tw[-1] in "aui" and (re.sub("[aui]", "", th) in JUNCTION
+                                or th[-4:-1] in ("هiم", "هuم", "كuم")):
+        # a particle or a plural pronoun before a wasl: the vowel that joins
+        # them is the reader's, not the word's
         return "junction_vowel" + suffix
     # the hamza, but only where the two actually differ in how many they have,
     # so that a pure difference of vowel length is never absorbed here
@@ -384,14 +506,20 @@ def hand_verdicts():
     kalimatu / kalimaatu (singular against plural) and al-birra / al-birru
     (a case ending) as mere notation. What looks like noise here -- a dagger
     alif, a final vowel -- is often the farsh itself. So the last pass is a
-    person reading all 468 word pairs, and what that person decided lives in
-    farsh_review.tsv rather than in the code: one line per pair, with a
-    reason, so every verdict can be looked up and argued with.
+    person reading every word pair the rules left, and what that person
+    decided lives in farsh_review.tsv rather than in the code: one line per
+    pair, with a reason, so every verdict can be looked up and argued with.
 
-    Only two verdicts appear there. A pair is either notation after all, or
-    it could not be settled -- the six rows of allaatie / allatie, where the
+    Only two verdicts appear there. A pair is either not farsh after all, or
+    it could not be settled -- the ten rows of allaatie / allatie, where the
     Warsh mushaf leaves out the dagger alif and nothing here says whether
-    that is the reading or the spelling."""
+    that is the reading or the spelling.
+
+    The largest group struck is the hamz of an-nabii' and an-nubuu'a, which
+    a rule cannot judge either: what makes it usul rather than a word-by-word
+    choice is that Naafi' reads it so at all 82 places the word occurs, and
+    that count is a fact about the whole text and not about the pair in
+    front of you."""
     out = {}
     if not REVIEW.exists():
         return out
@@ -407,11 +535,11 @@ def hand_verdicts():
 def classified(a="hafs", b="warsh"):
     rows = sites(a, b)
     for r in rows:
-        r["th"], r["tw"] = key(r["a"]), key(r["b"])
+        r["th"], r["tw"] = tr(r["a"], a), tr(r["b"], b)
         if r["tag"] != "replace":
             r["cls"] = "word_" + r["tag"]
         else:
-            r["cls"] = classify(r["th"], r["tw"])
+            r["cls"] = classify(r["th"], r["tw"], r.get("ctrl"), r["b"])
         if r["cls"] == "identical":
             # the letters agree and only the word boundary moved
             r["cls"] = "reviewed:alignment_or_word_split"
@@ -419,7 +547,7 @@ def classified(a="hafs", b="warsh"):
             again = second_look(r)
             if again:
                 r["cls"] = again
-    if (a, b) == CLASSIFIED_PAIR:
+    if (a, b) == REVIEWED_PAIR:
         verdicts = hand_verdicts()
         for r in rows:
             if not (r["cls"].startswith("farsh_candidate")
@@ -447,25 +575,23 @@ def write(conn, rows):
     cur.execute("DROP TABLE IF EXISTS riwaya_diff")
     cur.execute("""CREATE TABLE riwaya_diff (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        riwaya_a TEXT, riwaya_b TEXT, pair_type TEXT, classified INTEGER,
+        riwaya_a TEXT, riwaya_b TEXT, pair_type TEXT, reviewed INTEGER,
         surah INTEGER, ayah_a INTEGER, ayah_b INTEGER,
         form_a TEXT, form_b TEXT, translit_a TEXT, translit_b TEXT,
         class TEXT, kind TEXT)""")
     for a, b in PAIRS:
-        known = (a, b) == CLASSIFIED_PAIR
+        read = (a, b) == REVIEWED_PAIR
         for r in rows[(a, b)]:
             base = r["cls"].split("+")[0]
             cur.execute(
                 "INSERT INTO riwaya_diff (riwaya_a, riwaya_b, pair_type,"
-                " classified, surah, ayah_a, ayah_b, form_a, form_b,"
+                " reviewed, surah, ayah_a, ayah_b, form_a, form_b,"
                 " translit_a, translit_b, class, kind)"
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (a, b, pair_type(a, b), 1 if known else 0,
+                (a, b, pair_type(a, b), 1 if read else 0,
                  r["sura"], r["ah"], r["aw"], r["a"].strip(), r["b"].strip(),
-                 r["th"] if known else None, r["tw"] if known else None,
-                 r["cls"] if known else None,
-                 KIND.get(base, ("onbekend", ""))[0] if known
-                 else "ongeclassificeerd"))
+                 r["th"], r["tw"], r["cls"],
+                 KIND.get(base, ("onbekend", ""))[0]))
     cur.execute("CREATE INDEX idx_riwaya_diff_verse ON riwaya_diff(surah, ayah_a)")
     cur.execute("CREATE INDEX idx_riwaya_diff_kind ON riwaya_diff(kind)")
     cur.execute("CREATE INDEX idx_riwaya_diff_pair ON riwaya_diff(riwaya_a, riwaya_b)")
@@ -476,15 +602,12 @@ def summary(rows):
     """One line per pair: how far apart the two transmissions are."""
     out = []
     for a, b in PAIRS:
-        n = len(rows[(a, b)])
-        if (a, b) == CLASSIFIED_PAIR:
-            cnt = collections.Counter(
-                KIND.get(r["cls"].split("+")[0], ("onbekend",))[0]
-                for r in rows[(a, b)])
-            out.append((a, b, pair_type(a, b), n, cnt["farsh"], cnt["usul"],
-                        cnt["notatie"]))
-        else:
-            out.append((a, b, pair_type(a, b), n, None, None, None))
+        cnt = collections.Counter(
+            KIND.get(r["cls"].split("+")[0], ("onbekend",))[0]
+            for r in rows[(a, b)])
+        out.append((a, b, pair_type(a, b), len(rows[(a, b)]),
+                    cnt["farsh"], cnt["usul"], cnt["notatie"],
+                    (a, b) == REVIEWED_PAIR))
     return out
 
 
@@ -503,25 +626,52 @@ def markdown(conn, rows):
            "`عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie. Beide zijn "
            "Qoeraan; dit is geen lijst van afwijkingen.*\n",
            "## Alle vergeleken paren\n",
-           "| Paar | | Plaatsen | farsh | usul | notatie |",
-           "|---|---|--:|--:|--:|--:|"]
-    dash = lambda v: format(v, ",") if v is not None else "—"
-    for a, b, kind, total, f, u, n in summary(rows):
-        out.append("| %s – %s | %s qiraa-a | %s | %s | %s | %s |"
+           "| Paar | | Plaatsen | farsh | usul | notatie | nagelezen |",
+           "|---|---|--:|--:|--:|--:|:-:|"]
+    for a, b, kind, total, f, u, n, read in summary(rows):
+        out.append("| %s – %s | %s qiraa-a | %s | %s | %s | %s | %s |"
                    % (a, b, "binnen een" if kind == "binnen" else "tussen twee",
-                      format(total, ","), dash(f), dash(u), dash(n)))
+                      format(total, ","), format(f, ","), format(u, ","),
+                      format(n, ","), "ja" if read else "nee"))
     out.append("")
-    out.append("Het verschil tussen die twee soorten paren is de reden om meer "
-               "dan twee riwaayaat te vergelijken: twee overleveringen van "
-               "*dezelfde* qaari- liggen een orde van grootte dichter bij "
-               "elkaar dan twee van verschillende qurraa-.\n")
-    out.append("De kolommen farsh, usul en notatie staan alleen bij Hafs-Warsh "
-               "ingevuld. De classificatie is op dat paar gebouwd en nagelopen "
-               "en gaat niet mee naar de andere: de pakketten van Doorie en "
-               "Soesie schrijven de wasl-alif anders, en de idghaam kabier van "
-               "al-Soesie is een systematisch kenmerk dat geen regel hier kent. "
-               "Wat die paren wel geven is de telling, en die is een "
-               "tekstvergelijking en geen oordeel.\n")
+    binnen = [f for _a, _b, k, _t, f, _u, _n, _r in summary(rows) if k == "binnen"]
+    tussen = [f for _a, _b, k, _t, f, _u, _n, _r in summary(rows) if k == "tussen"]
+    out.append("Kijk naar de kolom farsh, niet naar het aantal plaatsen. Het "
+               "aantal plaatsen telt usul en schrijfwijze mee, en die lopen "
+               "per pakket sterk uiteen: Qaaloon-Warsh staat op %s plaatsen "
+               "terwijl het binnen een qiraa-a valt, omdat Warsh naql en "
+               "hamza-ibdaal toepast waar Qaaloon dat niet doet. De farsh-"
+               "kolom is de vergelijkbare maat, en die zegt wat je verwacht: "
+               "binnen een qiraa-a %s, tussen twee qiraa-aat %s.\n"
+               % (format(next(t for a, b, k, t, f, u, n, r in [x for x in summary(rows)]
+                              if (a, b) == ("qaloon", "warsh")), ","),
+                  "-".join(str(x) for x in (min(binnen), max(binnen))),
+                  "-".join(str(x) for x in (min(tussen), max(tussen)))))
+    out.append("Alle tien de paren zijn met dezelfde regels geclassificeerd. "
+               "Wat per pakket verschilt is de schrijfwijze, en dat zit nu in "
+               "de transliteratie: Qaaloon, Doorie en Soesie schrijven de "
+               "wasl-alif als een kale alif met de klinker erop, Hafs en de "
+               "Kufische pakketten als de letter alef wasla, en Warsh met een "
+               "teken erboven. De kenmerken die maar bij een deel van de "
+               "riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala "
+               "van Aboe 3Amr en van Warsh, het wegvallen van de klinker in "
+               "*hoewa* en *hiya* -- hebben elk hun eigen klasse.\n")
+    struck = sum(1 for r in main_rows if r["cls"].startswith("reviewed:hand"))
+    unsure = sum(1 for r in main_rows if r["cls"].startswith("reviewed:onzeker"))
+    kept = counts_farsh = sum(
+        1 for r in main_rows
+        if KIND.get(r["cls"].split("+")[0], ("", ""))[0] == "farsh")
+    out.append("De kolom *nagelezen* is iets anders dan de classificatie. Bij "
+               "Hafs-Warsh is de farsh-lijst daarna nog woord voor woord "
+               "gelezen. Dat streepte %d rijen weg die de regels ten onrechte "
+               "als farsh hadden staan en liet %d onbeslist, tegenover %d die "
+               "bleven staan -- %.0f%% van wat de regels aandroegen was geen "
+               "farsh. De oordelen staan per woordpaar met hun reden in "
+               "`farsh_review.tsv`. Voor de negen andere paren is dat niet "
+               "gedaan, en hun farsh-getal is dus een bovengrens; reken op een "
+               "marge van die orde.\n"
+               % (struck, unsure, kept,
+                  struck / (struck + unsure + kept) * 100))
     out.append("## Hafs – Warsh in detail\n")
     out.append("| klasse | soort | plaatsen | wat het is |")
     out.append("|---|---|--:|---|")
@@ -567,14 +717,14 @@ def main():
 
     total = sum(len(v) for v in rows.values())
     print("riwaya_diff: %s plaatsen over %d paren" % (format(total, ","), len(PAIRS)))
-    print("  %-16s %-9s %8s %7s %7s %8s"
-          % ("paar", "qiraa-a", "plaatsen", "farsh", "usul", "notatie"))
-    dash = lambda v: format(v, ",") if v is not None else "—"
-    for a, b, kind, tot, f, u, n in summary(rows):
-        print("  %-16s %-9s %8s %7s %7s %8s"
-              % ("%s-%s" % (a, b), kind, format(tot, ","), dash(f), dash(u),
-                 dash(n)))
-    print("  (alleen hafs-warsh is geclassificeerd; zie de docstring)")
+    print("  %-16s %-9s %8s %7s %7s %8s %s"
+          % ("paar", "qiraa-a", "plaatsen", "farsh", "usul", "notatie", "gelezen"))
+    for a, b, kind, tot, f, u, n, read in summary(rows):
+        print("  %-16s %-9s %8s %7s %7s %8s %s"
+              % ("%s-%s" % (a, b), kind, format(tot, ","), format(f, ","),
+                 format(u, ","), format(n, ","), "ja" if read else ""))
+    print("  (regels classificeren alle tien; alleen hafs-warsh is daarna")
+    print("   ook woord voor woord nagelezen -- zie de docstring)")
     if args.markdown:
         print("  docs/hafs-warsh.md: %d regels" % markdown(conn, rows))
     conn.close()
