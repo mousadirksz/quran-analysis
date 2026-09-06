@@ -294,9 +294,18 @@ De treebank markeert die lege plekken. Dit is hoe vaak, en op welke posities:
 11.157 geponeerde elementen in totaal, waarvan 6.673 met een woord ingevuld en 4.484 alleen als lege positie.
 
 Dat is één op de twaalf woorden van de Qoeraan dat *niet geschreven staat* en
-toch in de ontleding meetelt. De grootste groep — de weggelaten fāʿil — komt
-in hoofdstuk 11 aan de orde; die zit meestal in het werkwoord zelf. Hier
-gaat het om de tweede groep: 1.444 keer een ḫabar die er niet staat.
+toch in de ontleding meetelt.
+
+Let wel op wat die tabel bij elkaar zet. "Niet geschreven" is één ding voor de
+database maar twee voor de grammatica. Een **ḍamīr mustatir** is er wél — hij
+zit in de vorm van het werkwoord, en يَقُولُ zegt uit zichzelf dat het om هو
+gaat. Een **maḥdhūf** element is er niet: het is weggelaten, en de lezer moet
+het aanvullen. De eerste is *istitār*, de tweede *ḥadhf*, en de grammatici
+houden ze uit elkaar.
+
+De grootste post uit de tabel, de 6.104 fāʿils, is dus istitār en geen ḥadhf;
+die staan in hoofdstuk 11. Dit hoofdstuk gaat over de tweede soort, en de
+grootste post daarvan is de ḫabar: 1.444 keer.
 
 Drie standaardgevallen:
 
@@ -516,7 +525,7 @@ verschil tussen "Allah schiep" en "Allah, Hij is het die schiep".
 ٱلرِّجَالُ, niet قَالُوا۟ ٱلرِّجَالُ. Het werkwoord richt zich alleen naar het
 geslacht, niet naar het aantal, zolang het vóór de fāʿil staat.
 
-De treebank telt 10.520 geschreven fāʿil-relaties:
+De treebank wijst 16.624 fāʿils aan. Zo staan ze in de tekst:
 
 | Vers | Woord | Hangt aan |
 |---|---|---|
@@ -524,25 +533,75 @@ De treebank telt 10.520 geschreven fāʿil-relaties:
 | 2:10 | ٱللَّهُ | فَزَادَهُمُ |
 | 2:13 | ٱلنَّاسُ | ءَامَنَ |
 
-### De verborgen fāʿil
+### Ẓāhir, bāriz, mustatir
 
-Daarnaast poneert de treebank er 6.104 die niet geschreven staan — meer dan de
-helft van alle geponeerde elementen in de hele Qoeraan, en de grootste enkele
-post uit de tabel van hoofdstuk 7.
+Een fāʿil is óf een **ism ẓāhir** — een naamwoord dat er staat, zoals ٱللَّهُ
+hierboven — óf een **ḍamīr**. En dat ḍamīr is óf **bāriz**, geschreven en aan
+het werkwoord vast, óf **mustatir**, niet geschreven.
 
-De reden is eenvoudig: in قَالَ zit de fāʿil al. Het Arabisch schrijft
-geen los "hij". De grammatici zeggen dat de fāʿil een **ḍamīr mustatir** is —
-een verborgen ḍamīr — en ze geven zelfs aan of hij verplicht verborgen
-is (bij أَقُولُ kán er geen los أنا staan zonder nadruk) of facultatief (bij
-قَالَ mag هو erbij).
+- قَالَ زَيْدٌ — de fāʿil is ẓāhir.
+- قَالُوا۟ — de wāw is de fāʿil, een ḍamīr bāriz. Hij staat er, alleen niet als
+  los woord.
+- قَالَ — de fāʿil is een ḍamīr mustatir (*هو*). Er staat niets, en toch is er
+  een fāʿil.
 
-ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ (1:6): het werkwoord is een amr, de
-fāʿil is verplicht verborgen (*أنتَ*), نا is mafʿūl bihi en ٱلصِّرَٰطَ de
-tweede mafʿūl bihi. Drie van de vier delen zijn zichtbaar; de fāʿil niet.
+Een vierde soort is er niet, en **een werkwoord zonder fāʿil bestaat niet.**
+Dat is geen aanname maar iets wat de tellingen moeten waarmaken:
+
+| De fāʿil is | | Plaatsen | Aandeel |
+|---|---|--:|--:|
+| **bāriz** | een ḍamīr, aan het werkwoord vast | 7.982 | 48% |
+| **mustatir** | een ḍamīr, niet geschreven | 6.104 | 37% |
+| **ẓāhir** | een naamwoord dat er staat | 2.538 | 15% |
+| | **samen** | **16.624** | |
+
+Nog geen zesde deel van alle fāʿils is dus ẓāhir. Bijna de helft is een ḍamīr
+dat aan het werkwoord vastzit, en ruim een derde staat er helemaal niet. Wie
+alleen let op naamwoorden achter een werkwoord, ziet vijftien procent van de
+fāʿils.
+
+De mustatir is verplicht of facultatief: bij أَقُولُ kán er geen los أنا staan
+zonder nadruk (*mustatir wujūban*), bij قَالَ mag هو erbij (*mustatir
+jawāzan*).
+
+ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ (1:6): het werkwoord is een amr, de fāʿil
+is mustatir wujūban (*أنتَ*), نا is mafʿūl bihi en ٱلصِّرَٰطَ de tweede mafʿūl
+bihi. Drie van de vier delen zijn zichtbaar; de fāʿil niet.
+
+### De telling die moet kloppen
+
+Elk werkwoord heeft een fāʿil, tenzij het majhūl is — dan een nāʾib al-fāʿil —
+of tenzij het كان of een van haar zusters is, die een ism nemen. Meer
+mogelijkheden zijn er niet, dus de vier getallen moeten samen op de
+werkwoorden van het corpus uitkomen:
+
+| Bij elk werkwoord | Plaatsen |
+|---|--:|
+| werkwoorden in het corpus | 19.356 |
+| met een fāʿil | 16.512 |
+| met een nāʾib al-fāʿil | 1.061 |
+| met een ism (kāna en haar zusters) | 1.246 |
+| met meer dan één daarvan | 19 |
+| waar de treebank niets aanwijst | 556 |
+
+En ze komen eruit: 18.781 werkwoorden krijgen precies één van de drie, 19
+krijgen er twee, en bij 556 wijst de treebank niets aan. Samen 19.356.
+
+Die 556 zijn geen gat in de grammatica maar in de bron. 212 komen van de
+wortel كون — كان en haar vervoegingen, waar noch een ism noch een fāʿil is
+aangehecht; 69 zijn majhūl zonder dat er een nāʾib al-fāʿil bij staat; 12 zijn
+كَفَىٰ بِٱللَّهِ شَهِيدًا, waar de fāʿil een majrūr is met een toegevoegde bāʾ
+ervoor — een bekend twistpunt, en de treebank kiest er geen kant in. De rest
+is verspreid.
+
+Het gat is klein: 97 procent van de werkwoorden krijgt zijn doener wél
+toegewezen. Maar het staat er, want een boek dat zegt dat elk werkwoord een
+fāʿil heeft en dat vervolgens niet natelt, vraagt om vertrouwen waar het bewijs
+had kunnen geven.
 
 Voor wie leert ontleden is dit de belangrijkste gewoonte om aan te wennen:
-**wijs bij elk werkwoord de fāʿil aan, ook als er niets staat.** Zes van de
-tien keer staat er niets.
+**wijs bij elk werkwoord de fāʿil aan, ook als er niets staat.** Ruim een
+derde van de keren staat er niets.
 
 ## 12. Nāʾib al-fāʿil
 
@@ -1284,6 +1343,7 @@ Elke tabel is met een commando te reproduceren:
 | de posities en de wijzen (h. 2) | `python3 nahw_examples.py cases --markdown` |
 | geponeerde elementen (h. 7) | `python3 nahw_examples.py muqaddar --markdown` |
 | de nawaasikh (h. 8) | `python3 nahw_examples.py nawasikh --markdown` |
+| de fāʿil naar soort (h. 11) | `python3 nahw_examples.py faail --markdown` |
 | voorbeelden van één relatie | `python3 nahw_examples.py rel Pred --markdown` |
 | de 38 iʿrāb-verschillen (h. 22) | `python3 nahw_examples.py irab-book --markdown` |
 | de 10 die het niet zijn (h. 22) | `python3 nahw_examples.py irab-mabni --markdown` |
