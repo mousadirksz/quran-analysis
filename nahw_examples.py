@@ -37,7 +37,7 @@ REL_NL = {
     "gen": "wat na een voorzetsel of als tweede lid van een iḍāfa staat",
     "Poss": "het bepalende lid van de iḍāfa, altijd majrūr",
     "conj": "aangehaakt met wa, fa, thumma; neemt de iʿrāb over",
-    "sub": "de zin die een betrekkelijk woord zijn inhoud geeft",
+    "sub": "de zin die een ism mawṣūl zijn inhoud geeft",
     "Adj": "wat een eigenschap toekent en zijn woord in vier dingen volgt",
     "neg": "het partikel dat ontkent",
     "circ": "de toestand waarin de handeling zich voltrekt",

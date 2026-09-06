@@ -81,7 +81,7 @@ grootte.
 | `Poss` | مضاف إليه | 9.805 | 2 | het bepalende lid van de iḍāfa, altijd majrūr | 17 |
 | `conj` | معطوف | 5.217 | 25 | aangehaakt met wa, fa, thumma; neemt de iʿrāb over | 19 |
 | `Pred` | خبر | 2.955 | 1.444 | wat er over de mubtadaʾ gezegd wordt | 6 |
-| `sub` | صلة | 4.039 | 310 | de zin die een betrekkelijk woord zijn inhoud geeft | 20 |
+| `sub` | صلة | 4.039 | 310 | de zin die een ism mawṣūl zijn inhoud geeft | 20 |
 | `Adj` | صفة | 2.976 | 758 | wat een eigenschap toekent en zijn woord in vier dingen volgt | 19 |
 | `neg` | نفي | 2.112 | 5 | het partikel dat ontkent | 20 |
 | `circ` | حال | 1.257 | 686 | de toestand waarin de handeling zich voltrekt | 15 |
@@ -252,7 +252,8 @@ tekst staan, met het woord waaraan de ḫabar hangt:
 De ḫabar hoeft geen los naamwoord te zijn. Het kan een hele zin zijn
 (هُمْ يُوقِنُونَ, 2:4), of een voorzetselgroep (وَعَلَىٰ أَبْصَٰرِهِمْ
 غِشَٰوَةٌ, 2:7). In dat laatste geval staat de ḫabar vooraan en de mubtadaʾ
-erachter — het Arabisch staat dat toe wanneer de ḫabar een bepaling is.
+erachter — het Arabisch staat dat toe wanneer de ḫabar een jarr-groep of een
+ẓarf is.
 
 > **In de riwaayaat**
 >
@@ -299,7 +300,7 @@ gaat het om de tweede groep: 1.444 keer een ḫabar die er niet staat.
 
 Drie standaardgevallen:
 
-**Na een voorzetselgroep of tijdsbepaling.** وَلِلَّهِ ٱلْمَشْرِقُ
+**Na een jarr-groep of een ẓarf.** وَلِلَّهِ ٱلْمَشْرِقُ
 وَٱلْمَغْرِبُ (2:115) — "en van Allah is het oosten en het westen". Er is geen
 werkwoord en geen los ḫabar-woord; de jarr-groep وَلِلَّهِ hangt aan een
 geschatte ḫabar (*ثابتٌ*, "staat vast").
@@ -567,7 +568,7 @@ moderne gewoonte, geen klassieke.
 | 2:61 | ٱلذِّلَّةُ | وَضُرِبَتْ |
 
 Staat er geen mafʿūl bihi om te promoveren, dan neemt iets anders die
-plaats in — een jarr-groep, een tijdsbepaling, een mafʿūl muṭlaq. In
+plaats in — een jarr-groep, een ẓarf, een mafʿūl muṭlaq. In
 1:7 ٱلْمَغْضُوبِ **عَلَيْهِمْ** is de jarr-groep de nāʾib al-fāʿil bij het
 ism mafʿūl.
 
@@ -682,7 +683,7 @@ en 93 geponeerde.
 >
 > 10:23 doet hetzelfde: Ḥafṣ **مَّتَٰعَ** ٱلْحَيَوٰةِ ٱلدُّنْيَا als mafʿūl
 > muṭlaq of ẓarf, Warsh **مَّتَٰعُ** als ḫabar van een weggelaten mubtadaʾ.
-> Allebei de keren is de naṣb de bepaling bij een geschat werkwoord en de rafʿ
+> Allebei de keren hangt de naṣb aan een geschat werkwoord en is de rafʿ
 > een zelfstandige mededeling.
 
 **Mafʿūl fīhi** (مَفْعُول فِيهِ), tijd en plaats — ook **ẓarf** genoemd.
@@ -720,7 +721,7 @@ De treebank telt 489 geschreven munādā's. Verreweg de meeste zijn
 
 ## 15. Ḥāl en tamyīz
 
-Twee bepalingen die allebei in naṣb staan en allebei onbepaald zijn, en die
+Twee manṣūbāt die allebei onbepaald zijn, en die
 beginners door elkaar halen.
 
 De **ḥāl** (حَال) zegt in welke toestand iemand verkeert terwijl hij iets doet.
@@ -875,7 +876,7 @@ kasra's met twee verschillende oorzaken.
 
 ### De ẓarf die op een zin uitkomt
 
-Een tijds- of plaatsbepaling die als muḍāf een hele zin bij zich krijgt in
+Een ẓarf van tijd of plaats die als muḍāf een hele zin bij zich krijgt in
 plaats van een naamwoord, mág mabnī worden op een fatḥa in plaats van zijn
 eigen iʿrāb te tonen. De grammatici verschillen erover of dat verplicht is.
 
@@ -946,12 +947,12 @@ manṣūb, allebei enkelvoud mannelijk, allebei met lidwoord.
 | 2:3 | ٱلَّذِينَ | لِّلْمُتَّقِينَ |
 
 **Het ʿaṭf** koppelt met وَ, فَ, ثُمَّ, أَوْ, بَلْ, لَٰكِنْ, أَمْ. Wat na het
-koppelwoord komt neemt de iʿrāb van wat ervoor stond. Dat maakt het ʿaṭf tot
+ḥarf al-ʿaṭf komt neemt de iʿrāb van wat ervoor stond. Dat maakt het ʿaṭf tot
 de gevoeligste van de vier: verandert er één klinker, dan hangt het woord
 ineens aan iets anders.
 
 **De tawkīd** herhaalt: نَفْس, عَيْن, كُلّ, جَمِيع, of het woord zelf.
-فَسَجَدَ ٱلْمَلَٰٓئِكَةُ **كُلُّهُمْ أَجْمَعُونَ** (15:30) — twee versterkers
+فَسَجَدَ ٱلْمَلَٰٓئِكَةُ **كُلُّهُمْ أَجْمَعُونَ** (15:30) — tweemaal tawkīd
 achter elkaar, allebei marfūʿ met ٱلْمَلَٰٓئِكَةُ mee.
 
 **De badal** vervangt: het tweede woord is waar het eigenlijk om gaat, het
