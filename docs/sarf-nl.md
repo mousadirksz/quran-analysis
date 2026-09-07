@@ -66,7 +66,7 @@ Een **ism** herken je hieraan dat het:
 Een **fiʿl** herken je hieraan dat het:
 - قَدْ vóór zich kan hebben: قَدْ أَفْلَحَ
 - سَـ of سَوْفَ kan krijgen: سَيَقُولُ
-- de vrouwelijke تْ van de verleden tijd kan krijgen: كَتَبَتْ
+- de vrouwelijke تْ van de *māḍī* kan krijgen: كَتَبَتْ
 - de aangesproken ت kan krijgen: كَتَبْتَ
 
 Een **ḥarf** herken je aan het ontbreken van dit alles. Het is de restcategorie
@@ -76,8 +76,8 @@ heeft geen plaats in de *iʿrāb*, geen uitgang die verandert.
 > **In de Quran**
 >
 > Van de 128.219 morfologische segmenten is 48,9% een ism, 35,9% een ḥarf en
-> 15,1% een fiʿl. Bijna de helft is dus naamwoord — en voornaamwoorden alleen
-> al (24.685) zijn goed voor meer dan alle werkwoorden samen.
+> 15,1% een fiʿl. Bijna de helft is dus ism — en de ḍamāʾir alleen al
+> (24.685) zijn goed voor meer dan alle afʿāl samen.
 
 ### Wat is één woord?
 
@@ -89,7 +89,7 @@ maar de grammatica telt ze afzonderlijk.
 > **In de Quran**
 >
 > 77.429 geschreven woorden — maar 128.189 kalimāt. Het verschil van ruim
-> 50.000 zit volledig in de vastgeplakte ḥurūf en voornaamwoorden.
+> 50.000 zit volledig in de vastgeplakte ḥurūf en ḍamāʾir.
 
 ---
 
@@ -123,7 +123,7 @@ Arabisch woordenboek op wortel geordend is en niet alfabetisch op woordvorm.
 
 Een veelgemaakte fout: ك-ت-ب is niet uitspreekbaar en betekent op zichzelf
 niets. Het is een abstractie — de gemene deler van een woordfamilie. Het
-kleinste werkelijke woord van de familie is de verleden tijd كَتَبَ, en juist
+kleinste werkelijke woord van de familie is de *māḍī* كَتَبَ, en juist
 dáárom nemen woordenboeken die vorm als ingang.
 
 ### Drie letters, soms vier
@@ -221,13 +221,13 @@ niet de letter zelf.
 Het werkwoord wordt op vier manieren ingedeeld. Ze staan los van elkaar: elk
 werkwoord valt in élke indeling ergens.
 
-## 5. Indeling 1: naar tijd
+## 5. Indeling 1: māḍī, muḍāriʿ, amr
 
-| Vorm | Arabisch | Betekenis | Voorbeeld |
+| Vorm | | Wat hij doet | Voorbeeld |
 |---|---|---|---|
-| Verleden tijd | ٱلْمَاضِي (*al-māḍī*) | voltooide handeling | كَتَبَ |
-| Tegenwoordige tijd | ٱلْمُضَارِع (*al-muḍāriʿ*) | lopende of toekomstige handeling | يَكْتُبُ |
-| Gebiedende wijs | ٱلْأَمْر (*al-amr*) | bevel | اُكْتُبْ |
+| **al-māḍī** | ٱلْمَاضِي | de handeling is voltooid | كَتَبَ |
+| **al-muḍāriʿ** | ٱلْمُضَارِع | de handeling loopt nog of moet nog komen | يَكْتُبُ |
+| **al-amr** | ٱلْأَمْر | de handeling wordt bevolen | اُكْتُبْ |
 
 De *māḍī* is de grondvorm: hij draagt geen voorvoegsel en is het lemma
 waaronder woordenboeken het werkwoord opnemen.
@@ -268,7 +268,7 @@ werkwoordsvormen. Dit is het hart van de ṣarf.
 ### Thulāthī mujarrad — de zes abwāb
 
 Alle kale drieletterige werkwoorden vallen in zes patronen, onderscheiden door
-de klinker van de *ʿayn* in verleden en tegenwoordige tijd.
+de klinker van de *ʿayn* in de *māḍī* en de *muḍāriʿ*.
 
 | Bāb | Māḍī | Muḍāriʿ | Voorbeeld |
 |---|---|---|---|
@@ -283,8 +283,8 @@ Bāb 3 vereist meestal een keelletter (ء ه ع ح غ خ) als *ʿayn* of *lām*.
 is bijzonder: die drukt een blijvende eigenschap uit (كَرُمَ, "hij was
 edelmoedig") en is daarom nooit overgankelijk.
 
-Elke bāb staat in **10.4** volledig doorvervoegd, met verleden tijd,
-tegenwoordige tijd en gebiedende wijs naast elkaar.
+Elke bāb staat in **10.4** volledig doorvervoegd, met *māḍī*, *muḍāriʿ* en
+*amr* naast elkaar.
 
 #### De abwāb zoals de Qoeraan ze gebruikt (riwaaya van Ḥafṣ)
 
@@ -292,7 +292,7 @@ De tabel hierboven is de leerboekvorm. Hieronder dezelfde zes *abwāb* met
 werkwoorden die werkelijk in de Quran staan, met het aantal voorkomens. De
 *bāb* is hier niet overgenomen uit een woordenboek maar afgelezen uit de
 tekst: van elk gaaf werkwoord in de kale vorm zijn de verleden en de
-tegenwoordige tijd opgezocht en is de klinker op de *ʿayn* uitgelezen — uit de
+*muḍāriʿ* opgezocht en is de klinker op de *ʿayn* uitgelezen — uit de
 riwaaya van Ḥafṣ, want dat is de tekst die het corpus ontleedt. Dat maakt bij
 bāb 5 en 6 verschil, zoals hieronder blijkt.
 
@@ -323,7 +323,7 @@ komt hij zelden voor in verhalend of gebiedend proza.
 voorbeeld van deze bāb. In de riwaaya van Ḥafṣ, waaruit deze tabel is geteld,
 leest dat werkwoord يَحْسَبُ — met een *fatḥa*, en dat is bāb 4. **In de
 riwaaya van Warsh leest het يَحْسِبُ**, op alle 28 plaatsen waar het in de
-tegenwoordige tijd staat.
+*muḍāriʿ* staat.
 
 Bij een gave wortel staat bāb 6 dus wel in Warsh en niet in Ḥafṣ, en nog wel
 met precies het werkwoord waaraan de grammatici hem hun naam gaven. Beide
@@ -333,7 +333,7 @@ het telt. Dit boek telt Ḥafṣ, en zegt het hier.
 
 Bāb 6 ontbreekt in Ḥafṣ overigens niet volledig: hij komt voor bij een *mithāl*
 wāwie, وَرِثَ / يَرِثُ ("erven", 19:6 يَرِثُنِي), waar de wāw in de
-tegenwoordige tijd wegvalt. De tabel hierboven telt alleen gave wortels, en
+*muḍāriʿ* wegvalt. De tabel hierboven telt alleen gave wortels, en
 daar is hij leeg.
 
 #### De abwāb en de riwaayaat
@@ -522,7 +522,7 @@ query. `riwaya_sarf.py --only` drukt beide lijsten af.
 
 Eén kanttekening bij de Ḥafṣ-kolom: het corpus schrijft geen `verb_form` bij
 vorm I, dus een leeg veld leest hier als I. Dat klopt overal behalve bij 4:42,
-waar تُسَوَّىٰ vorm II in de lijdende vorm is en het corpus niets invult. Voor
+waar تُسَوَّىٰ vorm II *majhūl* is en het corpus niets invult. Voor
 de conclusie maakt het niet uit: vorm V van سوي staat hoe dan ook alleen in
 Warsh.
 
@@ -610,7 +610,7 @@ persoon (1e, 2e, 3e), getal (enkelvoud, tweevoud, meervoud) en geslacht
 
 ### Het sālim als maatstaf
 
-Neem كَتَبَ. De verleden tijd:
+Neem كَتَبَ. De *māḍī*:
 
 | | Enkelvoud | Tweevoud | Meervoud |
 |---|---|---|---|
@@ -620,7 +620,7 @@ Neem كَتَبَ. De verleden tijd:
 | 2e v. | كَتَبْتِ | كَتَبْتُمَا | كَتَبْتُنَّ |
 | 1e | كَتَبْتُ | — | كَتَبْنَا |
 
-De tegenwoordige tijd:
+De *muḍāriʿ*:
 
 | | Enkelvoud | Tweevoud | Meervoud |
 |---|---|---|---|
@@ -630,10 +630,10 @@ De tegenwoordige tijd:
 | 2e v. | تَكْتُبِينَ | تَكْتُبَانِ | تَكْتُبْنَ |
 | 1e | أَكْتُبُ | — | نَكْتُبُ |
 
-Twee dingen om te onthouden. Ten eerste: bij de verleden tijd verandert de
+Twee dingen om te onthouden. Ten eerste: bij de *māḍī* verandert de
 klinker van de *lām* naar *sukūn* zodra de uitgang met een medeklinker begint
 (كَتَبْتَ, كَتَبْنَا). Ten tweede: de vormen met ن en و en ي aan het eind zijn
-in de tegenwoordige tijd *iʿrāb*-gevoelig — dat is naḥw en komt daar terug.
+in de *muḍāriʿ* *iʿrāb*-gevoelig — dat is naḥw en komt daar terug.
 
 > **In de Quran**
 >
@@ -666,18 +666,18 @@ Vandaar de vuistregel: **verdubbeld waar het kan, gescheiden waar het moet.**
 
 #### Mithāl
 
-De zwakke eerste letter valt in de tegenwoordige tijd weg als het een و is:
+De zwakke eerste letter valt in de *muḍāriʿ* weg als het een و is:
 
 وَعَدَ → يَعِدُ (niet يَوْعِدُ)
 وَصَلَ → يَصِلُ
 
-En daarmee ook in de gebiedende wijs: عِدْ، صِلْ.
+En daarmee ook in de *amr*: عِدْ، صِلْ.
 
 Is de eerste letter een ي, dan blijft die staan: يَسِرَ → يَيْسِرُ.
 
 #### Ajwaf
 
-De zwakke middenletter wordt in de verleden tijd een lange ا:
+De zwakke middenletter wordt in de *māḍī* een lange ا:
 قَوَلَ → قَالَ، بَيَعَ → بَاعَ.
 
 Maar zodra de uitgang met een medeklinker begint, wordt die lange klinker
@@ -689,12 +689,12 @@ ingekort:
 De klinker die overblijft verraadt de oorspronkelijke letter: **ḍamma bij een
 و** (قُلْتُ), **kasra bij een ي** (بِعْتُ).
 
-In de tegenwoordige tijd: يَقُولُ، يَبِيعُ — en ingekort tot يَقُلْ، يَبِعْ
+In de *muḍāriʿ*: يَقُولُ، يَبِيعُ — en ingekort tot يَقُلْ، يَبِعْ
 zodra er een *jazm* op komt.
 
 #### Nāqiṣ
 
-De zwakke laatste letter is het meest veranderlijk. In de verleden tijd:
+De zwakke laatste letter is het meest veranderlijk. In de *māḍī*:
 
 دَعَا (van د-ع-و) — de و is een ا geworden
 رَمَى (van ر-م-ي) — de ي is een *alif maqṣūra* geworden
@@ -704,7 +704,7 @@ Bij een medeklinkeruitgang komt de oorspronkelijke letter terug:
 
 Bij de meervoudsuitgang وا valt de zwakke letter weg: دَعَوْا، رَمَوْا.
 
-In de tegenwoordige tijd: يَدْعُو، يَرْمِي — en bij *jazm* valt de eindletter
+In de *muḍāriʿ*: يَدْعُو، يَرْمِي — en bij *jazm* valt de eindletter
 weg: لَمْ يَدْعُ، لَمْ يَرْمِ.
 
 #### Lafīf
@@ -712,7 +712,7 @@ weg: لَمْ يَدْعُ، لَمْ يَرْمِ.
 Combineert de regels van twee soorten.
 
 *Mafrūq* (1e en 3e zwak), zoals وَقَى: gedraagt zich vooraan als een *mithāl*
-en achteraan als een *nāqiṣ*. Tegenwoordige tijd يَقِي, gebiedende wijs قِ —
+en achteraan als een *nāqiṣ*. *Muḍāriʿ* يَقِي, *amr* قِ —
 één letter, het kortste woord van het Arabisch.
 
 *Maqrūn* (2e en 3e zwak), zoals طَوَى: gedraagt zich vooral als een *nāqiṣ*;
@@ -960,22 +960,22 @@ Let bij het doornemen op deze dingen:
 - **Sālim** (علم، جعل): niets bijzonders — de klinker van de derde
   wortelletter wordt een *sukūn* zodra de uitgang met een medeklinker begint.
 - **Mahmūz** (امن، اخذ): let op أَخَذَ → خُذْ, waar de hamza in de
-  gebiedende wijs verdwijnt.
+  *amr* verdwijnt.
 - **Muḍaʿʿaf** (ضلل، مسس): verdubbeld waar het kan, gescheiden waar het moet.
-- **Mithāl** (وجد، وعد): de و verdwijnt in de tegenwoordige tijd —
+- **Mithāl** (وجد، وعد): de و verdwijnt in de *muḍāriʿ* —
   وَعَدَ maar يَعِدُ.
 - **Ajwaf** (قول، كون): قَالَ maar قُلْتُ, en de *ḍamma* verraadt de و;
   vergelijk بِعْتُ met zijn *kasra* van de ي.
 - **Nāqiṣ** (اتي، راي): de eindletter valt weg onder *jazm* en bij de
   meervoudsuitgang.
-- **Lafīf mafrūq** (وقي): de gebiedende wijs قِ is één letter — het kortste
+- **Lafīf mafrūq** (وقي): de *amr* قِ is één letter — het kortste
   woord van het Arabisch; in de Quran staat het meervoud قُوٓا۟ (66:6).
 
 ### 10.4 De zes abwāb vervoegd
 
 Hoofdstuk 8 gaf de zes *abwāb* met hun voorbeelden. Hier is elke bāb
 doorvervoegd, met de wortel die de Qoeraan er het volledigst in gebruikt: de
-verleden tijd, de tegenwoordige tijd en de gebiedende wijs naast elkaar, zodat
+*māḍī*, de *muḍāriʿ* en de *amr* naast elkaar, zodat
 te zien is wat de klinker op de *ʿayn* door het hele paradigma heen doet.
 
 **Bāb 1 — فَعَلَ / يَفْعُلُ — كفر** · كَفَرَ · 15 cellen
@@ -1044,10 +1044,10 @@ te zien is wat de klinker op de *ʿayn* door het hele paradigma heen doet.
 | wij | — |  | نَرِثُ | 19:40 | — |  |
 
 Twee dingen vallen op. **Bāb 5 is nauwelijks te vervoegen** — كَبُرَ vult vier
-cellen en heeft geen gebiedende wijs, wat past bij een bāb die een blijvende
+cellen en heeft geen *amr*, wat past bij een bāb die een blijvende
 eigenschap uitdrukt: daar geef je geen bevel toe. En **bāb 6 heeft in deze
 tekst geen gave wortel**, dus staat hij hier met een *mithāl*, وَرِثَ / يَرِثُ,
-waar de wāw in de tegenwoordige tijd wegvalt. Zie hoofdstuk 8 voor wat de
+waar de wāw in de *muḍāriʿ* wegvalt. Zie hoofdstuk 8 voor wat de
 riwaaya van Warsh hier leest.
 
 ### 10.5 De uitgebreide vormen vervoegd
@@ -1176,14 +1176,79 @@ voorkomen; hoofdstuk 8 geeft er voorbeelden uit de taal bij.
 
 ---
 
+## 11. Al-mabnī li-l-majhūl — als de handelende niet genoemd wordt
+
+Elk werkwoord is **mabnī li-l-maʿlūm** (مَبْنِيّ لِلْمَعْلُوم) of **mabnī
+li-l-majhūl** (مَبْنِيّ لِلْمَجْهُول). Bij de eerste wordt de handelende
+genoemd, bij de tweede niet. Het Nederlands noemt dat bedrijvend en lijdend,
+maar die woorden leiden af: het Arabisch zegt niet dat de handeling *ondergaan*
+wordt, het zegt dat de dader **onbekend blijft** — dat is wat *majhūl*
+betekent.
+
+Daarom staat er in het klassieke Arabisch ook geen "door" achter. Wie
+مِن قِبَلِ erbij zet om de dader alsnog te noemen, doet iets moderns; de
+majhūl bestaat juist om hem weg te laten, omdat hij vanzelf spreekt, er niet
+toe doet, of niet genoemd hoeft te worden.
+
+### Hoe hij gevormd wordt
+
+De vorm verandert alleen in de klinkers; er komt geen letter bij.
+
+| | maʿlūm | majhūl |
+|---|---|---|
+| **māḍī** | كَتَبَ | كُتِبَ |
+| **muḍāriʿ** | يَكْتُبُ | يُكْتَبُ |
+
+De regel is kort: in de *māḍī* krijgt de eerste letter een ḍamma en de letter
+vóór de laatste een kasra; in de *muḍāriʿ* krijgt het voorvoegsel een ḍamma en
+de letter vóór de laatste een fatḥa. Een *amr* heeft geen majhūl — je kunt
+niets bevelen zonder te zeggen aan wie.
+
+Bij de uitgebreide vormen gaat het net zo, en de toegevoegde letters blijven
+staan: أَنْزَلَ → أُنْزِلَ، يُنْزِلُ → يُنْزَلُ.
+
+### Bij de zwakke wortels
+
+De zwakke letter gedraagt zich zoals hoofdstuk 9 beschrijft, en dat levert
+vormen op die je moet herkennen omdat ze op het oog niets met hun wortel te
+maken hebben.
+
+- **Ajwaf**: قَالَ → **قِيلَ**. De ḍamma van de eerste letter verspringt naar
+  een kasra en de و wordt een ي. Dit is met 49 plaatsen het vaakst
+  voorkomende majhūl-werkwoord van de Qoeraan.
+- **Nāqiṣ**: قَضَىٰ → **قُضِىَ**، دَعَا → **دُعِىَ**. De laatste letter komt
+  als ي terug.
+- **Mithāl**: de و blijft juist staan, want hij valt alleen in de *muḍāriʿ*
+  maʿlūm weg: وَعَدَ → وُعِدَ.
+
+> **In de Quran**
+>
+> Van de 19.356 werkwoordsvormen zijn er **1.140 majhūl** — precies één op de
+> zeventien. Daarvan staan er 634 in de *māḍī* en 506 in de *muḍāriʿ*, en 634
+> plus 506 is 1.140: er is er geen enkele in de *amr*, zoals de regel hierboven
+> voorspelt.
+>
+> Naar vorm: 652 in vorm I, 284 in vorm IV, 140 in vorm II, en de rest
+> verspreid over III, V, VIII en X. Dat vorm IV zo hoog staat is geen toeval —
+> أَنْزَلَ alleen al levert 48 plaatsen أُنْزِلَ.
+>
+> De vijf vaakste: قِيلَ (49), أُنزِلَ (48), أُوتُ (33), تُرْجَعُ (25),
+> قُضِىَ (19).
+
+Wat de majhūl met de zin doet — dat het lijdend voorwerp opschuift naar de
+plaats van de fāʿil en zijn *naṣb* voor *rafʿ* inruilt — is naḥw, en staat in
+hoofdstuk 12 van `docs/nahw-nl.md`.
+
+---
+
 # Deel III — Het naamwoord
 
-## 11. Mushtaqqāt — de afgeleide naamwoorden
+## 12. Mushtaqqāt — de afgeleide naamwoorden
 
 Van elke werkwoordswortel laat zich een reeks naamwoorden afleiden, elk met een
 vaste betekenis en een vast patroon. Dit is het productiefste deel van de ṣarf.
 
-### 11.1 De maṣdar
+### 12.1 De maṣdar
 
 De **maṣdar** (مَصْدَر) is het verbaalsubstantief: de handeling zelf, zonder
 tijd of persoon. Nederlands vertaalt hem meestal met een infinitief of een
@@ -1243,7 +1308,7 @@ sterven).
 Let op het contrast: ضَرْبَة is één klap, ضِرْبَة is een manier van slaan.
 Alleen de klinker verschilt.
 
-### 11.2 Ism al-fāʿil
+### 12.2 Ism al-fāʿil
 
 De **doener**, patroon فَاعِل bij de kale drieletterige vorm:
 كَتَبَ → كَاتِب (schrijver), عَلِمَ → عَالِم (wetende).
@@ -1254,7 +1319,7 @@ zet een *kasra* op de voorlaatste letter.
 يُعَلِّمُ → مُعَلِّم (leraar)
 يَسْتَغْفِرُ → مُسْتَغْفِر (die om vergeving vraagt)
 
-### 11.3 Ṣīghat mubālagha
+### 12.3 Ṣīghat mubālagha
 
 De **versterkte doener**: niet wie iets doet, maar wie het veel of intens doet.
 Vijf hoofdpatronen:
@@ -1274,7 +1339,7 @@ Vijf hoofdpatronen:
 > geen gradueel maar een wezenlijk verschil: عَالِم is wie weet, عَلِيم is wie
 > alwetend ís.
 
-### 11.4 Ṣifa mushabbaha
+### 12.4 Ṣifa mushabbaha
 
 De **bestendige eigenschap** — anders dan de *ism fāʿil*, die een handeling
 aanduidt. حَسَن (mooi), كَرِيم (edelmoedig), أَحْمَر (rood), عَطْشَان
@@ -1287,7 +1352,7 @@ Het onderscheid met de *mubālagha* is subtiel: عَلِيم als "alwetend" is e
 bestendige eigenschap, maar wordt traditioneel toch bij de *mubālagha*
 gerekend omdat de wortel een handeling aanduidt.
 
-### 11.5 Ism al-mafʿūl
+### 12.5 Ism al-mafʿūl
 
 Het **ondergane**, patroon مَفْعُول bij de kale vorm:
 كَتَبَ → مَكْتُوب (geschreven), عَلِمَ → مَعْلُوم (bekend).
@@ -1303,10 +1368,10 @@ klinker.
 
 > **In de Quran**
 >
-> 3.525 segmenten zijn als deelwoord (*participium*) geannoteerd, actief of
-> passief samen.
+> 3.525 segmenten zijn als *ism fāʿil* of *ism mafʿūl* geannoteerd, de twee
+> samen.
 
-### 11.6 Ismā az-zamān wa-l-makān
+### 12.6 Ismā az-zamān wa-l-makān
 
 **Tijd- en plaatsnaamwoorden**, beide met م ervoor:
 
@@ -1319,7 +1384,7 @@ Tijd en plaats delen het patroon; alleen de context onderscheidt ze.
 مَغْرِب is zowel "de plaats van ondergaan" (het westen) als "het tijdstip van
 ondergaan".
 
-### 11.7 Ism al-āla
+### 12.7 Ism al-āla
 
 Het **werktuig**. Drie patronen:
 
@@ -1332,7 +1397,7 @@ Het **werktuig**. Drie patronen:
 Merk het verschil met de plaatsnaamwoorden: die beginnen met مَـ (*fatḥa*),
 werktuigen met مِـ (*kasra*).
 
-### 11.8 Ism at-tafḍīl
+### 12.8 Ism at-tafḍīl
 
 De **vergrotende en overtreffende trap**, patroon أَفْعَل voor mannelijk en
 فُعْلَى voor vrouwelijk:
@@ -1344,7 +1409,7 @@ Voorwaarden: het moet een drieletterig, kaal, volledig vervoegbaar werkwoord
 zijn dat een graduele eigenschap uitdrukt. Voor de rest gebruikt men een
 omschrijving met أَشَدّ of أَكْثَر gevolgd door een maṣdar.
 
-### 11.9 At-taʿajjub
+### 12.9 At-taʿajjub
 
 De **verwonderingsvorm**. Twee vaste patronen:
 
@@ -1355,7 +1420,7 @@ Beide zijn versteend: ze veranderen niet mee met persoon of tijd.
 
 ---
 
-## 12. Tadhkīr wa taʾnīth — mannelijk en vrouwelijk
+## 13. Tadhkīr wa taʾnīth — mannelijk en vrouwelijk
 
 Elk naamwoord is mannelijk (*mudhakkar*) of vrouwelijk (*muʾannath*).
 
@@ -1382,7 +1447,7 @@ En omgekeerd: طَلْحَة، حَمْزَة، مُعَاوِيَة zijn mannen
 
 ---
 
-## 13. Vier soorten naamwoorden naar hun uitgang
+## 14. Vier soorten naamwoorden naar hun uitgang
 
 Deze indeling bepaalt hoe een woord zich gedraagt bij tweevoud, meervoud en
 *iʿrāb*.
@@ -1393,7 +1458,7 @@ Deze indeling bepaalt hoe een woord zich gedraagt bij tweevoud, meervoud en
 دَاعِي.
 **Ism mamdūd** (مَمْدُود) — eindigt op اء: سَمَاء، بِنَاء.
 
-### 13.1 Tathniya — het tweevoud
+### 14.1 Tathniya — het tweevoud
 
 Het Arabisch heeft een aparte vorm voor precies twee. Voeg ـَانِ toe in de
 onderwerpsvorm, ـَيْنِ in de overige:
@@ -1407,7 +1472,7 @@ Bij de bijzondere uitgangen:
 - *manqūṣ*: de ي komt terug — قَاضِي → قَاضِيَانِ
 - *mamdūd*: de hamza kan ا worden — سَمَاء → سَمَاوَانِ
 
-### 13.2 Jamʿ — het regelmatige meervoud
+### 14.2 Jamʿ — het regelmatige meervoud
 
 **Jamʿ mudhakkar sālim** (mannelijk gaaf meervoud): ـُونَ / ـِينَ
 مُسْلِم → مُسْلِمُونَ / مُسْلِمِينَ
@@ -1420,7 +1485,7 @@ erbij.
 
 ---
 
-## 14. Jamʿ taksīr — het gebroken meervoud
+## 15. Jamʿ taksīr — het gebroken meervoud
 
 Bij het **gebroken meervoud** (جَمْع تَكْسِير) blijft de stam níét intact: de
 klinkers worden herschikt, soms komen er letters bij.
@@ -1450,7 +1515,7 @@ meervoud — en zijn *mamnūʿ min aṣ-ṣarf*: ze krijgen geen *tanwīn*.
 
 ---
 
-## 15. Taṣghīr — de verkleinvorm
+## 16. Taṣghīr — de verkleinvorm
 
 De **verkleinvorm** (تَصْغِير) drukt kleinheid, geringschatting of juist
 vertedering uit. Drie patronen naar woordlengte:
@@ -1466,7 +1531,7 @@ De vaste kern is: *ḍamma* op de eerste letter, *fatḥa* op de tweede, dan een
 
 ---
 
-## 16. Nasab — de betrekkelijke afleiding
+## 17. Nasab — de betrekkelijke afleiding
 
 De **nisba** (نَسَب) maakt van een naamwoord een bijvoeglijk naamwoord dat
 herkomst of verbondenheid aanduidt, door ـِيّ toe te voegen:
@@ -1494,7 +1559,7 @@ werkwoorden en naamwoorden gelijk, en daarom staan ze apart.
 iets anders klinkt dan er staat. En de *hamza* is de enige letter waarvan
 niet de klank maar de schrijfwijze een heel hoofdstuk nodig heeft.
 
-## 17. Hamza — de spelling
+## 18. Hamza — de spelling
 
 De **hamza** (هَمْزَة) is de lastigste letter van het Arabisch, niet in klank
 maar in schrijfwijze.
@@ -1524,7 +1589,7 @@ de sterkste van de omringende klinkers. De volgorde is:
 
 ---
 
-## 18. Waqf — het pauzeren
+## 19. Waqf — het pauzeren
 
 **Waqf** (وَقْف) is stoppen aan het eind van een woord of vers. Er gelden dan
 andere regels dan in doorlopende spraak.
@@ -1543,7 +1608,7 @@ tekensysteem voor.
 
 ---
 
-## 19. Ibdāl — letterwisseling
+## 20. Ibdāl — letterwisseling
 
 **Ibdāl** (إِبْدَال) is het vervangen van de ene letter door de andere om de
 uitspraak te vergemakkelijken.
@@ -1562,7 +1627,7 @@ Verder wordt de و een ي wanneer er een *sukūn* op staat na een *kasra*:
 
 ---
 
-## 20. Iʿlāl — de zwakke-letterveranderingen
+## 21. Iʿlāl — de zwakke-letterveranderingen
 
 **Iʿlāl** (إِعْلَال) is de verzamelnaam voor wat er met zwakke letters gebeurt.
 Drie soorten:
@@ -1581,7 +1646,7 @@ De regel: een و of ي met een *fatḥa* ervoor wordt een ا.
 
 Een zwakke letter verdwijnt. Dit gebeurt onder meer:
 
-- Bij de *mithāl* in de tegenwoordige tijd: وَعَدَ → يَعِدُ
+- Bij de *mithāl* in de *muḍāriʿ*: وَعَدَ → يَعِدُ
 - Bij de *nāqiṣ* onder *jazm*: لَمْ يَدْعُ
 - Bij het samentreffen van twee *sukūn*: قَالَ + تُ → قُلْتُ
 
@@ -1599,7 +1664,7 @@ geworden.
 
 ## Slot
 
-Wie deze twintig hoofdstukken beheerst, kan van vrijwel elk Arabisch woord
+Wie deze eenentwintig hoofdstukken beheerst, kan van vrijwel elk Arabisch woord
 zeggen uit welke wortel het komt, volgens welk patroon het is gevormd en welke
 betekenis dat patroon eraan geeft. Dat is wat de ṣarf te bieden heeft: niet een
 lijst woorden om te onthouden, maar een systeem waarmee de woordenschat zich
