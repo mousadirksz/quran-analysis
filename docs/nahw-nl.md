@@ -606,7 +606,7 @@ derde van de keren staat er niets.
 ## 12. Nāʾib al-fāʿil
 
 Staat het werkwoord **mabnī li-l-majhūl** — de vorm waarin de handelende niet
-genoemd wordt (hoofdstuk 12 van het ṣarf-boek: كُتِبَ, يُكْتَبُ) — dan
+genoemd wordt (hoofdstuk 11 van het ṣarf-boek: كُتِبَ, يُكْتَبُ) — dan
 verdwijnt de fāʿil helemaal uit de zin. De mafʿūl bihi schuift op naar zijn
 plaats en neemt zijn iʿrāb over: van naṣb naar **rafʿ**. Hij heet dan
 **nāʾib al-fāʿil** (نَائِب ٱلْفَاعِل), de invaller voor de handelende.
