@@ -9,7 +9,7 @@ figure can re-run the mode that produced it.
 
   python3 nahw_examples.py relations     every relation with its count
   python3 nahw_examples.py muqaddar      the elements the grammarians posit
-  python3 nahw_examples.py nawasikh      every naasikh the treebank names
+  python3 nahw_examples.py nawasikh      every naasikh the treebank names\n  python3 nahw_examples.py faail         the faa'il by kind, against the verbs
   python3 nahw_examples.py cases         case and mood across the corpus
   python3 nahw_examples.py irab-diff     where the riwayat read the i'rab differently\n  python3 nahw_examples.py irab-mabni    final-vowel differences that are not i'rab\n  python3 nahw_examples.py irab-book     the i'rab differences with their chapter
   python3 nahw_examples.py rel Pred      examples of one relation
@@ -210,6 +210,64 @@ def cases(cur, markdown=False):
               % (nl, label, num(n)))
 
 
+def faail(cur, markdown=False):
+    """The faa'il by kind, and whether every verb has one.
+
+    A faa'il is either zaahir -- a noun standing there -- or a damiir, and
+    that damiir is either baariz, written and attached to the verb, or
+    mustatir, not written at all. There is no fourth kind and no verb
+    without one, so the three counts have to add up against the corpus'
+    verbs; where they do not, it is the treebank that is silent, not the
+    grammar. The treebank supplies the split without meaning to: it segments
+    `qaaluu` into the verb and the waaw and labels the waaw itself, and the
+    mustatir ones are the rows it posits with no word behind them."""
+    rows = cur.execute(
+        "SELECT CASE WHEN s.is_implicit=1 THEN 'mustatir'"
+        "            WHEN co.tag='PRON' THEN 'baariz'"
+        "            ELSE 'zaahir' END soort, COUNT(*) n"
+        " FROM syntax s LEFT JOIN corpus co ON co.surah=s.surah"
+        "  AND co.ayah=s.ayah AND co.word=s.word AND co.segment=s.segment"
+        " WHERE s.rel_label='Subj' GROUP BY 1 ORDER BY n DESC").fetchall()
+    total = sum(n for _, n in rows)
+    WAT = {"zaahir": ("ẓāhir", "een naamwoord dat er staat"),
+           "baariz": ("bāriz", "een ḍamīr, aan het werkwoord vast"),
+           "mustatir": ("mustatir", "een ḍamīr, niet geschreven")}
+    if markdown:
+        print("| De fāʿil is | | Plaatsen | Aandeel |")
+        print("|---|---|--:|--:|")
+    for kind, n in rows:
+        name, wat = WAT[kind]
+        print(("| **%s** | %s | %s | %.0f%% |" if markdown else "  %-10s %-34s %7s  %4.1f%%")
+              % (name, wat, num(n), n / total * 100))
+    print(("| | **samen** | **%s** | |" if markdown else "  samen%40s")
+          % num(total))
+
+    # MAX() over a LEFT JOIN yields NULL, not 0, for a verb with no children
+    # at all -- 42 of them -- so every branch here has to coalesce or those
+    # verbs fall out of the count and the arithmetic quietly stops closing.
+    verbs, subj, pas, ism, none, both = cur.execute(
+        "SELECT COUNT(*), SUM(subj), SUM(pas), SUM(ism),"
+        "       SUM(subj + pas + ism = 0), SUM(subj + pas + ism > 1) FROM ("
+        "  SELECT COALESCE(MAX(k.rel_label = 'Subj'), 0) subj,"
+        "         COALESCE(MAX(k.rel_label = 'Pass'), 0) pas,"
+        "         COALESCE(MAX(k.rel_label LIKE 'subj%<<%'), 0) ism"
+        "  FROM syntax s JOIN corpus co ON co.id = s.corpus_id"
+        "  LEFT JOIN syntax k ON k.head_tid = s.tid"
+        "  WHERE co.kalima_type = 'fiil' AND s.is_implicit = 0"
+        "  GROUP BY s.tid)").fetchone()
+    print()
+    if markdown:
+        print("| Bij elk werkwoord | Plaatsen |")
+        print("|---|--:|")
+    for label, n in (("werkwoorden in het corpus", verbs),
+                     ("met een fāʿil", subj),
+                     ("met een nāʾib al-fāʿil", pas),
+                     ("met een ism (kāna en haar zusters)", ism),
+                     ("met meer dan één daarvan", both),
+                     ("waar de treebank niets aanwijst", none)):
+        print(("| %s | %s |" if markdown else "  %-38s %7s") % (label, num(n)))
+
+
 def rel(cur, label, markdown=False, limit=6):
     """Examples of one relation: the word, what it hangs on, and the verse."""
     rows = cur.execute(
@@ -326,6 +384,8 @@ def main():
         muqaddar(cur, markdown)
     elif mode == "nawasikh":
         nawasikh(cur, markdown)
+    elif mode == "faail":
+        faail(cur, markdown)
     elif mode == "cases":
         cases(cur, markdown)
     elif mode == "irab-diff":

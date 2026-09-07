@@ -88,7 +88,11 @@ def main():
     for stmt in ("CREATE INDEX IF NOT EXISTS idx_syntax_verse ON syntax(surah, ayah)",
                  "CREATE INDEX IF NOT EXISTS idx_syntax_corpus ON syntax(corpus_id)",
                  "CREATE INDEX IF NOT EXISTS idx_syntax_sentence ON syntax(sentence_id)",
-                 "CREATE INDEX IF NOT EXISTS idx_syntax_rel ON syntax(rel_label)"):
+                 "CREATE INDEX IF NOT EXISTS idx_syntax_rel ON syntax(rel_label)",
+                 # walking down the tree -- "what hangs on this token" -- is
+                 # the query the dependency structure exists for, and without
+                 # this it is a full scan of 139,376 rows every time
+                 "CREATE INDEX IF NOT EXISTS idx_syntax_head ON syntax(head_tid)"):
         cur.execute(stmt)
 
     written = cur.execute("SELECT COUNT(*) FROM syntax WHERE is_implicit=0").fetchone()[0]
