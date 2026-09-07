@@ -244,7 +244,7 @@ het overgebleven woord dan met een *sukūn* begonnen, dan komt er een
 > 9.150 werkwoordsvormen staan in de *māḍī*, 8.330 in de *muḍāriʿ* en 1.876 in
 > de *amr*.
 
-## 6. Indeling 2: naar aantal wortelletters
+## 6. Indeling 2: thulāthī en rubāʿī
 
 **Thulāthī** (ثُلَاثِي) — drieletterig: كَتَبَ, ذَهَبَ, نَصَرَ.
 **Rubāʿī** (رُبَاعِي) — vierletterig: دَحْرَجَ (hij rolde), زَلْزَلَ (hij deed
@@ -253,7 +253,7 @@ schudden), وَسْوَسَ (hij fluisterde in).
 Veel *rubāʿī*-werkwoorden zijn verdubbelingen van een tweeletterige klankkern
 (زَلْزَلَ، وَسْوَسَ) en dragen daardoor vaak iets herhalends of intensiefs.
 
-## 7. Indeling 3: kaal of uitgebreid
+## 7. Indeling 3: mujarrad en mazīd
 
 **Mujarrad** (مُجَرَّد) — het werkwoord bestaat uitsluitend uit wortelletters:
 كَتَبَ.
@@ -550,7 +550,7 @@ Merk op hoeveel van deze wortels een verdubbelde klankkern hebben —
 typisch voor de vierletterige vorm en draagt vaak iets intensiefs of
 klanknabootsends.
 
-## 9. Indeling 4: gaaf of zwak
+## 9. Indeling 4: ṣaḥīḥ en muʿtall
 
 Deze indeling kijkt naar de *aard* van de wortelletters, en zij bepaalt vrijwel
 alle onregelmatigheid in het Arabisch.
@@ -605,14 +605,16 @@ Bevat één of meer zwakke letters. Vier soorten, genoemd naar de plaats:
 
 *Isnād* betekent "toeschrijven": het werkwoord aan een persoon koppelen. Het
 Arabisch onderscheidt veertien personen, door drie assen te combineren:
-persoon (1e, 2e, 3e), getal (enkelvoud, tweevoud, meervoud) en geslacht
-(mannelijk, vrouwelijk).
+persoon (1e, 2e, 3e), getal — **mufrad** (enkel), **muthannā** (twee) en
+**jamʿ** (meer) — en geslacht: **mudhakkar** en **muʾannath**. Hoofdstuk 13 en
+14 werken die laatste twee assen uit bij het naamwoord; hier zijn ze de kolommen
+en de rijen.
 
 ### Het sālim als maatstaf
 
 Neem كَتَبَ. De *māḍī*:
 
-| | Enkelvoud | Tweevoud | Meervoud |
+| | mufrad | muthannā | jamʿ |
 |---|---|---|---|
 | 3e m. | كَتَبَ | كَتَبَا | كَتَبُوا |
 | 3e v. | كَتَبَتْ | كَتَبَتَا | كَتَبْنَ |
@@ -622,7 +624,7 @@ Neem كَتَبَ. De *māḍī*:
 
 De *muḍāriʿ*:
 
-| | Enkelvoud | Tweevoud | Meervoud |
+| | mufrad | muthannā | jamʿ |
 |---|---|---|---|
 | 3e m. | يَكْتُبُ | يَكْتُبَانِ | يَكْتُبُونَ |
 | 3e v. | تَكْتُبُ | تَكْتُبَانِ | يَكْتُبْنَ |
@@ -633,11 +635,11 @@ De *muḍāriʿ*:
 Twee dingen om te onthouden. Ten eerste: bij de *māḍī* verandert de
 klinker van de *lām* naar *sukūn* zodra de uitgang met een medeklinker begint
 (كَتَبْتَ, كَتَبْنَا). Ten tweede: de vormen met ن en و en ي aan het eind zijn
-in de *muḍāriʿ* *iʿrāb*-gevoelig — dat is naḥw en komt daar terug.
+in de *muḍāriʿ* gevoelig voor *iʿrāb* — dat is naḥw en komt daar terug.
 
 > **In de Quran**
 >
-> Het zichtbare onderwerp is lang niet altijd geschreven. In يَكْتُبُ zit
+> De fāʿil is lang niet altijd geschreven. In يَكْتُبُ zit
 > volgens de grammatici een verborgen هُوَ, de *ḍamīr mustatir*. De
 > Quran-treebank poneert er 6.674, waarvan (هُوَ) 3.878 keer, (أَنْتَ) 1.414
 > keer en (نَحْنُ) 582 keer.
@@ -1447,9 +1449,9 @@ En omgekeerd: طَلْحَة، حَمْزَة، مُعَاوِيَة zijn mannen
 
 ---
 
-## 14. Vier soorten naamwoorden naar hun uitgang
+## 14. De vier soorten ism, en wat tathniya en jamʿ ermee doen
 
-Deze indeling bepaalt hoe een woord zich gedraagt bij tweevoud, meervoud en
+Deze indeling bepaalt hoe een woord zich gedraagt bij *tathniya*, *jamʿ* en
 *iʿrāb*.
 
 **Ism ṣaḥīḥ** (صَحِيح) — eindigt op een medeklinker: كِتَاب، قَلَم.
@@ -1461,7 +1463,7 @@ Deze indeling bepaalt hoe een woord zich gedraagt bij tweevoud, meervoud en
 ### 14.1 Tathniya — het tweevoud
 
 Het Arabisch heeft een aparte vorm voor precies twee. Voeg ـَانِ toe in de
-onderwerpsvorm, ـَيْنِ in de overige:
+*rafʿ*, ـَيْنِ in de overige:
 
 كِتَاب → كِتَابَانِ / كِتَابَيْنِ
 مُسْلِمَة → مُسْلِمَتَانِ / مُسْلِمَتَيْنِ
