@@ -520,22 +520,22 @@ other five.
 
 Only Hafs–Warsh has had its farsh list read word by word afterwards. That pass
 struck 95 rows the rules had wrongly called farsh and left 10 undecided against
-514 that stood — 15% of what the rules proposed was not farsh — with a reason
+505 that stood — 16% of what the rules proposed was not farsh — with a reason
 per word pair in `farsh_review.tsv`. The nine other pairs carry the rule
 verdict alone, so their farsh figure is an upper bound and `reviewed` is 0.
 
 | Pair | | Places | farsh | usul | notation | read |
 |---|---|--:|--:|--:|--:|:-:|
-| bazzi – qumbul | **within one qiraa** | 184 | **35** | 70 | 75 | — |
-| doori – soosi | **within one qiraa** | 3,658 | **131** | 2,287 | 1,200 | — |
-| hafs – shouba | **within one qiraa** | 595 | **396** | 68 | 82 | — |
-| hafs – warsh | between two qiraa'at | 8,453 | **514** | 4,866 | 2,892 | yes |
-| qaloon – warsh | **within one qiraa** | 5,377 | **578** | 4,293 | 415 | — |
-| hafs – qaloon | between two qiraa'at | 4,287 | **655** | 677 | 2,864 | — |
-| hafs – doori | between two qiraa'at | 2,343 | **668** | 1,174 | 427 | — |
-| hafs – bazzi | between two qiraa'at | 9,225 | **674** | 7,529 | 969 | — |
-| hafs – qumbul | between two qiraa'at | 9,183 | **681** | 7,467 | 983 | — |
-| hafs – soosi | between two qiraa'at | 5,829 | **840** | 3,379 | 1,517 | — |
+| bazzi – qumbul | **within one qiraa** | 184 | **34** | 73 | 73 | — |
+| doori – soosi | **within one qiraa** | 3,658 | **63** | 2,479 | 1,076 | — |
+| qaloon – warsh | **within one qiraa** | 5,377 | **339** | 4,533 | 414 | — |
+| hafs – shouba | **within one qiraa** | 595 | **383** | 84 | 79 | — |
+| hafs – warsh | between two qiraa'at | 8,453 | **505** | 4,941 | 2,826 | yes |
+| hafs – doori | between two qiraa'at | 2,343 | **623** | 1,239 | 407 | — |
+| hafs – qaloon | between two qiraa'at | 4,287 | **630** | 740 | 2,826 | — |
+| hafs – bazzi | between two qiraa'at | 9,225 | **644** | 7,576 | 952 | — |
+| hafs – qumbul | between two qiraa'at | 9,183 | **651** | 7,512 | 968 | — |
+| hafs – soosi | between two qiraa'at | 5,829 | **733** | 3,627 | 1,376 | — |
 
 Read the farsh column, not the places column. Places counts usul and spelling
 too, and those vary enormously by package: al-Bazzi and Qunbul apply silat
@@ -544,10 +544,10 @@ places while sitting *within* one qiraa because Warsh applies naql and softens
 the hamza where Qaaloon does not.
 
 Farsh is the comparable measure, and it says what the transmission history
-predicts. Two transmissions of one qari's reading differ in 35 words
-(al-Bazzi–Qunbul) or 131 (al-Doori–al-Soosi); two readings differ in 514 to
-840. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 396 and
-Qaaloon–Warsh at 578 — are the two the literature already singles out as the
+predicts. Two transmissions of one qari's reading differ in 34 words
+(al-Bazzi–Qunbul) or 63 (al-Doori–al-Soosi); two readings differ in 505 to
+733. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 383 and
+Qaaloon–Warsh at 339 — are the two the literature already singles out as the
 widest-diverging transmissions of a single reading.
 
 For Hafs–Warsh, the one pair also read afterwards, the 8,453 places fall out
@@ -555,9 +555,9 @@ like this:
 
 | `kind` | Rows | What it is |
 |---|--:|---|
-| `usul` | 4,866 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, imaala, the ya of idafa. Real differences, but not word-specific |
-| `notatie` | 2,892 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
-| `farsh` | 514 | *farsh al-huruf*: what no rule explains — the word-by-word differences |
+| `usul` | 4,941 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, imaala, the ya of idafa. Real differences, but not word-specific |
+| `notatie` | 2,826 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
+| `farsh` | 505 | *farsh al-huruf*: what no rule explains — the word-by-word differences |
 | `uitgesloten` | 171 | set aside: a moved word boundary, an alignment artefact, the disconnected letters, and the 95 rows a reading of every pair found to be notation |
 | `onzeker` | 10 | read and not settled: allaatie / allatie, where Warsh omits the dagger alif |
 
@@ -565,7 +565,7 @@ Differences of vowel length and of short vowels are deliberately never folded
 away, which is why `maalik` / `malik` at 1:4 is `farsh` and not notation.
 Every distinct word pair the rules left in that list has been read one by one,
 and the verdicts live in `farsh_review.tsv` — one line per pair, with a reason.
-95 rows (15% of the 619 the rules produced) were notation or usul after all and
+95 rows (16% of the 610 the rules produced) were notation or usul after all and
 are now `uitgesloten`; 10 more are `onzeker`, all of them the same word. The
 largest group among the 95 is the hamz of `an-nabii'` and `an-nubuu'a`, which
 Naafi' applies at every one of the 82 places that word occurs and which is
@@ -597,7 +597,7 @@ the database itself.
 | `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
 | `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
 | `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
-| `riwaya_diff`, `kind='farsh'` | 489 | 8% | the verses where Hafs and Warsh read alike — and the nine other pairs are located but not classified |
+| `riwaya_diff`, `kind='farsh'` | 436 | 7% | the verses where Hafs and Warsh read alike — and the nine other pairs are located but not classified |
 
 Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
 the particles, the pronouns, and the names the corpus leaves unanalysed. There

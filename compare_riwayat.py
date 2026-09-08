@@ -101,6 +101,12 @@ REVIEWED_PAIR = ("hafs", "warsh")
 # same qiraa that does not, which serves as its control; see undo_idghaam.
 IDGHAAM_KABIR = {"soosi": "doori"}
 
+# Classes that describe a feature without saying which side carries it, so
+# they may be recognised with the two sides swapped. Everything not here is
+# one-way, either because the rule names a direction (naql moves a vowel onto
+# the last letter) or because reading it backwards collides with real farsh.
+SYMMETRIC = {"sila_mim", "sila_ha", "yaa_idafa", "ha_iskan"}
+
 PAIRS = [("hafs", "warsh"), ("hafs", "qaloon"), ("hafs", "bazzi"),
          ("hafs", "qumbul"), ("hafs", "doori"), ("hafs", "soosi"),
          ("hafs", "shouba"),
@@ -143,6 +149,12 @@ fold_gem = lambda x: re.sub(r"(.)\1", r"\1", x)
 fold_art = lambda x: re.sub(r"لل([aui]?)", "ل", x)
 fold_ham = lambda x: x.replace("'", "")
 fold_ham2 = lambda x: re.sub(r"'[aui]?", "", x)
+# The second hamza of a pair is often given as tashiel or ibdaal, and the
+# mushaf then writes it as the long vowel it is drawn out into: 'a'iذA against
+# 'AذA. Reaching those needs the long vowel folded away with the hamza too --
+# but only as a second try, because folding a long vowel away unasked loses
+# waلصصAبi'Uنa against waلصصAبUنa, where the hamza goes and the vowel stays.
+fold_ham3 = lambda x: re.sub(r"'[auiAUI]?", "", x)
 fold_sil = lambda x: x.replace("uw", "u").replace("iy", "i")
 fold_mq = lambda x: x.replace("yA", "A")
 fold_iv = lambda x: re.sub(r"^'[aui]", "'", x)
@@ -150,6 +162,9 @@ fold_head = lambda x: re.sub(r"^('[aui]?|A|w|y)", "", x, count=1)
 fold_wu = lambda x: x.replace("'U", "'w").replace("'I", "'y")
 fold_nq = lambda x: x.replace("uA", "u").replace("iA", "i")
 fold_fy = lambda x: re.sub("ay$", "A", x)
+# a final alif maqsura written as a bare yaa, which is how the Warsh, al-Doori
+# and al-Soosi mushafs write the alif they read with imaala: waتaرy for waتaرA
+fold_ya = lambda x: re.sub("y$", "A", x)
 
 # particles whose final vowel is only the helper spoken at a junction
 JUNCTION = {"من", "عن", "'ن", "قل", "بل", "قد", "لقد", "wلقد", "فقل", "w'ن",
@@ -160,22 +175,50 @@ MUQ = {"Aلم", "Aلر", "طسم", "Aلمر", "كهيعص", "حم", "يس", "ط�
 MUQATTAAT_SURAS = {2, 3, 7, 10, 11, 12, 13, 14, 15, 19, 20, 26, 27, 28, 29, 30,
                    31, 32, 36, 38, 40, 41, 42, 43, 44, 45, 46, 50, 68}
 HAMZA = set("ءأإؤئٓٔ")
-# These three signs each do two jobs, told apart by what they sit on. After a
-# vowel sign U+06ED is the iqlaab marker and U+06EA and U+06EC mark hamzat
-# al-wasl, and the transliteration resolves all three. After a bare letter
-# they mark imaala and taqliil, which are differences in the recitation and
-# not in the spelling. Warsh writes 1,689 of them, al-Soosi 1,208, al-Doori
-# 1,157; Hafs writes one. The transliteration ignores them, so they add no
+# These three signs each do two jobs, told apart by the letter they sit on.
+# U+06ED is the small low meem of iqlaab where it sits on a vowelled letter;
+# Hafs writes it 102 times and every package writes about as many. U+06EA and
+# U+06EC on an alif mark hamzat
+# al-wasl, which is what the nearly ten thousand of them in Warsh, Qaaloon,
+# al-Doori and al-Soosi are, and the transliteration resolves those. On any
+# other letter U+06EA and U+06EC mark imaala and taqliil on the alif that
+# follows -- Warsh 1,911, al-Doori 737, al-Soosi 609, Qaaloon 11, al-Bazzi,
+# Qunbul and Shu'ba 3 each, Hafs 2 -- as does U+06ED on a bare letter. That
+# is a difference in the recitation
+# and not in the spelling. The transliteration ignores them, so they add no
 # differences of their own, and they are read here only to give a difference
 # that is there anyway its right name.
 IMALA_MARKS = "\u06ea\u06ec\u06ed"
 VOWEL_SIGNS = "\u064b\u064c\u064d\u064e\u064f\u0650\u0651\u0652"
 
 
+ALIFS = "\u0627\u0649\u0670"
+
+
 def has_imala(w):
-    """True when the word carries an imaala or taqliil mark on a letter."""
-    return any(c in IMALA_MARKS and (i == 0 or w[i - 1] not in VOWEL_SIGNS)
-               for i, c in enumerate(w))
+    """True when the word carries an imaala or taqliil mark on a letter.
+
+    The mark that says the aa is drawn towards the ee is told apart from the
+    other two jobs these three signs do by what they sit on, not by whether a
+    vowel sign comes in between. U+06ED is the iqlaab marker and appears even
+    in Hafs; U+06EA and U+06EC on an alif mark hamzat al-wasl, which is what
+    the nearly ten thousand of them in Warsh, Qaaloon, al-Doori and al-Soosi
+    are. On any other letter the two of them mark imaala or taqliil.
+    """
+    for i, c in enumerate(w):
+        if c not in IMALA_MARKS:
+            continue
+        if c == "\u06ed":
+            # iqlaab sits on a vowelled letter; on a bare one it is not that
+            if i == 0 or w[i - 1] not in VOWEL_SIGNS:
+                return True
+            continue
+        j = i - 1
+        while j >= 0 and w[j] in VOWEL_SIGNS:
+            j -= 1
+        if j < 0 or w[j] not in ALIFS:
+            return True
+    return False
 
 KIND = {
     "farsh_candidate": ("farsh", "verschil in de lezing zelf"),
@@ -360,14 +403,27 @@ def strip_usul(th, tw, ctrl=None):
         return th, undone, ["idghaam_kabir"]
     if tw.endswith("U") and tw[:-1].endswith("م") and th.endswith("م"):
         tw = tw[:-1]; tags.append("sila_mim")
-    if not tags and len(th) > 1 and th[-2] == "ه" and len(tw) > 1 \
-       and tw[-2] == "ه" and th[:-1] == tw[:-1] and fold_len(th) == fold_len(tw):
-        tw = th; tags.append("sila_ha")
+    # The sila of the haa is the long vowel a transmission gives the pronoun
+    # between two vowelled letters. Three shapes of the same thing: both sides
+    # carry it at different length, one side drops it altogether, or the word
+    # also carries a shadda from the word before it, which is notation and has
+    # to be folded away first or the two sides never line up.
+    if not tags:
+        ga, gb = fold_gem(th), fold_gem(tw)
+        if len(ga) > 1 and ga[-2] == "ه" and len(gb) > 1 and gb[-2] == "ه" \
+           and ga[:-1] == gb[:-1] and fold_len(ga) == fold_len(gb):
+            tw = th; tags.append("sila_ha")
+        elif gb == ga[:-1] and ga[-1:] in ("U", "I") and ga[-2:-1] == "ه":
+            tw = th; tags.append("sila_ha")
     if not tags and tw == th + "a" and th.endswith("iy"):
         tw = th; tags.append("yaa_idafa")
     if not tags and th.endswith("iya") and tw == th[:-3] + "I":
         tw = th; tags.append("yaa_idafa")
     if not tags and th.endswith("I") and tw == th[:-1] + "iya":
+        tw = th; tags.append("yaa_idafa")
+    # yaa bunayya against yaa bunayyi: the same yaa al-idaafa, opened by one
+    # transmission and read with a kasra by the other
+    if not tags and th.endswith("yya") and tw == th[:-1] + "i":
         tw = th; tags.append("yaa_idafa")
     if not tags and len(tw) == len(th) + 1 and tw[:-1] == th and tw[-1] in "aui":
         tw = th; tags.append("naql")
@@ -391,7 +447,9 @@ def classify(th, tw, ctrl=None, raw_b=""):
     # vowel being read differently and not two ways of writing one sound
     if has_imala(raw_b) and (fold_mq(th) == fold_mq(tw)
                              or fold_len(fold_mq(th)) == fold_len(fold_mq(tw))
-                             or fold_fy(th) == fold_fy(tw)):
+                             or fold_fy(th) == fold_fy(tw)
+                             or fold_ya(th) == fold_ya(tw)
+                             or fold_ya(fold_mq(th)) == fold_ya(fold_mq(tw))):
         return "imaala" + suffix
     if fold_gem(th) == fold_gem(tw):
         return "gemination_notation" + suffix
@@ -441,6 +499,8 @@ def classify(th, tw, ctrl=None, raw_b=""):
         if fold_nq(fold_ham(th)) == fold_nq(fold_ham(tw)) or \
            fold_nq(fold_ham2(th)) == fold_nq(fold_ham2(tw)) or \
            fold_ham2(th) == fold_ham2(tw) or \
+           fold_ham3(th) == fold_ham3(tw) or \
+           fold_len(fold_ham3(th)) == fold_len(fold_ham3(tw)) or \
            vowels_only_dropped(fold_ham2(th), fold_ham2(tw)) or \
            fold_mq(fold_ham2(th)) == fold_mq(fold_ham2(tw)) or \
            fold_len(fold_ham2(th)) == fold_len(fold_ham2(tw)):
@@ -540,6 +600,23 @@ def classified(a="hafs", b="warsh"):
             r["cls"] = "word_" + r["tag"]
         else:
             r["cls"] = classify(r["th"], r["tw"], r.get("ctrl"), r["b"])
+            if r["cls"].startswith("farsh_candidate"):
+                # Most rules describe a feature without saying which side
+                # carries it -- silat al-haa is silat al-haa whichever
+                # transmission opens the yaa. They were written with Hafs on
+                # the left, so on a pair like Qaaloon-Warsh they fire on the
+                # wrong side and 216 rows of wa-hwa / wa-huwa come out as
+                # farsh. Retrying with the sides swapped costs nothing and is
+                # what symmetry means here -- but only for the classes that
+                # really are symmetric. Read backwards, `naql` says "a vowel
+                # was added to the last letter", and that is what a jazm looks
+                # like from the other side: at 2:284 fa-yaghfiru / fa-yaghfir
+                # the reverse pass called the most argued farsh difference in
+                # the Quran a spelling rule. Idghaam kabiir stays one-way for
+                # the same reason, and because only one riwaya applies it.
+                back = classify(r["tw"], r["th"], None, r["a"])
+                if back.split("+")[0] in SYMMETRIC:
+                    r["cls"] = back
         if r["cls"] == "identical":
             # the letters agree and only the word boundary moved
             r["cls"] = "reviewed:alignment_or_word_split"
