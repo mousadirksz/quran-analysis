@@ -36,8 +36,8 @@ indeling van het woord in soorten. Daar beginnen we.
 ## 1. Wat zijn woorden?
 
 Het Arabisch kent één woord voor "woord": **kalima** (كَلِمَة). En de
-grammatici zijn het al sinds Sībawayh eens dat elke kalima tot precies één van
-drie soorten behoort.
+grammatici zijn het al sinds Sībawayh (ca. 148–180 AH / ca. 765–796 n.Chr.)[^sibawayh]
+eens dat elke kalima tot precies één van drie soorten behoort.
 
 ### De drie soorten
 
@@ -1685,3 +1685,19 @@ Quranic Arabic Corpus, dat één riwaaya ontleedt: die van Ḥafṣ. Waar dat
 verschil maakt — welke vormen en abwāb maar in één van beide riwaayaat staan —
 staat het in hoofdstuk 8, met `python3 riwaya_sarf.py` als controle. Zie `SOURCES.md` voor de volledige
 verantwoording.*
+
+
+---
+
+[^sibawayh]: **Sībawayh** — Abū Bishr ʿAmr ibn ʿUthmān ibn Qanbar, een Pers uit
+    al-Bayḍāʾ bij Shiraz die in Basra studeerde bij al-Khalīl ibn Aḥmad
+    al-Farāhīdī, de man van de ʿarūḍ en van het eerste Arabische woordenboek.
+    Zijn *al-Kitāb* — dat geen andere titel draagt dan "het boek" — is het
+    oudste bewaarde samenhangende werk over de Arabische taalkunde en behandelt
+    naḥw, ṣarf en klankleer als één doorlopend betoog; het opent met de
+    driedeling ism, fiʿl, ḥarf die in dit hoofdstuk wordt gevolgd. Het is
+    sindsdien nooit vervangen, alleen herordend en becommentarieerd. Hij stierf
+    jong — de bronnen zeggen 32 of "ruim veertig" — en beide jaartallen zijn
+    omstreden: voor zijn geboorte worden 140 tot 148 AH genoemd, voor zijn dood
+    177 tot 188 AH, met 180 als gangbare keuze. Vandaar de "ca." in de tekst.
+    Meer over hem, zijn boek en de bronnen: `docs/sibawayh-nl.md`.

@@ -437,8 +437,8 @@ def riwayat(c):
         print("    %-20s %-9s %8s %8s %8s %8s"
               % ("%s - %s" % (a, b), t, format(n, ","), format(f, ","),
                  format(u, ","), format(nt, ",")))
-    print("\n    Binnen een qiraa-a staat farsh laag (Bazzie-Qoenboel 35,")
-    print("    Doorie-Soesie 131); tussen twee qiraa-aat ligt het rond de 600.")
+    print("\n    Binnen een qiraa-a staat farsh laag (Bazzie-Qoenboel 34,")
+    print("    Doorie-Soesie 63); tussen twee qiraa-aat ligt het rond de 600.")
     print("    Alleen Hafs-Warsh is daarna nog woord voor woord nagelezen, dus")
     print("    de andere farsh-getallen zijn bovengrenzen.")
 

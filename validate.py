@@ -882,6 +882,85 @@ def riwayat_readers(cur, args):
     return f"{total} riwayat from {qurra} qurra, {loaded} of them compared here"
 
 
+def quoted_words(text, verses, extra=None):
+    """Every Arabic word a book quotes beside a verse reference, checked.
+
+    Two shapes are recognised, `phrase (S:A)` and `S:A phrase`, and only what
+    sits directly against the reference is checked. A looser rule was tried --
+    every Arabic word on a line that names one verse -- and it had to go: prose
+    puts paradigm forms next to citations all the time, and `waratha / yarithu
+    ("erven", 19:6 yarithunii)` quotes one word from 19:6 and illustrates with
+    two others. Anchoring on the reference is what separates the two.
+
+    Words are compared without their vowels: a quote inside a sentence is
+    sometimes cut short of a final vowel or a pause mark, and the question is
+    whether the words are in that verse, not how they were typeset. `extra`
+    holds what else counts as standing there: forms from another riwaya than
+    the one `verses` was built from, and the roots of the words -- a book cites
+    a root beside its verse as readily as a word, and `sahat (20:61)` is a true
+    statement about 20:61 even though the word written there is
+    `fa-yushitakum`."""
+    here = r"([\u0621-\u06ff][\u0600-\u06ff\s]*?)\s*\((\d+):(\d+)\)"
+    there = r"(\d+):(\d+)\s+([\u0621-\u06ff][\u0600-\u06ff\s*]*)"
+    bad, seen = [], 0
+    for line in text.splitlines():
+        if line.startswith("|"):
+            continue
+        found = [(m.group(1), int(m.group(2)), int(m.group(3)))
+                 for m in re.finditer(here, line)]
+        found += [(m.group(3), int(m.group(1)), int(m.group(2)))
+                  for m in re.finditer(there, line)]
+        for phrase, surah, ayah in found:
+            if (surah, ayah) not in verses:
+                continue
+            hay = verses[(surah, ayah)] | (extra or {}).get((surah, ayah), set())
+            for token in re.sub(r"[*_>|\u2014\u2013\-\u2026\u060c]", " ",
+                                phrase).split():
+                bare = normalize(token)
+                if not bare:
+                    continue
+                seen += 1
+                if bare not in hay:
+                    bad.append("%d:%d %s" % (surah, ayah, token))
+    return seen, bad
+
+
+@check("sarf book examples")
+def sarf_book(cur, args):
+    """Every verse the sarf book quotes must still say what it says.
+
+    The book cites the mushaf in running prose -- `19:6 yarithunii`, `famakatha
+    (27:22)` -- and those are typed by hand, so they are exactly what goes
+    stale. It also quotes Warsh where the two riwayat read a word differently,
+    and those forms are not in the corpus at all, so the riwaya table is
+    consulted as a second source: a word counts as found when it stands in the
+    verse in either transmission.
+
+    The paradigm tables are not checked here. They are pasted from
+    sarf_examples.py, and re-running it is the check for those."""
+    book = HERE / "docs" / "sarf-nl.md"
+    if not book.exists():
+        raise Skipped("docs/sarf-nl.md is not here")
+    require_tables(cur, "words")
+    verse = {}
+    for surah, ayah, ar in cur.execute("SELECT surah, ayah, word_ar FROM words"):
+        verse.setdefault((surah, ayah), set()).add(normalize(repair_markers(ar)))
+    other = {}
+    for surah, ayah, root in cur.execute(
+            "SELECT surah, ayah, root_ar FROM corpus WHERE root_ar IS NOT NULL"):
+        other.setdefault((surah, ayah), set()).add(normalize(root))
+    if cur.execute("SELECT name FROM sqlite_master WHERE name='riwaya_diff'").fetchone():
+        for surah, ayah, form in cur.execute(
+                "SELECT surah, ayah_a, form_b FROM riwaya_diff WHERE form_b != ''"):
+            other.setdefault((surah, ayah), set()).add(normalize(form))
+    seen, bad = quoted_words(book.read_text(encoding="utf-8"), verse, other)
+    if bad:
+        raise Failed("%d quoted word(s) in docs/sarf-nl.md are not in the verse "
+                     "they are cited from: %s" % (len(bad), "; ".join(bad[:4])))
+    return (f"{seen} quoted words in docs/sarf-nl.md all found in the verses "
+            f"they name")
+
+
 @check("nahw book examples")
 def nahw_book(cur, args):
     """Every example in docs/nahw-nl.md must still be in the database.
@@ -931,28 +1010,8 @@ def nahw_book(cur, args):
     verse = {}
     for (surah, ayah, _), ar in written.items():
         verse.setdefault((surah, ayah), set()).add(normalize(ar))
-    quotes_bad, quotes_n = [], 0
-    here = r"([\u0621-\u06ff][\u0600-\u06ff\s]*?)\s*\((\d+):(\d+)\)"
-    there = r"(\d+):(\d+)\s+([\u0621-\u06ff][\u0600-\u06ff\s*]*)"
-    for line in text.splitlines():
-        if line.startswith("|"):
-            continue
-        found = [(m.group(1), int(m.group(2)), int(m.group(3)))
-                 for m in re.finditer(here, line)]
-        found += [(m.group(3), int(m.group(1)), int(m.group(2)))
-                  for m in re.finditer(there, line)]
-        for phrase, surah, ayah in found:
-            if (surah, ayah) not in verse:
-                continue
-            hay = verse[(surah, ayah)]
-            for token in re.sub(r"[*_>|\u2014\u2013\-\u2026\u060c]", " ",
-                                phrase).split():
-                bare = normalize(token)
-                if not bare:
-                    continue
-                quotes_n += 1
-                if bare not in hay:
-                    quotes_bad.append(f"{surah}:{ayah} {token}")
+    quotes_n, quotes_bad = quoted_words(text, verse)
+
     if rows_bad or quotes_bad:
         bad = rows_bad + quotes_bad
         raise Failed(f"{len(bad)} example(s) in docs/nahw-nl.md are not in the "
