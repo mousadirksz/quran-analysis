@@ -42,8 +42,8 @@ al-Soosi and nowhere else.
 
 **One pair has also been read.** Rules classify; only Hafs-Warsh has had its
 farsh list gone through word by word afterwards, and the verdicts of that
-reading are in `farsh_review.tsv`. It struck 95 rows the rules had wrongly
-called farsh, 16 per cent of what they proposed. The other nine pairs carry
+reading are in `farsh_review.tsv`. It struck 121 rows the rules had wrongly
+called farsh, 19 per cent of what they proposed. The other nine pairs carry
 the rule verdict alone, so their farsh figure is an upper bound and `reviewed`
 is 0.
 
@@ -499,24 +499,43 @@ def classify(th, tw, ctrl=None, raw_b=""):
         # a particle or a plural pronoun before a wasl: the vowel that joins
         # them is the reader's, not the word's
         return "junction_vowel" + suffix
-    # the hamza, but only where the two actually differ in how many they have,
-    # so that a pure difference of vowel length is never absorbed here
+    # The hamza, but only where the two sides differ in how many they write.
+    #
+    # Two folds that are sound everywhere else are wrong *here*, because with
+    # the hamza already taken out they stop describing its treatment and start
+    # equating different words:
+    #
+    #   vowels_only_dropped, which reads a missing short vowel as an unwritten
+    #   one. At 43:19 that turned أَشَهِدُوٓاْ against اَ۟شْهِدُوٓاْ into one
+    #   spelling of one word, where it is a-shahiduu against ushhiduu -- ma'luum
+    #   against majhuul, and the difference lives in exactly those vowels. The
+    #   proof it was this branch and not the reading: the same difference came
+    #   out as farsh against Qaaloon, who writes that hamza on a seat, and as
+    #   usul against Warsh, who does not.
+    #
+    #   fold_sil, which drops the yaa of `iy` and the waw of `uw` as a written
+    #   trace of a long vowel. With the hamza gone from the other side there is
+    #   nothing left to hold the two apart, and 18:86 حَمِئَةٖ against حَٰمِيَةٖ
+    #   came out as one word: hami'a "muddy" (ح م أ) against haamiya "hot"
+    #   (ح م ي), two roots and the farsh every reader names.
+    #
+    # fold_len stays. It carries the dagger alif against the written alif, which
+    # is notation and not the reading, and taking it out of this branch alone
+    # moves some 1,500 rows that are nothing but that.
     if th.count("'") != tw.count("'"):
         if fold_nq(fold_ham(th)) == fold_nq(fold_ham(tw)) or \
            fold_nq(fold_ham2(th)) == fold_nq(fold_ham2(tw)) or \
            fold_ham2(th) == fold_ham2(tw) or \
            fold_ham3(th) == fold_ham3(tw) or \
            fold_len(fold_ham3(th)) == fold_len(fold_ham3(tw)) or \
-           vowels_only_dropped(fold_ham2(th), fold_ham2(tw)) or \
            fold_mq(fold_ham2(th)) == fold_mq(fold_ham2(tw)) or \
            fold_len(fold_ham2(th)) == fold_len(fold_ham2(tw)):
             return "hamza_treatment" + suffix
         a, b = fold_ham(th), fold_ham(tw)
-        for f in (lambda x: x, fold_len, fold_gem, fold_art, fold_sil, fold_mq,
+        for f in (lambda x: x, fold_len, fold_gem, fold_art, fold_mq,
                   fold_iv, lambda x: fold_mq(fold_len(x)),
-                  lambda x: fold_iv(fold_sil(x)),
                   lambda x: fold_len(fold_gem(x)), lambda x: fold_len(fold_art(x)),
-                  lambda x: fold_len(fold_sil(x)), lambda x: fold_gem(fold_art(x))):
+                  lambda x: fold_gem(fold_art(x))):
             if f(a) == f(b):
                 return "hamza_treatment" + suffix
     return "farsh_candidate" + suffix
@@ -738,10 +757,10 @@ def markdown(conn, rows):
                "eindklinker juist weg -- en ze zijn geschreven met Hafs als "
                "de kant waarvandaan gekeken wordt. Zet Warsh links en de "
                "regels herkennen hun eigen kenmerk niet meer: dan valt dat "
-               "kenmerk door naar farsh en telt dit paar geen 505 maar "
-               "1.573. Bij paren die dicht bij elkaar liggen scheelt het "
+               "kenmerk door naar farsh en telt dit paar geen 521 maar "
+               "1.614. Bij paren die dicht bij elkaar liggen scheelt het "
                "vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba "
-               "383 tegen 386); bij paren waar de ene kant usul toepast die "
+               "397 tegen 400); bij paren waar de ene kant usul toepast die "
                "de andere niet kent, scheelt het alles. De farsh-kolom is "
                "dus onderling vergelijkbaar doordat Hafs overal links staat, "
                "en niet doordat het getal van de richting onafhankelijk zou "

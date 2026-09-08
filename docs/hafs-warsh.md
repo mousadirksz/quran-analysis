@@ -8,7 +8,7 @@ Deze pagina telt waar twee overleveringen uiteenlopen, en die telling is een ind
 
 **Er is geen origineel waarvan de ander afwijkt.** Beide riwaayaat zijn mutawaatir: langs zoveel onafhankelijke ketens overgeleverd dat afspraak of vergissing is uitgesloten. Elk van de twee *is* de Qoeraan, en niet een variant erop. Het Oethmaanse rasm is bovendien zonder punten en zonder klinkertekens geschreven en draagt daardoor meer dan een lezing tegelijk: de qiraa-aat verwijderen zich niet van dat schriftbeeld, het schriftbeeld is zo gekozen dat het ze draagt.
 
-**Dat Hafs links staat, is gereedschap en geen norm -- maar het is niet vrijblijvend.** In negen van de tien paren staat Hafs in de linkerkolom, omdat dat de overlevering is die de meeste lezers kennen en omdat het elk van de acht pakketten een vergelijking geeft. *Welke* plaatsen uiteenlopen is symmetrisch: draai het paar om en je vindt dezelfde plaatsen terug. De *indeling* van die plaatsen is dat niet. De usul-regels hebben een richting -- naql legt de klinker van een volgende hamza op de laatste letter, silat al-haa voegt er een lange klinker aan toe, idghaam kabier neemt de eindklinker juist weg -- en ze zijn geschreven met Hafs als de kant waarvandaan gekeken wordt. Zet Warsh links en de regels herkennen hun eigen kenmerk niet meer: dan valt dat kenmerk door naar farsh en telt dit paar geen 505 maar 1.573. Bij paren die dicht bij elkaar liggen scheelt het vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba 383 tegen 386); bij paren waar de ene kant usul toepast die de andere niet kent, scheelt het alles. De farsh-kolom is dus onderling vergelijkbaar doordat Hafs overal links staat, en niet doordat het getal van de richting onafhankelijk zou zijn. Ook de versnummering is trouwens niet gedeeld -- het woord hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- en de tabel houdt daarom aan beide kanten een eigen ayah-nummer bij.
+**Dat Hafs links staat, is gereedschap en geen norm -- maar het is niet vrijblijvend.** In negen van de tien paren staat Hafs in de linkerkolom, omdat dat de overlevering is die de meeste lezers kennen en omdat het elk van de acht pakketten een vergelijking geeft. *Welke* plaatsen uiteenlopen is symmetrisch: draai het paar om en je vindt dezelfde plaatsen terug. De *indeling* van die plaatsen is dat niet. De usul-regels hebben een richting -- naql legt de klinker van een volgende hamza op de laatste letter, silat al-haa voegt er een lange klinker aan toe, idghaam kabier neemt de eindklinker juist weg -- en ze zijn geschreven met Hafs als de kant waarvandaan gekeken wordt. Zet Warsh links en de regels herkennen hun eigen kenmerk niet meer: dan valt dat kenmerk door naar farsh en telt dit paar geen 521 maar 1.614. Bij paren die dicht bij elkaar liggen scheelt het vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba 397 tegen 400); bij paren waar de ene kant usul toepast die de andere niet kent, scheelt het alles. De farsh-kolom is dus onderling vergelijkbaar doordat Hafs overal links staat, en niet doordat het getal van de richting onafhankelijk zou zijn. Ook de versnummering is trouwens niet gedeeld -- het woord hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- en de tabel houdt daarom aan beide kanten een eigen ayah-nummer bij.
 
 **Farsh betekent niet fout.** *Farsh al-hoeroef* is de klassieke term voor de plaatsen waar twee lezingen in het woord zelf verschillen, tegenover de *usul*, de regels die gelden overal waar hun voorwaarde zich voordoet. Het onderscheid gaat over de soort van het verschil en niet over de juistheid ervan. En een woord dat maar aan een kant staat -- هُوَ, Hafs 57:24 tegenover Warsh 57:23 -- ontbreekt niet aan de andere kant: daar loopt de zin anders.
 
@@ -18,38 +18,38 @@ Deze pagina telt waar twee overleveringen uiteenlopen, en die telling is een ind
 
 | Paar | | Plaatsen | farsh | usul | notatie | nagelezen |
 |---|---|--:|--:|--:|--:|:-:|
-| hafs – warsh | tussen twee qiraa-a | 8,453 | 505 | 4,941 | 2,826 | ja |
-| hafs – qaloon | tussen twee qiraa-a | 4,287 | 630 | 740 | 2,826 | nee |
-| hafs – bazzi | tussen twee qiraa-a | 9,225 | 644 | 7,576 | 952 | nee |
-| hafs – qumbul | tussen twee qiraa-a | 9,183 | 651 | 7,512 | 968 | nee |
-| hafs – doori | tussen twee qiraa-a | 2,343 | 623 | 1,239 | 407 | nee |
-| hafs – soosi | tussen twee qiraa-a | 5,829 | 733 | 3,627 | 1,376 | nee |
-| hafs – shouba | binnen een qiraa-a | 595 | 383 | 84 | 79 | nee |
-| qaloon – warsh | binnen een qiraa-a | 5,377 | 339 | 4,533 | 414 | nee |
+| hafs – warsh | tussen twee qiraa-a | 8,453 | 521 | 4,899 | 2,826 | ja |
+| hafs – qaloon | tussen twee qiraa-a | 4,287 | 645 | 725 | 2,826 | nee |
+| hafs – bazzi | tussen twee qiraa-a | 9,225 | 658 | 7,561 | 952 | nee |
+| hafs – qumbul | tussen twee qiraa-a | 9,183 | 665 | 7,497 | 968 | nee |
+| hafs – doori | tussen twee qiraa-a | 2,343 | 638 | 1,221 | 407 | nee |
+| hafs – soosi | tussen twee qiraa-a | 5,829 | 746 | 3,611 | 1,376 | nee |
+| hafs – shouba | binnen een qiraa-a | 595 | 397 | 70 | 79 | nee |
+| qaloon – warsh | binnen een qiraa-a | 5,377 | 369 | 4,503 | 414 | nee |
 | bazzi – qumbul | binnen een qiraa-a | 184 | 34 | 73 | 73 | nee |
 | doori – soosi | binnen een qiraa-a | 3,658 | 63 | 2,479 | 1,076 | nee |
 
-Kijk naar de kolom farsh, niet naar het aantal plaatsen. Het aantal plaatsen telt usul en schrijfwijze mee, en die lopen per pakket sterk uiteen: Qaaloon-Warsh staat op 5,377 plaatsen terwijl het binnen een qiraa-a valt, omdat Warsh naql en hamza-ibdaal toepast waar Qaaloon dat niet doet. De farsh-kolom is de vergelijkbare maat, en die zegt wat je verwacht: binnen een qiraa-a 34-383, tussen twee qiraa-aat 505-733.
+Kijk naar de kolom farsh, niet naar het aantal plaatsen. Het aantal plaatsen telt usul en schrijfwijze mee, en die lopen per pakket sterk uiteen: Qaaloon-Warsh staat op 5,377 plaatsen terwijl het binnen een qiraa-a valt, omdat Warsh naql en hamza-ibdaal toepast waar Qaaloon dat niet doet. De farsh-kolom is de vergelijkbare maat, en die zegt wat je verwacht: binnen een qiraa-a 34-397, tussen twee qiraa-aat 521-746.
 
 Alle tien de paren zijn met dezelfde regels geclassificeerd. Wat per pakket verschilt is de schrijfwijze, en dat zit nu in de transliteratie: Qaaloon, Doorie en Soesie schrijven de wasl-alif als een kale alif met de klinker erop, Hafs en de Kufische pakketten als de letter alef wasla, en Warsh met een teken erboven. De kenmerken die maar bij een deel van de riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala van Aboe 3Amr en van Warsh, het wegvallen van de klinker in *hoewa* en *hiya* -- hebben elk hun eigen klasse.
 
-De kolom *nagelezen* is iets anders dan de classificatie. Bij Hafs-Warsh is de farsh-lijst daarna nog woord voor woord gelezen. Dat streepte 95 rijen weg die de regels ten onrechte als farsh hadden staan en liet 10 onbeslist, tegenover 505 die bleven staan -- 16% van wat de regels aandroegen was geen farsh. De oordelen staan per woordpaar met hun reden in `farsh_review.tsv`. Voor de negen andere paren is dat niet gedaan, en hun farsh-getal is dus een bovengrens; reken op een marge van die orde.
+De kolom *nagelezen* is iets anders dan de classificatie. Bij Hafs-Warsh is de farsh-lijst daarna nog woord voor woord gelezen. Dat streepte 121 rijen weg die de regels ten onrechte als farsh hadden staan en liet 10 onbeslist, tegenover 521 die bleven staan -- 19% van wat de regels aandroegen was geen farsh. De oordelen staan per woordpaar met hun reden in `farsh_review.tsv`. Voor de negen andere paren is dat niet gedaan, en hun farsh-getal is dus een bovengrens; reken op een marge van die orde.
 
 ## Hafs – Warsh in detail
 
 | klasse | soort | plaatsen | wat het is |
 |---|---|--:|---|
-| `hamza_treatment` | usul | 2446 | hamza: ibdaal, tashiel, naql |
+| `hamza_treatment` | usul | 2404 | hamza: ibdaal, tashiel, naql |
 | `article_lam` | notatie | 1658 | de laam van al- met of zonder shadda |
 | `naql` | usul | 1079 | de klinker van een volgende hamza op de laatste letter |
 | `sila_mim` | usul | 820 | silat al-miem: hoem verbonden als hoemoe |
 | `gemination_notation` | notatie | 721 | idghaam met of zonder shadda gemarkeerd |
-| `farsh_candidate` | farsh | 504 | verschil in de lezing zelf |
+| `farsh_candidate` | farsh | 520 | verschil in de lezing zelf |
 | `imaala` | usul | 304 | imaala of taqliel: de aa wordt naar de ee getrokken |
 | `initial_alif_notation` | notatie | 216 | hamza aan het woordbegin, andere zetel |
 | `yaa_idafa` | usul | 167 | yaa al-idaafa geopend |
 | `unwritten_vowel` | notatie | 122 | klinker op de eerste letter ongeschreven |
-| `reviewed:hand` | uitgesloten | 95 | met de hand beoordeeld als notatie |
+| `reviewed:hand` | uitgesloten | 121 | met de hand beoordeeld als notatie |
 | `wasl_notation` | notatie | 56 | hamzat al-wasl anders geschreven |
 | `reviewed:hamza_vowel_notation` | uitgesloten | 48 | hamza met taqliel-teken |
 | `junction_vowel` | usul | 45 | hulpklinker bij wasl |
@@ -67,7 +67,7 @@ De kolom *nagelezen* is iets anders dan de classificatie. Bij Hafs-Warsh is de f
 
 Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: `maalik` / `malik` in 1:4 is precies zo'n verschil en dat is farsh.
 
-### Farsh al-huroef: 505 plaatsen, 429 woordparen, 436 ayaat, 83 soerahs
+### Farsh al-huroef: 521 plaatsen, 440 woordparen, 449 ayaat, 84 soerahs
 
 | soerah:ayah | Hafs | Warsh |
 |---|---|---|
@@ -75,6 +75,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 2:9 البقرة | يَخۡدَعُونَ | يُخَٰدِعُونَ |
 | 2:10 البقرة | يَكۡذِبُونَ | يُكَذِّبُونَۖ |
 | 2:58 البقرة | نَّغۡفِرۡ | يُغْفَرْ |
+| 2:67 البقرة | هُزُوٗاۖ | هُزُؤاٗۖ |
 | 2:81 البقرة | خَطِيٓـَٔتُهُۥ | خَطِيٓـَٰٔتُهُۥ |
 | 2:85 البقرة | تَعۡمَلُونَ | يَعْمَلُونَۖ |
 | 2:125 البقرة | وَٱتَّخِذُواْ | وَاتَّخَذُواْ |
@@ -93,6 +94,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 2:208 البقرة | ٱلسِّلۡمِ | اِ۬لسَّلْمِ |
 | 2:208 البقرة | خُطُوَٰتِ | خُطْوَٰتِ |
 | 2:214 البقرة | يَقُولَ | يَقُولُ |
+| 2:231 البقرة | هُزُوٗاۚ | هُزُؤاٗۖ |
 | 2:236 البقرة | قَدَرُهُۥ | قَدْرُهُۥ |
 | 2:236 البقرة | قَدَرُهُۥ | قَدْرُهُۥ |
 | 2:240 البقرة | وَصِيَّةٗ | وَصِيَّةٞ |
@@ -161,7 +163,10 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 5:41 المائدة | يَحۡزُنكَ | يُحْزِنكَ |
 | 5:53 المائدة | وَيَقُولُ | يَقُولُ |
 | 5:54 المائدة | يَرۡتَدَّ | يَّرْتَدِدْ |
+| 5:57 المائدة | هُزُوٗا | هُزُؤاٗ |
+| 5:58 المائدة | هُزُوٗا | هُزُؤاٗ |
 | 5:67 المائدة | رِسَالَتَهُۥۚ | رِسَالَٰتِهِۦۖ |
+| 5:69 المائدة | وَٱلصَّٰبِـُٔونَ | وَالصَّٰبُونَ |
 | 5:95 المائدة | فَجَزَآءٞ | فَجَزَآءُ |
 | 5:95 المائدة | مِّثۡلُ | مِثْلِ |
 | 5:95 المائدة | كَفَّٰرَةٞ | كَفَّٰرَةُ |
@@ -206,6 +211,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 7:144 الأعراف | بِرِسَٰلَٰتِي | بِرِسَالَتِے |
 | 7:161 الأعراف | نَّغۡفِرۡ | تُغْفَرْ |
 | 7:164 الأعراف | مَعۡذِرَةً | مَعْذِرَةٌ |
+| 7:165 الأعراف | بَـِٔيسِۭ | بِيسِۢ |
 | 7:172 الأعراف | ذُرِّيَّتَهُمۡ | ذُرِّيَّٰتِهِمْ |
 | 7:186 الأعراف | وَيَذَرُهُمۡ | وَنَذَرُهُمْ |
 | 7:190 الأعراف | شُرَكَآءَ | شِرْكاٗ |
@@ -221,6 +227,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 8:66 الأنفال | ضَعۡفٗاۚ | ضُعْفاٗۖ |
 | 8:66 الأنفال | يَكُن | تَكُن |
 | 9:30 التوبة | عُزَيۡرٌ | عُزَيْرُ |
+| 9:30 التوبة | يُضَٰهِـُٔونَ | يُضَٰهُونَ |
 | 9:37 التوبة | ٱلنَّسِيٓءُ | اَ۬لنَّسِيُّ |
 | 9:37 التوبة | يُضَلُّ | يَضِلُّ |
 | 9:61 التوبة | أُذُنُ | ا۟ذْنُ |
@@ -305,6 +312,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 18:42 الكهف | بِثَمَرِهِۦ | بِثُمُرِهِۦ |
 | 18:44 الكهف | عُقۡبٗا | عُقُباٗۖ |
 | 18:55 الكهف | قُبُلٗا | قِبَلاٗۖ |
+| 18:56 الكهف | هُزُوٗا | هُزُؤاٗۖ |
 | 18:59 الكهف | لِمَهۡلِكِهِم | لِمُهْلَكِهِم |
 | 18:63 الكهف | أَنسَىٰنِيهُ | أَنس۪يٰنِيهِ |
 | 18:70 الكهف | تَسۡـَٔلۡنِي | تَسْـَٔلَنِّے |
@@ -320,6 +328,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 18:94 الكهف | سَدّٗا | سُدّاٗۖ |
 | 18:98 الكهف | دَكَّآءَۖ | دَكّاٗ |
 | 18:104 الكهف | يَحۡسَبُونَ | يَحْسِبُونَ |
+| 18:106 الكهف | هُزُوًا | هُزُؤاًۖ |
 | 19:8 مريم | عِتِيّٗا | عُتِيّاٗۖ |
 | 19:23 مريم | نَسۡيٗا | نِسْياٗ |
 | 19:25 مريم | تُسَٰقِطۡ | تَسَّٰقَطْ |
@@ -340,6 +349,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 21:4 الأنبياء | قَالَ | قُل |
 | 21:7 الأنبياء | نُّوحِيٓ | يُوح۪ىٰٓ |
 | 21:25 الأنبياء | نُوحِيٓ | يُوح۪ىٰٓ |
+| 21:36 الأنبياء | هُزُوًا | هُزُؤاًۖ |
 | 21:47 الأنبياء | مِثۡقَالَ | مِثْقَالُ |
 | 21:80 الأنبياء | لِتُحۡصِنَكُم | لِيُحْصِنَكُم |
 | 21:104 الأنبياء | لِلۡكُتُبِۚ | لِلْكِتَٰبِۖ |
@@ -375,6 +385,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 25:17 الفرقان | يَحۡشُرُهُمۡ | نَحْشُرُهُمْ |
 | 25:19 الفرقان | تَسۡتَطِيعُونَ | يَسْتَطِيعُونَ |
 | 25:38 الفرقان | وَثَمُودَاْ | وَثَمُوداٗ |
+| 25:41 الفرقان | هُزُوًا | هُزُؤاًۖ |
 | 25:44 الفرقان | تَحۡسَبُ | تَحْسِبُ |
 | 25:48 الفرقان | بُشۡرَۢا | نُشُراَۢ |
 | 25:67 الفرقان | يَقۡتُرُواْ | يُقْتِرُواْ |
@@ -415,6 +426,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 30:54 الروم | ضَعۡفٗا | ضُعْفاٗ |
 | 30:57 الروم | يَنفَعُ | تَنفَعُ |
 | 31:6 لقمان | وَيَتَّخِذَهَا | وَيَتَّخِذُهَا |
+| 31:6 لقمان | هُزُوًاۚ | هُزُؤاًۖ |
 | 31:16 لقمان | مِثۡقَالَ | مِثْقَالُ |
 | 31:18 لقمان | تُصَعِّرۡ | تُصَٰعِرْ |
 | 31:23 لقمان | يَحۡزُنكَ | يُحْزِنكَ |
@@ -478,6 +490,7 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 43:10 الزخرف | مَهۡدٗا | مِهَٰداٗ |
 | 43:18 الزخرف | يُنَشَّؤُاْ | يَّنشَؤُاْ |
 | 43:19 الزخرف | عِبَٰدُ | عِندَ |
+| 43:19 الزخرف | أَشَهِدُواْ | اَ۟شْهِدُواْ |
 | 43:24 الزخرف | قَٰلَ | قُلَ |
 | 43:37 الزخرف | وَيَحۡسَبُونَ | وَيَحْسِبُونَ |
 | 43:53 الزخرف | أَسۡوِرَةٞ | أَسَٰوِرَةٞ |
@@ -489,7 +502,9 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 44:45 الدخان | يَغۡلِي | تَغْلِے |
 | 44:47 الدخان | فَٱعۡتِلُوهُ | فَاعْتُلُوهُ |
 | 44:51 الدخان | مَقَامٍ | مُقَامٍ |
+| 45:9 الجاثية | هُزُوًاۚ | هُزُؤاًۖ |
 | 45:11 الجاثية | أَلِيمٌ | اَلِيمٍۖ |
+| 45:35 الجاثية | هُزُوٗا | هُزُؤاٗ |
 | 46:12 الأحقاف | لِّيُنذِرَ | لِّتُنذِرَ |
 | 46:15 الأحقاف | إِحۡسَٰنًاۖ | حُسْناًۖ |
 | 46:15 الأحقاف | كُرۡهٗا | كَرْهاٗ |
@@ -576,3 +591,4 @@ Verschillen in klinkerlengte en korte klinkers zijn met opzet niet weggevouwen: 
 | 91:14 الشمس | وَلَا | فَلَا |
 | 104:3 الهمزة | يَحۡسَبُ | يَحْسِبُ |
 | 111:4 المسد | حَمَّالَةَ | حَمَّالَةُ |
+| 112:4 الإخلاص | كُفُوًا | كُفُؤاً |
