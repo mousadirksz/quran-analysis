@@ -700,11 +700,58 @@ def markdown(conn, rows):
     out = ["# Hafs tegenover Warsh\n",
            "*Gegenereerd door `compare_riwayat.py --markdown`; niet met de hand "
            "bijwerken. Twee riwaayaat uit twee verschillende qiraa-aat: Hafs "
-           "`عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie. Beide zijn "
-           "Qoeraan; dit is geen lijst van afwijkingen.*\n",
-           "## Alle vergeleken paren\n",
-           "| Paar | | Plaatsen | farsh | usul | notatie | nagelezen |",
-           "|---|---|--:|--:|--:|--:|:-:|"]
+           "`عن` Aasim al-Koefie, Warsh `عن` Naafi3 al-Madanie.*\n"]
+    # A page of counted differences reads as a list of deviations unless it
+    # says, in so many words, that it is not one. The two quotations below are
+    # taken verbatim from the two mushaf files, and their ayah numbers differ
+    # from each other on purpose -- that is itself part of what is being said.
+    out.append("## Beide zijn Qoeraan\n")
+    out.append("Deze pagina telt waar twee overleveringen uiteenlopen, en "
+               "die telling is een indeling naar het soort verschil -- geen "
+               "rangorde en geen lijst van afwijkingen. Vier dingen die "
+               "daarbij horen.\n")
+    out.append("**Er is geen origineel waarvan de ander afwijkt.** Beide "
+               "riwaayaat zijn mutawaatir: langs zoveel onafhankelijke "
+               "ketens overgeleverd dat afspraak of vergissing is "
+               "uitgesloten. Elk van de twee *is* de Qoeraan, en niet een "
+               "variant erop. Het Oethmaanse rasm is bovendien zonder punten "
+               "en zonder klinkertekens geschreven en draagt daardoor meer "
+               "dan een lezing tegelijk: de qiraa-aat verwijderen zich niet "
+               "van dat schriftbeeld, het schriftbeeld is zo gekozen dat het "
+               "ze draagt.\n")
+    out.append("**Dat Hafs links staat, is gereedschap en geen norm.** In "
+               "negen van de tien paren staat Hafs in de linkerkolom, omdat "
+               "dat de overlevering is die de meeste lezers kennen en omdat "
+               "het elk van de acht pakketten een vergelijking geeft. "
+               "Verwissel de kolommen en er verandert geen enkel getal. "
+               "Zelfs de versnummering is niet gedeeld -- het woord "
+               "hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- "
+               "en de tabel houdt daarom aan beide kanten een eigen "
+               "ayah-nummer bij.\n")
+    out.append("**Farsh betekent niet fout.** *Farsh al-hoeroef* is de "
+               "klassieke term voor de plaatsen waar twee lezingen in het "
+               "woord zelf verschillen, tegenover de *usul*, de regels die "
+               "gelden overal waar hun voorwaarde zich voordoet. Het "
+               "onderscheid gaat over de soort van het verschil en niet over "
+               "de juistheid ervan. En een woord dat maar aan een kant staat "
+               "-- هُوَ, Hafs 57:24 tegenover Warsh 57:23 -- ontbreekt niet "
+               "aan de andere kant: daar loopt de zin anders.\n")
+    out.append("**Het verschil is vaak juist de winst.** Waar de lezingen "
+               "uiteenlopen, loopt de betekenis niet zelden mee, en dan zijn "
+               "dat twee betekenissen die allebei Qoeraan zijn. Bij 34:17 "
+               "leest Hafs وَهَلۡ نُجَٰزِيٓ إِلَّا ٱلۡكَفُورَ -- het "
+               "werkwoord actief, eerste persoon meervoud, en de ondankbare "
+               "als lijdend voorwerp in de nasb: *en vergelden Wij anders "
+               "dan de ondankbare?* Warsh leest وَهَلْ يُجَٰز۪ىٰٓ إِلَّا "
+               "اَ۬لْكَفُورُۖ -- hetzelfde werkwoord in de lijdende vorm, en "
+               "de ondankbare daardoor in de raf3 als naa-ib al-faa3il: *en "
+               "wordt anders dan de ondankbare vergolden?* Twee ontledingen, "
+               "twee betekenissen, en de tafsier neemt ze allebei mee. Dat "
+               "is geen tegenspraak die opgelost moet worden; het is bereik "
+               "dat een enkele lezing niet zou hebben gehad.\n")
+    out += ["## Alle vergeleken paren\n",
+            "| Paar | | Plaatsen | farsh | usul | notatie | nagelezen |",
+            "|---|---|--:|--:|--:|--:|:-:|"]
     for a, b, kind, total, f, u, n, read in summary(rows):
         out.append("| %s – %s | %s qiraa-a | %s | %s | %s | %s | %s |"
                    % (a, b, "binnen een" if kind == "binnen" else "tussen twee",
