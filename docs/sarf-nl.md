@@ -1700,3 +1700,4 @@ verantwoording.*
     jong — de bronnen zeggen 32 of "ruim veertig" — en beide jaartallen zijn
     omstreden: voor zijn geboorte worden 140 tot 148 AH genoemd, voor zijn dood
     177 tot 188 AH, met 180 als gangbare keuze. Vandaar de "ca." in de tekst.
+    Meer over hem, zijn boek en de bronnen: `docs/sibawayh-nl.md`.

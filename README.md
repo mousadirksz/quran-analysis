@@ -737,6 +737,11 @@ places recur throughout the book at the chapter each one belongs to. The
 every example up again, so a rebuild cannot leave it quoting figures the
 database no longer holds.
 
+`docs/sibawayh-nl.md` is a background piece, in Dutch, on Sibawayh and his
+Kitab: who he was, what the book contains, why the dates of his life are
+disputed, and how the book became the canon. It backs the footnote in chapter
+1 of the sarf book and cites no figures from the database.
+
 `SOURCES.md` records the provenance of every source: what it is, where it was
 obtained, which edition, under what licence, which script loads it into which
 table, and — separately — what this project derived rather than sourced. Read it
