@@ -38,13 +38,14 @@ Op 38 plaatsen levert de Qoeraan zo'n paar zelf: daar reciteren Ḥafṣ en Wars
 één āya met een verschillende uitgang, en dan staan de twee ontledingen in de
 tekst zelf naast elkaar, zonder dat er iets bij verzonnen is.
 
-Bij 34:17 leest Ḥafṣ وَهَلْ **نُجَازِي** إِلَّا **ٱلۡكَفُورَ**. Het werkwoord
+Bij 34:17 leest Ḥafṣ وَهَلْ **نُجَٰزِىٓ** إِلَّا **ٱلْكَفُورَ**. Het werkwoord
 staat dan **mabnī li-l-maʿlūm**, de vorm waarin de handelende genoemd wordt, en
-dat is hier "Wij" — dezelfde spreker die net جَزَيْنَٰهُم zei. ٱلۡكَفُورَ krijgt
-een fatḥa als **mafʿūl bihi**, degene aan wie de handeling voltrokken wordt.
-Warsh leest وَهَلْ **يُجَازَىٰ** إِلَّا **ٱلۡكَفُورُ**: nu staat het werkwoord
+dat is hier "Wij" — dezelfde spreker die net جَزَيْنَٰهُم zei. ٱلْكَفُورَ
+krijgt een fatḥa als **mafʿūl bihi**, degene aan wie de handeling voltrokken
+wordt.
+Warsh leest وَهَلْ **يُجَٰز۪ىٰٓ** إِلَّا **اَ۬لْكَفُورُۖ**: nu staat het werkwoord
 **mabnī li-l-majhūl**, de vorm waarin de handelende juist níet genoemd wordt.
-Er is dan geen mafʿūl bihi meer, en ٱلۡكَفُورُ schuift op naar de vrijgekomen
+Er is dan geen mafʿūl bihi meer, en het woord schuift op naar de vrijgekomen
 plaats met de ḍamma die daarbij hoort — **nāʾib al-fāʿil**, de invaller voor de
 handelende.
 
