@@ -11,7 +11,7 @@ Two levels, and they answer differently:
   the fifteen forms   No. Warsh uses I, II, III, IV, V, VI, VIII and X, all
                       of them already abundant in Hafs. No wazn enters or
                       leaves the Quran with the riwaya.
-  root plus form      Yes. Fourteen (root, form) pairs occur in Warsh that
+  root plus form      Yes. Eleven (root, form) pairs occur in Warsh that
                       the Hafs text has nowhere, in any part of speech.
 
 One caveat on the Hafs column: the corpus writes no verb_form for form I, so

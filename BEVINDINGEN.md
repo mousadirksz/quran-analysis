@@ -292,7 +292,7 @@ vier klassieke werken over *al-wujuh wa-n-naza'ir*, samen vier eeuwen traditie
 (200–597 AH). Zie README.md voor de bronnen en de pijplijn.
 
 **7.637 → 12.344 citaatrijen**, 1.083 entries, 450 roots, waarvan 9.947 rijen
-gekoppeld aan het concrete woord in het vers. 3.284 canonieke senses, waarvan
+gekoppeld aan het concrete woord in het vers. 3.298 canonieke senses, waarvan
 **442 door drie of meer werken gedragen**.
 
 De sterkste validatie kwam van هدى: Ibn Sallam (2e eeuw) geeft er 17 wujuh,
@@ -376,7 +376,7 @@ partikels, de voornaamwoorden en de namen die het corpus onontleed laat. Van de
 Waar helemaal geen laag voor is:
 
 - **Sense-labels per voorkomen.** De klassieke werken citeren voorbeeldverzen,
-  geen uitputtende dekking: 17% van de voorkomens van polyseme roots is
+  geen uitputtende dekking: 13,9% van de voorkomens van polyseme roots is
   gelabeld. Tafsir-mining op al-Tabari is geprototypeerd en **gemeten op ~35%
   precisie bij een recall-plafond van ~35%** — afgewezen, omdat een kolom die
   in twee van de drie gevallen fout is de waarde ondermijnt van een laag
@@ -691,7 +691,7 @@ klasse. De idghām kabīr van al-Sūsī neemt de eindklinker van een woord mee i
 het volgende; **al-Dūrī is daarvan de controle** — dezelfde qirāʾa van dezelfde
 qārīʾ, zonder die regel — want een klinker die wegvalt kan net zo goed een jazm
 zijn, en bij 2:284 فَيَغْفِرُ / فَيَغْفِرْ is dat ook zo. Over de hele Qoeraan
-splitst dat 958 tegen 5, en die vijf zijn precies de plaatsen die een lezer zou
+splitst dat 1.152 tegen 5, en die vijf zijn precies de plaatsen die een lezer zou
 noemen: 2:284 tweemaal, 19:6 وَيَرِثْ, 4:81 بَيَّت en 27:66 بَلْ. Imāla en
 taqlīl worden afgelezen van de tekens die de mushaf zelf schrijft, die zich van
 de iqlāb- en waṣl-markering laten onderscheiden door wat eronder staat. En

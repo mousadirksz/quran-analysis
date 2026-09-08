@@ -228,12 +228,20 @@ corrected relation.
 
 **What is compared and what is claimed.** Ten pairs are aligned word by word:
 each riwaya beside Hafs, plus the three remaining pairs within one qiraa. Only
-Hafs-Warsh is classified into usul, notation and farsh. That classification was
-built by reading the Warsh mushaf and checked against that pair, and it does not
-transfer -- the Doori and Soosi packages write the wasl alif differently, and
-al-Soosi's idghaam kabir is a systematic feature the rules do not know. For the
-other nine pairs this database locates the differences and counts them, and
-claims nothing about what kind they are.
+all ten pairs are now classified into usul, notation and farsh by the same
+rules. What blocked that at first was not the classification but the
+transliteration: the Doori, Soosi and Qaaloon packages write the wasl alif as a
+plain vowelled alif where Hafs writes the letter alef wasla, and al-Soosi's
+idghaam kabir is a systematic feature the rules did not know. Both are modelled
+now -- al-Doori, the same qiraa from the same qari without that rule, serves as
+the control for the idghaam.
+
+What still sets Hafs-Warsh apart is that its farsh list has also been *read*,
+word pair by word pair, with the verdicts in `farsh_review.tsv`. The other nine
+carry the rule verdict alone, so their farsh figure is an upper bound. And the
+figures are directional: the rules are written with Hafs as the side looked out
+from, so putting the other riwaya on the left changes the classification (not
+which places differ). See README.md.
 
 ---
 

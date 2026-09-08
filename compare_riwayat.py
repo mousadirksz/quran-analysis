@@ -43,7 +43,7 @@ al-Soosi and nowhere else.
 **One pair has also been read.** Rules classify; only Hafs-Warsh has had its
 farsh list gone through word by word afterwards, and the verdicts of that
 reading are in `farsh_review.tsv`. It struck 95 rows the rules had wrongly
-called farsh, 15 per cent of what they proposed. The other nine pairs carry
+called farsh, 16 per cent of what they proposed. The other nine pairs carry
 the rule verdict alone, so their farsh figure is an upper bound and `reviewed`
 is 0.
 
@@ -362,10 +362,12 @@ def undo_idghaam(th, tw, ctrl=None):
     one word loses its final vowel and the next gains a doubled first letter,
     and both halves land here as separate differences.
 
-    It is a rule and not a word-by-word choice: of the 963 places where a
-    final short vowel goes, 879 have the doubled consonant on the next word,
-    and the 84 that do not are all miem before baa, where the assimilation is
-    incomplete and no shadda is written.
+    It is a rule and not a word-by-word choice: a final short vowel goes in
+    1,157 places over the whole Quran, against the five below that the control
+    picks out as jazm. Most of them have the doubled consonant on the next
+    word; those that do not are miem before baa, where the assimilation is
+    incomplete and no shadda is written. That second split is not re-derived
+    here, because only the losing half is counted at all -- see below.
 
     Only the losing half is recognised here, because only that half is
     unambiguous. A word that merely *begins* with a doubled consonant is far
@@ -386,7 +388,7 @@ def undo_idghaam(th, tw, ctrl=None):
     The control is al-Doori. He transmits the same qiraa from the same qari
     and does not apply idghaam kabiir, so a vowel that goes in al-Soosi and
     stays in al-Doori is the rule, and one that goes in both belongs to Abu
-    'Amr's reading. Over the whole Quran that splits 958 against 5, and the
+    'Amr's reading. Over the whole Quran that splits 1,152 against 5, and the
     five are exactly the places a reader would name: 2:284 twice, 19:6
     `wa-yarith`, 4:81 `bayyat`, and 27:66 `bal`."""
     if ctrl is not None and tw == th[:-1] and th[-1:] in ("a", "u", "i") \

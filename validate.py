@@ -738,7 +738,13 @@ def irab_passages(cur, args):
                 "SELECT DISTINCT work FROM irab WHERE work NOT IN ('nahhas')")
     covered = cur.execute("SELECT COUNT(DISTINCT surah || ':' || ayah) FROM irab").fetchone()[0]
     rows = cur.execute("SELECT COUNT(*) FROM irab").fetchone()[0]
-    return (f"{rows:,} passages covering {covered:,} of {EXPECTED_AYAHS:,} verses "
+    # A passage that covers a range of verses is stored once per verse of the
+    # range, so the row count is not the number of passages: say both, or the
+    # table reads as holding several hundred more discussions than it does.
+    distinct = cur.execute("SELECT COUNT(*) FROM (SELECT DISTINCT work, passage FROM irab)").fetchone()[0]
+    return (f"{distinct:,} distinct passages in {rows:,} rows (a passage on a range of "
+            f"verses is stored once per verse), covering {covered:,} of "
+            f"{EXPECTED_AYAHS:,} verses "
             f"({covered / EXPECTED_AYAHS * 100:.0f}%, the rest raise no question he treats)")
 
 

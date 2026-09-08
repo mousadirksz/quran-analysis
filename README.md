@@ -16,7 +16,7 @@ It combines four layers:
    classical *wujuh wa-naza'ir* works — spanning four centuries, from 200 to
    597 AH — to the verses their authors cite as evidence for each sense, and,
    where it can be established, to the individual word in that verse.
-4. **A sense alignment**: 5,027 of those senses grouped into 3,284 canonical
+4. **A sense alignment**: 5,043 of those senses grouped into 3,298 canonical
    senses that run across the works, so "which reading does the whole tradition
    carry, and which belongs to one author" becomes a query.
 
@@ -216,7 +216,7 @@ python3 build.py --list                # print the pipeline order and exit
 
 A full run takes a while; the parsers and `resolve_citations.py` are the slow
 steps. Every step except `to_sqlite.py` is idempotent, which is what `--keep`
-exploits. The last step is `validate.py`, which runs 19 checks over the
+exploits. The last step is `validate.py`, which runs 26 checks over the
 finished database (see *Data quality* below) and can also be run on its own:
 
 ```sh
@@ -342,7 +342,7 @@ so the label reflects the actual use in that verse:
 
 ### Table `wujuh` — 12,344 rows, one per (citation, verse) pair
 
-1,083 entries (work + headword) across the four works, 4,935 distinct senses,
+1,083 entries (work + headword) across the four works, 4,951 distinct senses,
 450 roots, pointing at 3,635 different verses. 9,947 rows also name the
 individual word of the verse.
 
@@ -419,10 +419,10 @@ them NULL rather than guess. For `entry_root_unknown` and `root_unverified`,
 `root_ar` is NULL as well: a stored root reads as a claim about the entry and
 would be counted as one.
 
-### Table `sense_alignment` — 5,027 rows
+### Table `sense_alignment` — 5,043 rows
 
-Canonical sense ids laid across the works: 5,027 aligned senses grouped into
-3,284 canonical senses, of which 442 are carried by three or more works and 140
+Canonical sense ids laid across the works: 5,043 aligned senses grouped into
+3,298 canonical senses, of which 442 are carried by three or more works and 140
 by all four. Primary key `(work, headword, sense_nr, gloss)` — the gloss is part
 of the key because a headword is not unique within a work (al-Damaghani has 26
 headwords heading two to four separate entries).
@@ -433,7 +433,7 @@ headwords heading two to four separate entries).
 | `root_ar`, `canonical_gloss` | root and representative gloss of the cluster |
 | `n_works`, `n_senses` | how many works and how many senses the cluster holds |
 | `work`, `headword`, `sense_nr`, `gloss` | the individual sense, joinable back to `wujuh` |
-| `confidence` | `strong` (2,585), `single` (2,131 — a cluster of one), `weak` (311) |
+| `confidence` | `strong` (2,587), `single` (2,143 — a cluster of one), `weak` (313) |
 | `evidence` | why the sense was aligned, e.g. `gloss 1.00, shared verses 2` |
 
 Two signals decide, and both must be earned: overlap in the cited verses
@@ -512,7 +512,7 @@ their own. al-Soosi's idghaam kabir takes the final vowel of a word into the
 next; al-Doori — the same qiraa from the same qari, without that rule — is the
 control for it, because a vowel that simply goes can as easily be a jazm, and
 at 2:284 `fa-yaghfiru` / `fa-yaghfir` it is. Over the whole Quran that splits
-958 to 5. Imaala and taqliil are read off the marks the mushaf writes, which
+1,152 to 5. Imaala and taqliil are read off the marks the mushaf writes, which
 separate from the iqlaab and wasl markers by what they sit on. And `huwa` and
 `hiya` lose their vowel after a prefix in Qaaloon, al-Doori and al-Soosi and
 nowhere else, which is what the counts say: 233, 232, 228, and zero for the
@@ -607,7 +607,7 @@ the database itself.
 | `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
 | `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
 | `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
-| `riwaya_diff`, `kind='farsh'` | 436 | 7% | the verses where Hafs and Warsh read alike — and the nine other pairs are located but not classified |
+| `riwaya_diff`, `kind='farsh'` | 436 | 7% | the verses where Hafs and Warsh read alike; the nine other pairs are classified by the same rules but not read by hand |
 
 Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
 the particles, the pronouns, and the names the corpus leaves unanalysed. There
@@ -618,13 +618,13 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 - a translation of the Quran — the glosses are word-by-word help, deliberately literal, and read poorly as running text
 - tafsir of any kind
 - a sense label per occurrence: the wujuh works cite example verses, they do not annotate exhaustively, and mining al-Tabari for the rest was measured at ~35% precision and rejected
-- the three readers whose riwayat are not here (Hamza, al-Kisa'i, Abu Ja'far), and any reading outside the canonical seven
+- the three readers of the seven whose riwayat are not here (Ibn 'Amir, Hamza, al-Kisa'i), and any reading outside the canonical seven
 - the counts that differ per riwaya — verse numbering, the ahzab — which are the Hafs values throughout
 
 ## Data quality
 
-`validate.py` runs 24 checks over the finished database and is the last step of
-`build.py`. On the committed database, 17 pass and 2 warn — the two warnings are
+`validate.py` runs 26 checks over the finished database and is the last step of
+`build.py`. On the committed database, 24 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
 `corpus`, *freshness* (the parsed JSONs, `resolved_citations.json` and the
@@ -712,7 +712,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 24 checks over the finished database (optional step) |
+| `validate.py` | 26 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
@@ -842,7 +842,7 @@ two different fragments of it, and joining `wujuh` to `corpus` on
 segments of the root. Use `DISTINCT`, aggregate, or join on `corpus_id`.
 
 **Not every parsed sense reaches the table.** The parsers produce 1,121 entries
-and 5,228 senses; the `wujuh` table holds 1,083 entries and 4,935 senses. The
+and 5,228 senses; the `wujuh` table holds 1,083 entries and 4,951 senses. The
 difference is entries and senses all of whose citations failed to resolve, or
 that carry no citation at all. Sense numbers can therefore have gaps.
 
@@ -877,7 +877,8 @@ would be.
 
 **Eight riwayat is not the qiraa'at.** `riwaya_diff` compares eight
 transmissions from four of the seven readers — Nafi', Ibn Kathir, Abu 'Amr and
-'Asim. Hamza, al-Kisa'i and Abu Ja'far are absent, as are the shawadhdh. All
+'Asim. Of the seven, Ibn 'Amir, Hamza and al-Kisa'i are absent, as are the
+three that make up the ten (Abu Ja'far, Ya'qub, Khalaf) and the shawadhdh. All
 eight are mutawatir and none is the baseline; the morphological layers of this
 database describe Hafs only, because that is what the corpus annotates, and
 `riwaya_sarf.py` is where the consequences of that are worked out in both
@@ -890,5 +891,5 @@ than being decided by default.
 
 **The `verses.text_ar` column is a reconstruction.** It is the corpus' segment
 forms joined back together, not an independently sourced mushaf text. The only
-mushaf texts in this repository are the two riwaya CSVs under `sources/`, and
+mushaf texts in this repository are the eight riwaya CSVs under `sources/`, and
 they are not what `verses` is built from.

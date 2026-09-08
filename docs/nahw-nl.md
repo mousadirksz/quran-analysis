@@ -1215,25 +1215,29 @@ alsof ze het wel kon.
 Het hele boek door stond er telkens een kader met twee lezingen. Dit hoofdstuk
 zet ze bij elkaar en telt ze.
 
-Ḥafṣ en Warsh verschillen op 515 plaatsen in de woorden zelf — dat is de
+Ḥafṣ en Warsh verschillen op 505 plaatsen in de woorden zelf — dat is de
 *farsh al-ḥurūf*, en de rest van hun verschillen (ruim 8.000 plaatsen) zit in
-de uitspraakregels en de spelling, niet in de tekst. Van die 515 vallen er 48
+de uitspraakregels en de spelling, niet in de tekst. Van die 505 vallen er 42
 op de **laatste klinker**: dezelfde medeklinkers, een ander teken aan het eind.
 
-Tien daarvan zijn geen iʿrāb. Ze staan er eerst, omdat het uit elkaar halen
+Vier daarvan zijn geen iʿrāb. Ze staan er eerst, omdat het uit elkaar halen
 van deze twee groepen precies de vaardigheid is die hoofdstuk 1 vraagt.
+
+Het waren er tien toen dit hoofdstuk werd geschreven, en dat er nu zes minder
+staan is zelf leerzaam. De zes die verdwenen zijn waren allemaal يَٰبُنَيَّ
+tegenover يَٰبُنَيِّ (11:42, 12:5, 31:13, 31:16, 31:17, 37:102): één en dezelfde
+**yāʾ al-iḍāfa**, door Ḥafṣ gesloten en door Warsh met een kasra gelezen.
+Inmiddels herkent `compare_riwayat.py` die als een uṣūl-regel, en daarmee staan
+ze niet meer op de farsh-lijst waar dit hoofdstuk uit put. Precies het
+onderscheid dat je hier met de hand moest maken, maakt de classificatie nu
+zelf — en dat is de goede richting: wat een regel is, hoort niet in een lijst
+van losse gevallen te staan.
 
 | Vers | Ḥafṣ | Warsh | Waarom geen iʿrāb |
 |---|---|---|---|
 | 7:143 | وَلَٰكِنِ | وَلَٰكِنُ | hulpklinker voor een waṣl-hamza (وَلَٰكِنِ ٱنظُرْ); لكن is mabnī |
-| 11:42 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
-| 12:5 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
 | 12:31 | وَقَالَتِ | وَقَالَتُ | hulpklinker voor een waṣl-hamza (وَقَالَتِ ٱخْرُجْ); de تْ is mabnī |
 | 15:54 | تُبَشِّرُونَ | تُبَشِّرُونِۖ | yāʾ zāʾida: de weggelaten yāʾ van تُبَشِّرُونَنِي |
-| 31:13 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
-| 31:16 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
-| 31:17 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
-| 37:102 | يَٰبُنَيَّ | يَٰبُنَيِّ | yāʾ al-iḍāfa: de yāʾ die "mijn" zegt, geen iʿrāb-uitgang |
 | 48:10 | عَلَيۡهُ | عَلَيْهِ | de klinker van de ḍamīr هُ; die is mabnī |
 
 De overige 38 zijn wél iʿrāb: op elk van deze plaatsen lezen de twee
