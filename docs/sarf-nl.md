@@ -1693,9 +1693,10 @@ verantwoording.*
     al-Bayḍāʾ bij Shiraz die in Basra studeerde bij al-Khalīl ibn Aḥmad
     al-Farāhīdī, de man van de ʿarūḍ en van het eerste Arabische woordenboek.
     Zijn *al-Kitāb* — dat geen andere titel draagt dan "het boek" — is het
-    eerste samenhangende werk over de Arabische taalkunde en behandelt naḥw en
-    ṣarf als één systeem. Het is sindsdien nooit vervangen, alleen becommentarieerd:
-    wat in dit boek een regel heet, is bijna altijd bij hem terug te vinden. Hij
-    stierf jong, ergens in de dertig, en beide jaartallen zijn omstreden — voor
-    zijn geboorte worden 135 tot 148 AH genoemd, voor zijn dood 177 tot 194 AH.
-    Vandaar de "ca." in de tekst.
+    oudste bewaarde samenhangende werk over de Arabische taalkunde en behandelt
+    naḥw, ṣarf en klankleer als één doorlopend betoog; het opent met de
+    driedeling ism, fiʿl, ḥarf die in dit hoofdstuk wordt gevolgd. Het is
+    sindsdien nooit vervangen, alleen herordend en becommentarieerd. Hij stierf
+    jong — de bronnen zeggen 32 of "ruim veertig" — en beide jaartallen zijn
+    omstreden: voor zijn geboorte worden 140 tot 148 AH genoemd, voor zijn dood
+    177 tot 188 AH, met 180 als gangbare keuze. Vandaar de "ca." in de tekst.
