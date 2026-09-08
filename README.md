@@ -543,6 +543,16 @@ al-mim throughout, which alone is 6,100 rows, and Qaaloon–Warsh reaches 5,377
 places while sitting *within* one qiraa because Warsh applies naql and softens
 the hamza where Qaaloon does not.
 
+The farsh column is comparable across the rows because Hafs is on the left in
+all but three of them, not because the figure is independent of which side that
+is. The usul rules have a direction -- naql puts the vowel of a following hamza
+on the last letter, the sila of the haa adds a long vowel, idghaam kabiir takes
+the final vowel away -- and they are written with Hafs as the side looked out
+from. Put Warsh on the left and its features stop being recognised and fall
+through to farsh: Hafs-Warsh reads 505 one way round and 1,573 the other,
+Qaaloon-Warsh 339 against 1,269. Where the two sides are close it hardly
+matters (al-Bazzi-Qunbul 34 against 30, Hafs-Shu'ba 383 against 386).
+
 Farsh is the comparable measure, and it says what the transmission history
 predicts. Two transmissions of one qari's reading differ in 34 words
 (al-Bazzi–Qunbul) or 63 (al-Doori–al-Soosi); two readings differ in 505 to

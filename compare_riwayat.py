@@ -176,14 +176,18 @@ MUQATTAAT_SURAS = {2, 3, 7, 10, 11, 12, 13, 14, 15, 19, 20, 26, 27, 28, 29, 30,
                    31, 32, 36, 38, 40, 41, 42, 43, 44, 45, 46, 50, 68}
 HAMZA = set("ءأإؤئٓٔ")
 # These three signs each do two jobs, told apart by the letter they sit on.
-# U+06ED is the small low meem of iqlaab where it sits on a vowelled letter;
-# Hafs writes it 102 times and every package writes about as many. U+06EA and
-# U+06EC on an alif mark hamzat
+# U+06ED is the small low meem of iqlaab where it sits on a vowelled letter.
+# The packages are nowhere near equal in it: Hafs writes it 99 times, al-Bazzi,
+# Qunbul and Shu'ba 100 each, al-Doori 66, al-Soosi 38, and Warsh and Qaaloon
+# not once. U+06EA and U+06EC on an alif mark hamzat
 # al-wasl, which is what the nearly ten thousand of them in Warsh, Qaaloon,
 # al-Doori and al-Soosi are, and the transliteration resolves those. On any
 # other letter U+06EA and U+06EC mark imaala and taqliil on the alif that
 # follows -- Warsh 1,911, al-Doori 737, al-Soosi 609, Qaaloon 11, al-Bazzi,
-# Qunbul and Shu'ba 3 each, Hafs 2 -- as does U+06ED on a bare letter. That
+# Qunbul and Shu'ba 3 each, Hafs 2 -- as does U+06ED on a bare letter, which
+# adds 560 more for al-Doori and 555 for al-Soosi and nothing for the rest.
+# What has_imala() counts is therefore the sum: al-Doori 1,297, al-Soosi
+# 1,164, and for the other six the figures above. That
 # is a difference in the recitation
 # and not in the spelling. The transliteration ignores them, so they add no
 # differences of their own, and they are read here only to give a difference
@@ -719,14 +723,29 @@ def markdown(conn, rows):
                "dan een lezing tegelijk: de qiraa-aat verwijderen zich niet "
                "van dat schriftbeeld, het schriftbeeld is zo gekozen dat het "
                "ze draagt.\n")
-    out.append("**Dat Hafs links staat, is gereedschap en geen norm.** In "
-               "negen van de tien paren staat Hafs in de linkerkolom, omdat "
-               "dat de overlevering is die de meeste lezers kennen en omdat "
-               "het elk van de acht pakketten een vergelijking geeft. "
-               "Verwissel de kolommen en er verandert geen enkel getal. "
-               "Zelfs de versnummering is niet gedeeld -- het woord "
-               "hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- "
-               "en de tabel houdt daarom aan beide kanten een eigen "
+    out.append("**Dat Hafs links staat, is gereedschap en geen norm -- maar "
+               "het is niet vrijblijvend.** In negen van de tien paren staat "
+               "Hafs in de linkerkolom, omdat dat de overlevering is die de "
+               "meeste lezers kennen en omdat het elk van de acht pakketten "
+               "een vergelijking geeft. *Welke* plaatsen uiteenlopen is "
+               "symmetrisch: draai het paar om en je vindt dezelfde plaatsen "
+               "terug. De *indeling* van die plaatsen is dat niet. De "
+               "usul-regels hebben een richting -- naql legt de klinker van "
+               "een volgende hamza op de laatste letter, silat al-haa voegt "
+               "er een lange klinker aan toe, idghaam kabier neemt de "
+               "eindklinker juist weg -- en ze zijn geschreven met Hafs als "
+               "de kant waarvandaan gekeken wordt. Zet Warsh links en de "
+               "regels herkennen hun eigen kenmerk niet meer: dan valt dat "
+               "kenmerk door naar farsh en telt dit paar geen 505 maar "
+               "1.573. Bij paren die dicht bij elkaar liggen scheelt het "
+               "vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba "
+               "383 tegen 386); bij paren waar de ene kant usul toepast die "
+               "de andere niet kent, scheelt het alles. De farsh-kolom is "
+               "dus onderling vergelijkbaar doordat Hafs overal links staat, "
+               "en niet doordat het getal van de richting onafhankelijk zou "
+               "zijn. Ook de versnummering is trouwens niet gedeeld -- het "
+               "woord hieronder staat bij Hafs in 57:24 en bij Warsh in "
+               "57:23 -- en de tabel houdt daarom aan beide kanten een eigen "
                "ayah-nummer bij.\n")
     out.append("**Farsh betekent niet fout.** *Farsh al-hoeroef* is de "
                "klassieke term voor de plaatsen waar twee lezingen in het "

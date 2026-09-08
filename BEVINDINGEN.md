@@ -518,13 +518,16 @@ verschil, en zonder dat onderscheid las de vergelijking 124 plaatsen waar Qālū
 en Warsh *dezelfde letters schrijven* als een verschil.
 
 **Drie tekens doen elk twee dingen, te scheiden aan wat eronder staat.** U+06ED
-is op een beklinkerde letter de kleine mīm van **iqlāb** — Ḥafṣ schrijft hem 102
-keer, elk pakket ongeveer evenveel. U+06EA en U+06EC op een alif markeren
-**hamzat al-waṣl**: dat zijn de bijna 10.000 per Maghribi-pakket. Op elke andere
-letter markeren dezelfde twee tekens **imāla en taqlīl** op de alif die volgt,
-en dat doet U+06ED op een kale letter ook. Dat laatste is recitatie en geen
-spelling: Warsh schrijft er 1.911, al-Dūrī 737, al-Sūsī 609, Qālūn 11, al-Bazzī,
-Qunbul en Shuʿba elk 3, en Ḥafṣ 2.
+is op een beklinkerde letter de kleine mīm van **iqlāb**: Ḥafṣ schrijft hem 99
+keer, al-Bazzī, Qunbul en Shuʿba elk 100, al-Dūrī 66 en al-Sūsī 38 — en Warsh en
+Qālūn schrijven hem nul keer. U+06EA en U+06EC op een alif markeren **hamzat
+al-waṣl**: dat zijn de bijna 10.000 per Maghribi-pakket. Op elke andere letter
+markeren dezelfde twee tekens **imāla en taqlīl** op de alif die volgt — Warsh
+1.911, al-Dūrī 737, al-Sūsī 609, Qālūn 11, al-Bazzī, Qunbul en Shuʿba elk 3, en
+Ḥafṣ 2 — en U+06ED op een *kale* letter doet dat ook, wat er bij al-Dūrī nog 560
+en bij al-Sūsī nog 555 bij zet en bij de rest niets. Wat de code als imāla telt
+is dus de som: al-Dūrī 1.297, al-Sūsī 1.164, en voor de andere zes de getallen
+hierboven. Dat is recitatie en geen spelling.
 
 Het onderscheid loopt dus over de **letter**, niet over de vraag of er een
 klinkerteken tussen staat. Dat is niet vrijblijvend: وَتَر۪ي bij al-Sūsī draagt
@@ -655,6 +658,18 @@ passen silat al-mīm overal toe, in hun eentje goed voor 6.100 rijen, en
 Qālūn–Warsh haalt 5.377 plaatsen terwijl het *binnen* één qirāʾa valt, omdat
 Warsh naql toepast (اَ۬لَارْضِ tegenover اِ۬لْأَرْضِ) en de hamza verzacht
 (يُوتِ tegenover يُؤْتِ) waar Qālūn dat niet doet.
+
+**De farsh-kolom is onderling vergelijkbaar doordat Ḥafṣ overal links staat**,
+en niet doordat het getal van de richting onafhankelijk zou zijn. De uṣūl-regels
+hébben een richting — naql legt de klinker van een volgende hamza op de laatste
+letter, ṣilat al-hāʾ voegt er een lange klinker aan toe, idghām kabīr neemt de
+eindklinker juist weg — en ze zijn geschreven met Ḥafṣ als de kant waarvandaan
+gekeken wordt. Zet Warsh links en de regels herkennen hun eigen kenmerk niet
+meer; het valt dan door naar farsh. Ḥafṣ–Warsh telt zo 505 de ene kant op en
+**1.573** de andere, Qālūn–Warsh 339 tegen 1.269. Bij paren die dicht bij elkaar
+liggen scheelt het vrijwel niets: al-Bazzī–Qunbul 34 tegen 30, Ḥafṣ–Shuʿba 383
+tegen 386. Welke *plaatsen* uiteenlopen is wél symmetrisch — alleen hun indeling
+niet.
 
 De farsh-kolom is de vergelijkbare maat, en die zegt wél wat de
 overleveringsgeschiedenis voorspelt. Twee overleveringen van één qārīʾ
