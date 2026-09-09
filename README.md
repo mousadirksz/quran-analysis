@@ -22,7 +22,12 @@ It combines four layers:
 
 Alongside them sit reference tables for suras, verses, ajza' and ahzab.
 
-Everything is plain Python 3 (standard library only) and one SQLite file.
+Everything the pipeline runs is plain Python 3 (standard library only) and
+one SQLite file. Two files at the root are outside that:
+`quran_analysis.ipynb`, an exploratory notebook from before the schema
+settled, which needs pandas/numpy/matplotlib and is in no pipeline step;
+and `unrar-0.4-py3-none-any.whl`, a third-party wheel nothing in the repo
+references. Neither is needed to build or query the database.
 
 ## Quick start
 
@@ -527,7 +532,7 @@ verdict alone, so their farsh figure is an upper bound and `reviewed` is 0.
 | Pair | | Places | farsh | usul | notation | read |
 |---|---|--:|--:|--:|--:|:-:|
 | bazzi – qumbul | **within one qiraa** | 184 | **34** | 73 | 73 | — |
-| doori – soosi | **within one qiraa** | 3,658 | **63** | 2,479 | 1,076 | — |
+| doori – soosi | **within one qiraa** | 3,658 | **25** | 2,503 | 1,090 | — |
 | qaloon – warsh | **within one qiraa** | 5,377 | **369** | 4,503 | 414 | — |
 | hafs – shouba | **within one qiraa** | 595 | **397** | 70 | 79 | — |
 | hafs – warsh | between two qiraa'at | 8,453 | **521** | 4,899 | 2,826 | yes |
@@ -535,7 +540,12 @@ verdict alone, so their farsh figure is an upper bound and `reviewed` is 0.
 | hafs – qaloon | between two qiraa'at | 4,287 | **645** | 725 | 2,826 | — |
 | hafs – bazzi | between two qiraa'at | 9,225 | **658** | 7,561 | 952 | — |
 | hafs – qumbul | between two qiraa'at | 9,183 | **665** | 7,497 | 968 | — |
-| hafs – soosi | between two qiraa'at | 5,829 | **746** | 3,611 | 1,376 | — |
+| hafs – soosi | between two qiraa'at | 5,829 | **709** | 3,634 | 1,391 | — |
+
+The three kind columns do not add up to Places, and are not meant to: the
+remainder is `uitgesloten` and `onzeker` — a moved word boundary, an alignment
+artefact, the disconnected letters, and for Hafs–Warsh the rows a reading
+struck. It runs from 4 rows (al-Bazzi–Qunbul) to 207 (Hafs–Warsh).
 
 Read the farsh column, not the places column. Places counts usul and spelling
 too, and those vary enormously by package: al-Bazzi and Qunbul apply silat
@@ -555,8 +565,8 @@ matters (al-Bazzi-Qunbul 34 against 30, Hafs-Shu'ba 383 against 386).
 
 Farsh is the comparable measure, and it says what the transmission history
 predicts. Two transmissions of one qari's reading differ in 34 words
-(al-Bazzi–Qunbul) or 63 (al-Doori–al-Soosi); two readings differ in 521 to
-746. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 397 and
+(al-Bazzi–Qunbul) or 25 (al-Doori–al-Soosi); two readings differ in 521 to
+709. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 397 and
 Qaaloon–Warsh at 369 — are the two the literature already singles out as the
 widest-diverging transmissions of a single reading.
 
@@ -716,7 +726,6 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `validate.py` | 27 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
-
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
@@ -725,7 +734,6 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |
-
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
 | `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `faail`, `rel <label>`, `irab-diff`, `irab-book`, `irab-mabni` |
 

@@ -152,8 +152,10 @@ fold_ham2 = lambda x: re.sub(r"'[aui]?", "", x)
 # The second hamza of a pair is often given as tashiel or ibdaal, and the
 # mushaf then writes it as the long vowel it is drawn out into: 'a'iذA against
 # 'AذA. Reaching those needs the long vowel folded away with the hamza too --
-# but only as a second try, because folding a long vowel away unasked loses
+# as a disjunct beside fold_ham2 and never in place of it, because replacing
+# it loses
 # waلصصAبi'Uنa against waلصصAبUنa, where the hamza goes and the vowel stays.
+# Order in the chain does not matter; being additional is what does.
 fold_ham3 = lambda x: re.sub(r"'[auiAUI]?", "", x)
 fold_sil = lambda x: x.replace("uw", "u").replace("iy", "i")
 fold_mq = lambda x: x.replace("yA", "A")
@@ -342,14 +344,24 @@ def sites(a="hafs", b="warsh"):
                 aa = bw[min(j1, len(bw) - 1)][0]
                 # difflib merges neighbouring changed words into one block;
                 # split it back when both sides hold the same number of words,
-                # so each difference is judged on its own
+                # so each difference is judged on its own.
+                #
+                # The control belongs here too. It used to be attached only in
+                # the `equal` branch above -- to words whose consonant skeletons
+                # already agree -- and a word that carries a second feature
+                # beside the idghaam has skeletons that do not agree, so it
+                # lands in a changed block. Those were exactly the rows that had
+                # no control and so could not be told from farsh: all 63 that
+                # doori-soosi reported.
                 if tag == "replace" and len(ha) == len(wa) > 1:
-                    for h, w in zip(ha, wa):
+                    for k, (h, w) in enumerate(zip(ha, wa)):
                         found.append(dict(sura=sura, ah=ah, aw=aa, tag=tag,
-                                          a=h, b=w))
+                                          a=h, b=w, ctrl=ctrl.get(i1 + k)))
                 else:
                     found.append(dict(sura=sura, ah=ah, aw=aa, tag=tag,
-                                      a=" ".join(ha), b=" ".join(wa)))
+                                      a=" ".join(ha), b=" ".join(wa),
+                                      ctrl=(ctrl.get(i1) if len(ha) == len(wa) == 1
+                                            else None)))
     return found
 
 
@@ -407,6 +419,19 @@ def strip_usul(th, tw, ctrl=None):
     undone = undo_idghaam(th, tw, ctrl)
     if undone is not None:
         return th, undone, ["idghaam_kabir"]
+    # The idghaam does not always come alone. Where the final vowel went by the
+    # rule -- the control still writes it -- but the two sides differ in
+    # something else as well (a hamza softened into its long vowel, a shadda
+    # carried over from the word before), the exact test above cannot see it,
+    # and the row fell through to farsh: every one of the 63 that doori-soosi
+    # reported was of that shape. So take the vowel the rule took and let the
+    # rest of the chain judge what is left. A residue nothing explains still
+    # ends up as farsh, which is the point of keeping the control.
+    if (ctrl is not None and th[-1:] in ("a", "u", "i")
+            and tw[-1:] not in ("a", "u", "i")
+            and ctrl != tw and ctrl[-1:] in ("a", "u", "i")):
+        th = th[:-1]
+        tags.append("idghaam_kabir")
     if tw.endswith("U") and tw[:-1].endswith("م") and th.endswith("م"):
         tw = tw[:-1]; tags.append("sila_mim")
     # The sila of the haa is the long vowel a transmission gives the pronoun
@@ -745,10 +770,12 @@ def markdown(conn, rows):
                "van dat schriftbeeld, het schriftbeeld is zo gekozen dat het "
                "ze draagt.\n")
     out.append("**Dat Hafs links staat, is gereedschap en geen norm -- maar "
-               "het is niet vrijblijvend.** In negen van de tien paren staat "
+               "het is niet vrijblijvend.** In zeven van de tien paren staat "
                "Hafs in de linkerkolom, omdat dat de overlevering is die de "
                "meeste lezers kennen en omdat het elk van de acht pakketten "
-               "een vergelijking geeft. *Welke* plaatsen uiteenlopen is "
+               "een vergelijking geeft; de drie overige zetten twee "
+               "overleveringen van een en dezelfde qaari- naast "
+               "elkaar. *Welke* plaatsen uiteenlopen is "
                "symmetrisch: draai het paar om en je vindt dezelfde plaatsen "
                "terug. De *indeling* van die plaatsen is dat niet. De "
                "usul-regels hebben een richting -- naql legt de klinker van "
@@ -814,8 +841,9 @@ def markdown(conn, rows):
     out.append("Alle tien de paren zijn met dezelfde regels geclassificeerd. "
                "Wat per pakket verschilt is de schrijfwijze, en dat zit nu in "
                "de transliteratie: Qaaloon, Doorie en Soesie schrijven de "
-               "wasl-alif als een kale alif met de klinker erop, Hafs en de "
-               "Kufische pakketten als de letter alef wasla, en Warsh met een "
+               "wasl-alif als een kale alif met de klinker erop, Hafs en "
+               "Shu3ba (Koefa) en al-Bazzie en Qoenboel (Mekka) als de "
+               "letter alef wasla, en Warsh met een "
                "teken erboven. De kenmerken die maar bij een deel van de "
                "riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala "
                "van Aboe 3Amr en van Warsh, het wegvallen van de klinker in "

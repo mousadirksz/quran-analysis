@@ -642,7 +642,7 @@ overige paren die *binnen* één qirāʾa vallen.
 | paar | | plaatsen | farsh | uṣūl | notatie |
 |---|---|--:|--:|--:|--:|
 | al-Bazzī – Qunbul | **binnen één qirāʾa** | 184 | **34** | 73 | 73 |
-| al-Dūrī – al-Sūsī | **binnen één qirāʾa** | 3.658 | **63** | 2.479 | 1.076 |
+| al-Dūrī – al-Sūsī | **binnen één qirāʾa** | 3.658 | **25** | 2.503 | 1.090 |
 | Qālūn – Warsh | **binnen één qirāʾa** | 5.377 | **369** | 4.503 | 414 |
 | Ḥafṣ – Shuʿba | **binnen één qirāʾa** | 595 | **397** | 70 | 79 |
 | Ḥafṣ – Warsh | tussen twee qirāʾāt | 8.453 | **521** | 4.899 | 2.826 |
@@ -650,7 +650,12 @@ overige paren die *binnen* één qirāʾa vallen.
 | Ḥafṣ – Qālūn | tussen twee qirāʾāt | 4.287 | **645** | 725 | 2.826 |
 | Ḥafṣ – al-Bazzī | tussen twee qirāʾāt | 9.225 | **658** | 7.561 | 952 |
 | Ḥafṣ – Qunbul | tussen twee qirāʾāt | 9.183 | **665** | 7.497 | 968 |
-| Ḥafṣ – al-Sūsī | tussen twee qirāʾāt | 5.829 | **746** | 3.611 | 1.376 |
+| Ḥafṣ – al-Sūsī | tussen twee qirāʾāt | 5.829 | **709** | 3.634 | 1.391 |
+
+De drie soortkolommen tellen niet op tot *plaatsen*, en dat hoort ook niet:
+het verschil is `uitgesloten` en `onzeker` — een verschoven woordgrens, een
+uitlijningsartefact, de losse letters, en bij Ḥafṣ–Warsh wat het nalezen
+wegstreepte. Dat loopt van 4 rijen (al-Bazzī–Qunbul) tot 207 (Ḥafṣ–Warsh).
 
 **Lees de kolom farsh, niet de kolom plaatsen.** Het aantal plaatsen telt uṣūl
 en schrijfwijze mee, en dat loopt per pakket enorm uiteen: al-Bazzī en Qunbul
@@ -673,8 +678,8 @@ niet.
 
 De farsh-kolom is de vergelijkbare maat, en die zegt wél wat de
 overleveringsgeschiedenis voorspelt. Twee overleveringen van één qārīʾ
-verschillen in 34 woorden (al-Bazzī–Qunbul) of 63 (al-Dūrī–al-Sūsī); twee
-verschillende lezingen in 521 tot 746. De twee binnen-paren die daar niet in
+verschillen in 34 woorden (al-Bazzī–Qunbul) of 25 (al-Dūrī–al-Sūsī); twee
+verschillende lezingen in 521 tot 709. De twee binnen-paren die daar niet in
 passen — Ḥafṣ–Shuʿba met 397 en Qālūn–Warsh met 369 — zijn precies de twee die
 in de literatuur bekendstaan als de verst uiteenlopende overleveringen van één
 lezing.
