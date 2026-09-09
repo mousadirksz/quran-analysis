@@ -61,10 +61,12 @@ counted but do not by themselves make the run fail.
 """
 
 import argparse
+import csv
 import difflib
 import json
 import random
 import re
+import unicodedata
 import sqlite3
 import sys
 from collections import Counter, defaultdict
@@ -1123,6 +1125,132 @@ PAIR_NAMES = {"hafs": ("hafs", "Ḥafṣ"), "warsh": ("warsh", "Warsh"),
 
 def _num(text):
     return int(text.replace(".", "").replace(",", ""))
+
+
+# Column headers whose Arabic is deliberately from somewhere else: the head a
+# word hangs on (another verse, often), a grammatical explanation, a pointer
+# into a chapter. Only columns outside this list are read as quotations.
+ELSEWHERE_COLUMNS = {"Hangt aan", "Waarom geen iʿrāb", "Waar het in dit boek staat",
+                     "Betekenis (hoofdlijn)", "Patroon", "Wat het is"}
+
+
+@check("Arabic quotations")
+def arabic_quotations(cur, args):
+    """Arabic quoted beside a verse number, compared codepoint for codepoint.
+
+    The sibling of `document figures`, for the other thing that keeps drifting
+    here. `sarf book examples` and `nahw book examples` ask whether a quoted
+    word is *in* the verse, and they compare with the vowels stripped, because
+    a quote is often cut short of a final vowel. That leaves the notation
+    unchecked, and the notation is exactly where hand-typed Arabic goes wrong.
+
+    One thing had to be settled before this could mean anything: the mushaf
+    files write the shadda before the vowel it carries, and the documents
+    write the vowel first. Neither is wrong. Unicode's canonical order is
+    vowel-then-shadda (combining classes 30-32 against 33), so the documents
+    are in NFC and the sources are not, and the two are canonically equivalent
+    -- they render identically and NFC makes them equal. So the comparison is
+    on NFC, and anything that still differs is a real difference and not a
+    storage detail.
+
+    A word that matches only once its vowels are stripped is reported apart
+    from one that is not in the verse at all: the first is a notation
+    mismatch, the second a wrong reference. Both fail.
+    """
+    require_tables(cur, "words")
+    index = {}
+
+    # A pause sign belongs to the page, not to the word: prose quotes قَالُوٓاْ
+    # where the mushaf writes قَالُوٓاْۖ, and that is not a notation mismatch.
+    pause = "\u06d6\u06d7\u06d8\u06d9\u06da\u06db\u06dc\u06dd\u06de\u06e9\u06e0"
+
+    def bare(word):
+        return unicodedata.normalize("NFC", word).rstrip(pause)
+
+    def add(surah, ayah, word):
+        index.setdefault((surah, ayah), set()).add(bare(word))
+
+    for surah, ayah, ar in cur.execute("SELECT surah, ayah, word_ar FROM words"):
+        add(surah, ayah, repair_markers(ar))
+    for surah, ayah, root in cur.execute(
+            "SELECT surah, ayah, root_ar FROM corpus WHERE root_ar IS NOT NULL AND root_ar<>''"):
+        add(surah, ayah, root)
+    # The eight mushaf packages, each word as that package writes it.
+    for path in sorted((HERE / "sources").glob("riwaya_*.csv")):
+        with open(path, encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                s, a = row.get("sora") or row.get("sura_no"), row.get("aya_no")
+                if not (s and a):
+                    continue
+                text = max((x for x in row.values()
+                            if x and any("\u0600" <= c <= "\u06ff" for c in x)),
+                           key=len, default="")
+                for word in text.split():
+                    add(int(s), int(a), word)
+    # A riwaya form is cited under the verse number of the side it is compared
+    # against, which for nine of the ten pairs is Hafs', not its own.
+    if cur.execute("SELECT name FROM sqlite_master WHERE name='riwaya_diff'").fetchone():
+        for surah, ayah, fa, fb in cur.execute(
+                "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"):
+            for form in (fa, fb):
+                for word in (form or "").split():
+                    add(surah, ayah, word)
+    loose = {k: {normalize(w) for w in ws} for k, ws in index.items()}
+
+    letter = re.compile(r"[\u0620-\u064a\u0671-\u06d3]")
+    here = r"([\u0621-\u06ff][\u0600-\u06ff\s]*?)\s*\((\d+):(\d+)\)"
+    there = r"(\d+):(\d+)\s+([\u0621-\u06ff][\u0600-\u06ff\s*]*)"
+    notation, absent, seen = [], [], 0
+    for name in ("README.md", "BEVINDINGEN.md", "docs/nahw-nl.md",
+                 "docs/sarf-nl.md", "docs/hafs-warsh.md"):
+        path = HERE / name
+        if not path.exists():
+            continue
+        header = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            found = []
+            if line.startswith("|"):
+                cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                if not set("".join(cells)) <= set("-: "):
+                    if any(c.startswith("Vers") or c == "Paar" for c in cells[:1]):
+                        header = cells
+                refs = [c for c in cells if re.fullmatch(r"\d+:\d+", c)]
+                if len(refs) == 1 and cells and cells[0] == refs[0]:
+                    s, a = (int(x) for x in refs[0].split(":"))
+                    for i, cell in enumerate(cells[1:], 1):
+                        col = header[i] if i < len(header) else ""
+                        if col in ELSEWHERE_COLUMNS or not letter.search(cell):
+                            continue
+                        found.append((cell, s, a))
+            else:
+                found = [(m.group(1), int(m.group(2)), int(m.group(3)))
+                         for m in re.finditer(here, line)]
+                found += [(m.group(3), int(m.group(1)), int(m.group(2)))
+                          for m in re.finditer(there, line)]
+            for phrase, s, a in found:
+                for token in re.sub(r"[*_>|\u2014\u2013\u2026\u060c()\[\];:,.`]",
+                                    " ", phrase).split():
+                    if not letter.search(token):
+                        continue
+                    seen += 1
+                    if bare(token) in index.get((s, a), ()):
+                        continue
+                    where = "%s %d:%d %s" % (name, s, a, token)
+                    if normalize(token) in loose.get((s, a), ()):
+                        notation.append(where)
+                    else:
+                        absent.append(where)
+    if notation or absent:
+        parts = []
+        if notation:
+            parts.append("%d written with different marks than any mushaf or the "
+                         "corpus: %s" % (len(notation), "; ".join(notation[:4])))
+        if absent:
+            parts.append("%d not in the verse they name at all: %s"
+                         % (len(absent), "; ".join(absent[:4])))
+        raise Failed("; ".join(parts))
+    return ("%d Arabic quotations across %d documents match the mushaf "
+            "codepoint for codepoint (compared on NFC)" % (seen, 5))
 
 
 @check("document figures")

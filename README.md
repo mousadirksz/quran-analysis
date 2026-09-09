@@ -221,7 +221,7 @@ python3 build.py --list                # print the pipeline order and exit
 
 A full run takes a while; the parsers and `resolve_citations.py` are the slow
 steps. Every step except `to_sqlite.py` is idempotent, which is what `--keep`
-exploits. The last step is `validate.py`, which runs 30 checks over the
+exploits. The last step is `validate.py`, which runs 31 checks over the
 finished database (see *Data quality* below) and can also be run on its own:
 
 ```sh
@@ -634,8 +634,8 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 
 ## Data quality
 
-`validate.py` runs 30 checks over the finished database and is the last step of
-`build.py`. On the committed database, 28 pass and 2 warn — the two warnings are
+`validate.py` runs 31 checks over the finished database and is the last step of
+`build.py`. On the committed database, 29 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
 `corpus`, *freshness* (the parsed JSONs, `resolved_citations.json` and the
@@ -723,7 +723,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 30 checks over the finished database (optional step) |
+| `validate.py` | 31 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
