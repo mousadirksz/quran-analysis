@@ -43,7 +43,7 @@ characters stand for the Quranic annotation signs of the Uthmani script: the
 small silent alef of 'قَالُوا۟', the small waw and small yeh of the pronouns
 'هُۥ' and 'بِهِۦ', the iqlab meem of 'مِنۢ بَعْدِ', and so on. Those characters were
 passed through unconverted, so corpus.form_ar holds 'وا@' where the mushaf has
-'وا۟' and 'هُ,' where it has 'هُۥ' - about 12.000 stray ASCII characters over
+'وا۟' and 'هُ,' where it has 'هُۥ' - 6,923 stray non-Arabic characters over
 the corpus. Concatenating those forms straight into a verse column called
 text_ar advertises readable Arabic and delivers mojibake.
 

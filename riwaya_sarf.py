@@ -11,7 +11,7 @@ Two levels, and they answer differently:
   the fifteen forms   No. Warsh uses I, II, III, IV, V, VI, VIII and X, all
                       of them already abundant in Hafs. No wazn enters or
                       leaves the Quran with the riwaya.
-  root plus form      Yes. Fourteen (root, form) pairs occur in Warsh that
+  root plus form      Yes. Eleven (root, form) pairs occur in Warsh that
                       the Hafs text has nowhere, in any part of speech.
 
 One caveat on the Hafs column: the corpus writes no verb_form for form I, so
@@ -132,12 +132,20 @@ def word_pair(cur, surah, ayah, root):
         " AND c.ayah = w.ayah AND c.word = w.word WHERE w.surah = ? AND w.ayah = ?"
         " AND c.root_ar = ?", (surah, ayah, root))]
     want = {shape(f) for f in forms}
+    # The corpus writes a final dotless yaa as alef maksura, which survives
+    # shape() as a letter; the mushaf writes it as yeh, which the transliteration
+    # reads as the long vowel of the kasra before it and strips. So 12:13
+    # لَيَحْزُنُنِىٓ and لَيَحۡزُنُنِيٓ come out as لyحزننy against لyحزنن and never
+    # meet. Trying again with a final semivowel off both sides is a second pass,
+    # so no pair that already matches can start matching something else.
+    bare = {w[:-1] if w[-1:] in "wy" else w for w in want}
     # riwaya_diff now holds ten pairs; this file is about Hafs and Warsh
     for a, b in cur.execute("SELECT form_a, form_b FROM riwaya_diff WHERE surah = ?"
                             " AND ayah_a = ? AND kind = 'farsh'"
                             " AND riwaya_a = 'hafs' AND riwaya_b = 'warsh'",
                             (surah, ayah)):
-        if shape(a) in want:
+        sh = shape(a)
+        if sh in want or (sh[:-1] if sh[-1:] in "wy" else sh) in bare:
             return a, b
     return None, None
 
@@ -199,11 +207,18 @@ def main():
         by = {}
         for surah, ayah, root, h, w in BAB:
             by.setdefault((root, h, w), []).append("%d:%d" % (surah, ayah))
-        print("%-6s %-6s %-7s %5s  %s" % ("wortel", "hafs", "warsh", "n", "plaatsen"))
+        if args.markdown:
+            print("| Wortel | Ḥafṣ | Warsh | n | Plaatsen |")
+            print("|---|---|---|--:|---|")
+        else:
+            print("%-6s %-6s %-7s %5s  %s" % ("wortel", "hafs", "warsh", "n", "plaatsen"))
         for (root, h, w), places in sorted(by.items(), key=lambda x: -len(x[1])):
-            print("%-6s baab %-1d baab %-1d %5d  %s"
-                  % (root, h, w, len(places),
-                     ", ".join(places[:6]) + (" ..." if len(places) > 6 else "")))
+            shown = ", ".join(places[:6]) + (" ..." if len(places) > 6 else "")
+            if args.markdown:
+                print("| %s | bāb %d | bāb %d | %d | %s |" % (root, h, w, len(places), shown))
+            else:
+                print("%-6s baab %-1d baab %-1d %5d  %s"
+                      % (root, h, w, len(places), shown))
         six = sum(1 for *_, w in BAB if w == 6)
         print("\n%d plaatsen waar de baab verschilt; %d daarvan zetten een gave"
               % (len(BAB), six))

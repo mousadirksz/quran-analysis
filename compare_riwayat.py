@@ -19,7 +19,9 @@ Every word is therefore transliterated first (riwaya_translit.py) and the
 transliterations are compared: that measures the recitation, which is what a
 farsh difference is.
 
-The verse division differs in 50 suras, so a join on (surah, ayah) breaks.
+The verse division differs from Hafs in 50 suras for Warsh and Qaaloon, 52
+for al-Bazzi and Qunbul, 43 for al-Doori and al-Soosi and none for Shu'ba,
+so a join on (surah, ayah) breaks.
 Each sura is aligned on its word sequence instead, with difflib over the
 consonant skeleton, and the two ayah numbers are both recorded.
 
@@ -42,8 +44,8 @@ al-Soosi and nowhere else.
 
 **One pair has also been read.** Rules classify; only Hafs-Warsh has had its
 farsh list gone through word by word afterwards, and the verdicts of that
-reading are in `farsh_review.tsv`. It struck 95 rows the rules had wrongly
-called farsh, 15 per cent of what they proposed. The other nine pairs carry
+reading are in `farsh_review.tsv`. It struck 116 rows the rules had wrongly
+called farsh, 18 per cent of what they proposed. The other nine pairs carry
 the rule verdict alone, so their farsh figure is an upper bound and `reviewed`
 is 0.
 
@@ -152,8 +154,10 @@ fold_ham2 = lambda x: re.sub(r"'[aui]?", "", x)
 # The second hamza of a pair is often given as tashiel or ibdaal, and the
 # mushaf then writes it as the long vowel it is drawn out into: 'a'iذA against
 # 'AذA. Reaching those needs the long vowel folded away with the hamza too --
-# but only as a second try, because folding a long vowel away unasked loses
+# as a disjunct beside fold_ham2 and never in place of it, because replacing
+# it loses
 # waلصصAبi'Uنa against waلصصAبUنa, where the hamza goes and the vowel stays.
+# Order in the chain does not matter; being additional is what does.
 fold_ham3 = lambda x: re.sub(r"'[auiAUI]?", "", x)
 fold_sil = lambda x: x.replace("uw", "u").replace("iy", "i")
 fold_mq = lambda x: x.replace("yA", "A")
@@ -176,14 +180,18 @@ MUQATTAAT_SURAS = {2, 3, 7, 10, 11, 12, 13, 14, 15, 19, 20, 26, 27, 28, 29, 30,
                    31, 32, 36, 38, 40, 41, 42, 43, 44, 45, 46, 50, 68}
 HAMZA = set("ءأإؤئٓٔ")
 # These three signs each do two jobs, told apart by the letter they sit on.
-# U+06ED is the small low meem of iqlaab where it sits on a vowelled letter;
-# Hafs writes it 102 times and every package writes about as many. U+06EA and
-# U+06EC on an alif mark hamzat
-# al-wasl, which is what the nearly ten thousand of them in Warsh, Qaaloon,
+# U+06ED is the small low meem of iqlaab where it sits on a vowelled letter.
+# The packages are nowhere near equal in it: Hafs writes it 99 times, al-Bazzi,
+# Qunbul and Shu'ba 100 each, al-Doori 66, al-Soosi 38, and Warsh and Qaaloon
+# not once. U+06EA and U+06EC on an alif mark hamzat
+# al-wasl, which is what the ten thousand and some of them in Warsh, Qaaloon,
 # al-Doori and al-Soosi are, and the transliteration resolves those. On any
 # other letter U+06EA and U+06EC mark imaala and taqliil on the alif that
 # follows -- Warsh 1,911, al-Doori 737, al-Soosi 609, Qaaloon 11, al-Bazzi,
-# Qunbul and Shu'ba 3 each, Hafs 2 -- as does U+06ED on a bare letter. That
+# Qunbul and Shu'ba 3 each, Hafs 2 -- as does U+06ED on a bare letter, which
+# adds 560 more for al-Doori and 555 for al-Soosi and nothing for the rest.
+# What has_imala() counts is therefore the sum: al-Doori 1,297, al-Soosi
+# 1,164, and for the other six the figures above. That
 # is a difference in the recitation
 # and not in the spelling. The transliteration ignores them, so they add no
 # differences of their own, and they are read here only to give a difference
@@ -202,7 +210,7 @@ def has_imala(w):
     other two jobs these three signs do by what they sit on, not by whether a
     vowel sign comes in between. U+06ED is the iqlaab marker and appears even
     in Hafs; U+06EA and U+06EC on an alif mark hamzat al-wasl, which is what
-    the nearly ten thousand of them in Warsh, Qaaloon, al-Doori and al-Soosi
+    the ten thousand and some of them in Warsh, Qaaloon, al-Doori and al-Soosi
     are. On any other letter the two of them mark imaala or taqliil.
     """
     for i, c in enumerate(w):
@@ -338,14 +346,24 @@ def sites(a="hafs", b="warsh"):
                 aa = bw[min(j1, len(bw) - 1)][0]
                 # difflib merges neighbouring changed words into one block;
                 # split it back when both sides hold the same number of words,
-                # so each difference is judged on its own
+                # so each difference is judged on its own.
+                #
+                # The control belongs here too. It used to be attached only in
+                # the `equal` branch above -- to words whose consonant skeletons
+                # already agree -- and a word that carries a second feature
+                # beside the idghaam has skeletons that do not agree, so it
+                # lands in a changed block. Those were exactly the rows that had
+                # no control and so could not be told from farsh: all 63 that
+                # doori-soosi reported.
                 if tag == "replace" and len(ha) == len(wa) > 1:
-                    for h, w in zip(ha, wa):
+                    for k, (h, w) in enumerate(zip(ha, wa)):
                         found.append(dict(sura=sura, ah=ah, aw=aa, tag=tag,
-                                          a=h, b=w))
+                                          a=h, b=w, ctrl=ctrl.get(i1 + k)))
                 else:
                     found.append(dict(sura=sura, ah=ah, aw=aa, tag=tag,
-                                      a=" ".join(ha), b=" ".join(wa)))
+                                      a=" ".join(ha), b=" ".join(wa),
+                                      ctrl=(ctrl.get(i1) if len(ha) == len(wa) == 1
+                                            else None)))
     return found
 
 
@@ -358,10 +376,12 @@ def undo_idghaam(th, tw, ctrl=None):
     one word loses its final vowel and the next gains a doubled first letter,
     and both halves land here as separate differences.
 
-    It is a rule and not a word-by-word choice: of the 963 places where a
-    final short vowel goes, 879 have the doubled consonant on the next word,
-    and the 84 that do not are all miem before baa, where the assimilation is
-    incomplete and no shadda is written.
+    It is a rule and not a word-by-word choice: a final short vowel goes in
+    1,157 places over the whole Quran, against the five below that the control
+    picks out as jazm. Most of them have the doubled consonant on the next
+    word; those that do not are miem before baa, where the assimilation is
+    incomplete and no shadda is written. That second split is not re-derived
+    here, because only the losing half is counted at all -- see below.
 
     Only the losing half is recognised here, because only that half is
     unambiguous. A word that merely *begins* with a doubled consonant is far
@@ -382,7 +402,7 @@ def undo_idghaam(th, tw, ctrl=None):
     The control is al-Doori. He transmits the same qiraa from the same qari
     and does not apply idghaam kabiir, so a vowel that goes in al-Soosi and
     stays in al-Doori is the rule, and one that goes in both belongs to Abu
-    'Amr's reading. Over the whole Quran that splits 958 against 5, and the
+    'Amr's reading. Over the whole Quran that splits 1,152 against 5, and the
     five are exactly the places a reader would name: 2:284 twice, 19:6
     `wa-yarith`, 4:81 `bayyat`, and 27:66 `bal`."""
     if ctrl is not None and tw == th[:-1] and th[-1:] in ("a", "u", "i") \
@@ -401,6 +421,19 @@ def strip_usul(th, tw, ctrl=None):
     undone = undo_idghaam(th, tw, ctrl)
     if undone is not None:
         return th, undone, ["idghaam_kabir"]
+    # The idghaam does not always come alone. Where the final vowel went by the
+    # rule -- the control still writes it -- but the two sides differ in
+    # something else as well (a hamza softened into its long vowel, a shadda
+    # carried over from the word before), the exact test above cannot see it,
+    # and the row fell through to farsh: every one of the 63 that doori-soosi
+    # reported was of that shape. So take the vowel the rule took and let the
+    # rest of the chain judge what is left. A residue nothing explains still
+    # ends up as farsh, which is the point of keeping the control.
+    if (ctrl is not None and th[-1:] in ("a", "u", "i")
+            and tw[-1:] not in ("a", "u", "i")
+            and ctrl != tw and ctrl[-1:] in ("a", "u", "i")):
+        th = th[:-1]
+        tags.append("idghaam_kabir")
     if tw.endswith("U") and tw[:-1].endswith("م") and th.endswith("م"):
         tw = tw[:-1]; tags.append("sila_mim")
     # The sila of the haa is the long vowel a transmission gives the pronoun
@@ -493,24 +526,43 @@ def classify(th, tw, ctrl=None, raw_b=""):
         # a particle or a plural pronoun before a wasl: the vowel that joins
         # them is the reader's, not the word's
         return "junction_vowel" + suffix
-    # the hamza, but only where the two actually differ in how many they have,
-    # so that a pure difference of vowel length is never absorbed here
+    # The hamza, but only where the two sides differ in how many they write.
+    #
+    # Two folds that are sound everywhere else are wrong *here*, because with
+    # the hamza already taken out they stop describing its treatment and start
+    # equating different words:
+    #
+    #   vowels_only_dropped, which reads a missing short vowel as an unwritten
+    #   one. At 43:19 that turned أَشَهِدُوٓاْ against اَ۟شْهِدُوٓاْ into one
+    #   spelling of one word, where it is a-shahiduu against ushhiduu -- ma'luum
+    #   against majhuul, and the difference lives in exactly those vowels. The
+    #   proof it was this branch and not the reading: the same difference came
+    #   out as farsh against Qaaloon, who writes that hamza on a seat, and as
+    #   usul against Warsh, who does not.
+    #
+    #   fold_sil, which drops the yaa of `iy` and the waw of `uw` as a written
+    #   trace of a long vowel. With the hamza gone from the other side there is
+    #   nothing left to hold the two apart, and 18:86 حَمِئَةٖ against حَٰمِيَةٖ
+    #   came out as one word: hami'a "muddy" (ح م أ) against haamiya "hot"
+    #   (ح م ي), two roots and the farsh every reader names.
+    #
+    # fold_len stays. It carries the dagger alif against the written alif, which
+    # is notation and not the reading, and taking it out of this branch alone
+    # moves some 1,500 rows that are nothing but that.
     if th.count("'") != tw.count("'"):
         if fold_nq(fold_ham(th)) == fold_nq(fold_ham(tw)) or \
            fold_nq(fold_ham2(th)) == fold_nq(fold_ham2(tw)) or \
            fold_ham2(th) == fold_ham2(tw) or \
            fold_ham3(th) == fold_ham3(tw) or \
            fold_len(fold_ham3(th)) == fold_len(fold_ham3(tw)) or \
-           vowels_only_dropped(fold_ham2(th), fold_ham2(tw)) or \
            fold_mq(fold_ham2(th)) == fold_mq(fold_ham2(tw)) or \
            fold_len(fold_ham2(th)) == fold_len(fold_ham2(tw)):
             return "hamza_treatment" + suffix
         a, b = fold_ham(th), fold_ham(tw)
-        for f in (lambda x: x, fold_len, fold_gem, fold_art, fold_sil, fold_mq,
+        for f in (lambda x: x, fold_len, fold_gem, fold_art, fold_mq,
                   fold_iv, lambda x: fold_mq(fold_len(x)),
-                  lambda x: fold_iv(fold_sil(x)),
                   lambda x: fold_len(fold_gem(x)), lambda x: fold_len(fold_art(x)),
-                  lambda x: fold_len(fold_sil(x)), lambda x: fold_gem(fold_art(x))):
+                  lambda x: fold_gem(fold_art(x))):
             if f(a) == f(b):
                 return "hamza_treatment" + suffix
     return "farsh_candidate" + suffix
@@ -577,7 +629,7 @@ def hand_verdicts():
 
     The largest group struck is the hamz of an-nabii' and an-nubuu'a, which
     a rule cannot judge either: what makes it usul rather than a word-by-word
-    choice is that Naafi' reads it so at all 82 places the word occurs, and
+    choice is that Naafi' reads it so at every place the word occurs, and
     that count is a fact about the whole text and not about the pair in
     front of you."""
     out = {}
@@ -719,14 +771,31 @@ def markdown(conn, rows):
                "dan een lezing tegelijk: de qiraa-aat verwijderen zich niet "
                "van dat schriftbeeld, het schriftbeeld is zo gekozen dat het "
                "ze draagt.\n")
-    out.append("**Dat Hafs links staat, is gereedschap en geen norm.** In "
-               "negen van de tien paren staat Hafs in de linkerkolom, omdat "
-               "dat de overlevering is die de meeste lezers kennen en omdat "
-               "het elk van de acht pakketten een vergelijking geeft. "
-               "Verwissel de kolommen en er verandert geen enkel getal. "
-               "Zelfs de versnummering is niet gedeeld -- het woord "
-               "hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- "
-               "en de tabel houdt daarom aan beide kanten een eigen "
+    out.append("**Dat Hafs links staat, is gereedschap en geen norm -- maar "
+               "het is niet vrijblijvend.** In zeven van de tien paren staat "
+               "Hafs in de linkerkolom, omdat dat de overlevering is die de "
+               "meeste lezers kennen en omdat het elk van de acht pakketten "
+               "een vergelijking geeft; de drie overige zetten twee "
+               "overleveringen van een en dezelfde qaari- naast "
+               "elkaar. *Welke* plaatsen uiteenlopen is "
+               "symmetrisch: draai het paar om en je vindt dezelfde plaatsen "
+               "terug. De *indeling* van die plaatsen is dat niet. De "
+               "usul-regels hebben een richting -- naql legt de klinker van "
+               "een volgende hamza op de laatste letter, silat al-haa voegt "
+               "er een lange klinker aan toe, idghaam kabier neemt de "
+               "eindklinker juist weg -- en ze zijn geschreven met Hafs als "
+               "de kant waarvandaan gekeken wordt. Zet Warsh links en de "
+               "regels herkennen hun eigen kenmerk niet meer: dan valt dat "
+               "kenmerk door naar farsh en telt dit paar geen 523 maar "
+               "1.611. Bij paren die dicht bij elkaar liggen scheelt het "
+               "vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba "
+               "397 tegen 400); bij paren waar de ene kant usul toepast die "
+               "de andere niet kent, scheelt het alles. De farsh-kolom is "
+               "dus onderling vergelijkbaar doordat Hafs overal links staat, "
+               "en niet doordat het getal van de richting onafhankelijk zou "
+               "zijn. Ook de versnummering is trouwens niet gedeeld -- het "
+               "woord hieronder staat bij Hafs in 57:24 en bij Warsh in "
+               "57:23 -- en de tabel houdt daarom aan beide kanten een eigen "
                "ayah-nummer bij.\n")
     out.append("**Farsh betekent niet fout.** *Farsh al-hoeroef* is de "
                "klassieke term voor de plaatsen waar twee lezingen in het "
@@ -774,8 +843,9 @@ def markdown(conn, rows):
     out.append("Alle tien de paren zijn met dezelfde regels geclassificeerd. "
                "Wat per pakket verschilt is de schrijfwijze, en dat zit nu in "
                "de transliteratie: Qaaloon, Doorie en Soesie schrijven de "
-               "wasl-alif als een kale alif met de klinker erop, Hafs en de "
-               "Kufische pakketten als de letter alef wasla, en Warsh met een "
+               "wasl-alif als een kale alif met de klinker erop, Hafs en "
+               "Shu3ba (Koefa) en al-Bazzie en Qoenboel (Mekka) als de "
+               "letter alef wasla, en Warsh met een "
                "teken erboven. De kenmerken die maar bij een deel van de "
                "riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala "
                "van Aboe 3Amr en van Warsh, het wegvallen van de klinker in "

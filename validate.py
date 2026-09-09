@@ -88,6 +88,10 @@ RESOLVED = SOURCES / "resolved_citations.json"
 EXPECTED_SEGMENTS = 128219
 EXPECTED_SURAHS = 114
 EXPECTED_AYAHS = 6236
+# The treebank's head pointers are not quite a forest; see the 'syntax head
+# structure' check for what these two count and why they are not repaired.
+EXPECTED_HEAD_CYCLES = 135
+EXPECTED_ROOTLESS = 19
 EXPECTED_WORDS = 77429
 
 KALIMA_TYPES = {"ism", "fiil", "harf", "muqattaat"}
@@ -649,11 +653,21 @@ def sense_alignment_refs(cur, args):
                 "COUNT(DISTINCT work), MAX(n_works) FROM sense_alignment "
                 "GROUP BY 1 HAVING COUNT(*) != MAX(n_senses) "
                 "OR COUNT(DISTINCT work) != MAX(n_works)")
+    # (work, headword, sense_nr) is not unique in wujuh -- 83 such keys carry
+    # more than one gloss, because distinct lexicon entries were collapsed onto
+    # one normalised headword. Matching on that key alone can therefore be
+    # satisfied by the wrong entry, so the gloss is matched too. wujuh.gloss is
+    # NULL where sense_alignment stores the empty string, hence the ifnull.
+    expect_none(cur, "aligned sense whose gloss is not the one wujuh holds",
+                "SELECT a.work, a.headword, a.sense_nr FROM sense_alignment a "
+                "WHERE NOT EXISTS (SELECT 1 FROM wujuh w WHERE w.work=a.work "
+                "AND w.headword=a.headword AND w.sense_nr=a.sense_nr "
+                "AND IFNULL(w.gloss,'') = a.gloss)")
     senses, clusters = cur.execute(
         "SELECT COUNT(*), COUNT(DISTINCT canonical_id) FROM sense_alignment"
     ).fetchone()
     return (f"{senses:,} aligned senses in {clusters:,} canonical senses, "
-            "all resolving to a wujuh sense")
+            "each resolving to a wujuh sense with the same gloss")
 
 
 @check("metadata: surahs")
@@ -738,7 +752,13 @@ def irab_passages(cur, args):
                 "SELECT DISTINCT work FROM irab WHERE work NOT IN ('nahhas')")
     covered = cur.execute("SELECT COUNT(DISTINCT surah || ':' || ayah) FROM irab").fetchone()[0]
     rows = cur.execute("SELECT COUNT(*) FROM irab").fetchone()[0]
-    return (f"{rows:,} passages covering {covered:,} of {EXPECTED_AYAHS:,} verses "
+    # A passage that covers a range of verses is stored once per verse of the
+    # range, so the row count is not the number of passages: say both, or the
+    # table reads as holding several hundred more discussions than it does.
+    distinct = cur.execute("SELECT COUNT(*) FROM (SELECT DISTINCT work, passage FROM irab)").fetchone()[0]
+    return (f"{distinct:,} distinct passages in {rows:,} rows (a passage on a range of "
+            f"verses is stored once per verse), covering {covered:,} of "
+            f"{EXPECTED_AYAHS:,} verses "
             f"({covered / EXPECTED_AYAHS * 100:.0f}%, the rest raise no question he treats)")
 
 
@@ -764,6 +784,98 @@ def syntax_tokens(cur, args):
     implicit = cur.execute("SELECT COUNT(*) FROM syntax WHERE is_implicit=1").fetchone()[0]
     return (f"{written:,} written tokens all linked to corpus, "
             f"{implicit:,} implicit tokens posited by the treebank")
+
+
+@check("syntax head structure")
+def syntax_heads(cur, args):
+    """The head pointers are nearly a forest, and the exceptions are counted.
+
+    Code that walks upward from a token wants a root to stop at, and almost
+    everywhere there is one. Not everywhere: the treebank's own analyses leave
+    some head chains running in a circle, and some sentences in which every
+    token has a head, so no token is the root. Those are the source's readings
+    and are not rewritten here -- but a naive upward walk over them never ends,
+    and the numbers are pinned so they cannot grow unnoticed. Anything that
+    walks heads should carry a seen-set.
+    """
+    require_tables(cur, "syntax")
+    expect_none(cur, "token that is its own head",
+                "SELECT tid FROM syntax WHERE head_tid = tid")
+    expect_none(cur, "head_tid pointing at no token",
+                "SELECT s.tid FROM syntax s WHERE s.head_tid IS NOT NULL"
+                " AND NOT EXISTS (SELECT 1 FROM syntax h WHERE h.tid = s.head_tid)")
+    head = dict(cur.execute("SELECT tid, head_tid FROM syntax"))
+    colour, cycles, in_cycles = {}, 0, 0
+    for start in head:
+        if colour.get(start):
+            continue
+        path, node = [], start
+        while node is not None and not colour.get(node):
+            colour[node] = 1
+            path.append(node)
+            node = head.get(node)
+        if node is not None and colour.get(node) == 1:
+            cycles += 1
+            in_cycles += len(path) - path.index(node)
+        for n in path:
+            colour[n] = 2
+    rootless = cur.execute(
+        "SELECT COUNT(*) FROM (SELECT sentence_id FROM syntax GROUP BY sentence_id"
+        " HAVING SUM(head_tid IS NULL) = 0)").fetchone()[0]
+    sentences = cur.execute("SELECT COUNT(DISTINCT sentence_id) FROM syntax").fetchone()[0]
+    expect(cycles, EXPECTED_HEAD_CYCLES, "head_tid cycles")
+    expect(rootless, EXPECTED_ROOTLESS, "sentences with no root token")
+    return (f"{sentences - rootless:,} of {sentences:,} sentences have a root; "
+            f"{rootless} do not, and {cycles} head chains ({in_cycles} tokens) "
+            "run in a circle -- the treebank's own analyses, left as they came")
+
+
+@check("corpus_id references")
+def corpus_id_refs(cur, args):
+    """A corpus_id must name a row that exists, and the same verse.
+
+    Two tables point into `corpus` by id, and nothing checked either. An id
+    that survives a rebuild of the corpus while pointing at a row that moved is
+    the failure this catches: not a dangling reference, which would be obvious,
+    but a live one that now names a different word in a different verse.
+    """
+    require_tables(cur, "corpus")
+    for table in ("syntax", "wujuh"):
+        if not cur.execute("SELECT name FROM sqlite_master WHERE name=?", (table,)).fetchone():
+            continue
+        expect_none(cur, f"{table}.corpus_id naming no corpus row",
+                    f"SELECT corpus_id FROM {table} WHERE corpus_id IS NOT NULL"
+                    " AND corpus_id NOT IN (SELECT id FROM corpus)")
+        expect_none(cur, f"{table}.corpus_id naming another verse than its own",
+                    f"SELECT t.corpus_id FROM {table} t JOIN corpus c ON c.id = t.corpus_id"
+                    " WHERE t.surah != c.surah OR t.ayah != c.ayah")
+    linked = cur.execute("SELECT COUNT(*) FROM syntax WHERE corpus_id IS NOT NULL").fetchone()[0]
+    wl = cur.execute("SELECT COUNT(*) FROM wujuh WHERE corpus_id IS NOT NULL").fetchone()[0]
+    return (f"{linked:,} syntax and {wl:,} wujuh rows point into corpus, "
+            "every one at a row that exists and names the same verse")
+
+
+@check("verses: derived columns")
+def verses_derived(cur, args):
+    """word_count, juz and hizb are derived, so they can drift from what they
+    describe. Each is checked against the table it was derived from."""
+    require_tables(cur, "verses", "juz_boundaries", "hizb_boundaries")
+    expect_none(cur, "verses.word_count disagreeing with the words view",
+                "SELECT v.surah, v.ayah FROM verses v LEFT JOIN"
+                " (SELECT surah, ayah, COUNT(*) n FROM words GROUP BY 1,2) w"
+                " ON w.surah=v.surah AND w.ayah=v.ayah"
+                " WHERE IFNULL(w.n, 0) != v.word_count")
+    expect_none(cur, "verses.juz outside 1..30", "SELECT surah, ayah FROM verses"
+                " WHERE juz IS NULL OR juz < 1 OR juz > 30")
+    expect_none(cur, "verses.hizb outside 1..60", "SELECT surah, ayah FROM verses"
+                " WHERE hizb IS NULL OR hizb < 1 OR hizb > 60")
+    expect_none(cur, "hizb that does not sit in its own juz",
+                "SELECT v.surah, v.ayah FROM verses v JOIN hizb_boundaries h"
+                " ON h.hizb = v.hizb WHERE h.juz != v.juz")
+    hizbs = cur.execute("SELECT COUNT(*) FROM hizb_boundaries").fetchone()[0]
+    expect(hizbs, 60, "ahzaab")
+    return (f"{hizbs} ahzaab over 30 ajzaa', and every verse's word_count, juz "
+            "and hizb agree with what they were derived from")
 
 
 @check("riwaya differences")
@@ -813,7 +925,7 @@ def riwaya_differences(cur, args):
                        " FROM riwaya_diff WHERE reviewed = 1").fetchall()
     if [r[0] for r in read] != ["hafs-warsh"]:
         raise Failed("pairs marked as read: %s (expected hafs-warsh alone)"
-                     % ", ".join(r[0] for r in read) or "none")
+                     % (", ".join(r[0] for r in read) or "none"))
     # idghaam kabiir is read off one riwaya against its sibling as control, so
     # it can only ever be claimed for a riwaya the comparison knows applies it
     applies = ", ".join("'" + r + "'" for r in sorted(IDGHAAM_KABIR))
@@ -902,14 +1014,41 @@ def quoted_words(text, verses, extra=None):
     `fa-yushitakum`."""
     here = r"([\u0621-\u06ff][\u0600-\u06ff\s]*?)\s*\((\d+):(\d+)\)"
     there = r"(\d+):(\d+)\s+([\u0621-\u06ff][\u0600-\u06ff\s*]*)"
+    # A table row is the third shape, and it is the one the books use most: a
+    # cell holding nothing but S:A, with Arabic cells beside it on the same row.
+    # Skipping every line that starts with a pipe left the fifteen-forms table
+    # of the sarf book unchecked, and that table cited a form-IX example from
+    # the wrong verse for as long as it existed.
     bad, seen = [], 0
     for line in text.splitlines():
         if line.startswith("|"):
-            continue
-        found = [(m.group(1), int(m.group(2)), int(m.group(3)))
-                 for m in re.finditer(here, line)]
-        found += [(m.group(3), int(m.group(1)), int(m.group(2)))
-                  for m in re.finditer(there, line)]
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            refs = [c for c in cells if re.fullmatch(r"\d+:\d+", c)]
+            if len(refs) != 1:
+                continue
+            # Only rows that open with the reference, and only the cell next to
+            # it. Those are the tables of literal quotations -- the riwaya
+            # tables of both books, where the cell beside the verse number is
+            # the word as that mushaf writes it.
+            #
+            # Deliberately out of scope: a table that puts the reference in a
+            # later column, because the Arabic beside it there is the citation
+            # form and not a quotation. The sarf book's fifteen-forms table
+            # gives أَنْعَمَ for form IV at 1:7, where the verse writes
+            # أَنْعَمْتَ, and ٱسْتَعِينُ at 1:5 for نَسْتَعِينُ. Both are true
+            # about those verses and neither is the word standing in them, and
+            # telling that apart from a wrong reference needs morphology this
+            # check does not have.
+            if cells[0] != refs[0]:
+                continue
+            surah, ayah = (int(x) for x in refs[0].split(":"))
+            found = [(c, surah, ayah) for c in cells[1:2]
+                     if re.search(r"[\u0621-\u06ff]", c)]
+        else:
+            found = [(m.group(1), int(m.group(2)), int(m.group(3)))
+                     for m in re.finditer(here, line)]
+            found += [(m.group(3), int(m.group(1)), int(m.group(2)))
+                      for m in re.finditer(there, line)]
         for phrase, surah, ayah in found:
             if (surah, ayah) not in verses:
                 continue
@@ -920,18 +1059,28 @@ def quoted_words(text, verses, extra=None):
                 if not bare:
                     continue
                 seen += 1
-                if bare not in hay:
+                # A table gives the citation form -- أَنْعَمَ for form IV -- beside
+                # the verse where it stands as أَنْعَمْتَ, and prose quotes a word
+                # without the fa- or wa- the verse writes. Both are true
+                # statements about that verse, so a word also counts as standing
+                # there when a word of the verse contains it. A word that is not
+                # in the verse in any shape still fails, which is what caught
+                # ٱبْيَضَّتْ cited from 3:106 where the verse has تَبْيَضُّ.
+                if bare not in hay and not any(bare in w for w in hay):
                     bad.append("%d:%d %s" % (surah, ayah, token))
     return seen, bad
 
 
 @check("sarf book examples")
 def sarf_book(cur, args):
-    """Every verse the sarf book quotes must still say what it says.
+    """Every word the sarf book quotes in running prose beside a verse number.
 
-    The book cites the mushaf in running prose -- `19:6 yarithunii`, `famakatha
-    (27:22)` -- and those are typed by hand, so they are exactly what goes
-    stale. It also quotes Warsh where the two riwayat read a word differently,
+    Scope, so the PASS line is not read for more than it says: this checks the
+    quotations the book sets in its own sentences -- `19:6 yarithunii`,
+    `famakatha (27:22)` -- and not the several hundred bare verse references,
+    nor the Arabic inside its tables, which are pasted from sarf_examples.py
+    and are that script's to reproduce. Prose quotations are typed by hand, so
+    they are exactly what goes stale. It also quotes Warsh where the two riwayat read a word differently,
     and those forms are not in the corpus at all, so the riwaya table is
     consulted as a second source: a word counts as found when it stands in the
     verse in either transmission.

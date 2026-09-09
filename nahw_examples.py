@@ -42,6 +42,10 @@ REL_NL = {
     "neg": "het partikel dat ontkent",
     "circ": "de toestand waarin de handeling zich voltrekt",
     "emph": "herhaling die bevestigt",
+    # The treebank spells some nawaasikh with a space before the marker and
+    # some without; the lookup strips spaces, so one spelling covers both.
+    "subj<<kan>>": "wat كان in rafʿ laat: zijn ism",
+    "pred<<kan>>": "wat كان in naṣb zet: zijn ḫabar",
     "subj<<in>>": "wat إنّ in naṣb zet",
     "pred<<in>>": "wat إنّ in rafʿ laat",
     "subj<<an>>": "wat أنّ in naṣb zet",
@@ -60,7 +64,10 @@ REL_NL = {
     "sup": "een partikel dat er staat zonder iets te regeren",
     "Spec": "wat een vage maat of hoeveelheid preciseert",
     "exp": "wat van het geheel wordt uitgezonderd",
-    "prev": "de kāf van de vergelijking",
+    # PREV is maa al-kaaffa, the maa that stops a particle from governing;
+    # the token is مَا in all 164 places. It was glossed as the kaaf of
+    # comparison, which is a different word entirely.
+    "prev": "de مَا die een partikel belet te regeren",
     "fut": "سوف of سـ, dat naar de toekomst wijst",
     "caus": "de lām die een reden geeft",
     "prp": "de maṣdar die zegt waarom",
@@ -91,8 +98,13 @@ REL_CH = {
     "Subj": 11, "Pass": 12, "Obj": 13, "cog": 14, "prp": 14, "circ": 15,
     "Spec": 15, "exp": 16, "res": 16, "gen": 17, "Poss": 17, "link": 18,
     "Adj": 19, "conj": 19, "emph": 19, "App": 19, "sub": 20, "cond": 20,
-    "rslt": 20, "Pred": 6, "neg": 20, "root": 5, "sup": 21,
-    "intg": 20, "voc": 14, "cert": 20, "Pro": 20, "fut": 20,
+    # A label with no chapter of its own gets 0, which the table prints as a
+    # dash. Sending it to a chapter that never mentions it is worse than saying
+    # nothing: nafy, istifhaam and qad used to point at chapter 20 (sila, sharT
+    # and the moods) and zaa-id at chapter 21, and none of those four words
+    # occurs there.
+    "rslt": 20, "Pred": 6, "neg": None, "root": 5, "sup": None,
+    "intg": None, "voc": 14, "cert": None, "Pro": 20, "fut": 20,
     "imrs": 20, "impv": 20, "caus": 20, "prev": 17, "inc": 6,
     "amd": 19, "ret": 19, "exl": 19, "int": 19, "sur": 20, "exh": 20,
     "avr": 20, "ans": 20, "state": 19, "eq": 6, "Cpnd": 17,
@@ -133,7 +145,7 @@ def relations(cur, markdown=False, limit=30):
         print("| Relatie | | Geschreven | Geponeerd | Wat het is | H. |")
         print("|---|---|--:|--:|---|--:|")
     for rel, ar, n, imp in head:
-        nl = REL_NL.get(rel, "")
+        nl = REL_NL.get(rel.replace(" ", ""), "")
         if markdown:
             print("| `%s` | %s | %s | %s | %s | %s |"
                   % (rel, ar or "", num(n - (imp or 0)),
@@ -274,7 +286,9 @@ def rel(cur, label, markdown=False, limit=6):
         "SELECT s.surah, s.ayah, s.word, h.surah, h.ayah, h.word, s.token_ar"
         " FROM syntax s LEFT JOIN syntax h ON h.tid = s.head_tid"
         " WHERE s.rel_label = ? AND s.is_implicit = 0 AND s.word IS NOT NULL"
-        " ORDER BY s.surah, s.ayah LIMIT ?", (label, limit * 4)).fetchall()
+        " ORDER BY s.surah, s.ayah", (label,)).fetchall()
+    if not rows:
+        sys.exit("geen rijen met rel_label %r; zie `relations` voor de labels" % label)
     if markdown:
         print("| Vers | Woord | Hangt aan |")
         print("|---|---|---|")
@@ -330,7 +344,7 @@ def irab_diff(cur, markdown=False, mode="irab"):
     print("\n%d plaatsen." % len(rows))
 
 
-# A final vowel is not always an i'rab ending. Thirteen of these places
+# A final vowel is not always an i'rab ending. Ten of these places
 # carry one for another reason, and no string rule tells them apart from the
 # real endings: نَكُونَ and تُبَشِّرُونَ end alike, and so do اللَّهِ and عَلَيْهِ. So
 # they were read, like the farsh list itself, and named here with the reason.
@@ -396,6 +410,8 @@ def main():
         irab_diff(cur, markdown, mode="book")
     elif mode == "rel" and len(args) > 1:
         rel(cur, args[1], markdown)
+    elif mode == "rel":
+        sys.exit("rel wil een label: `rel Subj`; zie `relations` voor de labels")
     else:
         sys.exit("onbekende modus: %s" % mode)
 

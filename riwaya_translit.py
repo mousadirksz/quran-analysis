@@ -39,11 +39,24 @@ ALIF_MAQSURA = 'ى'
 VOWELS = {FAT: 'a', DAM: 'u', KAS: 'i',
           'ً': 'aN', 'ٗ': 'aN',    # fathatan, both glyph shapes
           'ٌ': 'uN', 'ٞ': 'uN',    # dammatan
-          'ٍ': 'iN', 'ٖ': 'iN'}    # kasratan
+          'ٍ': 'iN', 'ٖ': 'iN',    # kasratan
+          # Shu'ba's mushaf writes the imaala on a fatha as a dot below the
+          # letter instead of the fatha itself, 79 times. It is the only vowel
+          # on that letter, and the generic combining-mark branch used to drop
+          # it, so the vowel vanished. Hafs writes a plain fatha at every one of
+          # the 52 words involved, so it is read as the fatha it stands for;
+          # that the recitation draws it towards the ee is what imaala is for.
+          '\u065c': 'a'}
 
 IGNORE = set('ۖۗۘۙۚۛۜ۝۞۟'
              '۠ۢۤۨ۩۪ۭ۫'
-             '‏‎﻿ـ')
+             '‏‎﻿ـ'
+             # Two more seats a hamza is written on, beside the tatweel above:
+             # the zero width joiner (al-Doori and al-Soosi at 17:7, where Hafs
+             # uses the tatweel) and the dotless beh (al-Bazzi and Qunbul at
+             # 6:19). They carry no sound, and without this they were appended
+             # into the comparison key as if they were letters.
+             '\u200d\u066e')
 
 CONSONANTS = set('بتثجحخدذرزسشصضطظعغفقكلمنهوي')
 # A wasl alif stands at the head of its word, behind nothing or behind one or
@@ -67,15 +80,19 @@ def _emit_long(out, ch):
 def translit(w, sila=True, plain_wasl=False):
     """Transliterate one vowelled word.
 
-    `plain_wasl` says which of the two mushaf conventions for hamzat al-wasl
-    this word's package follows. Hafs, al-Bazzi, Qunbul and Shu'ba write the
-    alef wasla letter (U+0671); Warsh marks it with a sign over a plain alif;
-    Qaaloon, al-Doori and al-Soosi write a plain alif carrying the vowel the
-    wasl would take if you began on it, and no distinct letter at all. In
-    those three, a bare alif with a vowel is a wasl alif -- hamzat al-qat' is
-    always written on a seat there, in every one of some 9,000 places against
-    a single exception per package, and that exception (40:46 'adkhiluu
-    against udkhuluu) is a farsh difference and not a spelling."""
+    There are two conventions among the eight packages, not three. Hafs,
+    Shu'ba, al-Bazzi and Qunbul write the alef wasla letter (U+0671), about
+    13,485 times each. Warsh, Qaaloon, al-Doori and al-Soosi never write that
+    letter at all, and mark the wasl with U+06EC over a plain alif instead --
+    10,056, 10,088, 10,052 and 10,053 times.
+
+    `plain_wasl` is not that split; it is a fallback for what the second
+    convention leaves unmarked. In Qaaloon, al-Doori and al-Soosi a bare alif
+    carrying a vowel is a wasl alif even where no sign says so, because hamzat
+    al-qat' is written on a seat there in every one of some 9,000 places bar
+    one per package. Warsh marks every one of his, so the fallback never fires
+    for him: setting the flag for him changes no row.
+    """
     # iqlab is written as a small mim beside a single vowel sign standing for
     # the tanwin; restore the tanwin the sign implies
     w = re.sub('\u064e[\u06e2\u06ed]', '\u064b', w)
@@ -140,6 +157,12 @@ def translit(w, sila=True, plain_wasl=False):
             # a wasl alif and the vowel it carries; never a tanwin, whose
             # silent carrier alif these packages write before the sign
             i += 2; continue
+        if c == 'ا' and not out and nxt == DAGGER:
+            # alef madda, which the Maghribi mushaf writes as a bare alif
+            # with the dagger over it where the Kufi one writes آ or ءَا.
+            # Without this the two came out as AA against 'A, and every one
+            # of the 177 words involved read as a difference in the text.
+            out.append("'"); _emit_long(out, 'A'); i += 2; continue
         if c == 'ا' and not out and nxt in VOWELS:
             # word-initial bare alif carrying a vowel: the Maghribi mushaf
             # writes hamzat al-qat' this way where the Kufi one writes a seat

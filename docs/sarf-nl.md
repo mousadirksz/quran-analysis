@@ -315,15 +315,22 @@ bāb 5 en 6 verschil, zoals hieronder blijkt.
 
 Twee dingen vallen op.
 
-**Bāb 5 is zeldzaam** — één werkwoord, كَبُرَ, acht keer. Dat past bij zijn
+**Bāb 5 is zeldzaam** — één werkwoord, كَبُرَ, zeven keer. Dat past bij zijn
 aard: hij drukt een blijvende eigenschap uit en is nooit overgankelijk, dus
 komt hij zelden voor in verhalend of gebiedend proza.
+
+`sarf_examples.py abwab` telt er acht, en dat achtste is leerzaam: 4:6
+يَكْبَرُ heeft een *fatḥa* op de ʿayn en is de muḍāriʿ van كَبِرَ, "opgroeien"
+— bāb 4, een ánder werkwoord van dezelfde wortel. De generator groepeert op
+wortel en houdt die twee niet uit elkaar; het oog wel.
 
 **Bāb 6 hangt aan de riwaaya.** De leerboeken geven حَسِبَ / يَحْسِبُ als
 voorbeeld van deze bāb. In de riwaaya van Ḥafṣ, waaruit deze tabel is geteld,
 leest dat werkwoord يَحْسَبُ — met een *fatḥa*, en dat is bāb 4. **In de
 riwaaya van Warsh leest het يَحْسِبُ**, op alle 28 plaatsen waar het in de
-*muḍāriʿ* staat.
+*muḍāriʿ* staat — de vergelijking vindt dat verschil op 31 plaatsen. (Het
+corpus telt 36 muḍāriʿ-vormen van حسب; op de overige vijf staat de klinker
+niet ter discussie.)
 
 Bij een gave wortel staat bāb 6 dus wel in Warsh en niet in Ḥafṣ, en nog wel
 met precies het werkwoord waaraan de grammatici hem hun naam gaven. Beide
@@ -386,6 +393,12 @@ De taal vormt vijftien patronen. De Quran gebruikt er elf. Hieronder alle
 vijftien: waar de Quran de vorm kent staat een voorbeeld uit de tekst met
 vindplaats en aantal, en waar niet staat een voorbeeld uit de taal.
 
+De kolom *Aantal* telt **werkwoorden** — segmenten die het corpus als fiʿl
+annoteert. Het kader onderaan dit hoofdstuk telt iets anders: álle segmenten
+die een vorm dragen, dus met de afgeleide naamwoorden erbij. Daarom staan er
+twee reeksen getallen op deze bladzijde, en daarom is vorm XI in de ene reeks
+afwezig en in de andere aanwezig.
+
 | Vorm | Patroon | Betekenis (hoofdlijn) | Voorbeeld | Vers | Aantal |
 |---|---|---|---|---|---|
 | I | فَعَلَ | grondvorm | عَبَدَ | 1:5 | 12347× |
@@ -396,17 +409,25 @@ vindplaats en aantal, en waar niet staat een voorbeeld uit de taal.
 | VI | تَفَاعَلَ | wederkerend van III | تَشَٰبَهَ | 2:70 | 77× |
 | VII | ٱنْفَعَلَ | lijdend, vanzelf | ٱنفَجَرَتْ | 2:60 | 51× |
 | VIII | ٱفْتَعَلَ | wederkerend, voor zichzelf | ٱشْتَرَىٰ | 2:16 | 963× |
-| IX | ٱفْعَلَّ | kleuren en gebreken | ٱبْيَضَّتْ | 3:106 | 5× |
+| IX | ٱفْعَلَّ | kleuren en gebreken | ٱبْيَضَّتْ | 3:107 | 5× |
 | X | ٱسْتَفْعَلَ | vragen om, achten als | ٱسْتَعِينُ | 1:5 | 369× |
-| XI | ٱفْعَالَّ | versterkte kleur | ٱحْمَارَّ — diep rood worden | — | niet in de Quran |
+| XI | ٱفْعَالَّ | versterkte kleur | مُدْهَآمَّتَانِ | 55:64 | 0 werkwoorden |
 | XII | ٱفْعَوْعَلَ | intensief | ٱطْمَأَنَّ | 2:260 | 9× |
 | XIII | ٱفْعَوَّلَ | intensief | ٱجْلَوَّذَ — voortjagen | — | niet in de Quran |
 | XIV | ٱفْعَنْلَلَ | zeldzaam | ٱقْعَنْسَسَ — achteroverleunen | — | niet in de Quran |
 | XV | ٱفْعَنْلَى | zeldzaam | ٱسْلَنْقَىٰ — op de rug liggen | — | niet in de Quran |
 
-De vier ontbrekende vormen — XI, XIII, XIV en XV — zijn ook buiten de Quran
-zeldzaam; XIII tot XV komen in de hele klassieke literatuur maar bij een
-handvol wortels voor. Vorm XI (ٱفْعَالَّ) is de versterkte tegenhanger van IX:
+De drie ontbrekende vormen — XIII, XIV en XV — zijn ook buiten de Quran
+zeldzaam; ze komen in de hele klassieke literatuur maar bij een handvol
+wortels voor.
+
+**Vorm XI is het mooiste geval op deze bladzijde.** Hij is de versterkte
+tegenhanger van IX. Als *werkwoord* staat hij in de Qoeraan nergens — vandaar
+de nul in de tabel. Maar zijn deelwoord staat er wel, precies één keer, en het
+is een van de bekendste woorden van de tekst: مُدْهَآمَّتَانِ in 55:64, "twee
+diepdonkergroene [tuinen]", van دهم. Vorm XI is dus aanwezig zonder ooit
+vervoegd te zijn, en dat is precies het verschil tussen de twee tellingen
+hierboven en hieronder. Vorm XI (ٱفْعَالَّ) is de versterkte tegenhanger van IX:
 waar ٱحْمَرَّ "rood worden" is, is ٱحْمَارَّ "diep rood worden". De Quran heeft
 wel IX (ٱبْيَضَّتْ، ٱسْوَدَّتْ in 3:106) maar niet XI.
 
@@ -539,11 +560,16 @@ De vierletterige werkwoorden die de Quran gebruikt, met hun voorkomens:
 | mujarrad | فَعْلَلَ | زُلْزِلُ (زلزل) | 2:214 | 3× |
 | mujarrad | فَعْلَلَ | بُعْثِرَ (بعثر) | 82:4 | 2× |
 | mujarrad | فَعْلَلَ | كُبْكِبُ (كبكب) | 26:94 | 1× |
-| mujarrad | فَعْلَلَ | تَقْشَعِرُّ (قشعر) | 39:23 | 1× |
+| *(zie noot)* | ٱفْعَلَلَّ | تَقْشَعِرُّ (قشعر) | 39:23 | 1× |
 | mujarrad | فَعْلَلَ | عَسْعَسَ (عسعس) | 81:17 | 1× |
 | mazīd | تَفَعْلَلَ | تَدَحْرَجَ — rollen | — | zie hieronder |
 | mazīd | ٱفْعَنْلَلَ | ٱحْرَنْجَمَ — samendrommen | — | zie hieronder |
 | mazīd | ٱفْعَلَلَّ | ٱطْمَأَنَّ — tot rust komen | — | zie hieronder |
+
+Eén rij staat op de verkeerde plaats en blijft er staan, met deze noot erbij:
+`sarf_examples.py quad` groepeert op wortel en scheidt de kale vierletterige
+vorm niet van de uitgebreide, dus تَقْشَعِرُّ komt binnen als فَعْلَلَ terwijl
+het ٱفْعَلَلَّ is — dezelfde vorm die drie rijen lager als *mazīd* staat.
 
 Merk op hoeveel van deze wortels een verdubbelde klankkern hebben —
 وَسْوَسَ، زَلْزَلَ، حَصْحَصَ، دَمْدَمَ، عَسْعَسَ. Dat herhalende karakter is
@@ -594,6 +620,12 @@ Bevat één of meer zwakke letters. Vier soorten, genoemd naar de plaats:
 > | Mahmūz | 90 | 5,6% |
 > | Mithāl | 72 | 4,5% |
 > | Lafīf | 26 | 1,6% |
+>
+> Vier van de 153 *muḍaʿʿaf*-wortels hebben een tweede én derde radicaal die
+> allebei zwak zijn — ايي، جوو، حيي، عيي. Naar de indeling van dit hoofdstuk
+> zijn dat *lafīf maqrūn*, en dus niet ṣaḥīḥ; de telling zet ze bij muḍaʿʿaf
+> omdat hun tweede en derde radicaal gelijk zijn. Beide criteria zijn waar en
+> ze snijden elkaar.
 >
 > Ruim de helft is dus volkomen regelmatig — maar de andere helft, waar de
 > vervoeging afwijkt, bevat juist de meest voorkomende werkwoorden van de
@@ -1161,10 +1193,15 @@ wortelsoort erbij.
 | zij (m. mv.) | وَٱطْمَأَنُّوا۟ | 10:7 | — |  | — |  |
 | jullie (m.) | ٱطْمَأْنَنتُمْ | 4:103 | — |  | — |  |
 
-Let bij het lezen op de klinker van het voorvoegsel. Vorm I heeft يَ-, maar de
-vormen II, III, IV en X hebben يُ-: يُسَبِّحُ، يُقَاتِلُ، يُشْرِكُ،
+Let bij het lezen op de klinker van het voorvoegsel. Vorm I heeft يَ-, en de
+vormen II, III en IV hebben يُ-: يُسَبِّحُ، يُقَاتِلُ، يُشْرِكُ،
 يَسْتَغْفِرُ. Dat ene teken is vaak het snelste onderscheid tussen een kale en
 een uitgebreide vorm.
+
+Vorm X hoort daar niet bij: die heeft يَ-, zoals in het vierde voorbeeld
+hierboven. De regel loopt langs de māḍī: de vormen die daar met vier letters
+beginnen (II, III, IV) krijgen een muḍāriʿ met *ḍamma*, en de vormen die daar
+een waṣl-hamza hebben (VII, VIII, IX, X) een met *fatḥa*.
 
 Twee tabellen zijn mager, en dat is informatie. Vorm VI haalt vier cellen omdat
 de vorm zelf maar 77 keer voorkomt, en vorm IX twee, want die staat in totaal
@@ -1472,7 +1509,7 @@ Bij de bijzondere uitgangen:
 - *maqṣūr*: de ى wordt weer ا of ي naar gelang de wortel — فَتَى →
   فَتَيَانِ
 - *manqūṣ*: de ي komt terug — قَاضِي → قَاضِيَانِ
-- *mamdūd*: de hamza kan ا worden — سَمَاء → سَمَاوَانِ
+- *mamdūd*: de hamza kan و worden — سَمَاء → سَمَاوَانِ
 
 ### 14.2 Jamʿ — het regelmatige meervoud
 
@@ -1535,7 +1572,7 @@ De vaste kern is: *ḍamma* op de eerste letter, *fatḥa* op de tweede, dan een
 
 ## 17. Nasab — de betrekkelijke afleiding
 
-De **nisba** (نَسَب) maakt van een naamwoord een bijvoeglijk naamwoord dat
+De **nasab** (نَسَب), in veel boeken *nisba* (نِسْبة) genoemd, maakt van een naamwoord een bijvoeglijk naamwoord dat
 herkomst of verbondenheid aanduidt, door ـِيّ toe te voegen:
 
 مِصْر → مِصْرِيّ (Egyptisch)

@@ -16,13 +16,18 @@ It combines four layers:
    classical *wujuh wa-naza'ir* works — spanning four centuries, from 200 to
    597 AH — to the verses their authors cite as evidence for each sense, and,
    where it can be established, to the individual word in that verse.
-4. **A sense alignment**: 5,027 of those senses grouped into 3,284 canonical
+4. **A sense alignment**: 5,043 of those senses grouped into 3,298 canonical
    senses that run across the works, so "which reading does the whole tradition
    carry, and which belongs to one author" becomes a query.
 
 Alongside them sit reference tables for suras, verses, ajza' and ahzab.
 
-Everything is plain Python 3 (standard library only) and one SQLite file.
+Everything the pipeline runs is plain Python 3 (standard library only) and
+one SQLite file. Two files at the root are outside that:
+`quran_analysis.ipynb`, an exploratory notebook from before the schema
+settled, which needs pandas/numpy/matplotlib and is in no pipeline step;
+and `unrar-0.4-py3-none-any.whl`, a third-party wheel nothing in the repo
+references. Neither is needed to build or query the database.
 
 ## Quick start
 
@@ -139,11 +144,11 @@ LIMIT 5;
 ```
 
 ```
-3056  البيان                              4  ibnsallam #1, damaghani #1, ibnjawzi #1, askari #1
-3057  الهدى دين الإسلام                    4  ibnsallam #2, damaghani #2, ibnjawzi #2, askari #9
-3058  الإيمان                             4  ibnsallam #3, damaghani #3, ibnjawzi #3, askari #4
-3061  الهدى أمر محمد صلى الله عليه وسلم     4  ibnsallam #6, damaghani #8, ibnjawzi #7, askari #8
-3069  الإلهام                             4  ibnsallam #17, damaghani #16, ibnjawzi #12, askari #12
+3070  البيان                             4  ibnsallam #1, damaghani #1, ibnjawzi #1, askari #1
+3071  الهدى دين الإسلام                  4  ibnsallam #2, damaghani #2, ibnjawzi #2, askari #9
+3072  الإيمان                            4  ibnsallam #3, damaghani #3, ibnjawzi #3, askari #4
+3075  الهدى أمر محمد صلى الله عليه وسلم  4  ibnsallam #6, damaghani #8, ibnjawzi #7, askari #8
+3083  الإلهام                            4  ibnsallam #17, damaghani #16, ibnjawzi #12, askari #12
 ```
 
 **6. How much of the wujuh layer is evidence and how much is a candidate list.**
@@ -158,9 +163,9 @@ ORDER BY rows DESC;
 ```
 
 ```
-high    9242   4713   3008
-low     2622    483   1404
-medium   480    323    367
+high      9242   4729   3008
+low       2622    483   1404
+medium     480    323    367
 ```
 
 **7. Join the corpus to the sura metadata.**
@@ -216,7 +221,7 @@ python3 build.py --list                # print the pipeline order and exit
 
 A full run takes a while; the parsers and `resolve_citations.py` are the slow
 steps. Every step except `to_sqlite.py` is idempotent, which is what `--keep`
-exploits. The last step is `validate.py`, which runs 19 checks over the
+exploits. The last step is `validate.py`, which runs 29 checks over the
 finished database (see *Data quality* below) and can also be run on its own:
 
 ```sh
@@ -273,7 +278,7 @@ possible the word) it points at.
 | `tag` | corpus part-of-speech tag, present on every segment (45 values: `N`, `PRON`, `V`, `P`, `CONJ`, `DET`, …) |
 | `segment_type` | `PREFIX` (28,670), `STEM` (77,915), `SUFFIX` (21,634) |
 | `pos` | part of speech; filled on stems only, NULL on prefixes and suffixes |
-| `lemma`, `lemma_ar` | dictionary form, Buckwalter and Arabic |
+| `lemma`, `lemma_ar` | dictionary form, Buckwalter and Arabic. `lemma_ar` carries the same unmapped markers as `form_ar` in 156 rows (35 lemmas), and the corpus' homograph index digit besides — `EalaY~2` stays `عَلَى2`, so grouping on `lemma_ar` splits that lemma in two |
 | `root`, `root_ar` | root, Buckwalter and Arabic; NULL where the corpus gives none — every particle, and the loan names it treats as unanalysable |
 | `aspect` | `PERF`, `IMPF`, `IMPV` |
 | `verb_form` | derived verb form `II`–`XII`; NULL for form I |
@@ -342,7 +347,7 @@ so the label reflects the actual use in that verse:
 
 ### Table `wujuh` — 12,344 rows, one per (citation, verse) pair
 
-1,083 entries (work + headword) across the four works, 4,935 distinct senses,
+1,083 entries (work + headword) across the four works, 4,951 distinct senses,
 450 roots, pointing at 3,635 different verses. 9,947 rows also name the
 individual word of the verse.
 
@@ -419,10 +424,10 @@ them NULL rather than guess. For `entry_root_unknown` and `root_unverified`,
 `root_ar` is NULL as well: a stored root reads as a claim about the entry and
 would be counted as one.
 
-### Table `sense_alignment` — 5,027 rows
+### Table `sense_alignment` — 5,043 rows
 
-Canonical sense ids laid across the works: 5,027 aligned senses grouped into
-3,284 canonical senses, of which 442 are carried by three or more works and 140
+Canonical sense ids laid across the works: 5,043 aligned senses grouped into
+3,298 canonical senses, of which 442 are carried by three or more works and 140
 by all four. Primary key `(work, headword, sense_nr, gloss)` — the gloss is part
 of the key because a headword is not unique within a work (al-Damaghani has 26
 headwords heading two to four separate entries).
@@ -433,7 +438,7 @@ headwords heading two to four separate entries).
 | `root_ar`, `canonical_gloss` | root and representative gloss of the cluster |
 | `n_works`, `n_senses` | how many works and how many senses the cluster holds |
 | `work`, `headword`, `sense_nr`, `gloss` | the individual sense, joinable back to `wujuh` |
-| `confidence` | `strong` (2,585), `single` (2,131 — a cluster of one), `weak` (311) |
+| `confidence` | `strong` (2,587), `single` (2,143 — a cluster of one), `weak` (313) |
 | `evidence` | why the sense was aligned, e.g. `gloss 1.00, shared verses 2` |
 
 Two signals decide, and both must be earned: overlap in the cited verses
@@ -475,7 +480,7 @@ compared:
 | `riwaya_ar`, `riwaya_en`, `riwaya_died_ah` | the transmitter |
 | `qari_ar`, `qari_en`, `qari_died_ah` | the reader he transmits from |
 | `region` | where the riwaya is read today |
-| `kfgqpc_version`, `source_date` | the version of the complex's data package; the date only for the two loaded here |
+| `kfgqpc_version`, `source_date` | the version of the complex's data package; all eight are loaded, but only two of the releases carry a date |
 | `in_database` | 1 for all eight; their text is in `sources/riwaya_*.csv` |
 
 `riwaya_diff` — 49,134 rows over **ten pairs**, one per place where two texts
@@ -512,63 +517,78 @@ their own. al-Soosi's idghaam kabir takes the final vowel of a word into the
 next; al-Doori — the same qiraa from the same qari, without that rule — is the
 control for it, because a vowel that simply goes can as easily be a jazm, and
 at 2:284 `fa-yaghfiru` / `fa-yaghfir` it is. Over the whole Quran that splits
-958 to 5. Imaala and taqliil are read off the marks the mushaf writes, which
+1,152 to 5. Imaala and taqliil are read off the marks the mushaf writes, which
 separate from the iqlaab and wasl markers by what they sit on. And `huwa` and
 `hiya` lose their vowel after a prefix in Qaaloon, al-Doori and al-Soosi and
 nowhere else, which is what the counts say: 233, 232, 228, and zero for the
 other five.
 
 Only Hafs–Warsh has had its farsh list read word by word afterwards. That pass
-struck 95 rows the rules had wrongly called farsh and left 10 undecided against
-505 that stood — 16% of what the rules proposed was not farsh — with a reason
+struck 116 rows the rules had wrongly called farsh and left 10 undecided against
+523 that stood — 18% of what the rules proposed was not farsh — with a reason
 per word pair in `farsh_review.tsv`. The nine other pairs carry the rule
 verdict alone, so their farsh figure is an upper bound and `reviewed` is 0.
 
 | Pair | | Places | farsh | usul | notation | read |
 |---|---|--:|--:|--:|--:|:-:|
 | bazzi – qumbul | **within one qiraa** | 184 | **34** | 73 | 73 | — |
-| doori – soosi | **within one qiraa** | 3,658 | **63** | 2,479 | 1,076 | — |
-| qaloon – warsh | **within one qiraa** | 5,377 | **339** | 4,533 | 414 | — |
-| hafs – shouba | **within one qiraa** | 595 | **383** | 84 | 79 | — |
-| hafs – warsh | between two qiraa'at | 8,453 | **505** | 4,941 | 2,826 | yes |
-| hafs – doori | between two qiraa'at | 2,343 | **623** | 1,239 | 407 | — |
-| hafs – qaloon | between two qiraa'at | 4,287 | **630** | 740 | 2,826 | — |
-| hafs – bazzi | between two qiraa'at | 9,225 | **644** | 7,576 | 952 | — |
-| hafs – qumbul | between two qiraa'at | 9,183 | **651** | 7,512 | 968 | — |
-| hafs – soosi | between two qiraa'at | 5,829 | **733** | 3,627 | 1,376 | — |
+| doori – soosi | **within one qiraa** | 3,658 | **25** | 2,503 | 1,090 | — |
+| qaloon – warsh | **within one qiraa** | 5,204 | **369** | 4,505 | 239 | — |
+| hafs – shouba | **within one qiraa** | 592 | **397** | 76 | 73 | — |
+| hafs – warsh | between two qiraa'at | 8,282 | **523** | 4,901 | 2,655 | yes |
+| hafs – doori | between two qiraa'at | 2,342 | **637** | 1,221 | 407 | — |
+| hafs – qaloon | between two qiraa'at | 4,287 | **645** | 725 | 2,826 | — |
+| hafs – bazzi | between two qiraa'at | 9,225 | **657** | 7,562 | 952 | — |
+| hafs – qumbul | between two qiraa'at | 9,183 | **664** | 7,498 | 968 | — |
+| hafs – soosi | between two qiraa'at | 5,828 | **708** | 3,634 | 1,391 | — |
+
+The three kind columns do not add up to Places, and are not meant to: the
+remainder is `uitgesloten` and `onzeker` — a moved word boundary, an alignment
+artefact, the disconnected letters, and for Hafs–Warsh the rows a reading
+struck. It runs from 4 rows (al-Bazzi–Qunbul) to 203 (Hafs–Warsh).
 
 Read the farsh column, not the places column. Places counts usul and spelling
 too, and those vary enormously by package: al-Bazzi and Qunbul apply silat
-al-mim throughout, which alone is 6,100 rows, and Qaaloon–Warsh reaches 5,377
+al-mim throughout, which alone is 6,150 and 6,142 rows, and Qaaloon–Warsh reaches 5,204
 places while sitting *within* one qiraa because Warsh applies naql and softens
 the hamza where Qaaloon does not.
 
+The farsh column is comparable across the rows because Hafs is on the left in
+all but three of them, not because the figure is independent of which side that
+is. The usul rules have a direction -- naql puts the vowel of a following hamza
+on the last letter, the sila of the haa adds a long vowel, idghaam kabiir takes
+the final vowel away -- and they are written with Hafs as the side looked out
+from. Put Warsh on the left and its features stop being recognised and fall
+through to farsh: Hafs-Warsh reads 523 one way round and 1,611 the other,
+Qaaloon-Warsh 339 against 1,269. Where the two sides are close it hardly
+matters (al-Bazzi-Qunbul 34 against 30, Hafs-Shu'ba 383 against 386).
+
 Farsh is the comparable measure, and it says what the transmission history
 predicts. Two transmissions of one qari's reading differ in 34 words
-(al-Bazzi–Qunbul) or 63 (al-Doori–al-Soosi); two readings differ in 505 to
-733. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 383 and
-Qaaloon–Warsh at 339 — are the two the literature already singles out as the
+(al-Bazzi–Qunbul) or 25 (al-Doori–al-Soosi); two readings differ in 523 to
+708. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 397 and
+Qaaloon–Warsh at 369 — are the two the literature already singles out as the
 widest-diverging transmissions of a single reading.
 
-For Hafs–Warsh, the one pair also read afterwards, the 8,453 places fall out
+For Hafs–Warsh, the one pair also read afterwards, the 8,282 places fall out
 like this:
 
 | `kind` | Rows | What it is |
 |---|--:|---|
-| `usul` | 4,941 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, imaala, the ya of idafa. Real differences, but not word-specific |
-| `notatie` | 2,826 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
-| `farsh` | 505 | *farsh al-huruf*: what no rule explains — the word-by-word differences |
-| `uitgesloten` | 171 | set aside: a moved word boundary, an alignment artefact, the disconnected letters, and the 95 rows a reading of every pair found to be notation |
+| `usul` | 4,901 | a rule of recitation that applies wherever its condition occurs: the sila of the mim, naql, the treatment of the hamza, imaala, the ya of idafa. Real differences, but not word-specific |
+| `notatie` | 2,655 | the same recitation written with different signs: dagger alif against alif, the shadda on the article's lam, the mark for the wasl alif |
+| `farsh` | 523 | *farsh al-huruf*: what no rule explains — the word-by-word differences |
+| `uitgesloten` | 193 | set aside: a moved word boundary, an alignment artefact, the disconnected letters, and the 116 rows a reading of every pair found to be notation |
 | `onzeker` | 10 | read and not settled: allaatie / allatie, where Warsh omits the dagger alif |
 
 Differences of vowel length and of short vowels are deliberately never folded
 away, which is why `maalik` / `malik` at 1:4 is `farsh` and not notation.
 Every distinct word pair the rules left in that list has been read one by one,
 and the verdicts live in `farsh_review.tsv` — one line per pair, with a reason.
-95 rows (16% of the 610 the rules produced) were notation or usul after all and
+116 rows (18% of the 649 the rules produced) were notation or usul after all and
 are now `uitgesloten`; 10 more are `onzeker`, all of them the same word. The
 largest group among the 95 is the hamz of `an-nabii'` and `an-nubuu'a`, which
-Naafi' applies at every one of the 82 places that word occurs and which is
+Naafi' applies at every place that word occurs and which is
 therefore a rule and not a word-by-word choice.
 
 ### Views
@@ -580,9 +600,10 @@ therefore a rule and not a word-by-word choice.
 
 Prefer the `verses` table over the `ayat` view for reading text: `ayat` passes
 the corpus' extended-Buckwalter markers (`@`, `,`, `.`, `[`) through unmapped,
-so 2,240 of its rows contain characters that are not Arabic script, where
+so 3,386 of its rows contain characters that are not Arabic script, where
 `verses.text_ar` has them repaired to the Quranic annotation signs they stand
-for.
+for. (2,240 of those carry `@`, the commonest of the four; the figure used to
+name only that one.)
 
 ## Coverage — what the database knows about a given verse
 
@@ -597,7 +618,7 @@ the database itself.
 | `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
 | `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
 | `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
-| `riwaya_diff`, `kind='farsh'` | 436 | 7% | the verses where Hafs and Warsh read alike — and the nine other pairs are located but not classified |
+| `riwaya_diff`, `kind='farsh'` | 451 | 7% | the verses where Hafs and Warsh read alike; the nine other pairs are classified by the same rules but not read by hand |
 
 Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
 the particles, the pronouns, and the names the corpus leaves unanalysed. There
@@ -608,13 +629,13 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 - a translation of the Quran — the glosses are word-by-word help, deliberately literal, and read poorly as running text
 - tafsir of any kind
 - a sense label per occurrence: the wujuh works cite example verses, they do not annotate exhaustively, and mining al-Tabari for the rest was measured at ~35% precision and rejected
-- the three readers whose riwayat are not here (Hamza, al-Kisa'i, Abu Ja'far), and any reading outside the canonical seven
+- the three readers of the seven whose riwayat are not here (Ibn 'Amir, Hamza, al-Kisa'i), and any reading outside the canonical seven
 - the counts that differ per riwaya — verse numbering, the ahzab — which are the Hafs values throughout
 
 ## Data quality
 
-`validate.py` runs 24 checks over the finished database and is the last step of
-`build.py`. On the committed database, 17 pass and 2 warn — the two warnings are
+`validate.py` runs 29 checks over the finished database and is the last step of
+`build.py`. On the committed database, 27 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
 `corpus`, *freshness* (the parsed JSONs, `resolved_citations.json` and the
@@ -696,16 +717,15 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `add_metadata.py` | builds `surahs`, `juz_boundaries`, `hizb_boundaries` and `verses` (optional step) |
 | `parse_tasarif.py` | parses Yahya ibn Sallam's *at-Tasarif* → `sources/tasarif_wujuh.json` (114 entries, 551 senses, 1,871 quotes) |
 | `parse_damaghani.py` | parses al-Damaghani's *Qamus al-Quran* → `sources/damaghani_wujuh.json` (497 entries, 2,329 senses, 3,736 quotes) |
-| `parse_ibnjawzi.py` | parses Ibn al-Jawzi's *Nuzhat al-A'yun* → `sources/ibnjawzi_wujuh.json` (300 entries, 1,500 senses, 2,752 quotes) |
+| `parse_ibnjawzi.py` | parses Ibn al-Jawzi's *Nuzhat al-A'yun* → `sources/ibnjawzi_wujuh.json` (300 entries, 1,518 senses, 2,752 quotes) |
 | `parse_askari.py` | parses Abu Hilal al-Askari's *al-Wujuh wa-l-Naza'ir* → `sources/askari_wujuh.json` (210 entries, 848 senses, 2,080 quotes; optional step) |
 | `resolve_citations.py` | resolves every quoted fragment to sura:aya against the corpus text, in tiers (exact → sura hint → cross-verse → prefix → fuzzy) → `sources/resolved_citations.json` |
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 24 checks over the finished database (optional step) |
+| `validate.py` | 29 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
-
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
@@ -714,9 +734,8 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |
-
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
-| `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `rel <label>`, `irab-book`, `irab-mabni` |
+| `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `faail`, `rel <label>`, `irab-diff`, `irab-book`, `irab-mabni` |
 
 `docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
 classification with its counts, and every farsh difference with its verse.
@@ -832,7 +851,7 @@ two different fragments of it, and joining `wujuh` to `corpus` on
 segments of the root. Use `DISTINCT`, aggregate, or join on `corpus_id`.
 
 **Not every parsed sense reaches the table.** The parsers produce 1,121 entries
-and 5,228 senses; the `wujuh` table holds 1,083 entries and 4,935 senses. The
+and 5,246 senses; the `wujuh` table holds 1,083 entries and 4,951 senses. The
 difference is entries and senses all of whose citations failed to resolve, or
 that carry no citation at all. Sense numbers can therefore have gaps.
 
@@ -867,7 +886,8 @@ would be.
 
 **Eight riwayat is not the qiraa'at.** `riwaya_diff` compares eight
 transmissions from four of the seven readers — Nafi', Ibn Kathir, Abu 'Amr and
-'Asim. Hamza, al-Kisa'i and Abu Ja'far are absent, as are the shawadhdh. All
+'Asim. Of the seven, Ibn 'Amir, Hamza and al-Kisa'i are absent, as are the
+three that make up the ten (Abu Ja'far, Ya'qub, Khalaf) and the shawadhdh. All
 eight are mutawatir and none is the baseline; the morphological layers of this
 database describe Hafs only, because that is what the corpus annotates, and
 `riwaya_sarf.py` is where the consequences of that are worked out in both
@@ -880,5 +900,5 @@ than being decided by default.
 
 **The `verses.text_ar` column is a reconstruction.** It is the corpus' segment
 forms joined back together, not an independently sourced mushaf text. The only
-mushaf texts in this repository are the two riwaya CSVs under `sources/`, and
+mushaf texts in this repository are the eight riwaya CSVs under `sources/`, and
 they are not what `verses` is built from.

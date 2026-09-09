@@ -65,15 +65,22 @@ STEPS = [
     ("parse_tasarif.py", True, ("sources/tasarif.txt",)),
     ("parse_damaghani.py", True, ("sources/damaghani_qamus.txt",)),
     ("parse_ibnjawzi.py", True, ("sources/ibnjawzi_nuzhat.txt",)),
-    # al-Askari's Wujuh wa-l-naza'ir is the newest work in the set; the parser
-    # checks for its own source text and reports what it needs, so no input is
-    # declared here.
-    ("parse_askari.py", False, ()),
+    # al-Askari's Wujuh wa-l-naza'ir is the newest work in the set. Its parser
+    # reads SRC directly with no existence check of its own, so the source has
+    # to be declared here or preflight cannot skip the step and a checkout
+    # without that file dies mid-build on a traceback -- which is the opposite
+    # of what marking the step optional is for.
+    ("parse_askari.py", False, ("sources/askari_wujuh_src.txt",)),
     ("parse_irab.py", False, ("sources/nahhas_irab.txt",)),
     ("parse_treebank.py", False, ("sources/treebank_eqtb.tsv.gz",)),
+    # farsh_review.tsv belongs in this list as much as the mushaf files do: it
+    # carries the hand verdicts, and without it the step still succeeds and
+    # quietly produces a different database -- Hafs-Warsh farsh goes from 521 to
+    # 652 and the reviewed rows vanish. Nothing failed and nothing warned.
     ("compare_riwayat.py", False, tuple(
-        "sources/riwaya_%s.csv" % r for r in
-        ("hafs", "warsh", "qaloon", "bazzi", "qumbul", "doori", "soosi", "shouba"))),
+        ["sources/riwaya_%s.csv" % r for r in
+         ("hafs", "warsh", "qaloon", "bazzi", "qumbul", "doori", "soosi", "shouba")]
+        + ["farsh_review.tsv"])),
     ("resolve_citations.py", True, ()),
     ("substantiate_jk.py", True, ("sources/ibnjawzi_nuzhat_jk.txt",)),
     ("add_wujuh.py", True, ()),
@@ -143,12 +150,19 @@ def preflight(planned):
     return runnable, skipped
 
 
+# Steps that need an argument to do their whole job. docs/hafs-warsh.md is
+# generated from the database by compare_riwayat.py, and a build that did not
+# pass --markdown left it behind whenever the classification moved.
+STEP_ARGS = {"compare_riwayat.py": ["--markdown"]}
+
+
 def run_step(name, nr, total):
     """Run one script; return its elapsed time or raise StepFailed."""
     print(f"\n[{nr}/{total}] {name}")
     print("-" * 60)
     started = time.time()
-    result = subprocess.run([sys.executable, str(HERE / name)], cwd=str(HERE))
+    result = subprocess.run([sys.executable, str(HERE / name)]
+                            + STEP_ARGS.get(name, []), cwd=str(HERE))
     elapsed = time.time() - started
     if result.returncode != 0:
         print("-" * 60)
@@ -167,8 +181,16 @@ def recover_leftovers():
     if not BACKUP.exists():
         return
     if DB.exists():
-        BACKUP.unlink()
-        print(f"removed a stale {BACKUP.name} left by an interrupted build")
+        # Both files present means the build was killed after it had parked the
+        # previous database and while it was writing the new one. BACKUP is the
+        # good one and DB is half-built, so keeping DB -- which this used to do,
+        # calling BACKUP stale -- threw away the only complete database there
+        # was. Park the half-built one under the name the docstring promises and
+        # restore the good one.
+        os.replace(DB, FAILED)
+        os.replace(BACKUP, DB)
+        print(f"restored {DB.name} ({mb(DB)}) from {BACKUP.name} after an "
+              f"interrupted build; the half-built one is {FAILED.name}")
     else:
         os.replace(BACKUP, DB)
         print(f"restored {DB.name} ({mb(DB)}) from {BACKUP.name}, "

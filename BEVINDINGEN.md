@@ -213,7 +213,7 @@ uiteenvallen (zoals de vier verschillende مَا's die er voorkomen).
 Ja, maar niet om de reden die je zou denken.
 
 - Het vocabulaire dekt **83,2% van de hele Quran** — je krijgt het complete
-  grammaticale skelet (huruf en damaa'ir, samen 61% van de tekst) cadeau.
+  grammaticale skelet (ḥurūf en ḍamāʾir, samen 55,2% van de segmenten) cadeau.
 - Maar als **pure vocabulaire-investering** is het inefficiënt: de 849
   frequentste lemma's van de Quran zouden **92,5%** dekken, en de overlap
   tussen beide sets is maar 382 lemma's. Ruim de helft van het Djoez
@@ -292,7 +292,7 @@ vier klassieke werken over *al-wujuh wa-n-naza'ir*, samen vier eeuwen traditie
 (200–597 AH). Zie README.md voor de bronnen en de pijplijn.
 
 **7.637 → 12.344 citaatrijen**, 1.083 entries, 450 roots, waarvan 9.947 rijen
-gekoppeld aan het concrete woord in het vers. 3.284 canonieke senses, waarvan
+gekoppeld aan het concrete woord in het vers. 3.298 canonieke senses, waarvan
 **442 door drie of meer werken gedragen**.
 
 De sterkste validatie kwam van هدى: Ibn Sallam (2e eeuw) geeft er 17 wujuh,
@@ -313,7 +313,7 @@ drie onafhankelijk gedigitaliseerde teksten en drie eigen parsers.
 | دِين | دين | 5 | 3 |
 
 دِين krijgt er drie verschillende betekenissen: *hisab/jaza'* (83:11),
-*tawhid/milla* (98:5) en *'adad* (107:1).
+*tawhid/milla* (98:5) en *al-Qur'aan* (107:1, Ibn al-Jawzie).
 
 En breder: **436 van de 849 lemma's** in Djoez Amma (51%) behoren tot een root
 die de geleerden ergens in de Quran meerdere betekenissen toekennen.
@@ -367,7 +367,7 @@ database er niets over zegt — niet dat er niets over te zeggen valt.
 | `syntax` (EQTB) | 6.236 | 100% | niets, maar het is één ontleding, geen feit |
 | `irab` (al-Nahhas) | 5.108 | 82% | de 1.128 verzen waar hij geen vraag ziet |
 | `wujuh` | 3.635 | 58% | verzen die geen van de vier werken citeert — en binnen een gedekt vers alleen het geciteerde woord |
-| `riwaya_diff`, farsh | 436 | 7% | verzen waar Hafs en Warsh gelijk lezen |
+| `riwaya_diff`, farsh | 451 | 7% | verzen waar Hafs en Warsh gelijk lezen |
 
 Binnen het corpus zelf dragen 27.947 van de 77.915 stems geen root (36%): de
 partikels, de voornaamwoorden en de namen die het corpus onontleed laat. Van de
@@ -376,7 +376,7 @@ partikels, de voornaamwoorden en de namen die het corpus onontleed laat. Van de
 Waar helemaal geen laag voor is:
 
 - **Sense-labels per voorkomen.** De klassieke werken citeren voorbeeldverzen,
-  geen uitputtende dekking: 17% van de voorkomens van polyseme roots is
+  geen uitputtende dekking: 13,9% van de voorkomens van polyseme roots is
   gelabeld. Tafsir-mining op al-Tabari is geprototypeerd en **gemeten op ~35%
   precisie bij een recall-plafond van ~35%** — afgewezen, omdat een kolom die
   in twee van de drie gevallen fout is de waarde ondermijnt van een laag
@@ -392,9 +392,11 @@ Waar helemaal geen laag voor is:
   hulp, bewust letterlijk; als lopende tekst lezen ze slecht en als vertaling
   moeten ze niet gepresenteerd worden.
 - **Tafsir**, in welke vorm dan ook.
-- **De zes andere riwaayaat**, en elke qiraa-a buiten die van Aasim en Naafi3.
-  Ook de tellingen die per riwaaya verschillen — de versnummering, de ahzaab —
-  staan er alleen in de Hafs-vorm in.
+- **Elke qiraa-a buiten die van Ibn Kathier, Aasim, Aboe 3Amr en Naafi3.** De
+  acht riwaayaat die het mujammaʿ uitgeeft staan er inmiddels alle acht in;
+  Ibn 3Aamir, Hamza en al-Kisaa-ie van de zeven staan er niet in, en de drie
+  die de tien voltooien evenmin. Ook de tellingen die per riwaaya verschillen —
+  de versnummering, de ahzaab — staan er alleen in de Hafs-vorm in.
 
 ## 10. Syntaxis en wat er niet staat (`syntax`)
 
@@ -494,17 +496,23 @@ classificatie over de andere negen paren werd gehaald, kwamen er duizenden
 **een teken dat in het ene pakket iets anders betekent dan in het andere.**
 `python3 analyses.py mushaf` telt ze; dit is wat eruit kwam.
 
-**Hamzat al-waṣl kent drie conventies, geen twee.** Ḥafṣ, al-Bazzī, Qunbul en
-Shuʿba schrijven de letter ٱ (ruim 13.480 keer elk). Qālūn, al-Dūrī en al-Sūsī
-gebruiken die letter **nul keer** en schrijven een kale alif met de klinker die
-de waṣl zou krijgen als je erop begon. Warsh zet een teken boven de alif. Dat
+**Hamzat al-waṣl kent twee conventies, en een terugval.** Ḥafṣ en Shuʿba
+(Kūfa) en al-Bazzī en Qunbul (Mekka) schrijven de letter ٱ, ruim 13.480 keer
+elk. De andere vier gebruiken die letter **nul keer** en zetten in plaats
+daarvan het teken U+06EC op een kale alif: Warsh 10.056 keer, Qālūn 10.088,
+al-Dūrī 10.052 en al-Sūsī 10.053. Bij die laatste drie blijft daarnaast een
+kale beklinkerde alif over die géén teken draagt en tóch een waṣl is — dat is
+wat `PLAIN_WASL` opvangt, en Warsh heeft het niet nodig omdat hij ze alle
+markeert. Dat
 één onderscheid is goed voor duizenden valse verschillen per paar: Ḥafṣ–al-Dūrī
 ging er alleen daardoor van 4.887 naar 2.705 plaatsen.
 
 Dat een kale alif mét klinker in die drie pakketten altijd een waṣl is, is niet
 aangenomen maar getoetst: hamzat al-qaṭʿ staat er op een zetel (أ, إ, آ) in
-ruim 9.000 plaatsen per pakket, met **één uitzondering per pakket** — en die
-uitzondering is zelf een farsh-verschil (40:46 أَدْخِلُوا tegenover ٱدْخُلُوا).
+ruim 9.000 plaatsen per pakket, met **één uitzondering per pakket**. Die
+uitzondering laat zich met deze acht pakketten niet illustreren — bij 40:46,
+de plaats die hier eerst als voorbeeld stond, schrijven alle acht een zetel —
+dus blijft het bij de telling.
 
 **De ring U+06DF zegt twee tegengestelde dingen.** Naast Ḥafṣ gelegd:
 
@@ -518,13 +526,16 @@ verschil, en zonder dat onderscheid las de vergelijking 124 plaatsen waar Qālū
 en Warsh *dezelfde letters schrijven* als een verschil.
 
 **Drie tekens doen elk twee dingen, te scheiden aan wat eronder staat.** U+06ED
-is op een beklinkerde letter de kleine mīm van **iqlāb** — Ḥafṣ schrijft hem 102
-keer, elk pakket ongeveer evenveel. U+06EA en U+06EC op een alif markeren
-**hamzat al-waṣl**: dat zijn de bijna 10.000 per Maghribi-pakket. Op elke andere
-letter markeren dezelfde twee tekens **imāla en taqlīl** op de alif die volgt,
-en dat doet U+06ED op een kale letter ook. Dat laatste is recitatie en geen
-spelling: Warsh schrijft er 1.911, al-Dūrī 737, al-Sūsī 609, Qālūn 11, al-Bazzī,
-Qunbul en Shuʿba elk 3, en Ḥafṣ 2.
+is op een beklinkerde letter de kleine mīm van **iqlāb**: Ḥafṣ schrijft hem 99
+keer, al-Bazzī, Qunbul en Shuʿba elk 100, al-Dūrī 66 en al-Sūsī 38 — en Warsh en
+Qālūn schrijven hem nul keer. U+06EA en U+06EC op een alif markeren **hamzat
+al-waṣl**: dat zijn de bijna 10.000 per Maghribi-pakket. Op elke andere letter
+markeren dezelfde twee tekens **imāla en taqlīl** op de alif die volgt — Warsh
+1.911, al-Dūrī 737, al-Sūsī 609, Qālūn 11, al-Bazzī, Qunbul en Shuʿba elk 3, en
+Ḥafṣ 2 — en U+06ED op een *kale* letter doet dat ook, wat er bij al-Dūrī nog 560
+en bij al-Sūsī nog 555 bij zet en bij de rest niets. Wat de code als imāla telt
+is dus de som: al-Dūrī 1.297, al-Sūsī 1.164, en voor de andere zes de getallen
+hierboven. Dat is recitatie en geen spelling.
 
 Het onderscheid loopt dus over de **letter**, niet over de vraag of er een
 klinkerteken tussen staat. Dat is niet vrijblijvend: وَتَر۪ي bij al-Sūsī draagt
@@ -561,17 +572,17 @@ die twee scheidt is per teken uitzoeken wat het in elk pakket doet.
 
 ### Wat er dan overblijft
 
-8.453 plaatsen waar de teksten uiteenlopen, gesorteerd naar wat het verschil ís:
+8.282 plaatsen waar de teksten uiteenlopen, gesorteerd naar wat het verschil ís:
 
 | soort | plaatsen | |
 |---|--:|---|
-| usul | 4.941 | een regel die geldt waar zijn voorwaarde zich voordoet: silat al-miem, naql, de behandeling van de hamza, imaala, de geopende yaa al-idaafa |
-| notatie | 2.826 | dezelfde recitatie, andere tekens |
-| **farsh** | **505** | wat geen regel verklaart: het verschil per woord |
-| uitgesloten | 171 | verschoven woordgrens, uitlijningsartefact, de losse letters, en wat het nalezen alsnog wegstreepte |
+| usul | 4.901 | een regel die geldt waar zijn voorwaarde zich voordoet: silat al-miem, naql, de behandeling van de hamza, imaala, de geopende yaa al-idaafa |
+| notatie | 2.655 | dezelfde recitatie, andere tekens |
+| **farsh** | **523** | wat geen regel verklaart: het verschil per woord |
+| uitgesloten | 193 | verschoven woordgrens, uitlijningsartefact, de losse letters, en wat het nalezen alsnog wegstreepte |
 | onzeker | 10 | gelezen en niet beslist |
 
-De 505 farsh-plaatsen zijn 429 woordparen in 436 ayaat, verspreid over 83
+De 523 farsh-plaatsen zijn 442 woordparen in 451 ayaat, verspreid over 84
 soerahs. Al-Baqara heeft er de meeste (38), dan Aal 3Imraan (28) en al-Kahf
 (24).
 
@@ -591,9 +602,11 @@ Silat al-miem alleen al — عَلَيْهِمْ dat als عَلَيْهِمُو 
 | 3:146 | قَٰتَلَ | قُتِلَ |
 | 43:19 | عِبَٰدُ | عِندَ |
 | 57:24 | هُوَ | *(ontbreekt)* |
-| 72:28 | عَدَدَۢا | عَدَداٗ |
 
-57:24 is het enige geval waar een heel woord aan één kant ontbreekt.
+57:24 is het enige geval waar een heel woord aan één kant ontbreekt. (Hier
+stond eerder ook 72:28 عَدَدَۢا / عَدَداٗ. Dat is geen farsh maar de
+schrijfwijze van de tanwīn-fatḥ die twee secties hierboven wordt beschreven:
+de vergelijking geeft dat vers alleen een naql-rij, geen farsh-rij.)
 
 ### Wat er niet klopt, geteld in plaats van geschat
 
@@ -602,7 +615,7 @@ Dat was een indruk van één keer doorlezen. Inmiddels is elk woordpaar dat de
 regels overhielden stuk voor stuk beoordeeld en staan de oordelen in
 `farsh_review.tsv`, met een reden per paar.
 
-- **95 rijen (16%)** waren toch notatie of uṣūl en staan nu op `uitgesloten`.
+- **116 rijen (18%)** waren toch notatie of uṣūl en staan nu op `uitgesloten`.
   De grootste groep is de hamz van ٱلنَّبِيء en ٱلنُّبُوءة: Nāfiʿ leest dat op
   **alle 82 plaatsen** waar het woord voorkomt, en wat overal geldt is een
   regel en geen woordkeuze. Daarnaast hamza's op een andere zetel
@@ -614,7 +627,7 @@ regels overhielden stuk voor stuk beoordeeld en staan de oordelen in
   lezing is (*allatī*) of alleen de spelling van *allātī*, kan ik uit deze
   bestanden niet opmaken. Dat blijft dus open staan in plaats van dat ik het
   bij gebrek aan beter naar farsh schuif.
-- Wat overblijft is **505 farsh-rijen**.
+- Wat overblijft is **523 farsh-rijen**.
 
 Waarom dit met de hand moest: ik heb twee keer geprobeerd de ruis met een regel
 te vangen, en allebei de keren vlagde die regel echte farsh. De eerste hield
@@ -639,28 +652,45 @@ overige paren die *binnen* één qirāʾa vallen.
 | paar | | plaatsen | farsh | uṣūl | notatie |
 |---|---|--:|--:|--:|--:|
 | al-Bazzī – Qunbul | **binnen één qirāʾa** | 184 | **34** | 73 | 73 |
-| al-Dūrī – al-Sūsī | **binnen één qirāʾa** | 3.658 | **63** | 2.479 | 1.076 |
-| Qālūn – Warsh | **binnen één qirāʾa** | 5.377 | **339** | 4.533 | 414 |
-| Ḥafṣ – Shuʿba | **binnen één qirāʾa** | 595 | **383** | 84 | 79 |
-| Ḥafṣ – Warsh | tussen twee qirāʾāt | 8.453 | **505** | 4.941 | 2.826 |
-| Ḥafṣ – al-Dūrī | tussen twee qirāʾāt | 2.343 | **623** | 1.239 | 407 |
-| Ḥafṣ – Qālūn | tussen twee qirāʾāt | 4.287 | **630** | 740 | 2.826 |
-| Ḥafṣ – al-Bazzī | tussen twee qirāʾāt | 9.225 | **644** | 7.576 | 952 |
-| Ḥafṣ – Qunbul | tussen twee qirāʾāt | 9.183 | **651** | 7.512 | 968 |
-| Ḥafṣ – al-Sūsī | tussen twee qirāʾāt | 5.829 | **733** | 3.627 | 1.376 |
+| al-Dūrī – al-Sūsī | **binnen één qirāʾa** | 3.658 | **25** | 2.503 | 1.090 |
+| Qālūn – Warsh | **binnen één qirāʾa** | 5.204 | **369** | 4.505 | 239 |
+| Ḥafṣ – Shuʿba | **binnen één qirāʾa** | 592 | **397** | 76 | 73 |
+| Ḥafṣ – Warsh | tussen twee qirāʾāt | 8.282 | **523** | 4.901 | 2.655 |
+| Ḥafṣ – al-Dūrī | tussen twee qirāʾāt | 2.342 | **637** | 1.221 | 407 |
+| Ḥafṣ – Qālūn | tussen twee qirāʾāt | 4.287 | **645** | 725 | 2.826 |
+| Ḥafṣ – al-Bazzī | tussen twee qirāʾāt | 9.225 | **657** | 7.562 | 952 |
+| Ḥafṣ – Qunbul | tussen twee qirāʾāt | 9.183 | **664** | 7.498 | 968 |
+| Ḥafṣ – al-Sūsī | tussen twee qirāʾāt | 5.828 | **708** | 3.634 | 1.391 |
+
+De drie soortkolommen tellen niet op tot *plaatsen*, en dat hoort ook niet:
+het verschil is `uitgesloten` en `onzeker` — een verschoven woordgrens, een
+uitlijningsartefact, de losse letters, en bij Ḥafṣ–Warsh wat het nalezen
+wegstreepte. Dat loopt van 4 rijen (al-Bazzī–Qunbul) tot 203 (Ḥafṣ–Warsh).
 
 **Lees de kolom farsh, niet de kolom plaatsen.** Het aantal plaatsen telt uṣūl
 en schrijfwijze mee, en dat loopt per pakket enorm uiteen: al-Bazzī en Qunbul
-passen silat al-mīm overal toe, in hun eentje goed voor 6.100 rijen, en
-Qālūn–Warsh haalt 5.377 plaatsen terwijl het *binnen* één qirāʾa valt, omdat
+passen silat al-mīm overal toe, in hun eentje goed voor 6.150 en 6.142 rijen, en
+Qālūn–Warsh haalt 5.204 plaatsen terwijl het *binnen* één qirāʾa valt, omdat
 Warsh naql toepast (اَ۬لَارْضِ tegenover اِ۬لْأَرْضِ) en de hamza verzacht
 (يُوتِ tegenover يُؤْتِ) waar Qālūn dat niet doet.
 
+**De farsh-kolom is onderling vergelijkbaar doordat Ḥafṣ overal links staat**,
+en niet doordat het getal van de richting onafhankelijk zou zijn. De uṣūl-regels
+hébben een richting — naql legt de klinker van een volgende hamza op de laatste
+letter, ṣilat al-hāʾ voegt er een lange klinker aan toe, idghām kabīr neemt de
+eindklinker juist weg — en ze zijn geschreven met Ḥafṣ als de kant waarvandaan
+gekeken wordt. Zet Warsh links en de regels herkennen hun eigen kenmerk niet
+meer; het valt dan door naar farsh. Ḥafṣ–Warsh telt zo 523 de ene kant op en
+**1.611** de andere, Qālūn–Warsh 369 tegen 1.295. Bij paren die dicht bij elkaar
+liggen scheelt het vrijwel niets: al-Bazzī–Qunbul 34 tegen 30, Ḥafṣ–Shuʿba 383
+tegen 386. Welke *plaatsen* uiteenlopen is wél symmetrisch — alleen hun indeling
+niet.
+
 De farsh-kolom is de vergelijkbare maat, en die zegt wél wat de
 overleveringsgeschiedenis voorspelt. Twee overleveringen van één qārīʾ
-verschillen in 34 woorden (al-Bazzī–Qunbul) of 63 (al-Dūrī–al-Sūsī); twee
-verschillende lezingen in 505 tot 733. De twee binnen-paren die daar niet in
-passen — Ḥafṣ–Shuʿba met 383 en Qālūn–Warsh met 339 — zijn precies de twee die
+verschillen in 34 woorden (al-Bazzī–Qunbul) of 25 (al-Dūrī–al-Sūsī); twee
+verschillende lezingen in 523 tot 708. De twee binnen-paren die daar niet in
+passen — Ḥafṣ–Shuʿba met 397 en Qālūn–Warsh met 369 — zijn precies de twee die
 in de literatuur bekendstaan als de verst uiteenlopende overleveringen van één
 lezing.
 
@@ -676,7 +706,7 @@ klasse. De idghām kabīr van al-Sūsī neemt de eindklinker van een woord mee i
 het volgende; **al-Dūrī is daarvan de controle** — dezelfde qirāʾa van dezelfde
 qārīʾ, zonder die regel — want een klinker die wegvalt kan net zo goed een jazm
 zijn, en bij 2:284 فَيَغْفِرُ / فَيَغْفِرْ is dat ook zo. Over de hele Qoeraan
-splitst dat 958 tegen 5, en die vijf zijn precies de plaatsen die een lezer zou
+splitst dat 1.152 tegen 5, en die vijf zijn precies de plaatsen die een lezer zou
 noemen: 2:284 tweemaal, 19:6 وَيَرِثْ, 4:81 بَيَّت en 27:66 بَلْ. Imāla en
 taqlīl worden afgelezen van de tekens die de mushaf zelf schrijft, die zich van
 de iqlāb- en waṣl-markering laten onderscheiden door wat eronder staat. En
@@ -686,7 +716,7 @@ al-Sūsī en nergens anders — 233, 232, 228, en nul bij de andere vijf.
 **Eén paar is daarna ook gelezen.** Regels classificeren; alleen bij Ḥafṣ–Warsh
 is de farsh-lijst daarna nog woord voor woord doorgenomen. De negen andere
 paren dragen alleen het regeloordeel, en hun farsh-getal is dus een bovengrens
-— reken op een marge van dezelfde orde als de 16% die het nalezen hier vond.
+— reken op een marge van dezelfde orde als de 18% die het nalezen hier vond.
 
 ### Wat dit voor de vormleer betekent
 
@@ -735,5 +765,5 @@ hoofdstuk 8 van `docs/sarf-nl.md` legt ze uit. De Warsh-vorm is daar de lezing v
 Warsh niet — maar de vraag of die vorm in Ḥafṣ voorkomt is een query.
 
 `docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om
-nagelopen te worden. Zes riwaayaat staan wel in de tabel `riwayat` maar hun
-tekst niet in de repo; zie `SOURCES.md` voor waarom.
+nagelopen te worden. Alle acht riwaayaat in de tabel `riwayat` hebben hun
+tekst in `sources/`; zie `SOURCES.md` voor de herkomst.

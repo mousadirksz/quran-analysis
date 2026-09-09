@@ -438,7 +438,7 @@ def riwayat(c):
               % ("%s - %s" % (a, b), t, format(n, ","), format(f, ","),
                  format(u, ","), format(nt, ",")))
     print("\n    Binnen een qiraa-a staat farsh laag (Bazzie-Qoenboel 34,")
-    print("    Doorie-Soesie 63); tussen twee qiraa-aat ligt het rond de 600.")
+    print("    Doorie-Soesie 25); tussen twee qiraa-aat ligt het rond de 650.")
     print("    Alleen Hafs-Warsh is daarna nog woord voor woord nagelezen, dus")
     print("    de andere farsh-getallen zijn bovengrenzen.")
 
@@ -563,7 +563,7 @@ def mushaf(c):
         words[code] = [w for s in R.text_of(code) for _a, txt in R.text_of(code)[s]
                        for w in re.split(r"[\s ]+", txt) if w]
 
-    print("  Hamzat al-wasl: drie conventies, geen twee\n")
+    print("  Hamzat al-wasl: twee conventies, en een terugval\n")
     print("    riwaaya      letter ٱ   kale alif   qat3-zetels")
     for code in R.SRC:
         ws = words[code]
@@ -571,10 +571,14 @@ def mushaf(c):
               % (code, format(sum(w.count("\u0671") for w in ws), ","),
                  format(sum(w.count("\u0627") for w in ws), ","),
                  format(sum(w.count("\u0623") + w.count("\u0625") for w in ws), ",")))
-    print("\n    Qaaloon, al-Doorie en al-Soesie gebruiken de letter ٱ nul keer")
-    print("    en schrijven een kale alif met de klinker die de wasl zou")
-    print("    krijgen; Hafs en de Kufische pakketten gebruiken de letter,")
-    print("    Warsh zet er een teken boven.\n")
+    print("\n    Vier pakketten schrijven de letter \u0671: Hafs en Shu3ba (Koefa)")
+    print("    en al-Bazzie en Qoenboel (Mekka). De andere vier gebruiken hem")
+    print("    nul keer en zetten in plaats daarvan het teken U+06EC op een kale")
+    print("    alif -- Warsh 10.056 keer, Qaaloon 10.088, al-Doorie 10.052 en")
+    print("    al-Soesie 10.053. Bij die laatste drie blijft daarnaast een kale")
+    print("    beklinkerde alif over die geen teken draagt en toch een wasl is;")
+    print("    daarvoor is de terugval in riwaya_translit.PLAIN_WASL. Warsh")
+    print("    markeert ze alle en heeft die terugval niet nodig.\n")
 
     print("  De sukoen: twee codepoints voor hetzelfde teken\n")
     print("    riwaaya      U+0652   U+06E1")
@@ -593,15 +597,21 @@ def mushaf(c):
             for i, ch in enumerate(w):
                 if ch not in R.IMALA_MARKS:
                     continue
-                if i and w[i - 1] in R.VOWEL_SIGNS:
-                    after_vowel += 1
-                else:
+                # The letter under the mark decides, not whether a vowel sign
+                # happens to sit in between -- U+06EA and U+06EC on an alif are
+                # the wasl marker, on anything else they mark imaala, and
+                # U+06ED is iqlaab on a vowelled letter. Splitting on the vowel
+                # instead called al-Soosi's وَتَر۪ي a spelling difference.
+                if R.has_imala(w[:i + 1]):
                     after_letter += 1
+                else:
+                    after_vowel += 1
         print("    %-12s %12s %20s"
               % (code, format(after_vowel, ","), format(after_letter, ",")))
-    print("\n    U+06EA, U+06EC en U+06ED. Na een klinkerteken zijn het de")
-    print("    iqlaab- en wasl-markering; na een kale letter markeren ze")
-    print("    imaala en taqliel, en dat is recitatie en geen spelling.")
+    print("\n    U+06EA, U+06EC en U+06ED. Op een alif is het de wasl-markering")
+    print("    en op een beklinkerde letter is U+06ED de iqlaab; op elke andere")
+    print("    letter markeren ze imaala en taqliel, en dat is recitatie en")
+    print("    geen spelling.")
 
     print("\n  De ring U+06DF zegt twee tegengestelde dingen\n")
     print("    Elk woord dat met alif+ring begint, naast het woord dat Hafs")
@@ -631,8 +641,11 @@ def mushaf(c):
         print("    %-20s %9s %11s %8s"
               % (shape, ring[(shape, "qat3")], ring[(shape, "wasl")],
                  ring[(shape, "anders")]))
-    print("\n    Zonder uitzondering, en tegengesteld. De klinker ertussen is")
-    print("    het hele verschil.")
+    other = sum(ring[(s, "anders")] for s in ("alif+ring", "alif+klinker+ring"))
+    print("\n    De klinker ertussen is het hele verschil%s."
+          % ("" if not other else
+             ", op %d plaats%s na die geen\n    van beide is"
+             % (other, "" if other == 1 else "en")))
 
     print("\n  Waar een wasl-alif kan staan (Hafs, alle %s)\n"
           % format(sum(w.count("\u0671") for w in words["hafs"]), ","))
