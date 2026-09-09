@@ -44,7 +44,7 @@ al-Soosi and nowhere else.
 
 **One pair has also been read.** Rules classify; only Hafs-Warsh has had its
 farsh list gone through word by word afterwards, and the verdicts of that
-reading are in `farsh_review.tsv`. It struck 119 rows the rules had wrongly
+reading are in `farsh_review.tsv`. It struck 116 rows the rules had wrongly
 called farsh, 18 per cent of what they proposed. The other nine pairs carry
 the rule verdict alone, so their farsh figure is an upper bound and `reviewed`
 is 0.
@@ -786,7 +786,7 @@ def markdown(conn, rows):
                "eindklinker juist weg -- en ze zijn geschreven met Hafs als "
                "de kant waarvandaan gekeken wordt. Zet Warsh links en de "
                "regels herkennen hun eigen kenmerk niet meer: dan valt dat "
-               "kenmerk door naar farsh en telt dit paar geen 520 maar "
+               "kenmerk door naar farsh en telt dit paar geen 523 maar "
                "1.611. Bij paren die dicht bij elkaar liggen scheelt het "
                "vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba "
                "397 tegen 400); bij paren waar de ene kant usul toepast die "

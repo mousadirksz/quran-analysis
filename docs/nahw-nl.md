@@ -1220,9 +1220,9 @@ alsof ze het wel kon.
 Het hele boek door stond er telkens een kader met twee lezingen. Dit hoofdstuk
 zet ze bij elkaar en telt ze.
 
-Ḥafṣ en Warsh verschillen op 520 plaatsen in de woorden zelf — dat is de
+Ḥafṣ en Warsh verschillen op 523 plaatsen in de woorden zelf — dat is de
 *farsh al-ḥurūf*, en de rest van hun verschillen (ruim 8.000 plaatsen) zit in
-de uitspraakregels en de spelling, niet in de tekst. Van die 520 vallen er 42
+de uitspraakregels en de spelling, niet in de tekst. Van die 523 vallen er 42
 op de **laatste klinker**: dezelfde medeklinkers, een ander teken aan het eind.
 
 Vier daarvan zijn geen iʿrāb. Ze staan er eerst, omdat het uit elkaar halen
