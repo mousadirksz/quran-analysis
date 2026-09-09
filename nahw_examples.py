@@ -95,8 +95,13 @@ REL_CH = {
     "Subj": 11, "Pass": 12, "Obj": 13, "cog": 14, "prp": 14, "circ": 15,
     "Spec": 15, "exp": 16, "res": 16, "gen": 17, "Poss": 17, "link": 18,
     "Adj": 19, "conj": 19, "emph": 19, "App": 19, "sub": 20, "cond": 20,
-    "rslt": 20, "Pred": 6, "neg": 20, "root": 5, "sup": 21,
-    "intg": 20, "voc": 14, "cert": 20, "Pro": 20, "fut": 20,
+    # A label with no chapter of its own gets 0, which the table prints as a
+    # dash. Sending it to a chapter that never mentions it is worse than saying
+    # nothing: nafy, istifhaam and qad used to point at chapter 20 (sila, sharT
+    # and the moods) and zaa-id at chapter 21, and none of those four words
+    # occurs there.
+    "rslt": 20, "Pred": 6, "neg": None, "root": 5, "sup": None,
+    "intg": None, "voc": 14, "cert": None, "Pro": 20, "fut": 20,
     "imrs": 20, "impv": 20, "caus": 20, "prev": 17, "inc": 6,
     "amd": 19, "ret": 19, "exl": 19, "int": 19, "sur": 20, "exh": 20,
     "avr": 20, "ans": 20, "state": 19, "eq": 6, "Cpnd": 17,

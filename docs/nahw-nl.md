@@ -84,7 +84,7 @@ grootte.
 | `Pred` | خبر | 2.955 | 1.444 | wat er over de mubtadaʾ gezegd wordt | 6 |
 | `sub` | صلة | 4.039 | 310 | de zin die een ism mawṣūl zijn inhoud geeft | 20 |
 | `Adj` | صفة | 2.976 | 758 | wat een eigenschap toekent en zijn woord in vier dingen volgt | 19 |
-| `neg` | نفي | 2.112 | 5 | het partikel dat ontkent | 20 |
+| `neg` | نفي | 2.112 | 5 | het partikel dat ontkent | — |
 | `circ` | حال | 1.257 | 686 | de toestand waarin de handeling zich voltrekt | 15 |
 | `emph` | توكيد | 1.546 | — | herhaling die bevestigt | 19 |
 | `subj<<in>>` | اسم إن | 1.542 | — | wat إنّ in naṣb zet | 9 |
@@ -95,15 +95,15 @@ grootte.
 | `pred <<kan>>` | خبر كان | 819 | 86 | wat كان in naṣb zet: zijn ḫabar | 8 |
 | `subj <<kan>>` | اسم كان | 716 | 81 | wat كان in rafʿ laat: zijn ism | 8 |
 | `App` | بدل | 651 | 2 | het woord waar het eigenlijk om gaat, in plaats van het vorige | 19 |
-| `intg` | استفهام | 595 | 3 | het vraagpartikel | 20 |
+| `intg` | استفهام | 595 | 3 | het vraagpartikel | — |
 | `voc` | منادى | 489 | 5 | de aangesprokene, na يا | 14 |
-| `cert` | تحقيق | 423 | 1 | قد dat bevestigt | 20 |
+| `cert` | تحقيق | 423 | 1 | قد dat bevestigt | — |
 | `cog` | مفعول مطلق | 331 | 93 | de maṣdar van het werkwoord zelf, ter versterking | 14 |
 | `res` | حصر | 414 | — | إلّا na een ontkenning: alleen | 16 |
 | `Pro` | نهي | 387 | 1 | لا dat verbiedt | 20 |
 | `subj<<an>>` | اسم أن | 348 | — | wat أنّ in naṣb zet | 9 |
 | `pred<<an>>` | خبر أن | 279 | 30 | wat أنّ in rafʿ laat | 9 |
-| `sup` | زائد | 283 | — | een partikel dat er staat zonder iets te regeren | 21 |
+| `sup` | زائد | 283 | — | een partikel dat er staat zonder iets te regeren | — |
 
 98 verdere labels met 3.297 plaatsen samen, waarvan 78 labels (1.730 plaatsen) een aparte naasikh benoemen: `subj <<lays>>`, `pred <<ka'ana>>`, `subj <<easaa>>` en zo voort.
 
@@ -196,7 +196,7 @@ lidwoord-alif of in een iḍāfa, dan krijgt hij zijn kasra terug. Namen als
 > ontleding: met de fatḥa hangt يعقوب aan het voorafgaande (ġayr munṣarif in
 > naṣb), met de ḍamma begint er iets nieuws.
 
-## 4. De aamil — wat een uitgang veroorzaakt
+## 4. De ʿāmil — wat een uitgang veroorzaakt
 
 De klassieke naḥw draait om één idee: een uitgang komt niet uit de lucht
 vallen, er is iets dat hem veroorzaakt. Dat veroorzakende woord heet de
@@ -294,8 +294,9 @@ De treebank markeert die lege plekken. Dit is hoe vaak, en op welke posities:
 
 11.157 geponeerde elementen in totaal, waarvan 6.673 met een woord ingevuld en 4.484 alleen als lege positie.
 
-Dat is één op de twaalf woorden van de Qoeraan dat *niet geschreven staat* en
-toch in de ontleding meetelt.
+Dat is één op de twaalf *tokens* van de treebank dat niet geschreven staat
+en toch in de ontleding meetelt — gerekend naar geschreven woorden is het
+één op de zeven: 11.157 tegenover 77.429.
 
 Let wel op wat die tabel bij elkaar zet. "Niet geschreven" is één ding voor de
 database maar twee voor de grammatica. Een **ḍamīr mustatir** is er wél — hij
@@ -378,7 +379,7 @@ vaakst regeren:
 | `layt` | 13 | 10 |
 | `tkn` | 10 | 12 |
 
-45 verschillende nawaasikh, samen 7.089 plaatsen.
+45 verschillende nawāsikh, samen 7.089 plaatsen.
 
 De lijst is langer dan een grammaticaboek pleegt te geven omdat de treebank
 elke vervoegde vorm apart telt: `kan`, `kn`, `ykon`, `tkon`, `ykn`, `kant`,
@@ -635,11 +636,11 @@ ism mafʿūl.
 > **In de riwaayaat**
 >
 > 34:17 is de majhūl zelf het verschil. Ḥafṣ leest
-> وَهَلْ **نُجَٰزِىٓ** إِلَّا **ٱلْكَفُورَ** — maʿlūm, eerste persoon meervoud,
+> وَهَلۡ نُجَٰزِيٓ إِلَّا ٱلۡكَفُورَ — maʿlūm, eerste persoon meervoud,
 > met الكفور als mafʿūl bihi in naṣb: "en vergelden Wij [zo] iemand
 > anders dan de ondankbare?"
 >
-> Warsh leest وَهَلْ **يُجَٰزَىٰٓ** إِلَّا **ٱلْكَفُورُ** — majhūl, derde
+> Warsh leest وَهَلْ يُجَٰز۪ىٰٓ إِلَّا اَ۬لْكَفُورُۖ — majhūl, derde
 > persoon, met الكفور als nāʾib al-fāʿil in rafʿ: "en wordt [zo] iemand anders
 > vergolden dan de ondankbare?"
 >
@@ -762,7 +763,7 @@ aan te wijzen.
 
 ### De munādā
 
-Bij de manṣūbāt hoort ook de aangesprokene. Na يَا (of أَيُّهَا, of niets) staat
+Bij de manṣūbāt hoort ook de aangesprokene. Na يَا (of niets) staat
 de **munādā** (مُنَادَى) in naṣb wanneer hij muḍāf is of onbepaald-onbedoeld, en
 mabnī op ḍamma wanneer hij een enkelvoudige eigennaam is of bepaald bedoeld.
 
@@ -957,9 +958,13 @@ een werkwoord, aan een ism fāʿil of ism mafʿūl, aan een maṣdar, of — als
 — aan een geschat woord. Dat aanhangen heet **taʿalluq** (تَعَلُّق), en het
 woord waar hij aan hangt de **mutaʿallaq**.
 
-Met 14.093 plaatsen is dit de grootste relatie in de hele treebank. Groter dan
-de fāʿil, groter dan de mafʿūl bihi. Wie Arabisch leest, is meer tijd
-bezig met de vraag *waar hangt dit voorzetsel aan* dan met welke vraag ook.
+Met 14.093 geschreven plaatsen is dit de grootste relatie van de treebank
+*als je alleen telt wat er staat* — groter dan de geschreven fāʿil (10.520)
+en dan de mafʿūl bihi. Tel je de geponeerde elementen mee, zoals dit boek
+verder overal doet, dan wint de fāʿil alsnog met 16.624 tegen 14.095: die
+heeft er 6.104 die niet geschreven staan en de taʿalluq maar twee. Hoe dan
+ook is een lezer van het Arabisch meer tijd bezig met de vraag *waar hangt
+dit voorzetsel aan* dan met welke vraag ook.
 
 | Vers | Woord | Hangt aan |
 |---|---|---|
@@ -1199,7 +1204,7 @@ verschil van mening bestaat. Soms is het een ḫabar of een werkwoord waarover
 dat wel bestaat.
 
 **129 verschillende relatielabels.** De 30 uit de wegwijzer dekken het meeste;
-de overige 99 zijn goed voor 3.297 plaatsen, en 78 daarvan bestaan alleen
+de overige 99 zijn goed voor 3.580 plaatsen, en 78 daarvan bestaan alleen
 omdat de treebank elke naasikh apart benoemt. `subj <<tkn>>` en
 `subj <<kant>>` zijn allebei "ism kāna"; dat het twee labels zijn is een
 eigenschap van de database, niet van de grammatica.
@@ -1264,7 +1269,7 @@ riwaayaat een andere zinsbouw.
 | 14:2 | ٱللَّهِ | اِ۬للَّهُ | 19 — badal |
 | 16:12 | وَٱلنُّجُومُ | وَالنُّجُومَ | 13 — ishtighāl |
 | 19:34 | قَوۡلَ | قَوْلُ | 14 |
-| 21:47 | مِثۡقَالَ | مِثْقَالُ | 8 — kāna nāqiṣa of tāmma |
+| 21:47 | مِثۡقَالَ | مِثْقَالُ | 8 — kāna als naasikh of als tāmma |
 | 23:92 | عَٰلِمِ | عَٰلِمُ | 19 — badal |
 | 24:9 | وَٱلۡخَٰمِسَةَ | وَالْخَٰمِسَةُ | 9 — inna en anna |
 | 24:9 | ٱللَّهِ | اَ۬للَّهُ | 9 — inna en anna |
@@ -1285,9 +1290,12 @@ riwaayaat een andere zinsbouw.
 | 111:4 | حَمَّالَةَ | حَمَّالَةُ | 19 — naṣb ʿalā al-dhamm |
 
 De vormen staan er zoals de twee mushafs ze schrijven, met de notatie en al —
-اَ۬لْبِرُّ is de Maghribi manier om ٱلْبِرُّ te schrijven. 2:177 staat er in de
-bron tweemaal in, met twee schrijfwijzen van diezelfde Warsh-lezing; het zijn
-38 regels over 37 plaatsen. `docs/hafs-warsh.md` legt de notatie uit.
+اَ۬لْبِرُّ is de Maghribi manier om ٱلْبِرُّ te schrijven.
+
+Dat 2:177 er tweemaal in staat is geen doublure: Ḥafṣ schrijft ٱلۡبِرَّ twee
+keer in dat vers, en Warsh leest ze allebei anders, met twee verschillende
+waṣl-schrijfwijzen naar de klinker die eraan voorafgaat. Het zijn dus
+38 regels over 38 plaatsen. `docs/hafs-warsh.md` legt de notatie uit.
 
 ### Wat de tabel laat zien
 
@@ -1313,7 +1321,7 @@ waar de opsomming aanhaakt).
 **De rest zijn losse gevallen**: een ġayr munṣarif (11:71), een ẓarf die mabnī
 wordt (5:119), een istithnāʾ tegenover een ṣifa (4:95), taqdīr van een
 werkwoord tegenover taqdīr van een mubtadaʾ (36:5, 19:34, 10:23, 38:84,
-111:4), en tweemaal de ḫabar van لَيْسَ (2:177, 2:189).
+111:4), en tweemaal het woord achter لَيْسَ of وَلَٰكِنَّ (2:177, 2:189) — bij 2:177 is het de ism van وَلَٰكِنَّ, die Warsh als de verlichte وَلَٰكِنِ leest, dus hoofdstuk 9 en niet 6.
 
 ### Waarom dit het boek afmaakt
 
@@ -1347,7 +1355,7 @@ Elke tabel is met een commando te reproduceren:
 | de wegwijzertabel (vooraan, h. 21) | `python3 nahw_examples.py relations --markdown` |
 | de posities en de wijzen (h. 2) | `python3 nahw_examples.py cases --markdown` |
 | geponeerde elementen (h. 7) | `python3 nahw_examples.py muqaddar --markdown` |
-| de nawaasikh (h. 8) | `python3 nahw_examples.py nawasikh --markdown` |
+| de nawāsikh (h. 8) | `python3 nahw_examples.py nawasikh --markdown` |
 | de fāʿil naar soort (h. 11) | `python3 nahw_examples.py faail --markdown` |
 | voorbeelden van één relatie | `python3 nahw_examples.py rel Pred --markdown` |
 | de 38 iʿrāb-verschillen (h. 22) | `python3 nahw_examples.py irab-book --markdown` |
