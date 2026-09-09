@@ -39,11 +39,24 @@ ALIF_MAQSURA = 'ى'
 VOWELS = {FAT: 'a', DAM: 'u', KAS: 'i',
           'ً': 'aN', 'ٗ': 'aN',    # fathatan, both glyph shapes
           'ٌ': 'uN', 'ٞ': 'uN',    # dammatan
-          'ٍ': 'iN', 'ٖ': 'iN'}    # kasratan
+          'ٍ': 'iN', 'ٖ': 'iN',    # kasratan
+          # Shu'ba's mushaf writes the imaala on a fatha as a dot below the
+          # letter instead of the fatha itself, 79 times. It is the only vowel
+          # on that letter, and the generic combining-mark branch used to drop
+          # it, so the vowel vanished. Hafs writes a plain fatha at every one of
+          # the 52 words involved, so it is read as the fatha it stands for;
+          # that the recitation draws it towards the ee is what imaala is for.
+          '\u065c': 'a'}
 
 IGNORE = set('ۖۗۘۙۚۛۜ۝۞۟'
              '۠ۢۤۨ۩۪ۭ۫'
-             '‏‎﻿ـ')
+             '‏‎﻿ـ'
+             # Two more seats a hamza is written on, beside the tatweel above:
+             # the zero width joiner (al-Doori and al-Soosi at 17:7, where Hafs
+             # uses the tatweel) and the dotless beh (al-Bazzi and Qunbul at
+             # 6:19). They carry no sound, and without this they were appended
+             # into the comparison key as if they were letters.
+             '\u200d\u066e')
 
 CONSONANTS = set('بتثجحخدذرزسشصضطظعغفقكلمنهوي')
 # A wasl alif stands at the head of its word, behind nothing or behind one or
@@ -140,6 +153,12 @@ def translit(w, sila=True, plain_wasl=False):
             # a wasl alif and the vowel it carries; never a tanwin, whose
             # silent carrier alif these packages write before the sign
             i += 2; continue
+        if c == 'ا' and not out and nxt == DAGGER:
+            # alef madda, which the Maghribi mushaf writes as a bare alif
+            # with the dagger over it where the Kufi one writes آ or ءَا.
+            # Without this the two came out as AA against 'A, and every one
+            # of the 177 words involved read as a difference in the text.
+            out.append("'"); _emit_long(out, 'A'); i += 2; continue
         if c == 'ا' and not out and nxt in VOWELS:
             # word-initial bare alif carrying a vowel: the Maghribi mushaf
             # writes hamzat al-qat' this way where the Kufi one writes a seat
