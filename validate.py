@@ -1071,6 +1071,127 @@ def quoted_words(text, verses, extra=None):
     return seen, bad
 
 
+# The figures the prose quotes, and where they are quoted. Each entry is a
+# label, the query that produces the true value, and the patterns that find the
+# claim in a document -- one capture group, the number. See document_figures.
+DOC_FIGURES = [
+    ("corpus segments", "SELECT COUNT(*) FROM corpus", [
+        r"— ([\d.,]+) segments, ",
+        r"### Table `corpus` — ([\d.,]+) rows",
+        r"Van de ([\d.,]+) morfologische segmenten"]),
+    ("posited syntax tokens", "SELECT COUNT(*) FROM syntax WHERE is_implicit=1", [
+        r"including ([\d.,]+) elements the grammarians",
+        r"staat: ([\d.,]+) elementen die de",
+        r"([\d.,]+) geponeerde elementen in totaal"]),
+    ("verses", "SELECT COUNT(*) FROM verses", [
+        r"written words, ([\d.,]+) verses",
+        r"\| `verses` \| ([\d.,]+) \|"]),
+    ("written words", "SELECT COUNT(*) FROM words", [
+        r"segments, ([\d.,]+) written words",
+        r"([\d.,]+) geschreven woorden"]),
+    ("kalimaat (written plus posited)", "SELECT COUNT(*) FROM syntax", [
+        r"Quran op \*\*([\d.,]+) kalimat"]),
+    ("distinct roots", "SELECT COUNT(DISTINCT root_ar) FROM corpus "
+                       "WHERE root_ar IS NOT NULL AND root_ar<>''", [
+        r"suras, ([\d.,]+) roots,",
+        r"are ([\d.,]+) distinct roots"]),
+    ("wujuh rows", "SELECT COUNT(*) FROM wujuh", [
+        r"\(polysemy\): ([\d.,]+) rows linking",
+        r"### Table `wujuh` — ([\d.,]+) rows"]),
+    ("wujuh distinct senses",
+     "SELECT COUNT(*) FROM (SELECT DISTINCT work, headword, sense_nr FROM wujuh)", [
+        r"across the four works, ([\d.,]+) distinct senses",
+        r"entries and ([\d.,]+) senses\."]),
+    ("aligned senses", "SELECT COUNT(*) FROM sense_alignment", [
+        r"sense alignment\*\*: ([\d.,]+) of those senses",
+        r"### Table `sense_alignment` — ([\d.,]+) rows",
+        r"works: ([\d.,]+) aligned senses"]),
+    ("canonical senses", "SELECT COUNT(DISTINCT canonical_id) FROM sense_alignment", [
+        r"senses grouped into\s+([\d.,]+) canonical",
+        r"^([\d.,]+) canonical senses, of which",
+        r"([\d.,]+) canonieke senses"]),
+    ("riwaya_diff rows", "SELECT COUNT(*) FROM riwaya_diff", [
+        r"`riwaya_diff` — ([\d.,]+) rows over"]),
+]
+
+# Every pair's places and farsh, in both documents' table shapes.
+PAIR_NAMES = {"hafs": ("hafs", "Ḥafṣ"), "warsh": ("warsh", "Warsh"),
+              "qaloon": ("qaloon", "Qālūn"), "bazzi": ("bazzi", "al-Bazzī"),
+              "qumbul": ("qumbul", "Qunbul"), "doori": ("doori", "al-Dūrī"),
+              "soosi": ("soosi", "al-Sūsī"), "shouba": ("shouba", "Shuʿba")}
+
+
+def _num(text):
+    return int(text.replace(".", "").replace(",", ""))
+
+
+@check("document figures")
+def document_figures(cur, args):
+    """The figures the prose quotes must be the figures the database holds.
+
+    This is the check the repository most needed and did not have. Every
+    headline number in README.md, BEVINDINGEN.md and the two books is typed by
+    hand out of a script that keeps changing underneath it, and an audit found
+    them drifted in more than a dozen places at once -- 5,027 senses against
+    5,043, a control split of 958 against 1,152, a chapter counting 515 farsh
+    places where the database held 523. Each was true when it was written.
+
+    So: a small registry of figures, each with the query that produces it and
+    the phrasings that quote it. A claim whose number no longer matches fails.
+    A phrasing that matches nothing at all is reported too, because a sentence
+    that was reworded silently stops being checked, and that is how the drift
+    started."""
+    require_tables(cur, "corpus", "riwaya_diff")
+    docs = {}
+    for name in ("README.md", "BEVINDINGEN.md", "SOURCES.md",
+                 "docs/nahw-nl.md", "docs/sarf-nl.md", "docs/hafs-warsh.md"):
+        path = HERE / name
+        if path.exists():
+            docs[name] = path.read_text(encoding="utf-8")
+
+    checks = list(DOC_FIGURES)
+    # fetchall first: the loop body runs its own queries on this same cursor,
+    # which would reset it and end the loop after one pair
+    pairs = cur.execute("SELECT DISTINCT riwaya_a, riwaya_b FROM riwaya_diff").fetchall()
+    for a, b in pairs:
+        en, nl_a = PAIR_NAMES[a][0], PAIR_NAMES[a][1]
+        eb, nl_b = PAIR_NAMES[b][0], PAIR_NAMES[b][1]
+        total, farsh = cur.execute(
+            "SELECT COUNT(*), SUM(kind='farsh') FROM riwaya_diff "
+            "WHERE riwaya_a=? AND riwaya_b=?", (a, b)).fetchone()
+        # the row shape of both pair tables: name | kind | places | **farsh** |
+        row = r"\| %s [–-] %s \|[^|]*\| ([\d.,]+) \|"
+        checks.append(("%s-%s places" % (a, b), total,
+                       [row % (en, eb), row % (nl_a, nl_b)]))
+        rowf = r"\| %s [–-] %s \|[^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
+        checks.append(("%s-%s farsh" % (a, b), farsh,
+                       [rowf % (en, eb), rowf % (nl_a, nl_b)]))
+
+    bad, unseen, seen = [], [], 0
+    for label, source, patterns in checks:
+        want = cur.execute(source).fetchone()[0] if isinstance(source, str) else source
+        for pattern in patterns:
+            hit = False
+            for name, text in docs.items():
+                for m in re.finditer(pattern, text, re.M):
+                    hit = True
+                    seen += 1
+                    if _num(m.group(1)) != want:
+                        bad.append("%s: %s says %s, the database says %s"
+                                   % (name, label, m.group(1), f"{want:,}"))
+            if not hit:
+                unseen.append("%s: no document matches %r" % (label, pattern))
+    if bad:
+        raise Failed("%d figure(s) in the documents disagree with the database: %s"
+                     % (len(bad), "; ".join(bad[:6])))
+    if unseen:
+        raise Warned(
+            "%d registered figure(s) match no document any more, so nothing "
+            "checks them: %s" % (len(unseen), "; ".join(unseen[:4])))
+    return ("%d quoted figures in %d documents all agree with the database"
+            % (seen, len(docs)))
+
+
 @check("sarf book examples")
 def sarf_book(cur, args):
     """Every word the sarf book quotes in running prose beside a verse number.
