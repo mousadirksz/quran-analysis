@@ -213,7 +213,7 @@ uiteenvallen (zoals de vier verschillende مَا's die er voorkomen).
 Ja, maar niet om de reden die je zou denken.
 
 - Het vocabulaire dekt **83,2% van de hele Quran** — je krijgt het complete
-  grammaticale skelet (huruf en damaa'ir, samen 61% van de tekst) cadeau.
+  grammaticale skelet (ḥurūf en ḍamāʾir, samen 55,2% van de segmenten) cadeau.
 - Maar als **pure vocabulaire-investering** is het inefficiënt: de 849
   frequentste lemma's van de Quran zouden **92,5%** dekken, en de overlap
   tussen beide sets is maar 382 lemma's. Ruim de helft van het Djoez
@@ -313,7 +313,7 @@ drie onafhankelijk gedigitaliseerde teksten en drie eigen parsers.
 | دِين | دين | 5 | 3 |
 
 دِين krijgt er drie verschillende betekenissen: *hisab/jaza'* (83:11),
-*tawhid/milla* (98:5) en *'adad* (107:1).
+*tawhid/milla* (98:5) en *al-Qur'aan* (107:1, Ibn al-Jawzie).
 
 En breder: **436 van de 849 lemma's** in Djoez Amma (51%) behoren tot een root
 die de geleerden ergens in de Quran meerdere betekenissen toekennen.
@@ -392,9 +392,11 @@ Waar helemaal geen laag voor is:
   hulp, bewust letterlijk; als lopende tekst lezen ze slecht en als vertaling
   moeten ze niet gepresenteerd worden.
 - **Tafsir**, in welke vorm dan ook.
-- **De zes andere riwaayaat**, en elke qiraa-a buiten die van Aasim en Naafi3.
-  Ook de tellingen die per riwaaya verschillen — de versnummering, de ahzaab —
-  staan er alleen in de Hafs-vorm in.
+- **Elke qiraa-a buiten die van Ibn Kathier, Aasim, Aboe 3Amr en Naafi3.** De
+  acht riwaayaat die het mujammaʿ uitgeeft staan er inmiddels alle acht in;
+  Ibn 3Aamir, Hamza en al-Kisaa-ie van de zeven staan er niet in, en de drie
+  die de tien voltooien evenmin. Ook de tellingen die per riwaaya verschillen —
+  de versnummering, de ahzaab — staan er alleen in de Hafs-vorm in.
 
 ## 10. Syntaxis en wat er niet staat (`syntax`)
 
@@ -503,8 +505,10 @@ ging er alleen daardoor van 4.887 naar 2.705 plaatsen.
 
 Dat een kale alif mét klinker in die drie pakketten altijd een waṣl is, is niet
 aangenomen maar getoetst: hamzat al-qaṭʿ staat er op een zetel (أ, إ, آ) in
-ruim 9.000 plaatsen per pakket, met **één uitzondering per pakket** — en die
-uitzondering is zelf een farsh-verschil (40:46 أَدْخِلُوا tegenover ٱدْخُلُوا).
+ruim 9.000 plaatsen per pakket, met **één uitzondering per pakket**. Die
+uitzondering laat zich met deze acht pakketten niet illustreren — bij 40:46,
+de plaats die hier eerst als voorbeeld stond, schrijven alle acht een zetel —
+dus blijft het bij de telling.
 
 **De ring U+06DF zegt twee tegengestelde dingen.** Naast Ḥafṣ gelegd:
 
@@ -594,9 +598,11 @@ Silat al-miem alleen al — عَلَيْهِمْ dat als عَلَيْهِمُو 
 | 3:146 | قَٰتَلَ | قُتِلَ |
 | 43:19 | عِبَٰدُ | عِندَ |
 | 57:24 | هُوَ | *(ontbreekt)* |
-| 72:28 | عَدَدَۢا | عَدَداٗ |
 
-57:24 is het enige geval waar een heel woord aan één kant ontbreekt.
+57:24 is het enige geval waar een heel woord aan één kant ontbreekt. (Hier
+stond eerder ook 72:28 عَدَدَۢا / عَدَداٗ. Dat is geen farsh maar de
+schrijfwijze van de tanwīn-fatḥ die twee secties hierboven wordt beschreven:
+de vergelijking geeft dat vers alleen een naql-rij, geen farsh-rij.)
 
 ### Wat er niet klopt, geteld in plaats van geschat
 
@@ -659,7 +665,7 @@ wegstreepte. Dat loopt van 4 rijen (al-Bazzī–Qunbul) tot 207 (Ḥafṣ–Wars
 
 **Lees de kolom farsh, niet de kolom plaatsen.** Het aantal plaatsen telt uṣūl
 en schrijfwijze mee, en dat loopt per pakket enorm uiteen: al-Bazzī en Qunbul
-passen silat al-mīm overal toe, in hun eentje goed voor 6.100 rijen, en
+passen silat al-mīm overal toe, in hun eentje goed voor 6.150 en 6.142 rijen, en
 Qālūn–Warsh haalt 5.377 plaatsen terwijl het *binnen* één qirāʾa valt, omdat
 Warsh naql toepast (اَ۬لَارْضِ tegenover اِ۬لْأَرْضِ) en de hamza verzacht
 (يُوتِ tegenover يُؤْتِ) waar Qālūn dat niet doet.
@@ -755,5 +761,5 @@ hoofdstuk 8 van `docs/sarf-nl.md` legt ze uit. De Warsh-vorm is daar de lezing v
 Warsh niet — maar de vraag of die vorm in Ḥafṣ voorkomt is een query.
 
 `docs/hafs-warsh.md` bevat de volledige lijst met alle klassen, bedoeld om
-nagelopen te worden. Zes riwaayaat staan wel in de tabel `riwayat` maar hun
-tekst niet in de repo; zie `SOURCES.md` voor waarom.
+nagelopen te worden. Alle acht riwaayaat in de tabel `riwayat` hebben hun
+tekst in `sources/`; zie `SOURCES.md` voor de herkomst.

@@ -1204,7 +1204,7 @@ verschil van mening bestaat. Soms is het een ḫabar of een werkwoord waarover
 dat wel bestaat.
 
 **129 verschillende relatielabels.** De 30 uit de wegwijzer dekken het meeste;
-de overige 99 zijn goed voor 3.580 plaatsen, en 78 daarvan bestaan alleen
+de overige 98 zijn goed voor 3.297 plaatsen, en 78 daarvan bestaan alleen
 omdat de treebank elke naasikh apart benoemt. `subj <<tkn>>` en
 `subj <<kant>>` zijn allebei "ism kāna"; dat het twee labels zijn is een
 eigenschap van de database, niet van de grammatica.

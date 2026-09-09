@@ -144,11 +144,11 @@ LIMIT 5;
 ```
 
 ```
-3056  البيان                              4  ibnsallam #1, damaghani #1, ibnjawzi #1, askari #1
-3057  الهدى دين الإسلام                    4  ibnsallam #2, damaghani #2, ibnjawzi #2, askari #9
-3058  الإيمان                             4  ibnsallam #3, damaghani #3, ibnjawzi #3, askari #4
-3061  الهدى أمر محمد صلى الله عليه وسلم     4  ibnsallam #6, damaghani #8, ibnjawzi #7, askari #8
-3069  الإلهام                             4  ibnsallam #17, damaghani #16, ibnjawzi #12, askari #12
+3070  البيان                             4  ibnsallam #1, damaghani #1, ibnjawzi #1, askari #1
+3071  الهدى دين الإسلام                  4  ibnsallam #2, damaghani #2, ibnjawzi #2, askari #9
+3072  الإيمان                            4  ibnsallam #3, damaghani #3, ibnjawzi #3, askari #4
+3075  الهدى أمر محمد صلى الله عليه وسلم  4  ibnsallam #6, damaghani #8, ibnjawzi #7, askari #8
+3083  الإلهام                            4  ibnsallam #17, damaghani #16, ibnjawzi #12, askari #12
 ```
 
 **6. How much of the wujuh layer is evidence and how much is a candidate list.**
@@ -163,9 +163,9 @@ ORDER BY rows DESC;
 ```
 
 ```
-high    9242   4713   3008
-low     2622    483   1404
-medium   480    323    367
+high      9242   4729   3008
+low       2622    483   1404
+medium     480    323    367
 ```
 
 **7. Join the corpus to the sura metadata.**
@@ -480,7 +480,7 @@ compared:
 | `riwaya_ar`, `riwaya_en`, `riwaya_died_ah` | the transmitter |
 | `qari_ar`, `qari_en`, `qari_died_ah` | the reader he transmits from |
 | `region` | where the riwaya is read today |
-| `kfgqpc_version`, `source_date` | the version of the complex's data package; the date only for the two loaded here |
+| `kfgqpc_version`, `source_date` | the version of the complex's data package; all eight are loaded, but only two of the releases carry a date |
 | `in_database` | 1 for all eight; their text is in `sources/riwaya_*.csv` |
 
 `riwaya_diff` — 49,134 rows over **ten pairs**, one per place where two texts
@@ -549,7 +549,7 @@ struck. It runs from 4 rows (al-Bazzi–Qunbul) to 207 (Hafs–Warsh).
 
 Read the farsh column, not the places column. Places counts usul and spelling
 too, and those vary enormously by package: al-Bazzi and Qunbul apply silat
-al-mim throughout, which alone is 6,100 rows, and Qaaloon–Warsh reaches 5,377
+al-mim throughout, which alone is 6,150 and 6,142 rows, and Qaaloon–Warsh reaches 5,377
 places while sitting *within* one qiraa because Warsh applies naql and softens
 the hamza where Qaaloon does not.
 
@@ -588,7 +588,7 @@ and the verdicts live in `farsh_review.tsv` — one line per pair, with a reason
 121 rows (19% of the 652 the rules produced) were notation or usul after all and
 are now `uitgesloten`; 10 more are `onzeker`, all of them the same word. The
 largest group among the 95 is the hamz of `an-nabii'` and `an-nubuu'a`, which
-Naafi' applies at every one of the 82 places that word occurs and which is
+Naafi' applies at every place that word occurs and which is
 therefore a rule and not a word-by-word choice.
 
 ### Views
@@ -717,7 +717,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `add_metadata.py` | builds `surahs`, `juz_boundaries`, `hizb_boundaries` and `verses` (optional step) |
 | `parse_tasarif.py` | parses Yahya ibn Sallam's *at-Tasarif* → `sources/tasarif_wujuh.json` (114 entries, 551 senses, 1,871 quotes) |
 | `parse_damaghani.py` | parses al-Damaghani's *Qamus al-Quran* → `sources/damaghani_wujuh.json` (497 entries, 2,329 senses, 3,736 quotes) |
-| `parse_ibnjawzi.py` | parses Ibn al-Jawzi's *Nuzhat al-A'yun* → `sources/ibnjawzi_wujuh.json` (300 entries, 1,500 senses, 2,752 quotes) |
+| `parse_ibnjawzi.py` | parses Ibn al-Jawzi's *Nuzhat al-A'yun* → `sources/ibnjawzi_wujuh.json` (300 entries, 1,518 senses, 2,752 quotes) |
 | `parse_askari.py` | parses Abu Hilal al-Askari's *al-Wujuh wa-l-Naza'ir* → `sources/askari_wujuh.json` (210 entries, 848 senses, 2,080 quotes; optional step) |
 | `resolve_citations.py` | resolves every quoted fragment to sura:aya against the corpus text, in tiers (exact → sura hint → cross-verse → prefix → fuzzy) → `sources/resolved_citations.json` |
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
@@ -851,7 +851,7 @@ two different fragments of it, and joining `wujuh` to `corpus` on
 segments of the root. Use `DISTINCT`, aggregate, or join on `corpus_id`.
 
 **Not every parsed sense reaches the table.** The parsers produce 1,121 entries
-and 5,228 senses; the `wujuh` table holds 1,083 entries and 4,951 senses. The
+and 5,246 senses; the `wujuh` table holds 1,083 entries and 4,951 senses. The
 difference is entries and senses all of whose citations failed to resolve, or
 that carry no citation at all. Sense numbers can therefore have gaps.
 
