@@ -830,6 +830,54 @@ def syntax_heads(cur, args):
             "run in a circle -- the treebank's own analyses, left as they came")
 
 
+@check("corpus_id references")
+def corpus_id_refs(cur, args):
+    """A corpus_id must name a row that exists, and the same verse.
+
+    Two tables point into `corpus` by id, and nothing checked either. An id
+    that survives a rebuild of the corpus while pointing at a row that moved is
+    the failure this catches: not a dangling reference, which would be obvious,
+    but a live one that now names a different word in a different verse.
+    """
+    require_tables(cur, "corpus")
+    for table in ("syntax", "wujuh"):
+        if not cur.execute("SELECT name FROM sqlite_master WHERE name=?", (table,)).fetchone():
+            continue
+        expect_none(cur, f"{table}.corpus_id naming no corpus row",
+                    f"SELECT corpus_id FROM {table} WHERE corpus_id IS NOT NULL"
+                    " AND corpus_id NOT IN (SELECT id FROM corpus)")
+        expect_none(cur, f"{table}.corpus_id naming another verse than its own",
+                    f"SELECT t.corpus_id FROM {table} t JOIN corpus c ON c.id = t.corpus_id"
+                    " WHERE t.surah != c.surah OR t.ayah != c.ayah")
+    linked = cur.execute("SELECT COUNT(*) FROM syntax WHERE corpus_id IS NOT NULL").fetchone()[0]
+    wl = cur.execute("SELECT COUNT(*) FROM wujuh WHERE corpus_id IS NOT NULL").fetchone()[0]
+    return (f"{linked:,} syntax and {wl:,} wujuh rows point into corpus, "
+            "every one at a row that exists and names the same verse")
+
+
+@check("verses: derived columns")
+def verses_derived(cur, args):
+    """word_count, juz and hizb are derived, so they can drift from what they
+    describe. Each is checked against the table it was derived from."""
+    require_tables(cur, "verses", "juz_boundaries", "hizb_boundaries")
+    expect_none(cur, "verses.word_count disagreeing with the words view",
+                "SELECT v.surah, v.ayah FROM verses v LEFT JOIN"
+                " (SELECT surah, ayah, COUNT(*) n FROM words GROUP BY 1,2) w"
+                " ON w.surah=v.surah AND w.ayah=v.ayah"
+                " WHERE IFNULL(w.n, 0) != v.word_count")
+    expect_none(cur, "verses.juz outside 1..30", "SELECT surah, ayah FROM verses"
+                " WHERE juz IS NULL OR juz < 1 OR juz > 30")
+    expect_none(cur, "verses.hizb outside 1..60", "SELECT surah, ayah FROM verses"
+                " WHERE hizb IS NULL OR hizb < 1 OR hizb > 60")
+    expect_none(cur, "hizb that does not sit in its own juz",
+                "SELECT v.surah, v.ayah FROM verses v JOIN hizb_boundaries h"
+                " ON h.hizb = v.hizb WHERE h.juz != v.juz")
+    hizbs = cur.execute("SELECT COUNT(*) FROM hizb_boundaries").fetchone()[0]
+    expect(hizbs, 60, "ahzaab")
+    return (f"{hizbs} ahzaab over 30 ajzaa', and every verse's word_count, juz "
+            "and hizb agree with what they were derived from")
+
+
 @check("riwaya differences")
 def riwaya_differences(cur, args):
     """Every difference must name two riwayat that the riwayat table knows,
@@ -877,7 +925,7 @@ def riwaya_differences(cur, args):
                        " FROM riwaya_diff WHERE reviewed = 1").fetchall()
     if [r[0] for r in read] != ["hafs-warsh"]:
         raise Failed("pairs marked as read: %s (expected hafs-warsh alone)"
-                     % ", ".join(r[0] for r in read) or "none")
+                     % (", ".join(r[0] for r in read) or "none"))
     # idghaam kabiir is read off one riwaya against its sibling as control, so
     # it can only ever be claimed for a riwaya the comparison knows applies it
     applies = ", ".join("'" + r + "'" for r in sorted(IDGHAAM_KABIR))

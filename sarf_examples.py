@@ -4,7 +4,7 @@
 For each of the eight root types the sarf distinguishes -- salim, mahmuz,
 mudaccaf, mithal, ajwaf, naqis, lafif mafruq, lafif maqrun -- this picks the
 best-attested roots and prints, for each, the forms the Quran actually attests
-across the fourteen persons, with a verse reference for each.
+across the fifteen person-labels, with a verse reference for each.
 
 The point of teaching from attested forms is that the gaps are informative
 too: no root is conjugated through the whole paradigm in the text, and which
@@ -32,7 +32,8 @@ from add_metadata import repair_markers
 
 DB = Path(__file__).parent / "quran.db"
 
-# traditional order of the fourteen persons
+# The traditional order. Fifteen labels rather than fourteen: the corpus
+# writes 2D beside 2MD and 2FD, and all fifteen are attested.
 PGN_ORDER = ["3MS", "3FS", "3MD", "3FD", "3MP", "3FP",
              "2MS", "2FS", "2D", "2MD", "2FD", "2MP", "2FP", "1S", "1P"]
 PGN_NL = {

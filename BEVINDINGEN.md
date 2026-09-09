@@ -496,10 +496,14 @@ classificatie over de andere negen paren werd gehaald, kwamen er duizenden
 **een teken dat in het ene pakket iets anders betekent dan in het andere.**
 `python3 analyses.py mushaf` telt ze; dit is wat eruit kwam.
 
-**Hamzat al-waṣl kent drie conventies, geen twee.** Ḥafṣ, al-Bazzī, Qunbul en
-Shuʿba schrijven de letter ٱ (ruim 13.480 keer elk). Qālūn, al-Dūrī en al-Sūsī
-gebruiken die letter **nul keer** en schrijven een kale alif met de klinker die
-de waṣl zou krijgen als je erop begon. Warsh zet een teken boven de alif. Dat
+**Hamzat al-waṣl kent twee conventies, en een terugval.** Ḥafṣ en Shuʿba
+(Kūfa) en al-Bazzī en Qunbul (Mekka) schrijven de letter ٱ, ruim 13.480 keer
+elk. De andere vier gebruiken die letter **nul keer** en zetten in plaats
+daarvan het teken U+06EC op een kale alif: Warsh 10.056 keer, Qālūn 10.088,
+al-Dūrī 10.052 en al-Sūsī 10.053. Bij die laatste drie blijft daarnaast een
+kale beklinkerde alif over die géén teken draagt en tóch een waṣl is — dat is
+wat `PLAIN_WASL` opvangt, en Warsh heeft het niet nodig omdat hij ze alle
+markeert. Dat
 één onderscheid is goed voor duizenden valse verschillen per paar: Ḥafṣ–al-Dūrī
 ging er alleen daardoor van 4.887 naar 2.705 plaatsen.
 

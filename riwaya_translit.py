@@ -80,15 +80,19 @@ def _emit_long(out, ch):
 def translit(w, sila=True, plain_wasl=False):
     """Transliterate one vowelled word.
 
-    `plain_wasl` says which of the two mushaf conventions for hamzat al-wasl
-    this word's package follows. Hafs, al-Bazzi, Qunbul and Shu'ba write the
-    alef wasla letter (U+0671); Warsh marks it with a sign over a plain alif;
-    Qaaloon, al-Doori and al-Soosi write a plain alif carrying the vowel the
-    wasl would take if you began on it, and no distinct letter at all. In
-    those three, a bare alif with a vowel is a wasl alif -- hamzat al-qat' is
-    always written on a seat there, in every one of some 9,000 places against
-    a single exception per package, and that exception (40:46 'adkhiluu
-    against udkhuluu) is a farsh difference and not a spelling."""
+    There are two conventions among the eight packages, not three. Hafs,
+    Shu'ba, al-Bazzi and Qunbul write the alef wasla letter (U+0671), about
+    13,485 times each. Warsh, Qaaloon, al-Doori and al-Soosi never write that
+    letter at all, and mark the wasl with U+06EC over a plain alif instead --
+    10,056, 10,088, 10,052 and 10,053 times.
+
+    `plain_wasl` is not that split; it is a fallback for what the second
+    convention leaves unmarked. In Qaaloon, al-Doori and al-Soosi a bare alif
+    carrying a vowel is a wasl alif even where no sign says so, because hamzat
+    al-qat' is written on a seat there in every one of some 9,000 places bar
+    one per package. Warsh marks every one of his, so the fallback never fires
+    for him: setting the flag for him changes no row.
+    """
     # iqlab is written as a small mim beside a single vowel sign standing for
     # the tanwin; restore the tanwin the sign implies
     w = re.sub('\u064e[\u06e2\u06ed]', '\u064b', w)

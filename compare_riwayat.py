@@ -19,7 +19,9 @@ Every word is therefore transliterated first (riwaya_translit.py) and the
 transliterations are compared: that measures the recitation, which is what a
 farsh difference is.
 
-The verse division differs in 50 suras, so a join on (surah, ayah) breaks.
+The verse division differs from Hafs in 50 suras for Warsh and Qaaloon, 52
+for al-Bazzi and Qunbul, 43 for al-Doori and al-Soosi and none for Shu'ba,
+so a join on (surah, ayah) breaks.
 Each sura is aligned on its word sequence instead, with difflib over the
 consonant skeleton, and the two ayah numbers are both recorded.
 
@@ -182,7 +184,7 @@ HAMZA = set("ءأإؤئٓٔ")
 # The packages are nowhere near equal in it: Hafs writes it 99 times, al-Bazzi,
 # Qunbul and Shu'ba 100 each, al-Doori 66, al-Soosi 38, and Warsh and Qaaloon
 # not once. U+06EA and U+06EC on an alif mark hamzat
-# al-wasl, which is what the nearly ten thousand of them in Warsh, Qaaloon,
+# al-wasl, which is what the ten thousand and some of them in Warsh, Qaaloon,
 # al-Doori and al-Soosi are, and the transliteration resolves those. On any
 # other letter U+06EA and U+06EC mark imaala and taqliil on the alif that
 # follows -- Warsh 1,911, al-Doori 737, al-Soosi 609, Qaaloon 11, al-Bazzi,
@@ -208,7 +210,7 @@ def has_imala(w):
     other two jobs these three signs do by what they sit on, not by whether a
     vowel sign comes in between. U+06ED is the iqlaab marker and appears even
     in Hafs; U+06EA and U+06EC on an alif mark hamzat al-wasl, which is what
-    the nearly ten thousand of them in Warsh, Qaaloon, al-Doori and al-Soosi
+    the ten thousand and some of them in Warsh, Qaaloon, al-Doori and al-Soosi
     are. On any other letter the two of them mark imaala or taqliil.
     """
     for i, c in enumerate(w):
@@ -627,7 +629,7 @@ def hand_verdicts():
 
     The largest group struck is the hamz of an-nabii' and an-nubuu'a, which
     a rule cannot judge either: what makes it usul rather than a word-by-word
-    choice is that Naafi' reads it so at all 82 places the word occurs, and
+    choice is that Naafi' reads it so at every place the word occurs, and
     that count is a fact about the whole text and not about the pair in
     front of you."""
     out = {}

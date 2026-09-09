@@ -64,7 +64,10 @@ REL_NL = {
     "sup": "een partikel dat er staat zonder iets te regeren",
     "Spec": "wat een vage maat of hoeveelheid preciseert",
     "exp": "wat van het geheel wordt uitgezonderd",
-    "prev": "de kāf van de vergelijking",
+    # PREV is maa al-kaaffa, the maa that stops a particle from governing;
+    # the token is مَا in all 164 places. It was glossed as the kaaf of
+    # comparison, which is a different word entirely.
+    "prev": "de مَا die een partikel belet te regeren",
     "fut": "سوف of سـ, dat naar de toekomst wijst",
     "caus": "de lām die een reden geeft",
     "prp": "de maṣdar die zegt waarom",
