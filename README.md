@@ -216,7 +216,7 @@ python3 build.py --list                # print the pipeline order and exit
 
 A full run takes a while; the parsers and `resolve_citations.py` are the slow
 steps. Every step except `to_sqlite.py` is idempotent, which is what `--keep`
-exploits. The last step is `validate.py`, which runs 26 checks over the
+exploits. The last step is `validate.py`, which runs 27 checks over the
 finished database (see *Data quality* below) and can also be run on its own:
 
 ```sh
@@ -273,7 +273,7 @@ possible the word) it points at.
 | `tag` | corpus part-of-speech tag, present on every segment (45 values: `N`, `PRON`, `V`, `P`, `CONJ`, `DET`, …) |
 | `segment_type` | `PREFIX` (28,670), `STEM` (77,915), `SUFFIX` (21,634) |
 | `pos` | part of speech; filled on stems only, NULL on prefixes and suffixes |
-| `lemma`, `lemma_ar` | dictionary form, Buckwalter and Arabic |
+| `lemma`, `lemma_ar` | dictionary form, Buckwalter and Arabic. `lemma_ar` carries the same unmapped markers as `form_ar` in 156 rows (35 lemmas), and the corpus' homograph index digit besides — `EalaY~2` stays `عَلَى2`, so grouping on `lemma_ar` splits that lemma in two |
 | `root`, `root_ar` | root, Buckwalter and Arabic; NULL where the corpus gives none — every particle, and the loan names it treats as unanalysable |
 | `aspect` | `PERF`, `IMPF`, `IMPV` |
 | `verb_form` | derived verb form `II`–`XII`; NULL for form I |
@@ -590,9 +590,10 @@ therefore a rule and not a word-by-word choice.
 
 Prefer the `verses` table over the `ayat` view for reading text: `ayat` passes
 the corpus' extended-Buckwalter markers (`@`, `,`, `.`, `[`) through unmapped,
-so 2,240 of its rows contain characters that are not Arabic script, where
+so 3,386 of its rows contain characters that are not Arabic script, where
 `verses.text_ar` has them repaired to the Quranic annotation signs they stand
-for.
+for. (2,240 of those carry `@`, the commonest of the four; the figure used to
+name only that one.)
 
 ## Coverage — what the database knows about a given verse
 
@@ -623,8 +624,8 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 
 ## Data quality
 
-`validate.py` runs 26 checks over the finished database and is the last step of
-`build.py`. On the committed database, 24 pass and 2 warn — the two warnings are
+`validate.py` runs 27 checks over the finished database and is the last step of
+`build.py`. On the committed database, 25 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
 `corpus`, *freshness* (the parsed JSONs, `resolved_citations.json` and the
@@ -712,7 +713,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 26 checks over the finished database (optional step) |
+| `validate.py` | 27 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 
@@ -726,7 +727,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |
 
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
-| `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `rel <label>`, `irab-book`, `irab-mabni` |
+| `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `faail`, `rel <label>`, `irab-diff`, `irab-book`, `irab-mabni` |
 
 `docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
 classification with its counts, and every farsh difference with its verse.

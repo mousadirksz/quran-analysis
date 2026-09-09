@@ -10,9 +10,14 @@ The point of teaching from attested forms is that the gaps are informative
 too: no root is conjugated through the whole paradigm in the text, and which
 cells are filled says something about how the Quran speaks.
 
-    python3 sarf_examples.py            # all types
-    python3 sarf_examples.py ajwaf      # one type
-    python3 sarf_examples.py --markdown # tables ready for the textbook
+    python3 sarf_examples.py                 # all root types
+    python3 sarf_examples.py ajwaf           # one root type
+    python3 sarf_examples.py abwab           # the six abwab of the sound verb
+    python3 sarf_examples.py forms           # forms I-XV, with counts
+    python3 sarf_examples.py quad            # the quadriliteral roots
+    python3 sarf_examples.py form-paradigms  # one paradigm per form
+    python3 sarf_examples.py bab-paradigms   # one paradigm per baab
+    python3 sarf_examples.py --markdown      # any mode, ready for the textbook
 
 Classification uses the corpus' own root letters. Note that the corpus writes
 every hamza in a root as alif, so a root counts as mahmuz when it carries an

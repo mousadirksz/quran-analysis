@@ -5,7 +5,13 @@ This is the icrab layer at the level of the individual token: which word is the
 faacil of which verb, which is the mafcul, which the khabar — the analysis the
 classical icrab works argue out in prose, here as a structure that can be
 queried. Each token carries its relation label (English and Arabic) and points
-at its head, so a verse's parse can be walked from its root.
+at its head.
+
+Almost always that gives a tree per sentence, but not always, and code that
+walks upward has to say so: the source has 135 head_tid cycles and 19 sentences
+in which every token has a head, so there is no root to walk to and a naive
+loop never ends. Those are the treebank's own analyses and are left as they
+came; validate.py counts them so the number cannot drift unnoticed.
 
 Two things make it fit this database exactly:
 

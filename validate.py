@@ -88,6 +88,10 @@ RESOLVED = SOURCES / "resolved_citations.json"
 EXPECTED_SEGMENTS = 128219
 EXPECTED_SURAHS = 114
 EXPECTED_AYAHS = 6236
+# The treebank's head pointers are not quite a forest; see the 'syntax head
+# structure' check for what these two count and why they are not repaired.
+EXPECTED_HEAD_CYCLES = 135
+EXPECTED_ROOTLESS = 19
 EXPECTED_WORDS = 77429
 
 KALIMA_TYPES = {"ism", "fiil", "harf", "muqattaat"}
@@ -649,11 +653,21 @@ def sense_alignment_refs(cur, args):
                 "COUNT(DISTINCT work), MAX(n_works) FROM sense_alignment "
                 "GROUP BY 1 HAVING COUNT(*) != MAX(n_senses) "
                 "OR COUNT(DISTINCT work) != MAX(n_works)")
+    # (work, headword, sense_nr) is not unique in wujuh -- 83 such keys carry
+    # more than one gloss, because distinct lexicon entries were collapsed onto
+    # one normalised headword. Matching on that key alone can therefore be
+    # satisfied by the wrong entry, so the gloss is matched too. wujuh.gloss is
+    # NULL where sense_alignment stores the empty string, hence the ifnull.
+    expect_none(cur, "aligned sense whose gloss is not the one wujuh holds",
+                "SELECT a.work, a.headword, a.sense_nr FROM sense_alignment a "
+                "WHERE NOT EXISTS (SELECT 1 FROM wujuh w WHERE w.work=a.work "
+                "AND w.headword=a.headword AND w.sense_nr=a.sense_nr "
+                "AND IFNULL(w.gloss,'') = a.gloss)")
     senses, clusters = cur.execute(
         "SELECT COUNT(*), COUNT(DISTINCT canonical_id) FROM sense_alignment"
     ).fetchone()
     return (f"{senses:,} aligned senses in {clusters:,} canonical senses, "
-            "all resolving to a wujuh sense")
+            "each resolving to a wujuh sense with the same gloss")
 
 
 @check("metadata: surahs")
@@ -770,6 +784,50 @@ def syntax_tokens(cur, args):
     implicit = cur.execute("SELECT COUNT(*) FROM syntax WHERE is_implicit=1").fetchone()[0]
     return (f"{written:,} written tokens all linked to corpus, "
             f"{implicit:,} implicit tokens posited by the treebank")
+
+
+@check("syntax head structure")
+def syntax_heads(cur, args):
+    """The head pointers are nearly a forest, and the exceptions are counted.
+
+    Code that walks upward from a token wants a root to stop at, and almost
+    everywhere there is one. Not everywhere: the treebank's own analyses leave
+    some head chains running in a circle, and some sentences in which every
+    token has a head, so no token is the root. Those are the source's readings
+    and are not rewritten here -- but a naive upward walk over them never ends,
+    and the numbers are pinned so they cannot grow unnoticed. Anything that
+    walks heads should carry a seen-set.
+    """
+    require_tables(cur, "syntax")
+    expect_none(cur, "token that is its own head",
+                "SELECT tid FROM syntax WHERE head_tid = tid")
+    expect_none(cur, "head_tid pointing at no token",
+                "SELECT s.tid FROM syntax s WHERE s.head_tid IS NOT NULL"
+                " AND NOT EXISTS (SELECT 1 FROM syntax h WHERE h.tid = s.head_tid)")
+    head = dict(cur.execute("SELECT tid, head_tid FROM syntax"))
+    colour, cycles, in_cycles = {}, 0, 0
+    for start in head:
+        if colour.get(start):
+            continue
+        path, node = [], start
+        while node is not None and not colour.get(node):
+            colour[node] = 1
+            path.append(node)
+            node = head.get(node)
+        if node is not None and colour.get(node) == 1:
+            cycles += 1
+            in_cycles += len(path) - path.index(node)
+        for n in path:
+            colour[n] = 2
+    rootless = cur.execute(
+        "SELECT COUNT(*) FROM (SELECT sentence_id FROM syntax GROUP BY sentence_id"
+        " HAVING SUM(head_tid IS NULL) = 0)").fetchone()[0]
+    sentences = cur.execute("SELECT COUNT(DISTINCT sentence_id) FROM syntax").fetchone()[0]
+    expect(cycles, EXPECTED_HEAD_CYCLES, "head_tid cycles")
+    expect(rootless, EXPECTED_ROOTLESS, "sentences with no root token")
+    return (f"{sentences - rootless:,} of {sentences:,} sentences have a root; "
+            f"{rootless} do not, and {cycles} head chains ({in_cycles} tokens) "
+            "run in a circle -- the treebank's own analyses, left as they came")
 
 
 @check("riwaya differences")
@@ -933,11 +991,14 @@ def quoted_words(text, verses, extra=None):
 
 @check("sarf book examples")
 def sarf_book(cur, args):
-    """Every verse the sarf book quotes must still say what it says.
+    """Every word the sarf book quotes in running prose beside a verse number.
 
-    The book cites the mushaf in running prose -- `19:6 yarithunii`, `famakatha
-    (27:22)` -- and those are typed by hand, so they are exactly what goes
-    stale. It also quotes Warsh where the two riwayat read a word differently,
+    Scope, so the PASS line is not read for more than it says: this checks the
+    quotations the book sets in its own sentences -- `19:6 yarithunii`,
+    `famakatha (27:22)` -- and not the several hundred bare verse references,
+    nor the Arabic inside its tables, which are pasted from sarf_examples.py
+    and are that script's to reproduce. Prose quotations are typed by hand, so
+    they are exactly what goes stale. It also quotes Warsh where the two riwayat read a word differently,
     and those forms are not in the corpus at all, so the riwaya table is
     consulted as a second source: a word counts as found when it stands in the
     verse in either transmission.

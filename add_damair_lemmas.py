@@ -10,7 +10,9 @@ segments carry a combined code (e.g. 3MS, 2MP) in suffix_pron. Dual forms
 make no gender distinction (2D/2MD/2FD -> antuma, 3D/3MD/3FD -> huma).
 
 Lemma spellings follow the corpus' own conventions (dotless ya, no final
-sukun, Buckwalter in `lemma`, Arabic in `lemma_ar`).
+sukun, Buckwalter in `lemma`, Arabic in `lemma_ar`), and the Arabic is produced
+by convert.buckwalter_to_arabic rather than typed, so the combining marks come
+out in the same order as everywhere else in the table.
 
 Idempotent: only fills PRON segments that still lack a lemma.
 """
@@ -18,24 +20,30 @@ Idempotent: only fills PRON segments that still lack a lemma.
 import sqlite3
 from pathlib import Path
 
-# PGN code -> (lemma Buckwalter, lemma Arabic)
-DAMAIR = {
-    "1S": (">anaA", "أَنَا"),
-    "1P": ("naHonu", "نَحْنُ"),
-    "2MS": (">anta", "أَنتَ"),
-    "2FS": (">anti", "أَنتِ"),
-    "2D": (">antumaA", "أَنتُمَا"),
-    "2MD": (">antumaA", "أَنتُمَا"),
-    "2FD": (">antumaA", "أَنتُمَا"),
-    "2MP": (">antum", "أَنتُم"),
-    "2FP": (">antun~a", "أَنتُنَّ"),
-    "3MS": ("huwa", "هُوَ"),
-    "3FS": ("hiYa", "هِىَ"),
-    "3D": ("humaA", "هُمَا"),
-    "3MD": ("humaA", "هُمَا"),
-    "3FD": ("humaA", "هُمَا"),
-    "3MP": ("hum", "هُم"),
-    "3FP": ("hun~a", "هُنَّ"),
+import convert
+
+# PGN code -> lemma in Buckwalter. The Arabic is derived with the same
+# converter the rest of the corpus went through, not typed beside it: the two
+# hand-typed shadda forms (hun~a, >antun~a) had drifted to vowel-before-shadda,
+# the opposite order of every other lemma in the table, so `WHERE lemma_ar =
+# 'هُنَّ'` spelled the way the database spells it everywhere else found nothing.
+DAMAIR_BW = {
+    "1S": ">anaA",
+    "1P": "naHonu",
+    "2MS": ">anta",
+    "2FS": ">anti",
+    "2D": ">antumaA",
+    "2MD": ">antumaA",
+    "2FD": ">antumaA",
+    "2MP": ">antum",
+    "2FP": ">antun~a",
+    "3MS": "huwa",
+    "3FS": "hiYa",
+    "3D": "humaA",
+    "3MD": "humaA",
+    "3FD": "humaA",
+    "3MP": "hum",
+    "3FP": "hun~a",
 }
 
 
@@ -44,7 +52,8 @@ def main():
     conn = sqlite3.connect(str(db))
     cur = conn.cursor()
 
-    for code, (bw, ar) in DAMAIR.items():
+    for code, bw in DAMAIR_BW.items():
+        ar = convert.buckwalter_to_arabic(bw)
         # Attached pronouns: PGN code in suffix_pron.
         cur.execute(
             "UPDATE corpus SET lemma=?, lemma_ar=? "
