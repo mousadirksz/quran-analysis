@@ -966,14 +966,41 @@ def quoted_words(text, verses, extra=None):
     `fa-yushitakum`."""
     here = r"([\u0621-\u06ff][\u0600-\u06ff\s]*?)\s*\((\d+):(\d+)\)"
     there = r"(\d+):(\d+)\s+([\u0621-\u06ff][\u0600-\u06ff\s*]*)"
+    # A table row is the third shape, and it is the one the books use most: a
+    # cell holding nothing but S:A, with Arabic cells beside it on the same row.
+    # Skipping every line that starts with a pipe left the fifteen-forms table
+    # of the sarf book unchecked, and that table cited a form-IX example from
+    # the wrong verse for as long as it existed.
     bad, seen = [], 0
     for line in text.splitlines():
         if line.startswith("|"):
-            continue
-        found = [(m.group(1), int(m.group(2)), int(m.group(3)))
-                 for m in re.finditer(here, line)]
-        found += [(m.group(3), int(m.group(1)), int(m.group(2)))
-                  for m in re.finditer(there, line)]
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            refs = [c for c in cells if re.fullmatch(r"\d+:\d+", c)]
+            if len(refs) != 1:
+                continue
+            # Only rows that open with the reference, and only the cell next to
+            # it. Those are the tables of literal quotations -- the riwaya
+            # tables of both books, where the cell beside the verse number is
+            # the word as that mushaf writes it.
+            #
+            # Deliberately out of scope: a table that puts the reference in a
+            # later column, because the Arabic beside it there is the citation
+            # form and not a quotation. The sarf book's fifteen-forms table
+            # gives أَنْعَمَ for form IV at 1:7, where the verse writes
+            # أَنْعَمْتَ, and ٱسْتَعِينُ at 1:5 for نَسْتَعِينُ. Both are true
+            # about those verses and neither is the word standing in them, and
+            # telling that apart from a wrong reference needs morphology this
+            # check does not have.
+            if cells[0] != refs[0]:
+                continue
+            surah, ayah = (int(x) for x in refs[0].split(":"))
+            found = [(c, surah, ayah) for c in cells[1:2]
+                     if re.search(r"[\u0621-\u06ff]", c)]
+        else:
+            found = [(m.group(1), int(m.group(2)), int(m.group(3)))
+                     for m in re.finditer(here, line)]
+            found += [(m.group(3), int(m.group(1)), int(m.group(2)))
+                      for m in re.finditer(there, line)]
         for phrase, surah, ayah in found:
             if (surah, ayah) not in verses:
                 continue
@@ -984,7 +1011,14 @@ def quoted_words(text, verses, extra=None):
                 if not bare:
                     continue
                 seen += 1
-                if bare not in hay:
+                # A table gives the citation form -- أَنْعَمَ for form IV -- beside
+                # the verse where it stands as أَنْعَمْتَ, and prose quotes a word
+                # without the fa- or wa- the verse writes. Both are true
+                # statements about that verse, so a word also counts as standing
+                # there when a word of the verse contains it. A word that is not
+                # in the verse in any shape still fails, which is what caught
+                # ٱبْيَضَّتْ cited from 3:106 where the verse has تَبْيَضُّ.
+                if bare not in hay and not any(bare in w for w in hay):
                     bad.append("%d:%d %s" % (surah, ayah, token))
     return seen, bad
 
