@@ -25,11 +25,37 @@ OpenITI-repository toegevoegd aan de sessie.
 Deze kwamen uit de audit van 8 september 2026 en zijn bewust niet uitgevoerd,
 omdat ze de eigenaar toekomen.
 
-- **`quran.db` blijft getrackt.** 64 MB per versie, twintig versies in de
-  historie, samen ongeveer 263 MB objectopslag voor een project waarvan de
-  broncode een paar honderd kilobyte is. Dat de database wordt meegecommit is
-  gedocumenteerd en verdedigbaar — je kunt de repo klonen en meteen queryen —
-  maar wat het kost staat nergens.
+- **`quran.db` blijft getrackt.** Besloten op 11 september 2026, nadat de
+  kosten voor het eerst echt gemeten zijn in plaats van geschat. De schatting
+  die hier eerst stond — "twintig versies, samen ongeveer 263 MB" — was ruim
+  een factor tien te hoog.
+
+  | | |
+  |---|--:|
+  | hele historie, optimaal gepakt, mét alle 27 db-versies | 51 MB |
+  | dezelfde historie zonder de database | 11 MB |
+  | wat de 27 db-versies dus kosten | ~40 MB, ~1,5 MB per versie |
+  | wat `git clone` van GitHub vandaag haalt | 107 MB in 9 seconden |
+
+  Een SQLite-bestand dat telkens een beetje verandert delta-comprimeert goed
+  tegen zijn vorige versie; daarom kost een versie ~1,5 MB en geen 64. GitHub
+  stuurt 107 MB omdat zijn pack minder strak is dan een verse `git gc`, niet
+  omdat er meer in zit.
+
+  De 406 MB waar deze afweging mee begon, was een eigenschap van de container
+  waarin eraan gewerkt werd: 537 losse objecten, nooit gepakt. `git gc` bracht
+  dat naar 52 MB en veranderde geen enkele commit.
+
+  Daarmee valt de afweging anders uit dan hij leek. Negen seconden en 107 MB
+  is geen prijs die iemand voelt, en ertegenover staat dat je de repo kunt
+  klonen en meteen kunt queryen. Het alternatief — de geschiedenis herschrijven
+  naar ~11 MB — verandert elke commit-SHA en dwingt elke bestaande kloon
+  opnieuw, voor een eenmalige besparing van 96 MB. Niet waard.
+
+  Terugkomen op deze beslissing als de kloon richting een paar honderd MB
+  loopt, of als de database veel vaker gecommit gaat worden dan tot nu toe.
+  Dan is `git rm --cached quran.db` plus een GitHub Release met de database als
+  bijlage de eerste stap, en pas daarna een herschrijving.
 - **`quran_analysis.ipynb`** (515 KB, opgeslagen uitvoer, ongewijzigd sinds de
   eerste commit) en **`unrar-0.4-py3-none-any.whl`** (een derde-partij-wheel
   waar niets naar verwijst) staan in de repo. README noemt ze nu bij naam en
