@@ -15,11 +15,19 @@ Het ṣarf-boek eindigde met een zin: *"Wat overblijft is de naḥw: hoe deze
 woorden zich in de zin tot elkaar verhouden, en welke uitgangen dat oplevert.
 Dat is een tweede boek."* Dit is dat boek.
 
-<!-- @claude: Herschrijf het als volgt: Neem maktoeb... sarf kijkt naar de betekenis van het woord: "is wat geschreven is" en in de zin verteld dat woord iets over het eerste woord. Het is een beschrijving. Nahw gaat dus over hoe de woorden onderling een interactie hebben. Sarf gaat over het woord los, nahw gaat over isnaad (ook wel hoekm genoemd). Een woord (de moesnad) vertelt iets over de moesnad ilayhi (het woord waarover iets verteld wordt) -->
-Ṣarf kijkt naar het woord vóórdat het de zin in gaat. Naḥw kijkt naar wat de
-zin ermee doet. Neem مَكْتُوب: dat het van كتب komt en volgens het patroon
-مَفْعُول is gevormd, is ṣarf. Dat het in ٱلْكِتَٰبُ مَكْتُوبٌ een *ḫabar* is en
-daarom een ḍamma krijgt, is naḥw.
+Ṣarf kijkt naar het woord vóórdat het de zin in gaat: waar het vandaan komt,
+hoe het gevormd is, en wat het daardoor betekent. Neem مَكْتُوب — dat het van
+كتب komt en volgens het patroon مَفْعُول is gevormd, en daarmee "wat
+geschreven is" betekent, is ṣarf. Het is een beschrijving, en die beschrijving
+draagt het woord in zijn eentje al met zich mee.
+
+Naḥw begint pas waar twee woorden elkaar raken. De kern daarvan heet **isnād**,
+ook wel *ḥukm*: het ene woord vertelt iets over het andere. Het woord dat iets
+vertelt heet de **musnad**, het woord waarover iets verteld wordt de **musnad
+ilayhi**. In ٱلْكِتَٰبُ مَكْتُوبٌ is مَكْتُوبٌ de musnad en ٱلْكِتَٰبُ de musnad ilayhi — de
+beschrijving die مَكْتُوب in zijn eentje al had, wordt nu aan iets gehecht.
+Dát hechten is naḥw. De ḍamma op مَكْتُوبٌ is wat je aan de buitenkant ziet:
+het woord staat er als *ḫabar*, en een ḫabar krijgt die uitgang.
 
 Dit boek verschilt op drie punten van een gewoon naḥw-boek.
 
@@ -235,6 +243,9 @@ als bouwsteen leert zien, kun je ontleden waar geen uitgang te zien is.
 De eenvoudigste Arabische zin heeft geen werkwoord. Hij bestaat uit twee
 naamwoorden: waar de zin over gaat (**mubtadaʾ**, مُبْتَدَأ) en wat erover
 gezegd wordt (**ḫabar**, خَبَر). Allebei staan ze in rafʿ.
+
+Dat is het isnād uit de inleiding, met de namen die de naamwoordelijke zin
+eraan geeft: de mubtadaʾ is de musnad ilayhi, de ḫabar is de musnad.
 
 ٱللَّهُ نُورُ ٱلسَّمَٰوَٰتِ — "Allah is het licht van de hemelen" (24:35).
 
