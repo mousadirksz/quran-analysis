@@ -29,6 +29,48 @@ beschrijving die مَكْتُوب in zijn eentje al had, wordt nu aan iets gehec
 Dát hechten is naḥw. De ḍamma op مَكْتُوبٌ is wat je aan de buitenkant ziet:
 het woord staat er als *ḫabar*, en een ḫabar krijgt die uitgang.
 
+Waar isnād is, is **ʿamal**: het ene woord werkt op het andere en laat daar
+een spoor na. Naḥw gaat daarom niet over wat een woord betekent, maar over wat
+het in de zin dóet — hoe het andere woorden beïnvloedt en zelf door andere
+woorden beïnvloed wordt. En waar die beïnvloeding zichtbaar is, aan de
+uitgang, kun je de betekenis eruit aflezen.
+
+### Wie sloeg wie?
+
+ضَرَبَ مُحَمَّدٌ زَيْدًا — *ḍaraba Muḥammadun Zaydan.*
+
+In het Nederlands beslist de volgorde wie er slaat: "Mohammed sloeg Zayd" zegt
+iets anders dan "Zayd sloeg Mohammed". Het Arabisch heeft die volgorde niet
+nodig, want het staat aan de woorden zelf te lezen.
+
+ضَرَبَ is het werkwoord en noemt de **ḥadath**,
+de gebeurtenis zelf. مُحَمَّدٌ eindigt op een
+ḍamma, en die ḍamma is een **ʿalāma** — een kenteken — van de positie
+**rafʿ**. De **fāʿil**, degene die de handeling verricht, is altijd marfūʿ;
+daarmee staat vast dat Mohammed degene is die sloeg. زَيْدًا eindigt op een
+fatḥa, de ʿalāma van **naṣb**, en de **mafʿūl bihi**, degene bij wie de
+handeling plaatsvindt, is manṣūb: Zayd is degene die geslagen werd.
+
+Zet de twee namen in de omgekeerde volgorde en er verandert niets aan wie wie
+sloeg: het kenteken reist met het woord mee. Wat verschuift is
+waar de nadruk valt, niet wie wat doet. De redenering loopt telkens
+dezelfde kant op:
+
+> teken → positie → functie → betekenis
+
+Hoofdstuk 2 behandelt de vier posities, hoofdstuk 3 de tekens, hoofdstuk 4 wat
+die uitgangen veroorzaakt, en de rest van het boek de functies.
+
+Dit ene voorbeeld is bedacht — het is het schoolvoorbeeld waar elke ṭālib mee
+begint. Maar het hoeft niet bedacht te blijven: dezelfde drie rollen staan in
+dezelfde volgorde aan het begin van een vers.
+
+ضَرَبَ ٱللَّهُ مَثَلًا (16:75) — "Allah geeft een gelijkenis".
+
+Daarin: de ḥadath, dan ٱللَّهُ marfūʿ als fāʿil, dan مَثَلًا manṣūb als
+mafʿūl bihi. Wie het bij Mohammed en Zayd ziet, ziet het hier ook.
+
+
 Dit boek verschilt op drie punten van een gewoon naḥw-boek.
 
 **Het telt.** Elke relatie die de treebank kent is telbaar over de hele
@@ -148,6 +190,8 @@ veranderen.
 
 Een muʿrab woord staat in één van vier posities. De eerste drie gelden voor
 naamwoorden, de vierde voor werkwoorden.
+Het teken waaraan je die positie afleest heet de **ʿalāma**, het kenteken;
+dat is de derde kolom hieronder.
 
 | Positie | Arabisch | Waar je het aan ziet | Wat het meestal betekent |
 |---|---|---|---|
