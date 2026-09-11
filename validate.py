@@ -1134,6 +1134,76 @@ ELSEWHERE_COLUMNS = {"Hangt aan", "Waarom geen iʿrāb", "Waar het in dit boek s
                      "Betekenis (hoofdlijn)", "Patroon", "Wat het is"}
 
 
+@check("schema documentation")
+def schema_documentation(cur, args):
+    """README must name every table, every view and every column, and must not
+    name a column that is gone.
+
+    The third of the three things this repository kept getting wrong, after the
+    figures and the Arabic. A column added by a migration and never written up
+    is invisible to anyone reading the README, and a column documented after it
+    was renamed sends them looking for something that is not there. Neither
+    fails loudly on its own; both fail here.
+
+    The `syntax` table is why this is worth a check: it carries the whole
+    treebank layer the nahw book is built on, and until this check was written
+    README named ten of its sixteen columns nowhere at all."""
+    readme = HERE / "README.md"
+    if not readme.exists():
+        raise Skipped("README.md is not here")
+    text = readme.read_text(encoding="utf-8")
+    # Only what stands between backticks on one line counts as documentation;
+    # a bare word in a sentence is prose, not a column name.
+    quoted = set()
+    for chunk in re.findall(r"`([^`\n]+)`", text):
+        quoted |= set(re.findall(r"[A-Za-z_]\w*", chunk))
+
+    objects = [(r[0], r[1]) for r in cur.execute(
+        "SELECT name, type FROM sqlite_master WHERE type IN ('table','view')"
+        " AND name NOT LIKE 'sqlite_%'")]
+    unnamed, undocumented = [], []
+    for name, kind in sorted(objects):
+        if name not in quoted:
+            unnamed.append("%s %s" % (kind, name))
+        for row in cur.execute('PRAGMA table_info("%s")' % name):
+            if row[1] not in quoted:
+                undocumented.append("%s.%s" % (name, row[1]))
+
+    # A column table documents the object its section is about; a row naming a
+    # column that object does not have is stale documentation.
+    known = {n for n, _ in objects}
+    columns = {n: {r[1] for r in cur.execute('PRAGMA table_info("%s")' % n)} for n in known}
+    lines, current, ghosts = text.splitlines(), None, []
+    for i, line in enumerate(lines):
+        if line.startswith("#") or line.startswith("`"):
+            for m in re.finditer(r"`([a-z_]+)`", line):
+                if m.group(1) in known:
+                    current = m.group(1)
+        if line.startswith("| Column | Meaning |") and current:
+            j = i + 2
+            while j < len(lines) and lines[j].startswith("|"):
+                for word in re.findall(r"`([A-Za-z_]\w*)`", lines[j].split("|")[1]):
+                    if word not in columns[current]:
+                        ghosts.append("%s.%s" % (current, word))
+                j += 1
+
+    problems = []
+    if unnamed:
+        problems.append("%d never named in README: %s"
+                        % (len(unnamed), ", ".join(unnamed)))
+    if undocumented:
+        problems.append("%d column(s) named nowhere: %s"
+                        % (len(undocumented), ", ".join(undocumented[:8])))
+    if ghosts:
+        problems.append("%d documented column(s) the table does not have: %s"
+                        % (len(ghosts), ", ".join(ghosts[:8])))
+    if problems:
+        raise Failed("; ".join(problems))
+    total = sum(len(columns[n]) for n in known)
+    return ("%d tables and views with %d columns, all named in README"
+            % (len(objects), total))
+
+
 @check("Arabic quotations")
 def arabic_quotations(cur, args):
     """Arabic quoted beside a verse number, compared codepoint for codepoint.
