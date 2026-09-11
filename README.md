@@ -602,8 +602,11 @@ Farsh is the comparable measure, and it says what the transmission history
 predicts. Two transmissions of one qari's reading differ in 34 words
 (al-Bazzi–Qunbul) or 25 (al-Doori–al-Soosi); two readings differ in 523 to
 708. The two within-qiraa pairs that do not fit — Hafs–Shu'ba at 397 and
-Qaaloon–Warsh at 369 — are the two the literature already singles out as the
-widest-diverging transmissions of a single reading.
+Qaaloon–Warsh at 369 — are, by an order of magnitude, the two where the pupils
+of one reader part company most; the manuals bear that out for both, listing
+Hafs against Shu'ba and Qaaloon against Warsh word by word where they say
+nothing of the kind for the other two pairs. That is a claim about which pairs
+stand out here, not a count taken from any manual.
 
 For Hafs–Warsh, the one pair also read afterwards, the 8,282 places fall out
 like this:

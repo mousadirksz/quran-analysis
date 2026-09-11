@@ -112,8 +112,11 @@ carries the ending it does, and where the grammarians disagreed.
 | **File in this repo** | `sources/nahhas_irab.txt` |
 | **Loaded by** | `parse_irab.py` → table `irab` |
 
-The earliest complete work of the genre still extant. 5,114 passages covering
-5,108 of the 6,236 verses; al-Nahhas comments where a verse raises a syntactic
+Among the earliest works of the genre still extant, though not the first:
+al-Zajjaj (d. 311 AH), under whom al-Nahhas studied, had already treated the
+i'rab verse by verse in his *Ma'ani al-Quran wa-i'rabuh*. 4,535 distinct
+passages in 5,114 rows -- a passage covering a run of verses is stored once per
+verse of the run -- covering 5,108 of the 6,236 verses; al-Nahhas comments where a verse raises a syntactic
 question, not on every verse. Each passage is stored whole against its verse:
 the reference comes from the header of the passage itself, so no matching was
 needed.

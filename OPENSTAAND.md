@@ -36,19 +36,32 @@ omdat ze de eigenaar toekomen.
   zegt dat geen van beide nodig is om te bouwen of te queryen; of ze weg
   moeten is een keuze.
 
-## Wat de audit nooit heeft bekeken
+## Wat de audit nooit heeft bekeken — inmiddels alsnog gedaan
 
 De audit van 8 september strandde op een sessielimiet met 15 van de 560 agents
-klaar. Drie dimensies zijn nooit begonnen, en juist daar is deze repo
-aantoonbaar zwak — de tekenvolgorde van handgetypt Arabisch is er in de
-geschiedenis van dit project al meermaals naast gegaan:
+klaar. Drie dimensies zijn toen nooit begonnen. Ze zijn daarna alle drie met de
+hand gedaan, en de eerste twee hebben er een controle aan overgehouden die
+voorkomt dat het opnieuw wegdrijft:
 
-1. **Unicode en Arabisch** — de tekenvolgorde van elk Arabisch citaat in de
-   documenten tegen de mushaf-bestanden en het corpus.
-2. **Schemadocumentatie** — de kolommen die README beschrijft tegen wat de
-   database werkelijk heeft.
-3. **Klassieke claims** — qurrāʾ, sterfjaren, uṣūl-toeschrijvingen, en de
-   beschrijvingen in `SOURCES.md`.
+1. **Unicode en Arabisch** — afgedekt door de controle `Arabic quotations`:
+   426 citaten, codepoint voor codepoint tegen de acht mushaf-bestanden,
+   vergeleken op NFC. Vond drie fouten, waarvan twee ouder dan de audit.
+2. **Schemadocumentatie** — afgedekt door `schema documentation`: 15 tabellen
+   en views, 144 kolommen, alle in README genoemd. `syntax` miste er tien.
+3. **Klassieke claims** — met de hand nagelopen; laat zich niet
+   automatiseren. Alle sterfjaren van de acht riwaayaat, hun vier qurraa- en
+   de negen klassieke werken in `SOURCES.md` bleken de standaardwaarden. Vier
+   dingen klopten niet: Mauritanië leest Warsh en niet Qālūn; al-Naḥḥās was
+   niet de eerste van zijn genre (al-Zajjāj, bij wie hij studeerde, ging hem
+   voor); "5.114 passages" zijn 4.535 passages in 5.114 rijen; en dat de
+   literatuur Ḥafṣ–Shuʿba en Qālūn–Warsh "aanwijst" als de verst uiteenlopende
+   paren was sterker gezegd dan te verantwoorden viel.
+
+Wat hier niet mee gedekt is: de uṣūl-toeschrijvingen rusten op de meting in
+deze repo (al-Dūrī als controle voor de idghām kabīr van al-Sūsī splitst 1.152
+tegen 5, silat al-mīm bij al-Bazzī en Qunbul, iskān van de hāʾ bij Qālūn,
+al-Dūrī en al-Sūsī). Die metingen komen overeen met wat de handboeken geven,
+maar de repo citeert geen handboek — dat blijft werk voor wie het wil naslaan.
 
 Het volledige rapport met de bewijsvoering per bevinding, en welke van de 202
 zijn nagetrokken en gerepareerd, staat op

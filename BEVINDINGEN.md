@@ -703,9 +703,12 @@ De farsh-kolom is de vergelijkbare maat, en die zegt wél wat de
 overleveringsgeschiedenis voorspelt. Twee overleveringen van één qārīʾ
 verschillen in 34 woorden (al-Bazzī–Qunbul) of 25 (al-Dūrī–al-Sūsī); twee
 verschillende lezingen in 523 tot 708. De twee binnen-paren die daar niet in
-passen — Ḥafṣ–Shuʿba met 397 en Qālūn–Warsh met 369 — zijn precies de twee die
-in de literatuur bekendstaan als de verst uiteenlopende overleveringen van één
-lezing.
+passen — Ḥafṣ–Shuʿba met 397 en Qālūn–Warsh met 369 — zijn met een orde van
+grootte de twee waar de leerlingen van één qārīʾ het meest uiteengaan, en de
+handboeken bevestigen dat: die zetten Ḥafṣ tegenover Shuʿba en Qālūn tegenover
+Warsh woord voor woord uiteen, waar ze over de andere twee paren zwijgen. Dat
+is een uitspraak over welke paren hier opvallen, geen telling die uit een
+handboek komt.
 
 **Alle tien de paren zijn nu geclassificeerd.** Wat per pakket verschilt is de
 schrijfwijze, en dat hoort thuis in de transliteratie en niet in de
