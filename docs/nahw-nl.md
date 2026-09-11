@@ -15,6 +15,7 @@ Het ṣarf-boek eindigde met een zin: *"Wat overblijft is de naḥw: hoe deze
 woorden zich in de zin tot elkaar verhouden, en welke uitgangen dat oplevert.
 Dat is een tweede boek."* Dit is dat boek.
 
+<!-- @claude: Herschrijf het als volgt: Neem maktoeb... sarf kijkt naar de betekenis van het woord: "is wat geschreven is" en in de zin verteld dat woord iets over het eerste woord. Het is een beschrijving. Nahw gaat dus over hoe de woorden onderling een interactie hebben. Sarf gaat over het woord los, nahw gaat over isnaad (ook wel hoekm genoemd). Een woord (de moesnad) vertelt iets over de moesnad ilayhi (het woord waarover iets verteld wordt) -->
 Ṣarf kijkt naar het woord vóórdat het de zin in gaat. Naḥw kijkt naar wat de
 zin ermee doet. Neem مَكْتُوب: dat het van كتب komt en volgens het patroon
 مَفْعُول is gevormd, is ṣarf. Dat het in ٱلْكِتَٰبُ مَكْتُوبٌ een *ḫabar* is en
