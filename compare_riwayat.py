@@ -123,9 +123,9 @@ REVIEW = HERE / "farsh_review.tsv"
 RIWAYAT = [
     # code, riwaya ar, riwaya en, died, qari ar, qari en, died, region, version
     ("qaloon", "قالون", "Qaaloon", 220, "نافع المدني", "Naafi' al-Madani", 169,
-     "Libie, Tunesie, delen van Mauritanie", "10"),
+     "Libie, Tunesie, delen van Algerije", "10"),
     ("warsh", "ورش", "Warsh", 197, "نافع المدني", "Naafi' al-Madani", 169,
-     "Maghreb, West- en Centraal-Afrika, West-Europa", "10"),
+     "Marokko, Algerije, Mauritanie, West- en Centraal-Afrika", "10"),
     ("bazzi", "البزي", "al-Bazzi", 250, "ابن كثير المكي", "Ibn Kathir al-Makki", 120,
      "vooral onder specialisten", "7"),
     ("qumbul", "قنبل", "Qunbul", 291, "ابن كثير المكي", "Ibn Kathir al-Makki", 120,
