@@ -15,11 +15,61 @@ Het ṣarf-boek eindigde met een zin: *"Wat overblijft is de naḥw: hoe deze
 woorden zich in de zin tot elkaar verhouden, en welke uitgangen dat oplevert.
 Dat is een tweede boek."* Dit is dat boek.
 
-<!-- @claude: Herschrijf het als volgt: Neem maktoeb... sarf kijkt naar de betekenis van het woord: "is wat geschreven is" en in de zin verteld dat woord iets over het eerste woord. Het is een beschrijving. Nahw gaat dus over hoe de woorden onderling een interactie hebben. Sarf gaat over het woord los, nahw gaat over isnaad (ook wel hoekm genoemd). Een woord (de moesnad) vertelt iets over de moesnad ilayhi (het woord waarover iets verteld wordt) -->
-Ṣarf kijkt naar het woord vóórdat het de zin in gaat. Naḥw kijkt naar wat de
-zin ermee doet. Neem مَكْتُوب: dat het van كتب komt en volgens het patroon
-مَفْعُول is gevormd, is ṣarf. Dat het in ٱلْكِتَٰبُ مَكْتُوبٌ een *ḫabar* is en
-daarom een ḍamma krijgt, is naḥw.
+Ṣarf kijkt naar het woord vóórdat het de zin in gaat: waar het vandaan komt,
+hoe het gevormd is, en wat het daardoor betekent. Neem مَكْتُوب — dat het van
+كتب komt en volgens het patroon مَفْعُول is gevormd, en daarmee "wat
+geschreven is" betekent, is ṣarf. Het is een beschrijving, en die beschrijving
+draagt het woord in zijn eentje al met zich mee.
+
+Naḥw begint pas waar twee woorden elkaar raken. De kern daarvan heet **isnād**,
+ook wel *ḥukm*: het ene woord vertelt iets over het andere. Het woord dat iets
+vertelt heet de **musnad**, het woord waarover iets verteld wordt de **musnad
+ilayhi**. In ٱلْكِتَٰبُ مَكْتُوبٌ is مَكْتُوبٌ de musnad en ٱلْكِتَٰبُ de musnad ilayhi — de
+beschrijving die مَكْتُوب in zijn eentje al had, wordt nu aan iets gehecht.
+Dát hechten is naḥw. De ḍamma op مَكْتُوبٌ is wat je aan de buitenkant ziet:
+het woord staat er als *ḫabar*, en een ḫabar krijgt die uitgang.
+
+Waar isnād is, is **ʿamal**: het ene woord werkt op het andere en laat daar
+een spoor na. Naḥw gaat daarom niet over wat een woord betekent, maar over wat
+het in de zin dóet — hoe het andere woorden beïnvloedt en zelf door andere
+woorden beïnvloed wordt. En waar die beïnvloeding zichtbaar is, aan de
+uitgang, kun je de betekenis eruit aflezen.
+
+### Wie sloeg wie?
+
+ضَرَبَ مُحَمَّدٌ زَيْدًا — *ḍaraba Muḥammadun Zaydan.*
+
+In het Nederlands beslist de volgorde wie er slaat: "Mohammed sloeg Zayd" zegt
+iets anders dan "Zayd sloeg Mohammed". Het Arabisch heeft die volgorde niet
+nodig, want het staat aan de woorden zelf te lezen.
+
+ضَرَبَ is het werkwoord en noemt de **ḥadath**,
+de gebeurtenis zelf. مُحَمَّدٌ eindigt op een
+ḍamma, en die ḍamma is een **ʿalāma** — een kenteken — van de positie
+**rafʿ**. De **fāʿil**, degene die de handeling verricht, is altijd marfūʿ;
+daarmee staat vast dat Mohammed degene is die sloeg. زَيْدًا eindigt op een
+fatḥa, de ʿalāma van **naṣb**, en de **mafʿūl bihi**, degene bij wie de
+handeling plaatsvindt, is manṣūb: Zayd is degene die geslagen werd.
+
+Zet de twee namen in de omgekeerde volgorde en er verandert niets aan wie wie
+sloeg: het kenteken reist met het woord mee. Wat verschuift is
+waar de nadruk valt, niet wie wat doet. De redenering loopt telkens
+dezelfde kant op:
+
+> teken → positie → functie → betekenis
+
+Hoofdstuk 2 behandelt de vier posities, hoofdstuk 3 de tekens, hoofdstuk 4 wat
+die uitgangen veroorzaakt, en de rest van het boek de functies.
+
+Dit ene voorbeeld is bedacht — het is het schoolvoorbeeld waar elke ṭālib mee
+begint. Maar het hoeft niet bedacht te blijven: dezelfde drie rollen staan in
+dezelfde volgorde aan het begin van een vers.
+
+ضَرَبَ ٱللَّهُ مَثَلًا (16:75) — "Allah geeft een gelijkenis".
+
+Daarin: de ḥadath, dan ٱللَّهُ marfūʿ als fāʿil, dan مَثَلًا manṣūb als
+mafʿūl bihi. Wie het bij Mohammed en Zayd ziet, ziet het hier ook.
+
 
 Dit boek verschilt op drie punten van een gewoon naḥw-boek.
 
@@ -140,6 +190,8 @@ veranderen.
 
 Een muʿrab woord staat in één van vier posities. De eerste drie gelden voor
 naamwoorden, de vierde voor werkwoorden.
+Het teken waaraan je die positie afleest heet de **ʿalāma**, het kenteken;
+dat is de derde kolom hieronder.
 
 | Positie | Arabisch | Waar je het aan ziet | Wat het meestal betekent |
 |---|---|---|---|
@@ -235,6 +287,9 @@ als bouwsteen leert zien, kun je ontleden waar geen uitgang te zien is.
 De eenvoudigste Arabische zin heeft geen werkwoord. Hij bestaat uit twee
 naamwoorden: waar de zin over gaat (**mubtadaʾ**, مُبْتَدَأ) en wat erover
 gezegd wordt (**ḫabar**, خَبَر). Allebei staan ze in rafʿ.
+
+Dat is het isnād uit de inleiding, met de namen die de naamwoordelijke zin
+eraan geeft: de mubtadaʾ is de musnad ilayhi, de ḫabar is de musnad.
 
 ٱللَّهُ نُورُ ٱلسَّمَٰوَٰتِ — "Allah is het licht van de hemelen" (24:35).
 
