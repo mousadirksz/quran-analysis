@@ -1134,6 +1134,50 @@ ELSEWHERE_COLUMNS = {"Hangt aan", "Waarom geen iʿrāb", "Waar het in dit boek s
                      "Betekenis (hoofdlijn)", "Patroon", "Wat het is"}
 
 
+@check("open remarks")
+def open_remarks(cur, args):
+    """Remarks left in the documents for Claude to act on.
+
+    The convention: an HTML comment beginning `@claude:` at the spot the remark
+    is about.
+
+        <!-- @claude: dit klopt niet voor vorm X, die heeft يَ- -->
+
+    It is invisible in the rendered markdown and it travels with the sentence,
+    so unlike a line number or a quoted phrase in a list beside the file, the
+    anchor cannot go stale -- it *is* the place. Multi-line is fine; the marker
+    has to open the comment.
+
+    An open remark is not an error, so this warns rather than fails: it puts
+    every one of them in the output of every run, which is what stops them
+    being forgotten. Acting on a remark means deleting it in the same commit --
+    the deletion is the record that it was handled, and git keeps the history.
+    """
+    docs = sorted(HERE.glob("*.md")) + sorted((HERE / "docs").glob("*.md"))
+    marker = re.compile(r"<!--\s*@claude\s*:?(.*?)-->", re.S | re.I)
+    remarks, empty = [], []
+    for path in docs:
+        text = path.read_text(encoding="utf-8")
+        # A marker inside a fenced code block is the convention being written
+        # down, not a remark being left: README documents it that way. Blank
+        # the fences before scanning, keeping the line count intact.
+        text = re.sub(r"^```.*?^```", lambda m: re.sub(r"[^\n]", " ", m.group(0)),
+                      text, flags=re.S | re.M)
+        for m in marker.finditer(text):
+            line = text.count("\n", 0, m.start()) + 1
+            body = " ".join(m.group(1).split())
+            where = "%s:%d" % (path.relative_to(HERE), line)
+            (remarks if body else empty).append(
+                "%s %s" % (where, (body[:70] + "…") if len(body) > 70 else body))
+    if empty:
+        raise Failed("%d @claude remark(s) with nothing in them: %s"
+                     % (len(empty), "; ".join(empty[:4])))
+    if remarks:
+        raise Warned("%d remark(s) waiting: %s"
+                     % (len(remarks), "; ".join(remarks[:6])))
+    return "no @claude remarks left in the documents"
+
+
 @check("schema documentation")
 def schema_documentation(cur, args):
     """README must name every table, every view and every column, and must not
