@@ -563,6 +563,19 @@ draag-alif in het Qālūn-pakket vóór het teken (نَاراٗ) waar Ḥafṣ h
 zet (نَارٗا) — wie de alif als waṣl wegneemt zonder daarop te letten, sloopt de
 tanwīn.
 
+**En één die niemands fout is.** De mushaf-bestanden schrijven de shadda vóór
+de klinker die hij draagt (`0651 064E`); de documenten in deze repo schrijven
+de klinker eerst (`064E 0651`). Het is verleidelijk om de tweede voor een
+typefout te houden — dat is hier ook gebeurd — maar het is andersom niet fout
+en ook niet goed. Unicode's *canonieke* volgorde is klinker-dan-shadda, want de
+combining classes lopen 30–32 voor de klinkers en 33 voor de shadda. De
+documenten staan dus in NFC en de bronbestanden niet. De twee zijn canoniek
+equivalent: ze renderen identiek, en `unicodedata.normalize("NFC", …)` maakt ze
+gelijk. Wat er wél stukgaat is elke vergelijking op letterlijke gelijkheid —
+`lemma_ar = 'هُنَّ'` getypt zoals de rest van de tabel het spelt vond nul rijen,
+tot die 324 rijen werden rechtgezet. De controle `Arabic quotations` vergelijkt
+daarom op NFC, en wat dán nog verschilt is een echt verschil.
+
 **De les.** De classificatie was niet het knelpunt; de transcriptie was het. Wat
 in de vorige ronde als "de regels verhuizen niet naar andere paren" is
 opgeschreven, waren vier codeerfouten en drie ongemodelleerde uṣūl-regels. Het
@@ -598,7 +611,7 @@ Silat al-miem alleen al — عَلَيْهِمْ dat als عَلَيْهِمُو 
 |---|---|---|
 | 1:4 | مَٰلِكِ | مَلِكِ |
 | 2:9 | يَخۡدَعُونَ | يُخَٰدِعُونَ |
-| 2:132 | وَوَصَّىٰ | وَأَوْصىٰ |
+| 2:132 | وَوَصَّىٰ | وَأَوْص۪ىٰ |
 | 3:146 | قَٰتَلَ | قُتِلَ |
 | 43:19 | عِبَٰدُ | عِندَ |
 | 57:24 | هُوَ | *(ontbreekt)* |
@@ -707,7 +720,7 @@ het volgende; **al-Dūrī is daarvan de controle** — dezelfde qirāʾa van dez
 qārīʾ, zonder die regel — want een klinker die wegvalt kan net zo goed een jazm
 zijn, en bij 2:284 فَيَغْفِرُ / فَيَغْفِرْ is dat ook zo. Over de hele Qoeraan
 splitst dat 1.152 tegen 5, en die vijf zijn precies de plaatsen die een lezer zou
-noemen: 2:284 tweemaal, 19:6 وَيَرِثْ, 4:81 بَيَّت en 27:66 بَلْ. Imāla en
+noemen: 2:284 tweemaal, 19:6 وَيَرِثۡ, 4:81 بَيَّت en 27:66 بَلْ. Imāla en
 taqlīl worden afgelezen van de tekens die de mushaf zelf schrijft, die zich van
 de iqlāb- en waṣl-markering laten onderscheiden door wat eronder staat. En
 هُوَ en هِيَ verliezen hun klinker na een voorvoegsel bij Qālūn, al-Dūrī en
@@ -754,7 +767,7 @@ Warsh en niet in Ḥafṣ — 31 keer, en met precies het werkwoord waaraan de b
 zijn naam ontleent.** (In Ḥafṣ ontbreekt hij niet helemaal: وَرِثَ /
 يَرِثُ is bāb 6, maar dat is een *mithāl* waarbij de wāw wegvalt.) En bāb 5,
 die in Ḥafṣ maar één werkwoord heeft (كَبُرَ, 7×; het achtste dat de generator
-meetelt is 4:6 يَكْبَرُ, de muḍāriʿ van كَبِرَ en dus bāb 4), krijgt er in Warsh een
+meetelt is 4:6 يَكۡبَرُواْۚ de muḍāriʿ van كَبِرَ en dus bāb 4), krijgt er in Warsh een
 tweede bij: فَمَكُثَ in 27:22.
 
 Dat maakt het lesboek op één punt scherper dan het was. De zin "de Quran leest

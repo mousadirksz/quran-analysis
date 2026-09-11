@@ -320,7 +320,7 @@ aard: hij drukt een blijvende eigenschap uit en is nooit overgankelijk, dus
 komt hij zelden voor in verhalend of gebiedend proza.
 
 `sarf_examples.py abwab` telt er acht, en dat achtste is leerzaam: 4:6
-يَكْبَرُ heeft een *fatḥa* op de ʿayn en is de muḍāriʿ van كَبِرَ, "opgroeien"
+يَكۡبَرُواْ heeft een *fatḥa* op de ʿayn en is de muḍāriʿ van كَبِرَ, "opgroeien"
 — bāb 4, een ánder werkwoord van dezelfde wortel. De generator groepeert op
 wortel en houdt die twee niet uit elkaar; het oog wel.
 

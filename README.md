@@ -221,7 +221,7 @@ python3 build.py --list                # print the pipeline order and exit
 
 A full run takes a while; the parsers and `resolve_citations.py` are the slow
 steps. Every step except `to_sqlite.py` is idempotent, which is what `--keep`
-exploits. The last step is `validate.py`, which runs 30 checks over the
+exploits. The last step is `validate.py`, which runs 32 checks over the
 finished database (see *Data quality* below) and can also be run on its own:
 
 ```sh
@@ -448,14 +448,49 @@ affinity, because two wujuh of one root regularly cite the same verse precisely
 *because* the authors disagree about which wajh it belongs to. Complete linkage:
 a cluster is only extended by a sense alignable with every sense already in it.
 
+### Table `syntax` — 139,376 rows, the Extended Quranic Treebank
+
+One row per token of the parse: 128,219 that correspond to written text and
+11,157 the grammarians posit. This is the table the nahw book is built on.
+
+| Column | Meaning |
+|---|---|
+| `tid` | surrogate key, and what `head_tid` points at |
+| `sentence_id`, `token_id` | the treebank's own addressing: which sentence, which token within it |
+| `surah`, `ayah`, `word`, `segment` | the corpus' addressing; NULL on a posited token, which stands at no written place |
+| `corpus_id` | the `corpus` row this token is, or NULL when the token is posited |
+| `token_ar` | the token as the treebank writes it |
+| `pos` | the treebank's part of speech, which is its own vocabulary and not the corpus' `tag` |
+| `rel_label`, `rel_label_ar` | the relation to its head, in the treebank's English labels and in Arabic (`Subj` / فاعل). A nasikh is named in the label itself: `subj <<kan>>` |
+| `head_token_id`, `head_tid` | what it hangs on, in the treebank's numbering and as a `tid`. NULL on the root of a sentence — and 19 sentences have no root, see the `syntax head structure` check |
+| `constituent_label` | the phrase it belongs to, where the treebank gives one |
+| `is_implicit` | 1 for a posited token (the damir mustatir and the rest), 0 for a written one |
+
+### Table `irab` — 5,114 rows from al-Nahhas
+
+| Column | Meaning |
+|---|---|
+| `id` | surrogate key |
+| `work` | always `nahhas`; the column is there for a second work |
+| `surah`, `ayah` | the verse the passage is filed under |
+| `passage` | his prose on that verse |
+| `is_range` | 1 where the passage covers a run of verses. It is then stored once per verse of the run, which is why 5,114 rows are 4,535 distinct passages |
+
 ### Reference tables
 
 | Table | Rows | Content |
 |---|---|---|
+| `word_glosses` | 77,429 | `surah`, `ayah`, `word`, `gloss_en` — the corpus' word-by-word English gloss, one per written word |
 | `surahs` | 114 | `number`, `name_ar`, `name_en`, `revelation_type` (`meccan`/`medinan`), `revelation_order`, `ayah_count`. The ayah counts are derived from the corpus itself and only *checked* against the standard reference list |
 | `verses` | 6,236 | `surah`, `ayah`, `text_ar` (the joined verse text, with the corpus' leftover Buckwalter markers repaired), `text_normalized` (the form used for citation matching), `word_count`, `juz`, `hizb` |
 | `juz_boundaries` | 30 | `juz`, `start_surah`, `start_ayah`, `end_surah`, `end_ayah`; the ends are derived from the next juz' start |
-| `hizb_boundaries` | 60 | the same for the 60 ahzab, with the `juz` each belongs to |
+| `hizb_boundaries` | 60 | the same for the 60 ahzab: `hizb`, `juz`, `start_surah`, `start_ayah`, `end_surah`, `end_ayah` |
+
+Three views sit on top of these. `words` gives one row per written word
+(`surah`, `ayah`, `word`, `word_ar`, `word_bw`), assembled from the segments;
+`words_en` is the same with `gloss_en` joined on; and `ayat` gives one row per
+verse (`surah`, `ayah`, `verse_ar`) straight from the corpus, markers and all —
+prefer `verses.text_ar`, which has them repaired.
 
 ### Tables `riwayat` and `riwaya_diff` — eight transmissions compared
 
@@ -634,8 +669,8 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 
 ## Data quality
 
-`validate.py` runs 30 checks over the finished database and is the last step of
-`build.py`. On the committed database, 28 pass and 2 warn — the two warnings are
+`validate.py` runs 32 checks over the finished database and is the last step of
+`build.py`. On the committed database, 30 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
 `corpus`, *freshness* (the parsed JSONs, `resolved_citations.json` and the
@@ -723,7 +758,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 30 checks over the finished database (optional step) |
+| `validate.py` | 32 checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
