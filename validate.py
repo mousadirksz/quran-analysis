@@ -1158,6 +1158,11 @@ def open_remarks(cur, args):
     remarks, empty = [], []
     for path in docs:
         text = path.read_text(encoding="utf-8")
+        # A marker inside a fenced code block is the convention being written
+        # down, not a remark being left: README documents it that way. Blank
+        # the fences before scanning, keeping the line count intact.
+        text = re.sub(r"^```.*?^```", lambda m: re.sub(r"[^\n]", " ", m.group(0)),
+                      text, flags=re.S | re.M)
         for m in marker.finditer(text):
             line = text.count("\n", 0, m.start()) + 1
             body = " ".join(m.group(1).split())
