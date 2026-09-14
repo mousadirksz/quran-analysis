@@ -5,12 +5,22 @@ verdwijnt en dit niet.
 
 ## Voor de eigenaar — kan hier niet gedaan worden
 
-**`master` hernoemen naar `main`.** Er is geen tool voor repo-instellingen in
-de omgeving waarin dit werk gebeurt, en de directe API-aanroep wordt door de
-permissiecontrole geweigerd. GitHub's eigen knop doet het atomisch en verzet
-alle openstaande pull requests mee: *Settings → Branches → het potloodje naast
-`master`*. Daarna kunnen de verwijzingen in README en in eventuele workflows
-mee.
+**Drie branches opruimen.** `mousadirksz-patch-1` is gemergd (#25) en kan weg.
+`archive/pre-db-purge-2026-09-11` en `archive/pre-db-purge-malware-scan` waren
+de uitweg voor een herschrijving die niet is doorgegaan; ze wijzen naar
+dezelfde commits als `main` en `claude/repo-malware-scan-4yqtmo`, dus ze kosten
+niets, maar ze hoeven er niet te staan. Verwijderen lukt niet vanuit deze
+omgeving: de proxy geeft 403 op het verwijderen van een branch. *Branches →
+prullenbak* doet het in drie klikken.
+
+**De vrije SQL-pagina in `app.py`.** De branch
+`claude/repo-malware-scan-4yqtmo` heeft één ongemergde commit die hem
+weghaalt, en er hoort geen pull request bij. De afweging: `app.py` is een
+optioneel dashboard dat je lokaal draait, en de pagina is daar handig. Maar de
+verbinding eronder is `sqlite3.connect("quran.db")` zonder meer — lees én
+schrijf. Zodra dat dashboard ooit bereikbaar is voor iemand anders, is dat
+willekeurige SQL op de database, inclusief `DROP`. Mergen of laten liggen is
+een keuze; hem vergeten is er geen.
 
 **Twee klassieke iʿrāb-bronnen erbij.** Gewenst zijn al-ʿUkbarī's *al-Tibyān fī
 iʿrāb al-Qurʾān* en Makkī al-Qaysī's *Mushkil iʿrāb al-Qurʾān*; `SOURCES.md`
