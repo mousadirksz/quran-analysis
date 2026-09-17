@@ -1408,11 +1408,18 @@ def document_figures(cur, args):
         total, farsh = cur.execute(
             "SELECT COUNT(*), SUM(kind='farsh') FROM riwaya_diff "
             "WHERE riwaya_a=? AND riwaya_b=?", (a, b)).fetchone()
-        # the row shape of both pair tables: name | kind | places | **farsh** |
-        row = r"\| %s [–-] %s \|[^|]*\| ([\d.,]+) \|"
+        # The row shape of the pair tables: name | kind | places | **farsh** |
+        # The kind cell has to contain a letter ("binnen een qiraa-a",
+        # "between two qiraa'at"). Without that requirement the pattern also
+        # matched any other table whose first cell happened to be a pair name
+        # and whose second was a number -- which it twice did, on a table of
+        # direction figures and one of stacked usul features, reading their
+        # second column as a place count. The guard should fail on a drifted
+        # figure, not on a new table that mentions a pair.
+        row = r"\| %s [–-] %s \|[^|]*[A-Za-z][^|]*\| ([\d.,]+) \|"
         checks.append(("%s-%s places" % (a, b), total,
                        [row % pair for pair in spell]))
-        rowf = r"\| %s [–-] %s \|[^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
+        rowf = r"\| %s [–-] %s \|[^|]*[A-Za-z][^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
         checks.append(("%s-%s farsh" % (a, b), farsh,
                        [rowf % pair for pair in spell]))
 

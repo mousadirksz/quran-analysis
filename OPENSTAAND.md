@@ -38,6 +38,25 @@ API geeft 403 door de proxy voor repositories buiten de sessie, en er was geen
 bereikbare index. Nodig is dus één van beide: de directe URL's, of de
 OpenITI-repository toegevoegd aan de sessie.
 
+## Een modelkeuze, voor wie het Arabisch kent
+
+**Twee uṣūl-kenmerken in één rij.** De indeler geeft één klasse per rij. Waar
+twee kenmerken in hetzelfde woord samenkomen — `لaكuمU` tegenover `للaكuم`, de
+ene kant verbindt de mīm, de andere draagt een shadda van het woord ervóór —
+vuurt geen van beide regels en valt de rij door naar farsh. Elk van de twee
+apart zou wél herkend worden.
+
+Het raakt zes van de 28 paren en 650 rijen: 25% van de farsh-lijst bij
+al-Bazzī–al-Sūsī en Qunbul–al-Sūsī, 15% bij de twee al-Dūrī-paren, en een paar
+procent bij de twee van Warsh. In de oorspronkelijke tien paren komt de vorm nul
+keer voor, dus geen eerder gepubliceerd cijfer is erdoor geraakt.
+
+Dat het mechanisme bestaat, blijkt uit `strip_usul`: de idghām kabīr mág daar al
+samengaan met wat er verder overblijft ("de idghām komt niet altijd alleen").
+Wat de juiste indeling is, is geen programmeervraag: is zo'n plaats één rij met
+twee klassen, of twee rijen, of blijft hij farsh omdat de combinatie zelf
+woordspecifiek is? Dat hoort de eigenaar te beslissen; daarna is het werk klein.
+
 ## Beslissingen, geen fouten
 
 Deze kwamen uit de audit van 8 september 2026 en zijn bewust niet uitgevoerd,

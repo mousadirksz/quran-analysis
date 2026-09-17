@@ -701,9 +701,16 @@ uitlijningsartefact, de losse letters, en bij Ḥafṣ–Warsh wat het nalezen
 wegstreepte. Dat loopt van 4 rijen (al-Bazzī–Qunbul) tot 303 (Warsh–al-Sūsī).
 
 **Twee kolommen, twee vragen.** Het aantal *plaatsen* telt elk verschil mee,
-uṣūl en schrijfwijze inbegrepen, en het maakt niet uit welke kant links staat:
-draai het paar om en dezelfde plaatsen komen terug. Dat is dus de maat die over
-alle 28 paren vergelijkt. Maar hij meet niet hoe ver twee lezingen uiteen
+uṣūl en schrijfwijze inbegrepen, en het hangt vrijwel niet af van welke kant
+links staat: draai het paar om en vrijwel dezelfde plaatsen komen terug. Vrijwel
+— 14 van de 28 paren tellen er 2 of 7 meer of minder, op duizenden, dus
+hoogstens twee promille. Die rest komt niet uit de indeling maar uit de
+uitlijning, en de richting die netter uitvalt is niet altijd de onze: bij
+لِلَّذِينَ tegenover لِلذِينَ maakt de uitlijner met Ḥafṣ links drie rijen
+waarvan één farsh-kandidaat, en met Qālūn links één enkele rij `article_lam`.
+Twee promille is dicht genoeg om de paren ermee te vergelijken, en het is dus de
+maat die over alle 28 paren vergelijkt. Maar hij meet niet hoe ver twee lezingen
+uiteen
 liggen: al-Bazzī en Qunbul passen ṣilat al-mīm overal toe, in hun eentje goed
 voor 6.150 en 6.142 rijen, en Qālūn–Warsh haalt 5.204 plaatsen terwijl het
 *binnen* één qirāʾa valt, omdat Warsh naql toepast (اَ۬لَارْضِ tegenover
@@ -735,8 +742,7 @@ ander niet kent, doet de richting er nauwelijks toe. En er is geen volgorde die
 elke riwāya op zijn betere kant zet — al-Sūsī wil rechts van al-Dūrī staan en
 links van al-Bazzī — dus de vier rijen met Warsh links dragen farsh-getallen van
 1.575 tot 1.835 die meer zeggen over het gezichtspunt van de regels dan over
-Warsh. Welke *plaatsen* uiteenlopen is wél symmetrisch; alleen hun indeling
-niet.
+Warsh.
 
 De farsh-kolom is de vergelijkbare maat, en die zegt wél wat de
 overleveringsgeschiedenis voorspelt. Twee overleveringen van één qārīʾ
@@ -769,9 +775,32 @@ de iqlāb- en waṣl-markering laten onderscheiden door wat eronder staat. En
 al-Sūsī en nergens anders — 233, 232, 228, en nul bij de andere vijf.
 
 **Eén paar is daarna ook gelezen.** Regels classificeren; alleen bij Ḥafṣ–Warsh
-is de farsh-lijst daarna nog woord voor woord doorgenomen. De negen andere
+is de farsh-lijst daarna nog woord voor woord doorgenomen. De 27 andere
 paren dragen alleen het regeloordeel, en hun farsh-getal is dus een bovengrens
 — reken op een marge van dezelfde orde als de 18% die het nalezen hier vond.
+
+Bij zes paren is een deel van die marge aanwijsbaar, en het is een beperking van
+de indeler en niet van de data. Hij kent één klasse per rij, en waar twee
+uṣūl-kenmerken in hetzelfde woord samenkomen, vuurt geen van beide regels:
+
+| links | rechts | farsh | twee gestapelde kenmerken | |
+|---|---|--:|--:|--:|
+| al-Bazzī | al-Sūsī | 883 | 222 | 25% |
+| Qunbul | al-Sūsī | 898 | 221 | 25% |
+| al-Bazzī | al-Dūrī | 564 | 86 | 15% |
+| Qunbul | al-Dūrī | 577 | 85 | 15% |
+| Warsh | al-Sūsī | 1.835 | 29 | 2% |
+| Warsh | al-Dūrī | 1.654 | 7 | 0% |
+
+Het patroon is telkens hetzelfde: `لaكuمU` tegenover `للaكuم` — de ene kant
+verbindt de mīm (ṣilat al-mīm), de andere draagt een shadda die van het woord
+ervóór komt. Elk van de twee zou als uṣūl herkend worden; samen niet. Dat
+`strip_usul` de idghām kabīr al wél laat samengaan met wat er verder overblijft
+("de idghām komt niet altijd alleen") toont dat het mechanisme bestaat; het is
+hier gewoon niet toegepast. In de oorspronkelijke tien paren komt deze vorm nul
+keer voor, dus de eerdere cijfers zijn er niet door geraakt. Wat de juiste
+indeling is — één rij met twee klassen, of twee rijen — is een modelkeuze en
+staat in `OPENSTAAND.md`.
 
 ### Wat dit voor de vormleer betekent
 

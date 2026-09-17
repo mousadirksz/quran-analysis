@@ -570,6 +570,17 @@ struck 116 rows the rules had wrongly called farsh and left 10 undecided against
 per word pair in `farsh_review.tsv`. The 27 other pairs carry the rule verdict
 alone, so their farsh figure is an upper bound and `reviewed` is 0.
 
+For six of them part of that margin can be pointed at, and it is a limit of the
+classifier rather than of the data: it assigns one class per row, so where two
+usul features meet in the same word neither rule fires. `لaكuمU` against
+`للaكuم` — one side joins the mim, the other carries a shadda from the word
+before — is 222 of al-Bazzi–al-Soosi's 883 farsh rows (25%), 221 of
+Qunbul–al-Soosi's 898, 86 and 85 of the two al-Doori pairs (15%), and 29 and 7
+of the two Warsh ones. The shape does not occur at all in the original ten
+pairs, so none of the earlier figures moved. Whether the right answer is one row
+with two classes or two rows is a modelling question, and it is in
+`OPENSTAAND.md`.
+
 | Pair | | Places | farsh | usul | notation | read |
 |---|---|--:|--:|--:|--:|:-:|
 | al-Doori – al-Soosi | **within one qiraa** | 3,658 | **25** | 2,503 | 1,090 | — |
@@ -607,9 +618,15 @@ artefact, the disconnected letters, and for Hafs–Warsh the rows a reading
 struck. It runs from 4 rows (al-Bazzi–Qunbul) to 303 (Warsh–al-Soosi).
 
 **Two columns, two questions.** *Places* counts every difference, spelling and
-usul included, and does not care which side is on the left: turn the pair around
-and the same places come back. That makes it the measure that compares across
-all 28 rows. But it does not measure how far apart two readings are: al-Bazzi
+usul included, and barely depends on which side is on the left: turn the pair
+around and almost the same places come back. Almost — 14 of the 28 pairs count
+2 or 7 places more or fewer, out of thousands, so at most two per thousand. That
+remainder is not the classification but the alignment, and the direction that
+comes out cleaner is not always ours: at لِلَّذِينَ against لِلذِينَ the aligner
+makes three rows with Hafs on the left, one of them a farsh candidate, and a
+single `article_lam` row with Qaaloon on the left. Two per thousand is close
+enough to compare pairs by, and it is the measure that compares across all 28
+rows. But it does not measure how far apart two readings are: al-Bazzi
 and Qunbul apply silat al-mim throughout, which alone is 6,150 and 6,142 rows,
 and Qaaloon–Warsh reaches 5,204 places while sitting *within* one qiraa because
 Warsh applies naql and softens the hamza where Qaaloon does not.
@@ -698,7 +715,7 @@ the database itself.
 | `syntax` (EQTB) | 6,236 | 100% | nothing, but it is one analysis, not a fact: another grammarian would parse some verses differently |
 | `irab` (al-Nahhas) | 5,108 | 82% | the 1,128 verses he passes over, because they raise no question he treats |
 | `wujuh` | 3,635 | 58% | verses none of the four works quotes — and within a covered verse, only the word quoted |
-| `riwaya_diff`, `kind='farsh'` | 451 | 7% | the verses where Hafs and Warsh read alike; the nine other pairs are classified by the same rules but not read by hand |
+| `riwaya_diff`, `kind='farsh'` | 451 | 7% | the verses where Hafs and Warsh read alike; the 27 other pairs are classified by the same rules but not read by hand |
 
 Within the `corpus` table itself: 27,947 of 77,915 stems carry no root (36%) —
 the particles, the pronouns, and the names the corpus leaves unanalysed. There
