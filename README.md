@@ -518,14 +518,17 @@ compared:
 | `kfgqpc_version`, `source_date` | the version of the complex's data package; all eight are loaded, but only two of the releases carry a date |
 | `in_database` | 1 for all eight; their text is in `sources/riwaya_*.csv` |
 
-`riwaya_diff` — 48,785 rows over **ten pairs**, one per place where two texts
-diverge. Because the mushaf traditions write the same sound with different
-signs, the comparison is not a text diff: each word is transliterated first
-(`riwaya_translit.py`) and the transliterations are compared, which measures
-the recitation rather than the orthography.
+`riwaya_diff` — 216,973 rows over **all 28 pairs** of the eight riwayat, one
+per place where two texts diverge. Because the mushaf traditions write the same
+sound with different signs, the comparison is not a text diff: each word is
+transliterated first (`riwaya_translit.py`) and the transliterations are
+compared, which measures the recitation rather than the orthography.
 
-The pairs are every riwaya beside Hafs, plus the three remaining pairs that
-sit *within* one qiraa (Hafs–Shu'ba is already in the first set).
+Every riwaya is compared with every other, which is what makes a question like
+*do Warsh and al-Doori sit closer together than Warsh and Qunbul?* answerable at
+all. Seven of the 28 pairs have Hafs on the left; four put two riwayat of one
+and the same qari side by side. Which side is on the left matters, and the last
+paragraph of this section says how much.
 
 | Column | Meaning |
 |---|---|
@@ -539,13 +542,16 @@ sit *within* one qiraa (Hafs–Shu'ba is already in the first set).
 | `class` | the rule that explains the difference, or `farsh_candidate` where none does |
 | `kind` | `usul`, `notatie`, `farsh`, `uitgesloten` or `onzeker` |
 
-**All ten pairs are classified; one has also been read.** What differs between
-the packages is how they spell things, and that belongs in the transliteration:
-Qaaloon, al-Doori and al-Soosi write hamzat al-wasl as a plain alif carrying
-its vowel and never use the alef wasla letter, where Hafs and the other Kufi
-packages always do and Warsh marks it with a sign over the alif. Telling the
-transliteration which convention a file follows removes several thousand false
-differences per pair on its own.
+**All 28 pairs are classified; one has also been read.** What differs between
+the packages is how they spell things, and that belongs in the transliteration.
+There are two conventions for hamzat al-wasl, not three: Hafs and Shu'ba (Kufa)
+and al-Bazzi and Qunbul (Mecca) write the alef wasla letter, while the four
+Maghribi packages write a plain alif with a sign over it. Within that second
+group Qaaloon and Warsh mark practically all of theirs; al-Doori and al-Soosi
+leave some two thousand unmarked, which have to be inferred from position —
+that is what the `plain_wasl` flag does, and `test_translit.py` pins how many
+words it moves in each package. Telling the transliteration which convention a
+file follows removes several thousand false differences per pair on its own.
 
 The features that belong to some riwayat and not others each have a class of
 their own. al-Soosi's idghaam kabir takes the final vowel of a word into the
@@ -561,42 +567,78 @@ other five.
 Only Hafs–Warsh has had its farsh list read word by word afterwards. That pass
 struck 116 rows the rules had wrongly called farsh and left 10 undecided against
 523 that stood — 18% of what the rules proposed was not farsh — with a reason
-per word pair in `farsh_review.tsv`. The nine other pairs carry the rule
-verdict alone, so their farsh figure is an upper bound and `reviewed` is 0.
+per word pair in `farsh_review.tsv`. The 27 other pairs carry the rule verdict
+alone, so their farsh figure is an upper bound and `reviewed` is 0.
 
 | Pair | | Places | farsh | usul | notation | read |
 |---|---|--:|--:|--:|--:|:-:|
-| bazzi – qumbul | **within one qiraa** | 184 | **34** | 73 | 73 | — |
-| doori – soosi | **within one qiraa** | 3,658 | **25** | 2,503 | 1,090 | — |
-| qaloon – warsh | **within one qiraa** | 5,204 | **369** | 4,505 | 239 | — |
-| hafs – shouba | **within one qiraa** | 592 | **397** | 76 | 73 | — |
-| hafs – warsh | between two qiraa'at | 8,282 | **523** | 4,901 | 2,655 | yes |
-| hafs – doori | between two qiraa'at | 2,342 | **637** | 1,221 | 407 | — |
-| hafs – qaloon | between two qiraa'at | 4,287 | **645** | 725 | 2,826 | — |
-| hafs – bazzi | between two qiraa'at | 9,225 | **657** | 7,562 | 952 | — |
-| hafs – qumbul | between two qiraa'at | 9,183 | **664** | 7,498 | 968 | — |
-| hafs – soosi | between two qiraa'at | 5,828 | **708** | 3,634 | 1,391 | — |
+| al-Doori – al-Soosi | **within one qiraa** | 3,658 | **25** | 2,503 | 1,090 | — |
+| al-Bazzi – Qunbul | **within one qiraa** | 184 | **34** | 73 | 73 | — |
+| Qaaloon – Warsh | **within one qiraa** | 5,204 | **369** | 4,505 | 239 | — |
+| Hafs – Shu'ba | **within one qiraa** | 592 | **397** | 76 | 73 | — |
+| Hafs – Warsh | between two qiraa'at | 8,282 | **523** | 4,901 | 2,655 | yes |
+| Shu'ba – al-Bazzi | between two qiraa'at | 9,114 | **550** | 7,540 | 972 | — |
+| al-Bazzi – al-Doori | between two qiraa'at | 9,736 | **564** | 8,088 | 1,061 | — |
+| Shu'ba – Qunbul | between two qiraa'at | 9,080 | **569** | 7,474 | 986 | — |
+| Qunbul – al-Doori | between two qiraa'at | 9,808 | **577** | 8,138 | 1,070 | — |
+| Shu'ba – Qaaloon | between two qiraa'at | 4,220 | **621** | 730 | 2,780 | — |
+| Shu'ba – al-Doori | between two qiraa'at | 2,281 | **624** | 1,205 | 391 | — |
+| Hafs – al-Doori | between two qiraa'at | 2,342 | **637** | 1,221 | 407 | — |
+| Hafs – Qaaloon | between two qiraa'at | 4,287 | **645** | 725 | 2,826 | — |
+| Qaaloon – al-Bazzi | between two qiraa'at | 11,756 | **647** | 7,482 | 3,578 | — |
+| Hafs – al-Bazzi | between two qiraa'at | 9,225 | **657** | 7,562 | 952 | — |
+| Hafs – Qunbul | between two qiraa'at | 9,183 | **664** | 7,498 | 968 | — |
+| Qaaloon – Qunbul | between two qiraa'at | 11,824 | **670** | 7,518 | 3,588 | — |
+| Qaaloon – al-Doori | between two qiraa'at | 4,622 | **676** | 939 | 2,936 | — |
+| Shu'ba – al-Soosi | between two qiraa'at | 5,772 | **690** | 3,616 | 1,381 | — |
+| Shu'ba – Warsh | between two qiraa'at | 8,291 | **706** | 4,889 | 2,623 | — |
+| Hafs – al-Soosi | between two qiraa'at | 5,828 | **708** | 3,634 | 1,391 | — |
+| Qaaloon – al-Soosi | between two qiraa'at | 7,971 | **775** | 3,317 | 3,791 | — |
+| al-Bazzi – al-Soosi | between two qiraa'at | 12,897 | **883** | 10,065 | 1,890 | — |
+| Qunbul – al-Soosi | between two qiraa'at | 12,971 | **898** | 10,114 | 1,900 | — |
+| Warsh – al-Bazzi | between two qiraa'at | 14,073 | **1,575** | 8,565 | 3,671 | — |
+| Warsh – Qunbul | between two qiraa'at | 13,993 | **1,588** | 8,526 | 3,619 | — |
+| Warsh – al-Doori | between two qiraa'at | 9,091 | **1,654** | 4,169 | 2,997 | — |
+| Warsh – al-Soosi | between two qiraa'at | 10,688 | **1,835** | 4,654 | 3,896 | — |
 
 The three kind columns do not add up to Places, and are not meant to: the
 remainder is `uitgesloten` and `onzeker` — a moved word boundary, an alignment
 artefact, the disconnected letters, and for Hafs–Warsh the rows a reading
-struck. It runs from 4 rows (al-Bazzi–Qunbul) to 203 (Hafs–Warsh).
+struck. It runs from 4 rows (al-Bazzi–Qunbul) to 303 (Warsh–al-Soosi).
 
-Read the farsh column, not the places column. Places counts usul and spelling
-too, and those vary enormously by package: al-Bazzi and Qunbul apply silat
-al-mim throughout, which alone is 6,150 and 6,142 rows, and Qaaloon–Warsh reaches 5,204
-places while sitting *within* one qiraa because Warsh applies naql and softens
-the hamza where Qaaloon does not.
+**Two columns, two questions.** *Places* counts every difference, spelling and
+usul included, and does not care which side is on the left: turn the pair around
+and the same places come back. That makes it the measure that compares across
+all 28 rows. But it does not measure how far apart two readings are: al-Bazzi
+and Qunbul apply silat al-mim throughout, which alone is 6,150 and 6,142 rows,
+and Qaaloon–Warsh reaches 5,204 places while sitting *within* one qiraa because
+Warsh applies naql and softens the hamza where Qaaloon does not.
 
-The farsh column is comparable across the rows because Hafs is on the left in
-all but three of them, not because the figure is independent of which side that
-is. The usul rules have a direction -- naql puts the vowel of a following hamza
-on the last letter, the sila of the haa adds a long vowel, idghaam kabiir takes
-the final vowel away -- and they are written with Hafs as the side looked out
-from. Put Warsh on the left and its features stop being recognised and fall
-through to farsh: Hafs-Warsh reads 523 one way round and 1,611 the other,
-Qaaloon-Warsh 339 against 1,269. Where the two sides are close it hardly
-matters (al-Bazzi-Qunbul 34 against 30, Hafs-Shu'ba 383 against 386).
+*farsh* asks the sharper question — where do the readings differ in the word
+itself — but it does depend on direction, so it compares down a block with the
+same riwaya on the left, and not outside it. The usul rules have a direction:
+naql puts the vowel of a following hamza on the last letter, the sila of the
+haa adds a long vowel, idghaam kabiir takes the final vowel away, and they are
+written with Hafs as the side looked out from. Put the side that applies the
+feature on the left and the rule no longer recognises it, so it falls through
+to farsh.
+
+Measured over all 28 pairs in both directions, that is worth a factor of three
+wherever Warsh is involved, and a factor of five for al-Soosi's idghaam kabiir:
+
+| left | right | farsh | with the sides swapped |
+|---|---|--:|--:|
+| Hafs | Warsh | 523 | **1,611** |
+| Qaaloon | Warsh | 369 | **1,293** |
+| al-Doori | al-Soosi | 25 | **124** |
+| Hafs | Shu'ba | 397 | 400 |
+| al-Bazzi | Qunbul | 34 | 30 |
+
+The last two are the control: where neither side applies usul the other lacks,
+the direction hardly matters. And no ordering puts every riwaya on its better
+side — al-Soosi wants to be to the right of al-Doori and to the left of
+al-Bazzi — so the four rows with Warsh on the left carry farsh figures of
+1,575 to 1,835 that say more about the rules' viewpoint than about Warsh.
 
 Farsh is the comparable measure, and it says what the transmission history
 predicts. Two transmissions of one qari's reading differ in 34 words
@@ -803,7 +845,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
-| `compare_riwayat.py` | aligns ten pairs of riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies all ten; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
+| `compare_riwayat.py` | aligns all 28 pairs of the eight riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies all 28; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
 | `test_translit.py` | unit tests for `riwaya_translit`: 20 cases, each naming a word by `(package, sura, ayah, word)` and cutting it from the source rather than quoting it (optional step, runs before `compare_riwayat.py`) |
 | `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
@@ -987,8 +1029,8 @@ three that make up the ten (Abu Ja'far, Ya'qub, Khalaf) and the shawadhdh. All
 eight are mutawatir and none is the baseline; the morphological layers of this
 database describe Hafs only, because that is what the corpus annotates, and
 `riwaya_sarf.py` is where the consequences of that are worked out in both
-directions. All ten pairs are classified by rule, but only Hafs–Warsh has also been read
-word by word, so the other nine farsh figures are upper bounds and say so
+directions. All 28 pairs are classified by rule, but only Hafs–Warsh has also been read
+word by word, so the other 27 farsh figures are upper bounds and say so
 through `reviewed = 0`. None of it says anything about the three readers whose
 text is not here. Every farsh word pair of the read pair has a verdict in
 `farsh_review.tsv`; what could not be settled carries `kind = 'onzeker'` rather

@@ -8,7 +8,7 @@ Deze pagina telt waar twee overleveringen uiteenlopen, en die telling is een ind
 
 **Er is geen origineel waarvan de ander afwijkt.** Beide riwaayaat zijn mutawaatir: langs zoveel onafhankelijke ketens overgeleverd dat afspraak of vergissing is uitgesloten. Elk van de twee *is* de Qoeraan, en niet een variant erop. Het Oethmaanse rasm is bovendien zonder punten en zonder klinkertekens geschreven en draagt daardoor meer dan een lezing tegelijk: de qiraa-aat verwijderen zich niet van dat schriftbeeld, het schriftbeeld is zo gekozen dat het ze draagt.
 
-**Dat Hafs links staat, is gereedschap en geen norm -- maar het is niet vrijblijvend.** In zeven van de tien paren staat Hafs in de linkerkolom, omdat dat de overlevering is die de meeste lezers kennen en omdat het elk van de acht pakketten een vergelijking geeft; de drie overige zetten twee overleveringen van een en dezelfde qaari- naast elkaar. *Welke* plaatsen uiteenlopen is symmetrisch: draai het paar om en je vindt dezelfde plaatsen terug. De *indeling* van die plaatsen is dat niet. De usul-regels hebben een richting -- naql legt de klinker van een volgende hamza op de laatste letter, silat al-haa voegt er een lange klinker aan toe, idghaam kabier neemt de eindklinker juist weg -- en ze zijn geschreven met Hafs als de kant waarvandaan gekeken wordt. Zet Warsh links en de regels herkennen hun eigen kenmerk niet meer: dan valt dat kenmerk door naar farsh en telt dit paar geen 523 maar 1.611. Bij paren die dicht bij elkaar liggen scheelt het vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba 397 tegen 400); bij paren waar de ene kant usul toepast die de andere niet kent, scheelt het alles. De farsh-kolom is dus onderling vergelijkbaar doordat Hafs overal links staat, en niet doordat het getal van de richting onafhankelijk zou zijn. Ook de versnummering is trouwens niet gedeeld -- het woord hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- en de tabel houdt daarom aan beide kanten een eigen ayah-nummer bij.
+**Dat Hafs links staat, is gereedschap en geen norm -- maar het is niet vrijblijvend.** In 7 van de 28 paren staat Hafs in de linkerkolom, omdat dat de overlevering is die de meeste lezers kennen en omdat het elk van de acht pakketten een vergelijking geeft. Vier paren zetten twee overleveringen van een en dezelfde qaari- naast elkaar; de overige stellen twee qiraa-aat tegenover elkaar. *Welke* plaatsen uiteenlopen is symmetrisch: draai het paar om en je vindt dezelfde plaatsen terug. De *indeling* van die plaatsen is dat niet. De usul-regels hebben een richting -- naql legt de klinker van een volgende hamza op de laatste letter, silat al-haa voegt er een lange klinker aan toe, idghaam kabier neemt de eindklinker juist weg -- en ze zijn geschreven met Hafs als de kant waarvandaan gekeken wordt. Zet Warsh links en de regels herkennen hun eigen kenmerk niet meer: dan valt dat kenmerk door naar farsh en telt dit paar geen 523 maar 1.611. Dat is nagemeten over alle 28 paren in beide richtingen, en het patroon is scherp. Waar Warsh links komt te staan verdrievoudigt zijn farsh ongeveer, en al-Soesie gaat van 25 naar 124 zodra hij links van al-Doorie staat in plaats van rechts, omdat zijn idghaam kabier dan geen controle meer heeft. Paren waar geen van beide kanten usul toepast die de ander niet kent, bewegen nauwelijks: al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba 397 tegen 400. En er is geen volgorde die elke riwaaya op zijn beste kant zet -- al-Soesie wil rechts van al-Doorie staan en links van al-Bazzie. De farsh-kolom is dus vergelijkbaar zolang je hem afleest langs een vaste linkerkolom, en niet daarbuiten. Ook de versnummering is trouwens niet gedeeld -- het woord hieronder staat bij Hafs in 57:24 en bij Warsh in 57:23 -- en de tabel houdt daarom aan beide kanten een eigen ayah-nummer bij.
 
 **Farsh betekent niet fout.** *Farsh al-hoeroef* is de klassieke term voor de plaatsen waar twee lezingen in het woord zelf verschillen, tegenover de *usul*, de regels die gelden overal waar hun voorwaarde zich voordoet. Het onderscheid gaat over de soort van het verschil en niet over de juistheid ervan. En een woord dat maar aan een kant staat -- هُوَ, Hafs 57:24 tegenover Warsh 57:23 -- ontbreekt niet aan de andere kant: daar loopt de zin anders.
 
@@ -18,22 +18,42 @@ Deze pagina telt waar twee overleveringen uiteenlopen, en die telling is een ind
 
 | Paar | | Plaatsen | farsh | usul | notatie | nagelezen |
 |---|---|--:|--:|--:|--:|:-:|
-| hafs – warsh | tussen twee qiraa-a | 8,282 | 523 | 4,901 | 2,655 | ja |
+| hafs – shouba | binnen een qiraa-a | 592 | 397 | 76 | 73 | nee |
 | hafs – qaloon | tussen twee qiraa-a | 4,287 | 645 | 725 | 2,826 | nee |
+| hafs – warsh | tussen twee qiraa-a | 8,282 | 523 | 4,901 | 2,655 | ja |
 | hafs – bazzi | tussen twee qiraa-a | 9,225 | 657 | 7,562 | 952 | nee |
 | hafs – qumbul | tussen twee qiraa-a | 9,183 | 664 | 7,498 | 968 | nee |
 | hafs – doori | tussen twee qiraa-a | 2,342 | 637 | 1,221 | 407 | nee |
 | hafs – soosi | tussen twee qiraa-a | 5,828 | 708 | 3,634 | 1,391 | nee |
-| hafs – shouba | binnen een qiraa-a | 592 | 397 | 76 | 73 | nee |
+| shouba – qaloon | tussen twee qiraa-a | 4,220 | 621 | 730 | 2,780 | nee |
+| shouba – warsh | tussen twee qiraa-a | 8,291 | 706 | 4,889 | 2,623 | nee |
+| shouba – bazzi | tussen twee qiraa-a | 9,114 | 550 | 7,540 | 972 | nee |
+| shouba – qumbul | tussen twee qiraa-a | 9,080 | 569 | 7,474 | 986 | nee |
+| shouba – doori | tussen twee qiraa-a | 2,281 | 624 | 1,205 | 391 | nee |
+| shouba – soosi | tussen twee qiraa-a | 5,772 | 690 | 3,616 | 1,381 | nee |
 | qaloon – warsh | binnen een qiraa-a | 5,204 | 369 | 4,505 | 239 | nee |
+| qaloon – bazzi | tussen twee qiraa-a | 11,756 | 647 | 7,482 | 3,578 | nee |
+| qaloon – qumbul | tussen twee qiraa-a | 11,824 | 670 | 7,518 | 3,588 | nee |
+| qaloon – doori | tussen twee qiraa-a | 4,622 | 676 | 939 | 2,936 | nee |
+| qaloon – soosi | tussen twee qiraa-a | 7,971 | 775 | 3,317 | 3,791 | nee |
+| warsh – bazzi | tussen twee qiraa-a | 14,073 | 1,575 | 8,565 | 3,671 | nee |
+| warsh – qumbul | tussen twee qiraa-a | 13,993 | 1,588 | 8,526 | 3,619 | nee |
+| warsh – doori | tussen twee qiraa-a | 9,091 | 1,654 | 4,169 | 2,997 | nee |
+| warsh – soosi | tussen twee qiraa-a | 10,688 | 1,835 | 4,654 | 3,896 | nee |
 | bazzi – qumbul | binnen een qiraa-a | 184 | 34 | 73 | 73 | nee |
+| bazzi – doori | tussen twee qiraa-a | 9,736 | 564 | 8,088 | 1,061 | nee |
+| bazzi – soosi | tussen twee qiraa-a | 12,897 | 883 | 10,065 | 1,890 | nee |
+| qumbul – doori | tussen twee qiraa-a | 9,808 | 577 | 8,138 | 1,070 | nee |
+| qumbul – soosi | tussen twee qiraa-a | 12,971 | 898 | 10,114 | 1,900 | nee |
 | doori – soosi | binnen een qiraa-a | 3,658 | 25 | 2,503 | 1,090 | nee |
 
-Kijk naar de kolom farsh, niet naar het aantal plaatsen. Het aantal plaatsen telt usul en schrijfwijze mee, en die lopen per pakket sterk uiteen: Qaaloon-Warsh staat op 5,204 plaatsen terwijl het binnen een qiraa-a valt, omdat Warsh naql en hamza-ibdaal toepast waar Qaaloon dat niet doet. De farsh-kolom is de vergelijkbare maat, en die zegt wat je verwacht: binnen een qiraa-a 25-397, tussen twee qiraa-aat 523-708.
+**Twee kolommen, twee vragen.** Het *aantal plaatsen* telt elk verschil mee, ook usul en schrijfwijze, en is onafhankelijk van welke kant links staat: draai het paar om en je vindt dezelfde plaatsen terug. Dat maakt het de maat die over alle 28 paren vergelijkt. De *farsh*-kolom zegt iets scherpers -- waar de lezingen in het woord zelf uiteenlopen -- maar hangt van de richting af, en is dus vergelijkbaar binnen een blok met dezelfde riwaaya links.
 
-Alle tien de paren zijn met dezelfde regels geclassificeerd. Wat per pakket verschilt is de schrijfwijze, en dat zit nu in de transliteratie: Qaaloon, Doorie en Soesie schrijven de wasl-alif als een kale alif met de klinker erop, Hafs en Shu3ba (Koefa) en al-Bazzie en Qoenboel (Mekka) als de letter alef wasla, en Warsh met een teken erboven. De kenmerken die maar bij een deel van de riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala van Aboe 3Amr en van Warsh, het wegvallen van de klinker in *hoewa* en *hiya* -- hebben elk hun eigen klasse.
+Langs de zeven paren met Hafs links zegt de farsh-kolom wat je verwacht: binnen een qiraa-a 397, tussen twee qiraa-aat 523-708. En dat het aantal plaatsen iets anders meet dan afstand tussen lezingen, laat Qaaloon-Warsh zien: 5,204 plaatsen terwijl het binnen een qiraa-a valt, omdat Warsh naql en hamza-ibdaal toepast waar Qaaloon dat niet doet.
 
-De kolom *nagelezen* is iets anders dan de classificatie. Bij Hafs-Warsh is de farsh-lijst daarna nog woord voor woord gelezen. Dat streepte 116 rijen weg die de regels ten onrechte als farsh hadden staan en liet 10 onbeslist, tegenover 523 die bleven staan -- 18% van wat de regels aandroegen was geen farsh. De oordelen staan per woordpaar met hun reden in `farsh_review.tsv`. Voor de negen andere paren is dat niet gedaan, en hun farsh-getal is dus een bovengrens; reken op een marge van die orde.
+Alle 28 paren zijn met dezelfde regels geclassificeerd. Wat per pakket verschilt is de schrijfwijze, en dat zit nu in de transliteratie. Er zijn twee conventies voor de wasl-alif, niet drie: Hafs en Shu3ba (Koefa) en al-Bazzie en Qoenboel (Mekka) schrijven de letter alef wasla, de vier Maghribie-uitgaven een kale alif met een teken erboven. Binnen die tweede groep markeren Qaaloon en Warsh er praktisch alle; al-Doorie en al-Soesie laten er ruim tweeduizend ongemarkeerd, en die worden uit de stand afgeleid -- dat is wat de vlag `plain_wasl` doet, en `test_translit.py` legt per pakket vast hoeveel woorden hij raakt. De kenmerken die maar bij een deel van de riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala van Aboe 3Amr en van Warsh, het wegvallen van de klinker in *hoewa* en *hiya* -- hebben elk hun eigen klasse.
+
+De kolom *nagelezen* is iets anders dan de classificatie. Bij Hafs-Warsh is de farsh-lijst daarna nog woord voor woord gelezen. Dat streepte 116 rijen weg die de regels ten onrechte als farsh hadden staan en liet 10 onbeslist, tegenover 523 die bleven staan -- 18% van wat de regels aandroegen was geen farsh. De oordelen staan per woordpaar met hun reden in `farsh_review.tsv`. Voor de 27 andere paren is dat niet gedaan, en hun farsh-getal is dus een bovengrens; reken op een marge van die orde.
 
 ## Hafs – Warsh in detail
 
