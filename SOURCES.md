@@ -229,15 +229,22 @@ complex's release notes file al-Bazzi and Qunbul under Abu Amr al-Basri; they
 transmit from Ibn Kathir al-Makki, and the `riwayat` table records the
 corrected relation.
 
-**What is compared and what is claimed.** Ten pairs are aligned word by word:
-each riwaya beside Hafs, plus the three remaining pairs within one qiraa. Only
-all ten pairs are now classified into usul, notation and farsh by the same
-rules. What blocked that at first was not the classification but the
-transliteration: the Doori, Soosi and Qaaloon packages write the wasl alif as a
-plain vowelled alif where Hafs writes the letter alef wasla, and al-Soosi's
-idghaam kabir is a systematic feature the rules did not know. Both are modelled
-now -- al-Doori, the same qiraa from the same qari without that rule, serves as
-the control for the idghaam.
+**What is compared and what is claimed.** All 28 pairs of the eight riwayat
+are aligned word by word and classified into usul, notation and farsh by the
+same rules; only Hafs-Warsh has also been read by hand, so the other 27 farsh
+figures are upper bounds. What blocked the classification at first was not the
+rules but the transliteration: the four Maghribi packages write the wasl alif
+as a plain alif where Hafs writes the letter alef wasla, and al-Soosi's idghaam
+kabir is a systematic feature the rules did not know. Both are modelled now --
+al-Doori, the same qiraa from the same qari without that rule, serves as the
+control for the idghaam.
+
+One caveat belongs with the farsh column: it depends on which riwaya is on the
+left, because the usul rules name a direction and are written with Hafs as the
+side looked out from. Hafs-Warsh is 523 farsh one way round and 1,611 the
+other. The figure is therefore comparable down a block with the same riwaya on
+the left and not outside it; `compare_riwayat.py --reverse` prints the same
+table with the sides swapped, and README works the consequences out.
 
 What still sets Hafs-Warsh apart is that its farsh list has also been *read*,
 word pair by word pair, with the verdicts in `farsh_review.tsv`. The other nine

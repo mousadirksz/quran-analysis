@@ -25,13 +25,17 @@ so a join on (surah, ayah) breaks.
 Each sura is aligned on its word sequence instead, with difflib over the
 consonant skeleton, and the two ayah numbers are both recorded.
 
-All ten pairs are classified. What differs between the packages is how they
-spell things, and that belongs in the transliteration rather than in the
-comparison: Qaaloon, al-Doori and al-Soosi write hamzat al-wasl as a plain
-alif carrying its vowel and never use the alef wasla letter, where Hafs and
-the other Kufi packages always do and Warsh marks it with a sign. Telling the
-transliteration which convention a file follows removes several thousand
-false differences per pair on its own.
+All twenty-eight pairs are classified -- every pair the eight riwayat make,
+so that a question like "does Warsh sit closer to al-Doori than to Qunbul?"
+has a row to answer it. What differs between the packages is how they spell
+things, and that belongs in the transliteration rather than in the comparison.
+There are two conventions for hamzat al-wasl, not three: Hafs and Shu'ba
+(Kufa) and al-Bazzi and Qunbul (Mecca) write the alef wasla letter, while the
+four Maghribi packages write a plain alif with a sign over it -- Qaaloon and
+Warsh marking practically all of theirs, al-Doori and al-Soosi leaving some
+two thousand to be inferred from position. Telling the transliteration which
+convention a file follows removes several thousand false differences per pair
+on its own.
 
 The features that belong to some riwayat and not others each have a class.
 al-Soosi's idghaam kabir takes the final vowel of a word into the next, which
@@ -45,8 +49,8 @@ al-Soosi and nowhere else.
 **One pair has also been read.** Rules classify; only Hafs-Warsh has had its
 farsh list gone through word by word afterwards, and the verdicts of that
 reading are in `farsh_review.tsv`. It struck 116 rows the rules had wrongly
-called farsh, 18 per cent of what they proposed. The other nine pairs carry
-the rule verdict alone, so their farsh figure is an upper bound and `reviewed`
+called farsh, 18 per cent of what they proposed. The other 27 pairs carry the
+rule verdict alone, so their farsh figure is an upper bound and `reviewed`
 is 0.
 
 What comes out is sorted into three kinds:
@@ -66,6 +70,11 @@ Idempotent: drops and rebuilds both tables.
 
   python3 compare_riwayat.py                     rebuild the tables
   python3 compare_riwayat.py --markdown          also rewrite docs/hafs-warsh.md
+  python3 compare_riwayat.py --reverse           print the same summary with
+                                                 every pair's sides swapped,
+                                                 writing nothing; this is what
+                                                 the direction figures in the
+                                                 documents are measured with
 """
 
 import argparse
@@ -88,15 +97,9 @@ SRC = {code: (HERE / "sources" / ("riwaya_%s.csv" % code),
        for code in ("hafs", "warsh", "qaloon", "bazzi", "qumbul",
                     "doori", "soosi", "shouba")}
 
-# Which pairs to compare, and why these. Every riwaya is put beside Hafs,
-# because that is the transmission most readers will know and it gives each
-# of the eight a comparison. Beside that, the three remaining pairs that sit
-# *within* one qiraa (Hafs-Shu'ba is already in the first set), because the
-# contrast between a within-qiraa pair and a between-qiraa one is the whole
-# point of having more than two: Hafs and Shu'ba transmit one reading, Hafs
-# and Warsh two different ones, and the counts say so plainly.
-# Every pair is classified by rule. Only this one has also been read pair by
-# pair afterwards, and only it carries the verdicts in farsh_review.tsv.
+# Every pair is classified by rule; see ORDER below for which pairs and in
+# which direction. Only this one has also been read word by word afterwards,
+# and only it carries the verdicts in farsh_review.tsv.
 REVIEWED_PAIR = ("hafs", "warsh")
 
 # A riwaya that applies idghaam kabiir, and the sibling transmission of the
@@ -109,10 +112,30 @@ IDGHAAM_KABIR = {"soosi": "doori"}
 # the last letter) or because reading it backwards collides with real farsh.
 SYMMETRIC = {"sila_mim", "sila_ha", "yaa_idafa", "ha_iskan"}
 
-PAIRS = [("hafs", "warsh"), ("hafs", "qaloon"), ("hafs", "bazzi"),
-         ("hafs", "qumbul"), ("hafs", "doori"), ("hafs", "soosi"),
-         ("hafs", "shouba"),
-         ("qaloon", "warsh"), ("bazzi", "qumbul"), ("doori", "soosi")]
+# The order the pairs are built from, and it is not arbitrary. Hafs comes
+# first so that he stands on the left of all seven pairs he is in; Shu'ba
+# follows because they transmit one qiraa; then the three remaining qurraa
+# with their two riwayat each. Taking every combination from that order
+# reproduces the ten pairs this list held before it grew to all of them, with
+# the same side on the left and therefore the same counts.
+#
+# Keeping those ten oriented as they were is not housekeeping. Half the usul
+# classes name a direction -- naql moves the vowel of a following hamza onto
+# the last letter, silat al-haa adds a long vowel, idghaam kabiir takes the
+# final vowel away -- and they are written from the side that does *not* apply
+# the feature. Put that side on the right and its own usul is no longer
+# recognised: it falls through to farsh. Measured over all 28 pairs in both
+# directions, that is worth a factor of three where Warsh is involved
+# (Hafs-Warsh 523 farsh, Warsh-Hafs 1,611) and a factor of five for al-Soosi's
+# idghaam kabiir (al-Doori-al-Soosi 25, al-Soosi-al-Doori 124), while pairs
+# that apply no usul the other lacks barely move (al-Bazzi-Qunbul 34 and 30).
+#
+# There is no order that puts every riwaya on its best side -- al-Soosi wants
+# to be on the right of al-Doori and on the left of al-Bazzi -- so the farsh
+# column is comparable only down a fixed left-hand side, and the places column
+# is what compares across pairs. docs/hafs-warsh.md says so in full.
+ORDER = ("hafs", "shouba", "qaloon", "warsh", "bazzi", "qumbul", "doori", "soosi")
+PAIRS = [(a, b) for i, a in enumerate(ORDER) for b in ORDER[i + 1:]]
 DOC = HERE / "docs" / "hafs-warsh.md"
 REVIEW = HERE / "farsh_review.tsv"
 
@@ -728,9 +751,14 @@ def write(conn, rows):
 
 
 def summary(rows):
-    """One line per pair: how far apart the two transmissions are."""
+    """One line per pair: how far apart the two transmissions are.
+
+    Over the pairs it was handed, in the order they were built -- not over
+    PAIRS. That mattered once: with --reverse the keys are swapped, and
+    reading PAIRS here raised a KeyError on the first pair instead.
+    """
     out = []
-    for a, b in PAIRS:
+    for a, b in rows:
         cnt = collections.Counter(
             KIND.get(r["cls"].split("+")[0], ("onbekend",))[0]
             for r in rows[(a, b)])
@@ -772,14 +800,22 @@ def markdown(conn, rows):
                "van dat schriftbeeld, het schriftbeeld is zo gekozen dat het "
                "ze draagt.\n")
     out.append("**Dat Hafs links staat, is gereedschap en geen norm -- maar "
-               "het is niet vrijblijvend.** In zeven van de tien paren staat "
-               "Hafs in de linkerkolom, omdat dat de overlevering is die de "
+               "het is niet vrijblijvend.** In %d van de %d paren staat "
+               % (len(ORDER) - 1, len(PAIRS)) + "Hafs in de linkerkolom, omdat dat de overlevering is die de "
                "meeste lezers kennen en omdat het elk van de acht pakketten "
-               "een vergelijking geeft; de drie overige zetten twee "
-               "overleveringen van een en dezelfde qaari- naast "
-               "elkaar. *Welke* plaatsen uiteenlopen is "
-               "symmetrisch: draai het paar om en je vindt dezelfde plaatsen "
-               "terug. De *indeling* van die plaatsen is dat niet. De "
+               "een vergelijking geeft. Vier paren zetten twee "
+               "overleveringen van een en dezelfde qaari- naast elkaar; de "
+               "overige stellen twee qiraa-aat tegenover elkaar. *Welke* "
+               "plaatsen uiteenlopen is bijna symmetrisch: draai het paar om "
+               "en vrijwel dezelfde plaatsen komen terug -- 14 van de 28 "
+               "paren tellen er 2 of 7 meer of minder, op duizenden, dus "
+               "hoogstens twee promille. Die rest komt niet uit de indeling "
+               "maar uit de uitlijning, en de richting die netter uitvalt is "
+               "niet altijd de onze: bij لِلَّذِينَ tegenover لِلذِينَ maakt "
+               "de uitlijner met Hafs links drie rijen waarvan een "
+               "farsh-kandidaat, en met Qaaloon links een enkele rij "
+               "`article_lam`. De *indeling* van die plaatsen is helemaal "
+               "niet symmetrisch. De "
                "usul-regels hebben een richting -- naql legt de klinker van "
                "een volgende hamza op de laatste letter, silat al-haa voegt "
                "er een lange klinker aan toe, idghaam kabier neemt de "
@@ -787,13 +823,19 @@ def markdown(conn, rows):
                "de kant waarvandaan gekeken wordt. Zet Warsh links en de "
                "regels herkennen hun eigen kenmerk niet meer: dan valt dat "
                "kenmerk door naar farsh en telt dit paar geen 523 maar "
-               "1.611. Bij paren die dicht bij elkaar liggen scheelt het "
-               "vrijwel niets (al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba "
-               "397 tegen 400); bij paren waar de ene kant usul toepast die "
-               "de andere niet kent, scheelt het alles. De farsh-kolom is "
-               "dus onderling vergelijkbaar doordat Hafs overal links staat, "
-               "en niet doordat het getal van de richting onafhankelijk zou "
-               "zijn. Ook de versnummering is trouwens niet gedeeld -- het "
+               "1.611. Dat is nagemeten over alle 28 paren in beide "
+               "richtingen, en het patroon is scherp. Waar Warsh links komt "
+               "te staan verdrievoudigt zijn farsh ongeveer, en al-Soesie "
+               "gaat van 25 naar 124 zodra hij links van al-Doorie staat in "
+               "plaats van rechts, omdat zijn idghaam kabier dan geen "
+               "controle meer heeft. Paren waar geen van beide kanten usul "
+               "toepast die de ander niet kent, bewegen nauwelijks: "
+               "al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba 397 tegen 400. "
+               "En er is geen volgorde die elke riwaaya op zijn beste kant "
+               "zet -- al-Soesie wil rechts van al-Doorie staan en links van "
+               "al-Bazzie. De farsh-kolom is dus vergelijkbaar zolang je hem "
+               "afleest langs een vaste linkerkolom, en niet daarbuiten. "
+               "Ook de versnummering is trouwens niet gedeeld -- het "
                "woord hieronder staat bij Hafs in 57:24 en bij Warsh in "
                "57:23 -- en de tabel houdt daarom aan beide kanten een eigen "
                "ayah-nummer bij.\n")
@@ -827,26 +869,41 @@ def markdown(conn, rows):
                       format(total, ","), format(f, ","), format(u, ","),
                       format(n, ","), "ja" if read else "nee"))
     out.append("")
-    binnen = [f for _a, _b, k, _t, f, _u, _n, _r in summary(rows) if k == "binnen"]
-    tussen = [f for _a, _b, k, _t, f, _u, _n, _r in summary(rows) if k == "tussen"]
-    out.append("Kijk naar de kolom farsh, niet naar het aantal plaatsen. Het "
-               "aantal plaatsen telt usul en schrijfwijze mee, en die lopen "
-               "per pakket sterk uiteen: Qaaloon-Warsh staat op %s plaatsen "
+    hafs_binnen = [f for a, b, k, _t, f, _u, _n, _r in summary(rows)
+                   if a == "hafs" and k == "binnen"]
+    hafs_tussen = [f for a, b, k, _t, f, _u, _n, _r in summary(rows)
+                   if a == "hafs" and k == "tussen"]
+    out.append("**Twee kolommen, twee vragen.** Het *aantal plaatsen* telt "
+               "elk verschil mee, ook usul en schrijfwijze, en het hangt "
+               "vrijwel niet van de richting af -- op twee promille na, zie "
+               "hierboven. Dat maakt het de maat "
+               "die over alle %d paren vergelijkt. De *farsh*-kolom zegt iets "
+               "scherpers -- waar de lezingen in het woord zelf uiteenlopen "
+               "-- maar hangt van de richting af, en is dus vergelijkbaar "
+               "binnen een blok met dezelfde riwaaya links.\n"
+               % len(PAIRS))
+    out.append("Langs de zeven paren met Hafs links zegt de farsh-kolom wat "
+               "je verwacht: binnen een qiraa-a %s, tussen twee qiraa-aat "
+               "%s. En dat het aantal plaatsen iets anders meet dan afstand "
+               "tussen lezingen, laat Qaaloon-Warsh zien: %s plaatsen "
                "terwijl het binnen een qiraa-a valt, omdat Warsh naql en "
-               "hamza-ibdaal toepast waar Qaaloon dat niet doet. De farsh-"
-               "kolom is de vergelijkbare maat, en die zegt wat je verwacht: "
-               "binnen een qiraa-a %s, tussen twee qiraa-aat %s.\n"
-               % (format(next(t for a, b, k, t, f, u, n, r in [x for x in summary(rows)]
-                              if (a, b) == ("qaloon", "warsh")), ","),
-                  "-".join(str(x) for x in (min(binnen), max(binnen))),
-                  "-".join(str(x) for x in (min(tussen), max(tussen)))))
-    out.append("Alle tien de paren zijn met dezelfde regels geclassificeerd. "
-               "Wat per pakket verschilt is de schrijfwijze, en dat zit nu in "
-               "de transliteratie: Qaaloon, Doorie en Soesie schrijven de "
-               "wasl-alif als een kale alif met de klinker erop, Hafs en "
-               "Shu3ba (Koefa) en al-Bazzie en Qoenboel (Mekka) als de "
-               "letter alef wasla, en Warsh met een "
-               "teken erboven. De kenmerken die maar bij een deel van de "
+               "hamza-ibdaal toepast waar Qaaloon dat niet doet.\n"
+               % ("-".join(str(x) for x in sorted(set((min(hafs_binnen), max(hafs_binnen))))),
+                  "-".join(str(x) for x in sorted(set((min(hafs_tussen), max(hafs_tussen))))),
+                  format(next(t for a, b, k, t, f, u, n, r in summary(rows)
+                              if (a, b) == ("qaloon", "warsh")), ",")))
+    out.append("Alle %d paren zijn met dezelfde regels geclassificeerd. "
+               % len(PAIRS) + "Wat per pakket verschilt is de schrijfwijze, en dat zit nu in "
+               "de transliteratie. Er zijn twee conventies voor de "
+               "wasl-alif, niet drie: Hafs en Shu3ba (Koefa) en al-Bazzie en "
+               "Qoenboel (Mekka) schrijven de letter alef wasla, de vier "
+               "Maghribie-uitgaven een kale alif met een teken erboven. "
+               "Binnen die tweede groep markeren Qaaloon en Warsh er "
+               "praktisch alle; al-Doorie en al-Soesie laten er ruim "
+               "tweeduizend ongemarkeerd, en die worden uit de stand "
+               "afgeleid -- dat is wat de vlag `plain_wasl` doet, en "
+               "`test_translit.py` legt per pakket vast hoeveel woorden hij "
+               "raakt. De kenmerken die maar bij een deel van de "
                "riwaayaat horen -- de idghaam kabier van al-Soesie, de imaala "
                "van Aboe 3Amr en van Warsh, het wegvallen van de klinker in "
                "*hoewa* en *hiya* -- hebben elk hun eigen klasse.\n")
@@ -861,11 +918,11 @@ def markdown(conn, rows):
                "als farsh hadden staan en liet %d onbeslist, tegenover %d die "
                "bleven staan -- %.0f%% van wat de regels aandroegen was geen "
                "farsh. De oordelen staan per woordpaar met hun reden in "
-               "`farsh_review.tsv`. Voor de negen andere paren is dat niet "
+               "`farsh_review.tsv`. Voor de %d andere paren is dat niet "
                "gedaan, en hun farsh-getal is dus een bovengrens; reken op een "
                "marge van die orde.\n"
                % (struck, unsure, kept,
-                  struck / (struck + unsure + kept) * 100))
+                  struck / (struck + unsure + kept) * 100, len(PAIRS) - 1))
     out.append("## Hafs – Warsh in detail\n")
     out.append("| klasse | soort | plaatsen | wat het is |")
     out.append("|---|---|--:|---|")
@@ -896,15 +953,39 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--markdown", action="store_true",
                     help="also rewrite docs/hafs-warsh.md")
+    ap.add_argument("--reverse", action="store_true",
+                    help="classify every pair with the sides swapped and print "
+                         "the summary; touches neither the database nor the "
+                         "documents. This is how the direction figures quoted "
+                         "in README, BEVINDINGEN and docs/hafs-warsh.md are "
+                         "reproduced: the usul rules name a direction, so which "
+                         "riwaya stands on the left changes the farsh count.")
     args = ap.parse_args()
 
     for path, _s, _a in SRC.values():
         if not path.exists():
             sys.exit("ontbreekt: %s" % path)
 
+    pairs = [(b, a) for a, b in PAIRS] if args.reverse else list(PAIRS)
     rows = {}
-    for a, b in PAIRS:
+    for a, b in pairs:
         rows[(a, b)] = classified(a, b)
+
+    if args.reverse:
+        # Read-only on purpose: the database holds one orientation, the one
+        # PAIRS names, and a reversed run is a measurement about the rules and
+        # not a second version of the data.
+        total = sum(len(v) for v in rows.values())
+        print("omgekeerde richting -- niets weggeschreven")
+        print("riwaya_diff zou %s plaatsen over %d paren geven"
+              % (format(total, ","), len(pairs)))
+        print("  %-16s %-9s %8s %7s %7s %8s"
+              % ("paar", "qiraa-a", "plaatsen", "farsh", "usul", "notatie"))
+        for a, b, kind, tot, f, u, n, _read in summary(rows):
+            print("  %-16s %-9s %8s %7s %7s %8s"
+                  % ("%s-%s" % (a, b), kind, format(tot, ","), format(f, ","),
+                     format(u, ","), format(n, ",")))
+        return
 
     conn = sqlite3.connect(DB)
     write(conn, rows)
@@ -917,7 +998,7 @@ def main():
         print("  %-16s %-9s %8s %7s %7s %8s %s"
               % ("%s-%s" % (a, b), kind, format(tot, ","), format(f, ","),
                  format(u, ","), format(n, ","), "ja" if read else ""))
-    print("  (regels classificeren alle tien; alleen hafs-warsh is daarna")
+    print("  (regels classificeren alle %d; alleen hafs-warsh is daarna" % len(PAIRS))
     print("   ook woord voor woord nagelezen -- zie de docstring)")
     if args.markdown:
         print("  docs/hafs-warsh.md: %d regels" % markdown(conn, rows))

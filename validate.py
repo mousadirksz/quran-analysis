@@ -1117,10 +1117,18 @@ DOC_FIGURES = [
 ]
 
 # Every pair's places and farsh, in both documents' table shapes.
-PAIR_NAMES = {"hafs": ("hafs", "Ḥafṣ"), "warsh": ("warsh", "Warsh"),
-              "qaloon": ("qaloon", "Qālūn"), "bazzi": ("bazzi", "al-Bazzī"),
-              "qumbul": ("qumbul", "Qunbul"), "doori": ("doori", "al-Dūrī"),
-              "soosi": ("soosi", "al-Sūsī"), "shouba": ("shouba", "Shuʿba")}
+# Three spellings per riwaya, because the three documents that carry a pair
+# table write the names three ways: docs/hafs-warsh.md is generated and uses
+# the bare code, README the plain transliteration, BEVINDINGEN the one with
+# diacritics. A figure is checked wherever any of them matches.
+PAIR_NAMES = {"hafs": ("hafs", "Hafs", "Ḥafṣ"),
+              "warsh": ("warsh", "Warsh", "Warsh"),
+              "qaloon": ("qaloon", "Qaaloon", "Qālūn"),
+              "bazzi": ("bazzi", "al-Bazzi", "al-Bazzī"),
+              "qumbul": ("qumbul", "Qunbul", "Qunbul"),
+              "doori": ("doori", "al-Doori", "al-Dūrī"),
+              "soosi": ("soosi", "al-Soosi", "al-Sūsī"),
+              "shouba": ("shouba", "Shu'ba", "Shuʿba")}
 
 
 def _num(text):
@@ -1396,24 +1404,37 @@ def document_figures(cur, args):
     # which would reset it and end the loop after one pair
     pairs = cur.execute("SELECT DISTINCT riwaya_a, riwaya_b FROM riwaya_diff").fetchall()
     for a, b in pairs:
-        en, nl_a = PAIR_NAMES[a][0], PAIR_NAMES[a][1]
-        eb, nl_b = PAIR_NAMES[b][0], PAIR_NAMES[b][1]
+        spell = list(zip(PAIR_NAMES[a], PAIR_NAMES[b]))
         total, farsh = cur.execute(
             "SELECT COUNT(*), SUM(kind='farsh') FROM riwaya_diff "
             "WHERE riwaya_a=? AND riwaya_b=?", (a, b)).fetchone()
-        # the row shape of both pair tables: name | kind | places | **farsh** |
-        row = r"\| %s [–-] %s \|[^|]*\| ([\d.,]+) \|"
+        # The row shape of the pair tables: name | kind | places | **farsh** |
+        # The kind cell has to contain a letter ("binnen een qiraa-a",
+        # "between two qiraa'at"). Without that requirement the pattern also
+        # matched any other table whose first cell happened to be a pair name
+        # and whose second was a number -- which it twice did, on a table of
+        # direction figures and one of stacked usul features, reading their
+        # second column as a place count. The guard should fail on a drifted
+        # figure, not on a new table that mentions a pair.
+        row = r"\| %s [–-] %s \|[^|]*[A-Za-z][^|]*\| ([\d.,]+) \|"
         checks.append(("%s-%s places" % (a, b), total,
-                       [row % (en, eb), row % (nl_a, nl_b)]))
-        rowf = r"\| %s [–-] %s \|[^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
+                       [row % pair for pair in spell]))
+        rowf = r"\| %s [–-] %s \|[^|]*[A-Za-z][^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
         checks.append(("%s-%s farsh" % (a, b), farsh,
-                       [rowf % (en, eb), rowf % (nl_a, nl_b)]))
+                       [rowf % pair for pair in spell]))
 
     bad, unseen, seen = [], [], 0
     for label, source, patterns in checks:
         want = cur.execute(source).fetchone()[0] if isinstance(source, str) else source
+        # A figure may be registered with several wordings -- the same pair
+        # table is written three ways across the three documents that carry
+        # one. It counts as checked when *any* of them is found: requiring
+        # every wording would warn about spellings no document was ever meant
+        # to use. What must not happen is a figure that no wording finds at
+        # all, because then a claim sits in a document with nothing watching
+        # it, and that is the drift this check exists for.
+        hit = False
         for pattern in patterns:
-            hit = False
             for name, text in docs.items():
                 for m in re.finditer(pattern, text, re.M):
                     hit = True
@@ -1421,8 +1442,8 @@ def document_figures(cur, args):
                     if _num(m.group(1)) != want:
                         bad.append("%s: %s says %s, the database says %s"
                                    % (name, label, m.group(1), f"{want:,}"))
-            if not hit:
-                unseen.append("%s: no document matches %r" % (label, pattern))
+        if not hit:
+            unseen.append("%s: no document matches any of %r" % (label, patterns))
     if bad:
         raise Failed("%d figure(s) in the documents disagree with the database: %s"
                      % (len(bad), "; ".join(bad[:6])))

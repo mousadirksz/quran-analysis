@@ -87,11 +87,23 @@ def translit(w, sila=True, plain_wasl=False):
     10,056, 10,088, 10,052 and 10,053 times.
 
     `plain_wasl` is not that split; it is a fallback for what the second
-    convention leaves unmarked. In Qaaloon, al-Doori and al-Soosi a bare alif
-    carrying a vowel is a wasl alif even where no sign says so, because hamzat
-    al-qat' is written on a seat there in every one of some 9,000 places bar
-    one per package. Warsh marks every one of his, so the fallback never fires
-    for him: setting the flag for him changes no row.
+    convention leaves unmarked: a bare alif carrying a vowel is read as a wasl
+    alif even where no sign says so.
+
+    How much that fallback actually does, counted over each whole text and
+    pinned in test_translit.py, is not what the name suggests:
+
+        qaloon      0 words change      in PLAIN_WASL
+        doori   2,091 words change      in PLAIN_WASL
+        soosi   2,090 words change      in PLAIN_WASL
+        warsh   1,909 words change      NOT in PLAIN_WASL, and rightly so
+
+    Qaaloon marks his wasl alifs after all, so for him the flag is a no-op; he
+    is kept in the set because it costs nothing and guards against a future
+    package that does not mark them. Warsh is the opposite case and the reason
+    the flag is opt-in rather than tied to the convention: he leaves bare
+    vowelled alifs standing too, but what they carry is hamzat al-qat' -- 2:9
+    `aliimun` is written that way -- and the flag would eat the hamza.
     """
     # iqlab is written as a small mim beside a single vowel sign standing for
     # the tanwin; restore the tanwin the sign implies

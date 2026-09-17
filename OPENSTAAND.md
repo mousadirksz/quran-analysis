@@ -5,22 +5,30 @@ verdwijnt en dit niet.
 
 ## Voor de eigenaar — kan hier niet gedaan worden
 
-**Drie branches opruimen.** `mousadirksz-patch-1` is gemergd (#25) en kan weg.
-`archive/pre-db-purge-2026-09-11` en `archive/pre-db-purge-malware-scan` waren
-de uitweg voor een herschrijving die niet is doorgegaan; ze wijzen naar
-dezelfde commits als `main` en `claude/repo-malware-scan-4yqtmo`, dus ze kosten
-niets, maar ze hoeven er niet te staan. Verwijderen lukt niet vanuit deze
-omgeving: de proxy geeft 403 op het verwijderen van een branch. *Branches →
-prullenbak* doet het in drie klikken.
+**Vier branches opruimen.** Alle vier zijn ze klaar:
 
-**De vrije SQL-pagina in `app.py`.** De branch
-`claude/repo-malware-scan-4yqtmo` heeft één ongemergde commit die hem
-weghaalt, en er hoort geen pull request bij. De afweging: `app.py` is een
-optioneel dashboard dat je lokaal draait, en de pagina is daar handig. Maar de
-verbinding eronder is `sqlite3.connect("quran.db")` zonder meer — lees én
-schrijf. Zodra dat dashboard ooit bereikbaar is voor iemand anders, is dat
-willekeurige SQL op de database, inclusief `DROP`. Mergen of laten liggen is
-een keuze; hem vergeten is er geen.
+| branch | waarom weg |
+|---|---|
+| `mousadirksz-patch-1` | gemergd via #25 |
+| `claude/repo-malware-scan-4yqtmo` | zijn verandering zit al in `main` via #1 |
+| `archive/pre-db-purge-2026-09-11` | uitweg voor een herschrijving die niet doorging |
+| `archive/pre-db-purge-malware-scan` | idem |
+
+`claude/repo-malware-scan-4yqtmo` verdient een woord, want hij heeft hier
+eerder voor verwarring gezorgd. Hij haalt de vrije SQL-pagina uit `app.py`,
+en dat lijkt ongemergd werk. Dat is het niet: dezelfde verwijdering zit sinds
+15 augustus 2026 in `main` via `bcf728c` (#1). De branch takt af van de
+allereerste commit, dus `git diff main...branch` toont zijn eigen
+verwijdering en niet wat `main` zou missen — daar ging het mis. De maat die
+wél antwoord geeft is de droogloop:
+
+```
+git merge-tree --write-tree main claude/repo-malware-scan-4yqtmo
+  → dezelfde boom als main: de merge verandert geen enkel bestand
+```
+
+Verwijderen lukt niet vanuit deze omgeving: de proxy geeft 403 op het
+verwijderen van een branch. *Branches → prullenbak* doet het in vier klikken.
 
 **Twee klassieke iʿrāb-bronnen erbij.** Gewenst zijn al-ʿUkbarī's *al-Tibyān fī
 iʿrāb al-Qurʾān* en Makkī al-Qaysī's *Mushkil iʿrāb al-Qurʾān*; `SOURCES.md`
@@ -29,6 +37,25 @@ ophalen lukt hier als het pad bekend is, maar een pad *vinden* niet: de GitHub
 API geeft 403 door de proxy voor repositories buiten de sessie, en er was geen
 bereikbare index. Nodig is dus één van beide: de directe URL's, of de
 OpenITI-repository toegevoegd aan de sessie.
+
+## Een modelkeuze, voor wie het Arabisch kent
+
+**Twee uṣūl-kenmerken in één rij.** De indeler geeft één klasse per rij. Waar
+twee kenmerken in hetzelfde woord samenkomen — `لaكuمU` tegenover `للaكuم`, de
+ene kant verbindt de mīm, de andere draagt een shadda van het woord ervóór —
+vuurt geen van beide regels en valt de rij door naar farsh. Elk van de twee
+apart zou wél herkend worden.
+
+Het raakt zes van de 28 paren en 650 rijen: 25% van de farsh-lijst bij
+al-Bazzī–al-Sūsī en Qunbul–al-Sūsī, 15% bij de twee al-Dūrī-paren, en een paar
+procent bij de twee van Warsh. In de oorspronkelijke tien paren komt de vorm nul
+keer voor, dus geen eerder gepubliceerd cijfer is erdoor geraakt.
+
+Dat het mechanisme bestaat, blijkt uit `strip_usul`: de idghām kabīr mág daar al
+samengaan met wat er verder overblijft ("de idghām komt niet altijd alleen").
+Wat de juiste indeling is, is geen programmeervraag: is zo'n plaats één rij met
+twee klassen, of twee rijen, of blijft hij farsh omdat de combinatie zelf
+woordspecifiek is? Dat hoort de eigenaar te beslissen; daarna is het werk klein.
 
 ## Beslissingen, geen fouten
 

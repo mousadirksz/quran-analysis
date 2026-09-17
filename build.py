@@ -77,6 +77,12 @@ STEPS = [
     # carries the hand verdicts, and without it the step still succeeds and
     # quietly produces a different database -- Hafs-Warsh farsh goes from 521 to
     # 652 and the reviewed rows vanish. Nothing failed and nothing warned.
+    # De eenheidstests van de transliteratie draaien vóór de vergelijking die
+    # erop rust: een stukke sleutel levert een database op die nergens faalt
+    # en toch verkeerd is, en dat is precies wat hier drie keer gebeurd is.
+    ("test_translit.py", False, tuple(
+        ["sources/riwaya_%s.csv" % r for r in
+         ("hafs", "warsh", "qaloon", "bazzi", "doori", "soosi", "shouba")])),
     ("compare_riwayat.py", False, tuple(
         ["sources/riwaya_%s.csv" % r for r in
          ("hafs", "warsh", "qaloon", "bazzi", "qumbul", "doori", "soosi", "shouba")]
