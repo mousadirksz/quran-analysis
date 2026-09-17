@@ -681,6 +681,42 @@ the two annotation layers, the referential integrity of `wujuh` against
 `match_status` pile its rows onto one verse, or produce several verses per
 citation), a per-status spot check of the citations, and the reference tables.
 
+### Testing the transliteration, not just the database
+
+`validate.py` checks the *database*. `test_translit.py` checks the *function
+that fills it* — the phonemic key in `riwaya_translit.py` that decides whether
+two riwayat are saying the same thing. The distinction is not academic: three
+real bugs in that key were found by hand, after they were already in the data.
+
+| bug | what it cost |
+|---|---|
+| U+065C, Shu'ba's imala dot, missing from `VOWELS` | 79 words lost their only vowel |
+| the zero width joiner and the dotless beh as hamza seats | words failed to match |
+| alef madda written as a bare alif with a dagger | 177 false differences |
+
+344 differences that were not differences. Each is one line in the test table
+now, and removing any of the three fixes makes the suite fail — checked in both
+directions.
+
+```sh
+python3 test_translit.py        # 20 tests, one line per failure
+python3 test_translit.py -v     # also print the passing cases and why they exist
+```
+
+A case names its word by `(package, sura, ayah, word)` and cuts it from
+`sources/riwaya_*.csv` at run time instead of quoting it inline. That is
+deliberate: hand-typed Arabic has gone wrong repeatedly in this repository and
+cut Arabic never has. It also means a case that stops matching its source
+fails, which is what you want. Note that the packages do not number their ayat
+identically — the Maghribi editions do not count the basmala as a verse in
+al-Fatiha — so a reference holds *within* one package and never across two.
+
+Four kinds of case: pinned keys, pairs that must collapse to the same key
+(different orthography, same recitation), pairs that must **not** (a real farsh
+difference), and what the `plain_wasl` flag does per package, counted over the
+whole text. That last one is the least obvious and says the most — see the
+comment on `test_vlag`.
+
 ### What a citation match really guarantees
 
 The classical authors quote from memory and in the orthography of their own
@@ -769,6 +805,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `compare_riwayat.py` | aligns ten pairs of riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies all ten; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
+| `test_translit.py` | unit tests for `riwaya_translit`: 20 cases, each naming a word by `(package, sura, ayah, word)` and cutting it from the source rather than quoting it (optional step, runs before `compare_riwayat.py`) |
 | `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |
