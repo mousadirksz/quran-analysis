@@ -762,6 +762,28 @@ python3 test_translit.py        # 20 tests, one line per failure
 python3 test_translit.py -v     # also print the passing cases and why they exist
 ```
 
+`test_classify.py` does the same for the next layer: `classify()` takes two
+transliterations and returns the class name that decides whether a place lands
+in the database as usul, notation or farsh. 117 assertions — one case per
+class, what the al-Doori control buys, the reverse-pass rescue, and the guard
+that keeps 2:284 farsh. Not one Arabic word appears in that file: a case names
+a row by `(pair, sura, ayah, which row of that pair in that verse)` and fetches
+the forms from `quran.db`, so the position is the key and the class is the
+expectation.
+
+Two of its checks are worth naming because they reconstruct a claim quoted in
+four files rather than repeating it. The al-Doori control splits the places
+where al-Soosi drops a final vowel **1,152 to 5**, and the five are recomputed
+and named: 2:284 twice, 4:81, 19:6, 27:66. And `naql` must stay out of
+`SYMMETRIC` — the reverse pass calls 2:284 a naql in every pair it appears in,
+so adding it there would turn the most argued farsh place in the Quran into
+usul without a word of warning.
+
+Seven mutations were tried against it; six fail the suite. The one that
+survives is documented in the file: pointing `IDGHAAM_KABIR` at another riwaya
+changes nothing until the database is rebuilt, because the cases read the
+stored rows.
+
 A case names its word by `(package, sura, ayah, word)` and cuts it from
 `sources/riwaya_*.csv` at run time instead of quoting it inline. That is
 deliberate: hand-typed Arabic has gone wrong repeatedly in this repository and
@@ -865,6 +887,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `compare_riwayat.py` | aligns all 28 pairs of the eight riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies all 28; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
 | `test_translit.py` | unit tests for `riwaya_translit`: 20 cases, each naming a word by `(package, sura, ayah, word)` and cutting it from the source rather than quoting it (optional step, runs before `compare_riwayat.py`) |
+| `test_classify.py` | unit tests for the classifier in `compare_riwayat`: 117 assertions over one case per class, what the al-Doori control buys, the reverse-pass rescue and the guard that keeps 2:284 farsh (optional step, runs after `compare_riwayat.py`) |
 | `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |

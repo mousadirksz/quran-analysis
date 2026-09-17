@@ -87,6 +87,9 @@ STEPS = [
         ["sources/riwaya_%s.csv" % r for r in
          ("hafs", "warsh", "qaloon", "bazzi", "qumbul", "doori", "soosi", "shouba")]
         + ["farsh_review.tsv"])),
+    # na compare_riwayat, want de gevallen halen hun woorden uit de tabel die
+    # die stap net heeft gebouwd; test_translit draait er juist voor
+    ("test_classify.py", False, ()),
     ("resolve_citations.py", True, ()),
     ("substantiate_jk.py", True, ("sources/ibnjawzi_nuzhat_jk.txt",)),
     ("add_wujuh.py", True, ()),
