@@ -135,6 +135,19 @@ SYMMETRIC = {"sila_mim", "sila_ha", "yaa_idafa", "ha_iskan"}
 # column is comparable only down a fixed left-hand side, and the places column
 # is what compares across pairs. docs/hafs-warsh.md says so in full.
 ORDER = ("hafs", "shouba", "qaloon", "warsh", "bazzi", "qumbul", "doori", "soosi")
+# The farsh count of a pair with its two sides swapped. This cannot be read off
+# the database, which stores one orientation, and measuring it means
+# classifying every pair a second time -- so it lives here, in one place, with
+# the command that refreshes it:
+#
+#     python3 compare_riwayat.py --reverse
+#
+# The forward half of every figure quoted beside these is computed from the
+# rows, so only this dict can go stale, and only deliberately.
+REVERSE_FARSH = {("hafs", "warsh"): 1611, ("qaloon", "warsh"): 1293,
+                 ("doori", "soosi"): 124, ("hafs", "shouba"): 400,
+                 ("bazzi", "qumbul"): 30}
+
 PAIRS = [(a, b) for i, a in enumerate(ORDER) for b in ORDER[i + 1:]]
 DOC = HERE / "docs" / "hafs-warsh.md"
 REVIEW = HERE / "farsh_review.tsv"
@@ -770,6 +783,9 @@ def summary(rows):
 
 def markdown(conn, rows):
     cur = conn.cursor()
+    # the farsh count of every pair as it is stored, so the prose below never
+    # has to repeat a figure the data already holds
+    fw = {(a, b): f for a, b, _k, _t, f, _u, _n, _r in summary(rows)}
     names = dict(cur.execute("SELECT number, name_ar FROM surahs")) \
         if cur.execute("SELECT name FROM sqlite_master WHERE name='surahs'").fetchone() \
         else {}
@@ -822,15 +838,19 @@ def markdown(conn, rows):
                "eindklinker juist weg -- en ze zijn geschreven met Hafs als "
                "de kant waarvandaan gekeken wordt. Zet Warsh links en de "
                "regels herkennen hun eigen kenmerk niet meer: dan valt dat "
-               "kenmerk door naar farsh en telt dit paar geen 523 maar "
-               "1.611. Dat is nagemeten over alle 28 paren in beide "
+               "kenmerk door naar farsh en telt dit paar geen %d maar "
+               "%s. Dat is nagemeten over alle %d paren in beide "
+               % (fw[("hafs", "warsh")], format(REVERSE_FARSH[("hafs", "warsh")], ",").replace(",", "."), len(PAIRS)) +
                "richtingen, en het patroon is scherp. Waar Warsh links komt "
                "te staan verdrievoudigt zijn farsh ongeveer, en al-Soesie "
-               "gaat van 25 naar 124 zodra hij links van al-Doorie staat in "
+               "gaat van %d naar %d zodra hij links van al-Doorie staat in "
+               % (fw[("doori", "soosi")], REVERSE_FARSH[("doori", "soosi")]) +
                "plaats van rechts, omdat zijn idghaam kabier dan geen "
                "controle meer heeft. Paren waar geen van beide kanten usul "
                "toepast die de ander niet kent, bewegen nauwelijks: "
-               "al-Bazzie-Qoenboel 34 tegen 30, Hafs-Shu3ba 397 tegen 400. "
+               "al-Bazzie-Qoenboel %d tegen %d, Hafs-Shu3ba %d tegen %d. "
+               % (fw[("bazzi", "qumbul")], REVERSE_FARSH[("bazzi", "qumbul")],
+                  fw[("hafs", "shouba")], REVERSE_FARSH[("hafs", "shouba")]) +
                "En er is geen volgorde die elke riwaaya op zijn beste kant "
                "zet -- al-Soesie wil rechts van al-Doorie staan en links van "
                "al-Bazzie. De farsh-kolom is dus vergelijkbaar zolang je hem "

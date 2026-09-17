@@ -397,7 +397,15 @@ def referents(c, lemma="إِنسَٰن"):
 
 
 def riwayat(c):
-    head("Riwaayaat: acht overleveringen, tien paren")
+    # Alles wat hieronder een aantal noemt, wordt geteld. Dat is niet netheid:
+    # toen het aantal paren van tien naar achtentwintig ging, bleef dit proza
+    # "tien paren" zeggen en "tussen twee qiraa-aat ligt het rond de 650",
+    # terwijl er inmiddels rijen van 1.835 in stonden. De controle
+    # `document figures` in validate.py leest alleen .md-bestanden, dus niets
+    # ving het. Een getal dat zichzelf uitrekent kan niet verouderen.
+    n_paren = one(c, "SELECT COUNT(DISTINCT riwaya_a || '-' || riwaya_b)"
+                     " FROM riwaya_diff")
+    head("Riwaayaat: acht overleveringen, %d paren" % n_paren)
     print("  Een qiraa-a is de lezing van een qaari-; een riwaaya is de")
     print("  overlevering daarvan door een leerling. Hafs en Warsh horen bij")
     print("  twee verschillende qiraa-aat:\n")
@@ -410,7 +418,7 @@ def riwayat(c):
             (qe,))]
         print("    %-20s %-16s d. %3d AH   %s" % (qe, qa, qd, " en ".join(namen)))
 
-    print("\n  Tien paren vergeleken, elk woord voor woord uitgelijnd:\n")
+    print("\n  %d paren vergeleken, elk woord voor woord uitgelijnd:\n" % n_paren)
     print("    paar                 qiraa-a   plaatsen")
     for a, b, t, n in c.execute(
             "SELECT riwaya_a, riwaya_b, pair_type, COUNT(*) n FROM riwaya_diff"
@@ -425,7 +433,10 @@ def riwayat(c):
               % (t, format(n, ","), pairs, format(n // pairs, ",")))
     print("    Let op: dat gemiddelde zegt minder dan het lijkt. Het aantal")
     print("    plaatsen telt usul en schrijfwijze mee, en die lopen per paar")
-    print("    sterk uiteen. De kolom farsh hieronder is de vergelijkbare maat.")
+    print("    sterk uiteen -- maar het is wel de maat die over de paren heen")
+    print("    vergelijkt, want hij hangt vrijwel niet van de richting af.")
+    print("    De kolom farsh zegt iets scherpers en is juist wel")
+    print("    richtingafhankelijk; zie de opmerking onder de tabel.")
 
     print("\n  Per paar uitgesplitst naar wat het verschil is:\n")
     print("    paar                 qiraa-a   plaatsen    farsh     usul  notatie")
@@ -437,8 +448,26 @@ def riwayat(c):
         print("    %-20s %-9s %8s %8s %8s %8s"
               % ("%s - %s" % (a, b), t, format(n, ","), format(f, ","),
                  format(u, ","), format(nt, ",")))
-    print("\n    Binnen een qiraa-a staat farsh laag (Bazzie-Qoenboel 34,")
-    print("    Doorie-Soesie 25); tussen twee qiraa-aat ligt het rond de 650.")
+    lo_b, hi_b = c.execute(
+        "SELECT MIN(f), MAX(f) FROM (SELECT SUM(kind='farsh') f FROM riwaya_diff"
+        " WHERE pair_type='binnen' GROUP BY riwaya_a, riwaya_b)").fetchone()
+    lo_t, hi_t = c.execute(
+        "SELECT MIN(f), MAX(f) FROM (SELECT SUM(kind='farsh') f FROM riwaya_diff"
+        " WHERE pair_type='tussen' GROUP BY riwaya_a, riwaya_b)").fetchone()
+    hafs_lo, hafs_hi = c.execute(
+        "SELECT MIN(f), MAX(f) FROM (SELECT SUM(kind='farsh') f FROM riwaya_diff"
+        " WHERE pair_type='tussen' AND riwaya_a='hafs'"
+        " GROUP BY riwaya_a, riwaya_b)").fetchone()
+    print("\n    Binnen een qiraa-a loopt farsh van %d tot %d, tussen twee"
+          % (lo_b, hi_b))
+    print("    qiraa-aat van %d tot %d. Die bovenkant is geen afstand maar een"
+          % (lo_t, hi_t))
+    print("    gezichtspunt: de usul-regels zijn geschreven met Hafs als de")
+    print("    kant waarvandaan gekeken wordt, dus een riwaaya die links komt")
+    print("    te staan ziet zijn eigen usul doorvallen naar farsh. Langs de")
+    print("    paren met Hafs links loopt het van %d tot %d."
+          % (hafs_lo, hafs_hi))
+    print("    `compare_riwayat.py --reverse` laat het verschil zien.")
     print("    Alleen Hafs-Warsh is daarna nog woord voor woord nagelezen, dus")
     print("    de andere farsh-getallen zijn bovengrenzen.")
 
@@ -452,7 +481,7 @@ def riwayat(c):
                              " ORDER BY n DESC").fetchall():
         print("    %-12s %6s   %4.1f%%" % (kind, format(n, ","), n / total * 100))
 
-    print("\n  klassen binnen usul en notatie, over alle tien de paren:")
+    print("\n  klassen binnen usul en notatie, over alle %d paren:" % n_paren)
     for cls, kind, n in c.execute(
             "SELECT class, kind, COUNT(*) n FROM riwaya_diff"
             " WHERE kind IN ('usul','notatie') GROUP BY class"
