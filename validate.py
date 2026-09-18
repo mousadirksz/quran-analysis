@@ -1131,6 +1131,26 @@ PAIR_NAMES = {"hafs": ("hafs", "Hafs", "Ḥafṣ"),
               "shouba": ("shouba", "Shu'ba", "Shuʿba")}
 
 
+def _stacked(ta, tb):
+    """Do these two keys differ only by two usul features at once?
+
+    One is the shadda an idghaam leaves on the first letter of the next word,
+    the other the long vowel of silat al-mim or silat al-haa on the last. Each
+    alone has a class; together they have none, and the row falls to farsh.
+    """
+    ta, tb = (ta or "").strip(), (tb or "").strip()
+    if not ta or not tb or ta == tb:
+        return False
+
+    def ontdubbel(t):
+        return t[1:] if len(t) > 1 and t[0] == t[1] and t[0] not in "auiAUI" else t
+
+    def ontsila(t):
+        return t[:-1] if t and t[-1] in "UI" else t
+
+    return ontsila(ontdubbel(ta)) == ontsila(ontdubbel(tb))
+
+
 def _num(text):
     return int(text.replace(".", "").replace(",", ""))
 
@@ -1393,13 +1413,25 @@ def document_figures(cur, args):
     started."""
     require_tables(cur, "corpus", "riwaya_diff")
     docs = {}
-    for name in ("README.md", "BEVINDINGEN.md", "SOURCES.md",
-                 "docs/nahw-nl.md", "docs/sarf-nl.md", "docs/hafs-warsh.md"):
+    # Every markdown file that quotes a figure belongs here. OPENSTAAND and
+    # OBSERVATIES were left out at first because they were thought of as notes
+    # rather than documents; they quote measurements like any other, and a
+    # figure nobody watches is exactly what this check exists for.
+    for name in ("README.md", "BEVINDINGEN.md", "SOURCES.md", "OPENSTAAND.md",
+                 "OBSERVATIES.md",
+                 "docs/nahw-nl.md", "docs/sarf-nl.md", "docs/hafs-warsh.md",
+                 "docs/sibawayh-nl.md"):
         path = HERE / name
         if path.exists():
             docs[name] = path.read_text(encoding="utf-8")
 
     checks = list(DOC_FIGURES)
+    totaal_gestapeld = sum(1 for ta, tb in cur.execute(
+        "SELECT translit_a, translit_b FROM riwaya_diff WHERE kind='farsh'")
+        if _stacked(ta, tb))
+    checks.append(("rows where two usul features stack", totaal_gestapeld,
+                   [r"zes van de 28 paren en ([\d.,]+) rijen"]))
+
     # fetchall first: the loop body runs its own queries on this same cursor,
     # which would reset it and end the loop after one pair
     pairs = cur.execute("SELECT DISTINCT riwaya_a, riwaya_b FROM riwaya_diff").fetchall()
@@ -1422,6 +1454,23 @@ def document_figures(cur, args):
         rowf = r"\| %s [–-] %s \|[^|]*[A-Za-z][^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
         checks.append(("%s-%s farsh" % (a, b), farsh,
                        [rowf % pair for pair in spell]))
+
+        # Rows that are farsh only because two usul features land in the same
+        # word: one side joins the mim, the other carries a shadda from the
+        # word before, and the classifier has one class per row so neither
+        # rule fires. README and OPENSTAAND both table these, and the figure
+        # is not a column of riwaya_diff -- it is computed here so that a fix
+        # to the classifier cannot leave the documents claiming the old
+        # number. Both tables put the two riwaya in separate cells, which is
+        # what tells this pattern from the pair tables above.
+        gestapeld = sum(1 for ta, tb in cur.execute(
+            "SELECT translit_a, translit_b FROM riwaya_diff"
+            " WHERE riwaya_a=? AND riwaya_b=? AND kind='farsh'", (a, b))
+            if _stacked(ta, tb))
+        if gestapeld:
+            rows2 = r"\| %s \| %s \| [\d.,]+ \| ([\d.,]+) \|"
+            checks.append(("%s-%s stacked usul" % (a, b), gestapeld,
+                           [rows2 % (x, y) for x, y in spell[1:]]))
 
     bad, unseen, seen = [], [], 0
     for label, source, patterns in checks:
