@@ -76,11 +76,12 @@ def main():
         "SELECT COUNT(*) FROM corpus WHERE tag='PRON' AND (lemma IS NULL OR lemma='')"
     )
     print("PRON segments still without lemma:", cur.fetchone()[0])
+    lemmas = sorted(set(DAMAIR_BW.values()))
     for lemma_ar, count in cur.execute(
         "SELECT lemma_ar, COUNT(*) FROM corpus WHERE tag='PRON' "
         "AND lemma IN (%s) GROUP BY lemma_ar ORDER BY 2 DESC"
-        % ",".join("?" * len(DAMAIR)),
-        [bw for bw, _ in DAMAIR.values()],
+        % ",".join("?" * len(lemmas)),
+        lemmas,
     ):
         print(f"{lemma_ar}: {count}")
     conn.close()
