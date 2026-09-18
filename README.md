@@ -219,15 +219,24 @@ python3 build.py --from add_wujuh.py   # restart at a step (the parsers are slow
 python3 build.py --list                # print the pipeline order and exit
 ```
 
-A full run takes a while; the parsers and `resolve_citations.py` are the slow
-steps. Every step except `to_sqlite.py` is idempotent, which is what `--keep`
-exploits. The last step is `validate.py`, which runs 33 checks over the
-finished database (see *Data quality* below) and can also be run on its own:
+A full run takes about six minutes, and one step is nearly all of it:
+`compare_riwayat.py` aligns 28 pairs word by word and takes 4.9 of the 6.1.
+Nothing else costs more than twenty seconds. Every step except `to_sqlite.py`
+is idempotent, which is what `--keep` exploits. The last step is `validate.py`,
+which runs its checks over the finished database (see *Data quality* below) and
+can also be run on its own:
 
 ```sh
 python3 validate.py                    # validate ./quran.db
 python3 validate.py --sample 0         # spot check every citation, not a sample
 ```
+
+That the pipeline actually runs is not taken on trust. A full rebuild from the
+TSV was run on 18 September 2026 and reproduces the committed `quran.db`
+exactly: all twelve tables identical row for row, compared on a hash of every
+column of every row in sorted order. It had to be fixed first —
+`add_damair_lemmas.py` ended in a `NameError` and stopped the pipeline at step
+3 of 20, so the seventeen steps after it were unreachable from a clean build.
 
 `convert.py` regenerates `quranic-corpus-arabic.tsv` from the raw corpus file
 (`quranic-corpus-morphology-0.4.txt`); both files are committed, so this is only
@@ -742,7 +751,7 @@ are 1,642 distinct roots, of which 450 (27%) have an entry in a wujuh work.
 
 ## Data quality
 
-`validate.py` runs 33 checks over the finished database and is the last step of
+`validate.py` runs its checks over the finished database and is the last step of
 `build.py`. On the committed database, 31 pass and 2 warn — the two warnings are
 about the wujuh layer and are described below. It checks the corpus totals and
 the two annotation layers, the referential integrity of `wujuh` against
@@ -889,7 +898,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `substantiate_jk.py` | retries the quotes that failed, using a second, independently typed digitization of Ibn al-Jawzi as a source of correctly typed counterparts (for every work, not only his), and updates `resolved_citations.json` in place |
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
-| `validate.py` | 33 checks over the finished database (optional step) |
+| `validate.py` | the checks over the finished database (optional step) |
 | `query.py` | command-line query tool with RTL output |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
