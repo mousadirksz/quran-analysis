@@ -94,6 +94,9 @@ STEPS = [
     ("substantiate_jk.py", True, ("sources/ibnjawzi_nuzhat_jk.txt",)),
     ("add_wujuh.py", True, ()),
     ("align_senses.py", False, ()),
+    # query.py en het dashboard hebben de database nodig, dus hierna; ze
+    # raken haar niet aan, dus de volgorde met validate maakt niet uit
+    ("test_ui.py", False, ()),
     ("validate.py", False, ()),
 ]
 

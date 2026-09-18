@@ -818,6 +818,35 @@ difference), and what the `plain_wasl` flag does per package, counted over the
 whole text. That last one is the least obvious and says the most — see the
 comment on `test_vlag`.
 
+### The two user-facing scripts
+
+`query.py` and `app.py` are what someone actually touches, and they had no
+tests at all. What can break in each is different, so they are tested
+differently.
+
+`query.py` is run as a process, the way a user runs it, and its stdout is the
+expectation: the header row, the RTL mark around Arabic (without it a terminal
+walks the text backwards), `Geen resultaten.` on an empty result, a NULL shown
+as empty rather than as the Python word `None`, and — newly — a readable
+message on a SQL typo instead of a traceback. A typo at a prompt is the most
+ordinary thing there is, and the message sqlite gives (`no such column: x`) is
+the useful part.
+
+`app.py` is a Streamlit dashboard, and running Streamlit in a test costs more
+than it is worth. What silently breaks there is the SQL: the dashboard queries
+the database sixteen times, and a renamed column shows up only when somebody
+opens the page. So `test_ui.py` reads `app.py` with `ast` — without executing
+it, and without needing Streamlit installed — pulls out every `sql(...)` call
+with a literal query, and runs each against `quran.db`. It also asserts that
+`app.py` still defines the `sql` helper those calls name: renaming only the
+`def` leaves every call site standing while the dashboard falls over on its
+first query, and that was the one mutation the first version of the test
+missed.
+
+Not covered, so the PASS line is not read for more than it says: the pandas
+layer, the Streamlit widgets, and whether the page looks right. Only that every
+column the dashboard asks for still exists.
+
 ### What a citation match really guarantees
 
 The classical authors quote from memory and in the orthography of their own
@@ -899,7 +928,8 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `add_wujuh.py` | drops and rebuilds the `wujuh` table: root inference, word-level linkage, and the three confidence columns |
 | `align_senses.py` | builds `sense_alignment`: canonical sense ids across the works (optional step) |
 | `validate.py` | the checks over the finished database (optional step) |
-| `query.py` | command-line query tool with RTL output |
+| `query.py` | command-line query tool with RTL output; a SQL error prints the message sqlite gives, not a traceback |
+| `test_ui.py` | tests for `query.py` and `app.py`: the CLI run as a process, and every SQL query the dashboard makes, extracted from its source with `ast` and executed (optional step) |
 | `app.py` | optional Streamlit dashboard (needs `streamlit`, `pandas`) |
 | `add_translation.py` | builds `word_glosses`: the corpus' word-by-word English glosses (optional step) |
 | `parse_irab.py` | parses al-Nahhas' I'rab al-Quran into `irab` (optional step) |

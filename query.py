@@ -21,8 +21,16 @@ def main():
     db_path = Path(__file__).parent / "quran.db"
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
-    cur = conn.execute(query)
-    rows = cur.fetchall()
+    try:
+        cur = conn.execute(query)
+        rows = cur.fetchall()
+    except sqlite3.Error as e:
+        # A typo in the SQL is the most ordinary thing that happens at a
+        # prompt, and a traceback is the wrong answer to it: the message
+        # sqlite gives ("no such column: x") is the useful part.
+        print("SQL-fout: %s" % e, file=sys.stderr)
+        conn.close()
+        sys.exit(1)
 
     if not rows:
         print("Geen resultaten.")
