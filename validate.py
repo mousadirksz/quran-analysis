@@ -1131,6 +1131,26 @@ PAIR_NAMES = {"hafs": ("hafs", "Hafs", "Ḥafṣ"),
               "shouba": ("shouba", "Shu'ba", "Shuʿba")}
 
 
+def _stacked(ta, tb):
+    """Do these two keys differ only by two usul features at once?
+
+    One is the shadda an idghaam leaves on the first letter of the next word,
+    the other the long vowel of silat al-mim or silat al-haa on the last. Each
+    alone has a class; together they have none, and the row falls to farsh.
+    """
+    ta, tb = (ta or "").strip(), (tb or "").strip()
+    if not ta or not tb or ta == tb:
+        return False
+
+    def ontdubbel(t):
+        return t[1:] if len(t) > 1 and t[0] == t[1] and t[0] not in "auiAUI" else t
+
+    def ontsila(t):
+        return t[:-1] if t and t[-1] in "UI" else t
+
+    return ontsila(ontdubbel(ta)) == ontsila(ontdubbel(tb))
+
+
 def _num(text):
     return int(text.replace(".", "").replace(",", ""))
 
@@ -1140,6 +1160,47 @@ def _num(text):
 # into a chapter. Only columns outside this list are read as quotations.
 ELSEWHERE_COLUMNS = {"Hangt aan", "Waarom geen iʿrāb", "Waar het in dit boek staat",
                      "Betekenis (hoofdlijn)", "Patroon", "Wat het is"}
+
+
+BW_MARKERS = set('@,.[]"-')
+
+
+@check("leftover Buckwalter markers")
+def buckwalter_markers(cur, args):
+    """Where the corpus' ASCII markers still stand, and where they must not.
+
+    The morphology corpus writes seven Quranic marks as ASCII stand-ins that
+    its Buckwalter-to-Arabic mapping never translated: `@` for the sifr
+    mustadir over a silent letter, `,` and `.` for the small waw and yaa of
+    the sila, `[` for the small mim of iqlaab, and three rarer ones. They sit
+    in `corpus.form_ar` as the corpus supplies them, and that is deliberate --
+    the raw column stays raw.
+
+    `verses.text_ar` is the repaired text, and this pins that the repair is
+    complete: one leftover there and every citation match, every quotation
+    check and every book example is comparing against a text with an `@` in
+    it. The counts for the three views that read `corpus.form_ar` are here so
+    that the caveat README attaches to them cannot quietly stop being true.
+    """
+    require_tables(cur, "corpus", "verses")
+
+    def met_marker(rows):
+        return sum(1 for (t,) in rows if t and BW_MARKERS & set(t))
+
+    rest = met_marker(cur.execute("SELECT text_ar FROM verses"))
+    if rest:
+        raise Failed("%d verse(s) in verses.text_ar still carry a Buckwalter "
+                     "marker; the repair is meant to be complete" % rest)
+    ruw = met_marker(cur.execute("SELECT form_ar FROM corpus"))
+    tellingen = []
+    for view, kol in (("ayat", "verse_ar"), ("words", "word_ar"),
+                      ("words_en", "word_ar")):
+        if cur.execute("SELECT name FROM sqlite_master WHERE name=?", (view,)).fetchone():
+            tellingen.append("%s %s" % (view,
+                             f"{met_marker(cur.execute('SELECT %s FROM %s' % (kol, view))):,}"))
+    return ("verses.text_ar is clean; %s corpus rows keep the raw markers, and "
+            "the views built on them inherit that: %s"
+            % (f"{ruw:,}", ", ".join(tellingen)))
 
 
 @check("open remarks")
@@ -1393,13 +1454,25 @@ def document_figures(cur, args):
     started."""
     require_tables(cur, "corpus", "riwaya_diff")
     docs = {}
-    for name in ("README.md", "BEVINDINGEN.md", "SOURCES.md",
-                 "docs/nahw-nl.md", "docs/sarf-nl.md", "docs/hafs-warsh.md"):
+    # Every markdown file that quotes a figure belongs here. OPENSTAAND and
+    # OBSERVATIES were left out at first because they were thought of as notes
+    # rather than documents; they quote measurements like any other, and a
+    # figure nobody watches is exactly what this check exists for.
+    for name in ("README.md", "BEVINDINGEN.md", "SOURCES.md", "OPENSTAAND.md",
+                 "OBSERVATIES.md",
+                 "docs/nahw-nl.md", "docs/sarf-nl.md", "docs/hafs-warsh.md",
+                 "docs/sibawayh-nl.md"):
         path = HERE / name
         if path.exists():
             docs[name] = path.read_text(encoding="utf-8")
 
     checks = list(DOC_FIGURES)
+    totaal_gestapeld = sum(1 for ta, tb in cur.execute(
+        "SELECT translit_a, translit_b FROM riwaya_diff WHERE kind='farsh'")
+        if _stacked(ta, tb))
+    checks.append(("rows where two usul features stack", totaal_gestapeld,
+                   [r"zes van de 28 paren en ([\d.,]+) rijen"]))
+
     # fetchall first: the loop body runs its own queries on this same cursor,
     # which would reset it and end the loop after one pair
     pairs = cur.execute("SELECT DISTINCT riwaya_a, riwaya_b FROM riwaya_diff").fetchall()
@@ -1422,6 +1495,23 @@ def document_figures(cur, args):
         rowf = r"\| %s [–-] %s \|[^|]*[A-Za-z][^|]*\| [\d.,]+ \| \*\*([\d.,]+)\*\* \|"
         checks.append(("%s-%s farsh" % (a, b), farsh,
                        [rowf % pair for pair in spell]))
+
+        # Rows that are farsh only because two usul features land in the same
+        # word: one side joins the mim, the other carries a shadda from the
+        # word before, and the classifier has one class per row so neither
+        # rule fires. README and OPENSTAAND both table these, and the figure
+        # is not a column of riwaya_diff -- it is computed here so that a fix
+        # to the classifier cannot leave the documents claiming the old
+        # number. Both tables put the two riwaya in separate cells, which is
+        # what tells this pattern from the pair tables above.
+        gestapeld = sum(1 for ta, tb in cur.execute(
+            "SELECT translit_a, translit_b FROM riwaya_diff"
+            " WHERE riwaya_a=? AND riwaya_b=? AND kind='farsh'", (a, b))
+            if _stacked(ta, tb))
+        if gestapeld:
+            rows2 = r"\| %s \| %s \| [\d.,]+ \| ([\d.,]+) \|"
+            checks.append(("%s-%s stacked usul" % (a, b), gestapeld,
+                           [rows2 % (x, y) for x, y in spell[1:]]))
 
     bad, unseen, seen = [], [], 0
     for label, source, patterns in checks:

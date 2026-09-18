@@ -489,8 +489,11 @@ One row per token of the parse: 128,219 that correspond to written text and
 Three views sit on top of these. `words` gives one row per written word
 (`surah`, `ayah`, `word`, `word_ar`, `word_bw`), assembled from the segments;
 `words_en` is the same with `gloss_en` joined on; and `ayat` gives one row per
-verse (`surah`, `ayah`, `verse_ar`) straight from the corpus, markers and all —
-prefer `verses.text_ar`, which has them repaired.
+verse (`surah`, `ayah`, `verse_ar`). All three read `corpus.form_ar`, so all
+three carry the corpus' unmapped markers, not only `ayat` — for clean text read
+`verses.text_ar`, which has them repaired. The `leftover Buckwalter markers`
+check prints how many rows of each are affected and fails if the repair in
+`verses` ever stops being complete.
 
 ### Tables `riwayat` and `riwaya_diff` — eight transmissions compared
 
@@ -574,12 +577,20 @@ For six of them part of that margin can be pointed at, and it is a limit of the
 classifier rather than of the data: it assigns one class per row, so where two
 usul features meet in the same word neither rule fires. `لaكuمU` against
 `للaكuم` — one side joins the mim, the other carries a shadda from the word
-before — is 222 of al-Bazzi–al-Soosi's 883 farsh rows (25%), 221 of
-Qunbul–al-Soosi's 898, 86 and 85 of the two al-Doori pairs (15%), and 29 and 7
-of the two Warsh ones. The shape does not occur at all in the original ten
-pairs, so none of the earlier figures moved. Whether the right answer is one row
-with two classes or two rows is a modelling question, and it is in
-`OPENSTAAND.md`.
+before — is the whole shape:
+
+| left | right | farsh | of which two features stacked |
+|---|---|--:|--:|
+| al-Bazzi | al-Soosi | 883 | 222 |
+| Qunbul | al-Soosi | 898 | 221 |
+| al-Bazzi | al-Doori | 564 | 86 |
+| Qunbul | al-Doori | 577 | 85 |
+| Warsh | al-Soosi | 1,835 | 29 |
+| Warsh | al-Doori | 1,654 | 7 |
+
+The shape does not occur at all in the original ten pairs, so none of the
+earlier figures moved. Whether the right answer is one row with two classes or
+two rows is a modelling question, and it is in `OPENSTAAND.md`.
 
 | Pair | | Places | farsh | usul | notation | read |
 |---|---|--:|--:|--:|--:|:-:|
@@ -692,8 +703,8 @@ therefore a rule and not a word-by-word choice.
 
 | View | Content |
 |---|---|
-| `ayat` | one row per verse: `surah`, `ayah`, `verse_ar` (words joined with spaces), reconstructed on the fly from `corpus` |
-| `words` | one row per written word: `surah`, `ayah`, `word`, `word_ar`, `word_bw` (segments concatenated in segment order) |
+| `ayat` | one row per verse: `surah`, `ayah`, `verse_ar` (words joined with spaces), reconstructed on the fly from `corpus`, so it carries the unmapped markers — for clean text read `verses.text_ar` |
+| `words` | one row per written word: `surah`, `ayah`, `word`, `word_ar`, `word_bw` (segments concatenated in segment order); `word_ar` carries the same markers |
 
 Prefer the `verses` table over the `ayat` view for reading text: `ayat` passes
 the corpus' extended-Buckwalter markers (`@`, `,`, `.`, `[`) through unmapped,
@@ -764,7 +775,7 @@ python3 test_translit.py -v     # also print the passing cases and why they exis
 
 `test_classify.py` does the same for the next layer: `classify()` takes two
 transliterations and returns the class name that decides whether a place lands
-in the database as usul, notation or farsh. 117 assertions — one case per
+in the database as usul, notation or farsh: one case per
 class, what the al-Doori control buys, the reverse-pass rescue, and the guard
 that keeps 2:284 farsh. Not one Arabic word appears in that file: a case names
 a row by `(pair, sura, ayah, which row of that pair in that verse)` and fetches
@@ -886,8 +897,8 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `parse_treebank.py` | loads the Extended Quranic Treebank into `syntax` (optional step) |
 | `compare_riwayat.py` | aligns all 28 pairs of the eight riwayat word by word and builds `riwayat` and `riwaya_diff`; classifies all 28; `--markdown` rewrites `docs/hafs-warsh.md` (optional step) |
 | `riwaya_translit.py` | the transliteration the riwaya comparison runs on; a module, not a build step |
-| `test_translit.py` | unit tests for `riwaya_translit`: 20 cases, each naming a word by `(package, sura, ayah, word)` and cutting it from the source rather than quoting it (optional step, runs before `compare_riwayat.py`) |
-| `test_classify.py` | unit tests for the classifier in `compare_riwayat`: 117 assertions over one case per class, what the al-Doori control buys, the reverse-pass rescue and the guard that keeps 2:284 farsh (optional step, runs after `compare_riwayat.py`) |
+| `test_translit.py` | unit tests for `riwaya_translit`, each case naming a word by `(package, sura, ayah, word)` and cutting it from the source rather than quoting it (optional step, runs before `compare_riwayat.py`) |
+| `test_classify.py` | unit tests for the classifier in `compare_riwayat`: one case per class, what the al-Doori control buys, the reverse-pass rescue and the guard that keeps 2:284 farsh (optional step, runs after `compare_riwayat.py`) |
 | `farsh_review.tsv` | the verdict on each farsh word pair that reading found to be notation or could not settle, with a reason; read by `compare_riwayat.py` |
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |

@@ -198,7 +198,7 @@ vier eeuwen.
 Omdat `sense_nr` per werk telt, is Ibn Sallams eerste wajh van هدى ("bayaanan")
 formeel iets anders dan die van Ibn al-Jawzi ("al-bayaan"), terwijl het
 dezelfde wajh is. De tabel `sense_alignment` legt daarom canonieke sense-ids
-over de werken heen: **5.027 uitgelijnde senses in 3.284 canonieke senses**,
+over de werken heen: **5.043 uitgelijnde senses in 3.298 canonieke senses**,
 waarvan 442 door drie of meer werken worden gedragen en 140 door alle vier.
 
 Twee signalen beslissen, en beide moeten verdiend worden: overlap in de
