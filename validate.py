@@ -1162,6 +1162,47 @@ ELSEWHERE_COLUMNS = {"Hangt aan", "Waarom geen iʿrāb", "Waar het in dit boek s
                      "Betekenis (hoofdlijn)", "Patroon", "Wat het is"}
 
 
+BW_MARKERS = set('@,.[]"-')
+
+
+@check("leftover Buckwalter markers")
+def buckwalter_markers(cur, args):
+    """Where the corpus' ASCII markers still stand, and where they must not.
+
+    The morphology corpus writes seven Quranic marks as ASCII stand-ins that
+    its Buckwalter-to-Arabic mapping never translated: `@` for the sifr
+    mustadir over a silent letter, `,` and `.` for the small waw and yaa of
+    the sila, `[` for the small mim of iqlaab, and three rarer ones. They sit
+    in `corpus.form_ar` as the corpus supplies them, and that is deliberate --
+    the raw column stays raw.
+
+    `verses.text_ar` is the repaired text, and this pins that the repair is
+    complete: one leftover there and every citation match, every quotation
+    check and every book example is comparing against a text with an `@` in
+    it. The counts for the three views that read `corpus.form_ar` are here so
+    that the caveat README attaches to them cannot quietly stop being true.
+    """
+    require_tables(cur, "corpus", "verses")
+
+    def met_marker(rows):
+        return sum(1 for (t,) in rows if t and BW_MARKERS & set(t))
+
+    rest = met_marker(cur.execute("SELECT text_ar FROM verses"))
+    if rest:
+        raise Failed("%d verse(s) in verses.text_ar still carry a Buckwalter "
+                     "marker; the repair is meant to be complete" % rest)
+    ruw = met_marker(cur.execute("SELECT form_ar FROM corpus"))
+    tellingen = []
+    for view, kol in (("ayat", "verse_ar"), ("words", "word_ar"),
+                      ("words_en", "word_ar")):
+        if cur.execute("SELECT name FROM sqlite_master WHERE name=?", (view,)).fetchone():
+            tellingen.append("%s %s" % (view,
+                             f"{met_marker(cur.execute('SELECT %s FROM %s' % (kol, view))):,}"))
+    return ("verses.text_ar is clean; %s corpus rows keep the raw markers, and "
+            "the views built on them inherit that: %s"
+            % (f"{ruw:,}", ", ".join(tellingen)))
+
+
 @check("open remarks")
 def open_remarks(cur, args):
     """Remarks left in the documents for Claude to act on.

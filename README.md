@@ -489,8 +489,11 @@ One row per token of the parse: 128,219 that correspond to written text and
 Three views sit on top of these. `words` gives one row per written word
 (`surah`, `ayah`, `word`, `word_ar`, `word_bw`), assembled from the segments;
 `words_en` is the same with `gloss_en` joined on; and `ayat` gives one row per
-verse (`surah`, `ayah`, `verse_ar`) straight from the corpus, markers and all —
-prefer `verses.text_ar`, which has them repaired.
+verse (`surah`, `ayah`, `verse_ar`). All three read `corpus.form_ar`, so all
+three carry the corpus' unmapped markers, not only `ayat` — for clean text read
+`verses.text_ar`, which has them repaired. The `leftover Buckwalter markers`
+check prints how many rows of each are affected and fails if the repair in
+`verses` ever stops being complete.
 
 ### Tables `riwayat` and `riwaya_diff` — eight transmissions compared
 
@@ -700,8 +703,8 @@ therefore a rule and not a word-by-word choice.
 
 | View | Content |
 |---|---|
-| `ayat` | one row per verse: `surah`, `ayah`, `verse_ar` (words joined with spaces), reconstructed on the fly from `corpus` |
-| `words` | one row per written word: `surah`, `ayah`, `word`, `word_ar`, `word_bw` (segments concatenated in segment order) |
+| `ayat` | one row per verse: `surah`, `ayah`, `verse_ar` (words joined with spaces), reconstructed on the fly from `corpus`, so it carries the unmapped markers — for clean text read `verses.text_ar` |
+| `words` | one row per written word: `surah`, `ayah`, `word`, `word_ar`, `word_bw` (segments concatenated in segment order); `word_ar` carries the same markers |
 
 Prefer the `verses` table over the `ayat` view for reading text: `ayat` passes
 the corpus' extended-Buckwalter markers (`@`, `,`, `.`, `[`) through unmapped,
