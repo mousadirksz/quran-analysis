@@ -82,6 +82,7 @@ from add_wazifa import WAZIFA
 from add_wujuh import BEST_CONFIDENCE, SPAN_STATUSES
 from resolve_citations import WORKS as PARSED_WORKS
 from resolve_citations import clean_quote, normalize, skeleton
+from sarf_video import collect as collect_film
 
 HERE = Path(__file__).parent
 SOURCES = HERE / "sources"
@@ -1641,6 +1642,34 @@ def nahw_book(cur, args):
                      f"database: {'; '.join(bad[:3])}")
     return (f"{rows_n} treebank example rows and {quotes_n} quoted words in "
             f"docs/nahw-nl.md all found")
+
+
+@check("film figures")
+def film_figures(cur, args):
+    """video/sarf_data.js must hold what the database holds now.
+
+    The film about sarf takes every count and every Quranic example it shows
+    from that file, and the file is committed so the page plays without a
+    rebuild. That makes it one more place a figure can go stale: rebuild the
+    database and the film would go on quoting the old one. So the figures are
+    collected again here, the way sarf_video.py collects them, and compared
+    with the file. collect() also stops on a claim the film makes in words
+    that the data no longer bears out, and that is a failure here too."""
+    path = HERE / "video" / "sarf_data.js"
+    if not path.exists():
+        raise Skipped("video/sarf_data.js is not here")
+    require_tables(cur, "corpus", "words", "riwaya_diff")
+    try:
+        now = json.loads(json.dumps(collect_film(cur), ensure_ascii=False))
+    except SystemExit as exc:
+        raise Failed(f"sarf_video.py stops: {exc}")
+    text = path.read_text(encoding="utf-8")
+    held = json.loads(text[text.index("{"):text.rindex("}") + 1])
+    stale = sorted(k for k in set(now) | set(held) if now.get(k) != held.get(k))
+    if stale:
+        raise Failed("video/sarf_data.js no longer matches the database in "
+                     + ", ".join(stale) + "; python3 sarf_video.py --data rewrites it")
+    return f"{len(now)} groups of figures in video/sarf_data.js match the database"
 
 
 def report(outcome, name, text):

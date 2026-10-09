@@ -22,3 +22,8 @@ temp_interactive_push.bat
 # OS junk
 .DS_Store
 Thumbs.db
+
+# The film is rendered, not committed: sarf_video.py makes it again from
+# video/sarf.html and video/sarf_data.js, which are committed
+video/*.mp4
+video/stills/
