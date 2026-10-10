@@ -134,12 +134,18 @@ def whole(cur, surah, ayah, word):
     return repair_markers(r[0]) if r else None
 
 
-def relations(cur, markdown=False, limit=30):
+def relation_counts(cur):
+    """Every relation the treebank names, largest first, as (label, Arabic
+    label, places, of which posited). NonRel, which names none, is left out."""
     rows = cur.execute(
         "SELECT rel_label, rel_label_ar, COUNT(*) n,"
         " SUM(is_implicit) implicit FROM syntax WHERE rel_label IS NOT NULL"
         " GROUP BY rel_label ORDER BY n DESC").fetchall()
-    rows = [r for r in rows if r[0] != "NonRel"]
+    return [(rel, ar, n, imp or 0) for rel, ar, n, imp in rows if rel != "NonRel"]
+
+
+def relations(cur, markdown=False, limit=30):
+    rows = relation_counts(cur)
     head, tail = rows[:limit], rows[limit:]
     if markdown:
         print("| Relatie | | Geschreven | Geponeerd | Wat het is | H. |")
@@ -164,8 +170,8 @@ def relations(cur, markdown=False, limit=30):
                  num(sum(r[2] for r in nas))))
 
 
-def nawasikh(cur, markdown=False):
-    """Every naasikh the treebank names, with how often it governs."""
+def nasikh_counts(cur):
+    """naasikh -> {"subj": its ism, "pred": its khabar}, as often as it governs."""
     rows = cur.execute(
         "SELECT rel_label, COUNT(*) n FROM syntax WHERE rel_label IS NOT NULL"
         " GROUP BY rel_label").fetchall()
@@ -176,6 +182,12 @@ def nawasikh(cur, markdown=False):
             slot, gov = m.group(1), m.group(2)
             d = per.setdefault(gov, {"subj": 0, "pred": 0})
             d[slot] += n
+    return per
+
+
+def nawasikh(cur, markdown=False):
+    """Every naasikh the treebank names, with how often it governs."""
+    per = nasikh_counts(cur)
     order = sorted(per.items(), key=lambda kv: -(kv[1]["subj"] + kv[1]["pred"]))
     if markdown:
         print("| Naasikh | اسم | خبر |")
@@ -208,18 +220,28 @@ def muqaddar(cur, markdown=False):
     print(tail)
 
 
+CASES = (("NOM", "rafʿ"), ("ACC", "naṣb"), ("GEN", "jarr"),
+         ("SUBJ", "naṣb van het werkwoord"), ("JUS", "jazm"))
+
+
+def case_counts(cur):
+    """How many segments carry each case, and each mood of the verb."""
+    out = {}
+    for label, _ in CASES:
+        col = '"case"' if label in ("NOM", "ACC", "GEN") else "mood"
+        out[label] = cur.execute("SELECT COUNT(*) FROM corpus WHERE %s=?" % col,
+                                 (label,)).fetchone()[0]
+    return out
+
+
 def cases(cur, markdown=False):
     if markdown:
         print("| Positie | Corpuslabel | Aantal |")
         print("|---|---|--:|")
-    for label, nl in (("NOM", "rafʿ"), ("ACC", "naṣb"), ("GEN", "jarr")):
-        n = cur.execute('SELECT COUNT(*) FROM corpus WHERE "case"=?', (label,)).fetchone()[0]
+    counts = case_counts(cur)
+    for label, nl in CASES:
         print(("| %s | `%s` | %s |" if markdown else "  %-6s %-6s %8s")
-              % (nl, label, num(n)))
-    for label, nl in (("SUBJ", "naṣb van het werkwoord"), ("JUS", "jazm")):
-        n = cur.execute("SELECT COUNT(*) FROM corpus WHERE mood=?", (label,)).fetchone()[0]
-        print(("| %s | `%s` | %s |" if markdown else "  %-6s %-6s %8s")
-              % (nl, label, num(n)))
+              % (nl, label, num(counts[label])))
 
 
 def faail(cur, markdown=False):
@@ -233,13 +255,7 @@ def faail(cur, markdown=False):
     grammar. The treebank supplies the split without meaning to: it segments
     `qaaluu` into the verb and the waaw and labels the waaw itself, and the
     mustatir ones are the rows it posits with no word behind them."""
-    rows = cur.execute(
-        "SELECT CASE WHEN s.is_implicit=1 THEN 'mustatir'"
-        "            WHEN co.tag='PRON' THEN 'baariz'"
-        "            ELSE 'zaahir' END soort, COUNT(*) n"
-        " FROM syntax s LEFT JOIN corpus co ON co.surah=s.surah"
-        "  AND co.ayah=s.ayah AND co.word=s.word AND co.segment=s.segment"
-        " WHERE s.rel_label='Subj' GROUP BY 1 ORDER BY n DESC").fetchall()
+    rows = faail_kinds(cur)
     total = sum(n for _, n in rows)
     WAT = {"zaahir": ("ẓāhir", "een naamwoord dat er staat"),
            "baariz": ("bāriz", "een ḍamīr, aan het werkwoord vast"),
@@ -254,11 +270,41 @@ def faail(cur, markdown=False):
     print(("| | **samen** | **%s** | |" if markdown else "  samen%40s")
           % num(total))
 
+    d = verb_doers(cur)
+    print()
+    if markdown:
+        print("| Bij elk werkwoord | Plaatsen |")
+        print("|---|--:|")
+    for label, n in (("werkwoorden in het corpus", d["verbs"]),
+                     ("met een fāʿil", d["subj"]),
+                     ("met een nāʾib al-fāʿil", d["pas"]),
+                     ("met een ism (kāna en haar zusters)", d["ism"]),
+                     ("met meer dan één daarvan", d["both"]),
+                     ("waar de treebank niets aanwijst", d["none"])):
+        print(("| %s | %s |" if markdown else "  %-38s %7s") % (label, num(n)))
+
+
+def faail_kinds(cur):
+    """(kind, places) for the three kinds of faa'il, largest first; the kinds
+    are zaahir, baariz and mustatir, as faail() explains."""
+    return cur.execute(
+        "SELECT CASE WHEN s.is_implicit=1 THEN 'mustatir'"
+        "            WHEN co.tag='PRON' THEN 'baariz'"
+        "            ELSE 'zaahir' END soort, COUNT(*) n"
+        " FROM syntax s LEFT JOIN corpus co ON co.surah=s.surah"
+        "  AND co.ayah=s.ayah AND co.word=s.word AND co.segment=s.segment"
+        " WHERE s.rel_label='Subj' GROUP BY 1 ORDER BY n DESC").fetchall()
+
+
+def verb_doers(cur):
+    """Every verb of the corpus against what the treebank hangs on it: how many
+    have a faa'il, a naa'ib al-faa'il, an ism (kaana and her sisters), exactly
+    one of the three, more than one, or none."""
     # MAX() over a LEFT JOIN yields NULL, not 0, for a verb with no children
     # at all -- 42 of them -- so every branch here has to coalesce or those
     # verbs fall out of the count and the arithmetic quietly stops closing.
-    verbs, subj, pas, ism, none, both = cur.execute(
-        "SELECT COUNT(*), SUM(subj), SUM(pas), SUM(ism),"
+    verbs, subj, pas, ism, one, none, both = cur.execute(
+        "SELECT COUNT(*), SUM(subj), SUM(pas), SUM(ism), SUM(subj + pas + ism = 1),"
         "       SUM(subj + pas + ism = 0), SUM(subj + pas + ism > 1) FROM ("
         "  SELECT COALESCE(MAX(k.rel_label = 'Subj'), 0) subj,"
         "         COALESCE(MAX(k.rel_label = 'Pass'), 0) pas,"
@@ -267,17 +313,7 @@ def faail(cur, markdown=False):
         "  LEFT JOIN syntax k ON k.head_tid = s.tid"
         "  WHERE co.kalima_type = 'fiil' AND s.is_implicit = 0"
         "  GROUP BY s.tid)").fetchone()
-    print()
-    if markdown:
-        print("| Bij elk werkwoord | Plaatsen |")
-        print("|---|--:|")
-    for label, n in (("werkwoorden in het corpus", verbs),
-                     ("met een fāʿil", subj),
-                     ("met een nāʾib al-fāʿil", pas),
-                     ("met een ism (kāna en haar zusters)", ism),
-                     ("met meer dan één daarvan", both),
-                     ("waar de treebank niets aanwijst", none)):
-        print(("| %s | %s |" if markdown else "  %-38s %7s") % (label, num(n)))
+    return dict(verbs=verbs, subj=subj, pas=pas, ism=ism, one=one, none=none, both=both)
 
 
 def rel(cur, label, markdown=False, limit=6):
@@ -314,20 +350,7 @@ def irab_diff(cur, markdown=False, mode="irab"):
     vowel, and so does a pronoun or a lengthened yaa'. Those are separated
     out rather than quietly counted as i'rab -- telling them apart is the
     first thing chapter 1 asks the reader to do."""
-    rows = cur.execute(
-        "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"
-        " WHERE riwaya_a='hafs' AND riwaya_b='warsh' AND kind='farsh'"
-        " ORDER BY surah, ayah_a").fetchall()
-    sys.path.insert(0, str(Path(__file__).parent))
-    from riwaya_translit import key
-    irab, mabni = [], []
-    for s_, a, fa, fb in rows:
-        ta, tb = key(fa), key(fb)
-        if not (len(ta) == len(tb) and ta[:-1] == tb[:-1]
-                and ta[-1] in "aui" and tb[-1] in "aui"):
-            continue
-        why = not_irab(fa, (s_, a))
-        (mabni if why else irab).append((s_, a, fa, fb, why))
+    irab, mabni = irab_rows(cur)
     rows = mabni if mode == "mabni" else irab
     last = {"mabni": "Waarom geen iʿrāb", "book": "Waar het in dit boek staat"}.get(mode)
     if markdown:
@@ -342,6 +365,27 @@ def irab_diff(cur, markdown=False, mode="irab"):
         else:
             print(("| %s | %s | %s |" if markdown else "  %-8s %-18s %s") % (loc, fa, fb))
     print("\n%d plaatsen." % len(rows))
+
+
+def irab_rows(cur):
+    """The farsh differences between Hafs and Warsh that sit in the last
+    vowel, as two lists of (surah, ayah, Hafs, Warsh, why): those that are
+    i'rab, and those that are not, with the reason (see NOT_IRAB)."""
+    rows = cur.execute(
+        "SELECT surah, ayah_a, form_a, form_b FROM riwaya_diff"
+        " WHERE riwaya_a='hafs' AND riwaya_b='warsh' AND kind='farsh'"
+        " ORDER BY surah, ayah_a").fetchall()
+    sys.path.insert(0, str(Path(__file__).parent))
+    from riwaya_translit import key
+    irab, mabni = [], []
+    for s_, a, fa, fb in rows:
+        ta, tb = key(fa), key(fb)
+        if not (len(ta) == len(tb) and ta[:-1] == tb[:-1]
+                and ta[-1] in "aui" and tb[-1] in "aui"):
+            continue
+        why = not_irab(fa, (s_, a))
+        (mabni if why else irab).append((s_, a, fa, fb, why))
+    return irab, mabni
 
 
 # A final vowel is not always an i'rab ending. Ten of these places
