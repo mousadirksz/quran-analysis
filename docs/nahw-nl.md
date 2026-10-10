@@ -335,18 +335,18 @@ De treebank markeert die lege plekken. Dit is hoe vaak, en op welke posities:
 
 | Positie | | Aantal | Aandeel |
 |---|---|--:|--:|
-| `Subj` | فاعل | 10.520 | 6.104 | de handelende; staat in rafʿ | 11 |
-| `Pred` | خبر | 2.955 | 1.444 | wat er over de mubtadaʾ gezegd wordt | 6 |
-| `Adj` | صفة | 2.976 | 758 | wat een eigenschap toekent en zijn woord in vier dingen volgt | 19 |
-| `circ` | حال | 1.257 | 686 | de toestand waarin de handeling zich voltrekt | 15 |
-| `root` | root | 13.646 | 520 | de kern waar de rest van de zin aan hangt | 5 |
-| `sub` | صلة | 4.039 | 310 | de zin die een ism mawṣūl zijn inhoud geeft | 20 |
-| `Pass` | نائب فاعل | 826 | 255 | wat de plaats van de fāʿil inneemt als die niet genoemd wordt | 12 |
-| `Obj` | مفعول به | 10.627 | 225 | degene aan wie de handeling voltrokken wordt | 13 |
-| `pred<<in>>` | خبر إن | 1.304 | 154 | wat إنّ in rafʿ laat | 9 |
-| `cog` | مفعول مطلق | 331 | 93 | de maṣdar van het werkwoord zelf, ter versterking | 14 |
-| `pred <<kan>>` | خبر كان | 819 | 86 | wat كان in naṣb zet: zijn ḫabar | 8 |
-| `subj <<kan>>` | اسم كان | 716 | 81 | wat كان in rafʿ laat: zijn ism | 8 |
+| `Subj` | فاعل | 6.104 | 55% |
+| `Pred` | خبر | 1.444 | 13% |
+| `Adj` | صفة | 758 | 7% |
+| `circ` | حال | 686 | 6% |
+| `root` | root | 520 | 5% |
+| `sub` | صلة | 310 | 3% |
+| `Pass` | نائب فاعل | 255 | 2% |
+| `Obj` | مفعول به | 225 | 2% |
+| `pred<<in>>` | خبر إن | 154 | 1% |
+| `cog` | مفعول مطلق | 93 | 1% |
+| `pred <<kan>>` | خبر كان | 86 | 1% |
+| `subj <<kan>>` | اسم كان | 81 | 1% |
 
 11.157 geponeerde elementen in totaal, waarvan 6.673 met een woord ingevuld en 4.484 alleen als lege positie.
 
@@ -1394,7 +1394,7 @@ de wens van de verdoemden in 6:27 hun belofte omvat of ernaast staat.
 
 Dat is de sterkste illustratie die er bestaat van waar dit vak over gaat. De
 iʿrāb is niet de administratie achteraf van een zin die er al was. De iʿrāb
-ís de zin. En dat twee ononderbroken overleveringen op deze zevenendertig
+ís de zin. En dat twee ononderbroken overleveringen op deze achtendertig
 plaatsen twee verschillende zinnen doorgeven — elk sluitend, elk klassiek
 Arabisch, elk de Qoeraan — is niet een probleem dat een grammaticaboek moet
 wegpoetsen. Het is het mooiste dat een grammaticaboek te laten heeft.
@@ -1415,7 +1415,7 @@ Elke tabel is met een commando te reproduceren:
 | de fāʿil naar soort (h. 11) | `python3 nahw_examples.py faail --markdown` |
 | voorbeelden van één relatie | `python3 nahw_examples.py rel Pred --markdown` |
 | de 38 iʿrāb-verschillen (h. 22) | `python3 nahw_examples.py irab-book --markdown` |
-| de 10 die het niet zijn (h. 22) | `python3 nahw_examples.py irab-mabni --markdown` |
+| de 4 die het niet zijn (h. 22) | `python3 nahw_examples.py irab-mabni --markdown` |
 
 En `python3 validate.py` leest het boek terug: de controle `nahw book examples`
 zoekt elk voorbeeld en elk geciteerd woord opnieuw op in de database, zodat een
