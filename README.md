@@ -27,7 +27,9 @@ one SQLite file. Two files at the root are outside that:
 `quran_analysis.ipynb`, an exploratory notebook from before the schema
 settled, which needs pandas/numpy/matplotlib and is in no pipeline step;
 and `unrar-0.4-py3-none-any.whl`, a third-party wheel nothing in the repo
-references. Neither is needed to build or query the database.
+references. Neither is needed to build or query the database. The film in
+`video/` is drawn with node, playwright and ffmpeg; the part of
+`sarf_video.py` that reads the database is standard library like the rest.
 
 ## Quick start
 
@@ -912,6 +914,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `riwaya_sarf.py` | which (root, form) pairs and which abwab stand in only one of the two riwayat, in both directions; `--only`, `--bab`, `--markdown` for the tables in `docs/sarf-nl.md` ch. 8 |
 | `analyses.py` | reproduces every finding in `BEVINDINGEN.md` (`--all`, or one by name); `mushaf` counts what the eight source packages encode, which is where the transliteration's rules come from |
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
+| `sarf_video.py` | the film of the sarf book: writes `video/sarf_data.js` (every count and Quranic example the film shows) from the database, then renders `video/sarf.mp4` with `video/render.cjs`; `--data` for the data alone, `--stills` for single frames |
 | `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `faail`, `rel <label>`, `irab-diff`, `irab-book`, `irab-mabni` |
 
 `docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
@@ -922,6 +925,19 @@ hand.
 `docs/sarf-nl.md` is a textbook of Arabic morphology (sarf) in Dutch, in
 twenty-one chapters from the definition of a word to i'lal, with its examples
 and counts drawn from this database. An English version is planned.
+
+`video/` holds a film of that book: about five silent minutes in seventeen
+scenes, Dutch on screen, with root letters, added letters and the vowel that
+decides a form each in their own colour. `video/sarf.html` is the film itself
+and plays in any browser; `render.cjs` draws it frame by frame into an mp4.
+Its figures and its Quranic examples sit in `video/sarf_data.js`, which
+`sarf_video.py` writes from the database and the `film figures` check in
+`validate.py` reads back. A claim the film makes in words -- that both of the
+two commonest verbs are weak, that no root fills the whole paradigm -- is
+tested by the script, which stops when the data no longer bears it out. The
+mp4 is not committed: a video does not compress against its previous
+version, so every render would add its full size to the history, and one
+command makes it again.
 
 `docs/nahw-nl.md` is its companion on syntax (nahw), in twenty-two chapters
 from i'rab and bina' to the sentence as a building block. Its relation counts

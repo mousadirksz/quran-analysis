@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ṣarf — de vormleer van het Arabisch</title>
+<!--
+  The page the film is drawn from. Opened in a browser it plays in real time:
+  space or a click pauses, the arrow keys skip five seconds, and #t=95 in the
+  address starts at 95 s. render.cjs drives it frame by frame instead.
+
+  Everything on screen is a function of one number, the time, so a frame can
+  be drawn in any order and by any number of workers. The figures come from
+  sarf_data.js, which sarf_video.py writes from quran.db; nothing here is a
+  count typed by hand.
+
+  Markup conventions:
+    data-dur on a .scene   its length in seconds; scenes follow one another
+    data-t, data-d         when an element comes in (scene time) and how long it takes
+    data-a                 how: up (default), fade, pop, zoom, grow, move, barx,
+                           wipe, count, draw, or none (there from the start)
+    data-out               when it leaves again
+    data-k                 fill with this value from SARF ("roots.total")
+    data-m                 colour an Arabic word letter by letter: r root letter,
+                           z added letter, v vowel that matters, w weak letter,
+                           . as is; digits and a-h also link letters to a pattern
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<script src="sarf_data.js"></script>
+<style>
+:root{
+  --ink:#ece6d8; --soft:#c9d1dc; --muted:#94a1b5; --dim:#6f7c90;
+  --gold:#f2b544; --gold2:#c99a43; --teal:#45c4b5; --rose:#f27a8d;
+  --blue:#7fb2f0; --coral:#f08f6e; --violet:#b39af0;
+  --card:rgba(255,255,255,.045); --edge:rgba(255,255,255,.085);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#05080f}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;
+  background:radial-gradient(ellipse 85% 75% at 50% 42%,#16243c 0%,#0e182b 52%,#080d18 100%);
+  color:var(--ink);font-family:Inter,sans-serif;font-size:32px;line-height:1.4;
+  -webkit-font-smoothing:antialiased}
+#pattern{position:absolute;left:-180px;top:-180px;width:2280px;height:1440px;opacity:.05;background-size:180px 180px}
+#vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(0,0,0,.5) 100%)}
+#progress{position:absolute;left:0;bottom:0;width:100%;height:4px;opacity:.8;
+  background:linear-gradient(90deg,var(--gold2),var(--gold));transform-origin:0 50%}
+#hud{position:fixed;right:10px;bottom:10px;font:13px/1 Inter,sans-serif;color:#7f8ca0}
+
+.scene{position:absolute;inset:0;padding:72px 120px 0;visibility:hidden}
+.tag{font-size:20px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold2)}
+h2{font-size:56px;line-height:1.15;font-weight:700;letter-spacing:-.012em;margin-top:12px}
+h2 em{font-style:normal;color:var(--gold)}
+h2 .ar{font-size:1.25em;line-height:1}
+.sub{font-size:29px;color:var(--muted);margin-top:8px}
+.ar{font-family:Amiri,serif;direction:rtl;unicode-bidi:isolate;font-weight:400}
+.inl{font-size:1.4em;line-height:1}
+.r{color:var(--gold)} .z{color:var(--teal)} .v,.w{color:var(--rose)}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:22px}
+.cap{position:absolute;left:170px;right:170px;bottom:70px;text-align:center;font-size:34px;
+  line-height:1.9;color:var(--soft)}
+.cap b{color:var(--ink);font-weight:600}
+.cap .inl{font-size:1.3em}
+.ref{font-size:22px;color:var(--dim);letter-spacing:.02em}
+.ref .ar{font-size:1.45em;color:var(--soft)}
+.legend{position:absolute;right:120px;top:84px;font-size:24px;color:var(--muted);display:flex;gap:30px;align-items:center}
+.legend i{display:inline-block;width:16px;height:16px;border-radius:50%;margin-right:10px;vertical-align:-1px}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* 0 title */
+.hero{font-size:290px;line-height:1;color:var(--gold);text-shadow:0 0 70px rgba(242,181,68,.28);margin-top:-30px}
+.t1{font-size:88px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-top:18px}
+.t2{font-size:40px;color:var(--muted);margin-top:4px}
+.rule{width:140px;height:3px;background:var(--gold);margin:34px 0 24px;border-radius:2px}
+.t3{font-size:28px;color:var(--muted)}
+
+/* 1 two subjects */
+.duo{display:flex;gap:44px;justify-content:center;margin-top:76px}
+.pane{width:790px;padding:30px 48px 40px}
+.pword{font-size:116px;line-height:1.2;text-align:left}
+.pname{font-size:44px;font-weight:700}
+.pname span{font-weight:400;color:var(--muted)}
+.pdesc{font-size:29px;color:var(--muted);margin-top:10px;line-height:1.42;height:84px}
+.pq{font-size:33px;margin-top:30px}
+.pq .inl{font-size:1.55em}
+
+/* 2 three kinds */
+.trio{display:flex;gap:36px;justify-content:center;margin-top:42px}
+.kind{width:540px;padding:22px 36px 28px;border-top:4px solid var(--c);text-align:center}
+.kname{font-size:96px;line-height:1.55;color:var(--c)}
+.klabel{font-size:36px;font-weight:700}
+.kex{font-size:48px;line-height:1.6;margin-top:8px}
+.ksign{font-size:25px;color:var(--muted);margin-top:16px}
+.ksign .inl{font-size:1.5em;color:var(--soft)}
+.stackbox{position:absolute;left:220px;right:220px;top:700px}
+.stacklabel{font-size:28px;color:var(--muted);margin-bottom:12px}
+.stacklabel b{color:var(--ink)}
+.stack{display:flex;height:66px;border-radius:12px;overflow:hidden}
+.seg{display:flex;align-items:center;padding-left:20px;color:#0b1220;font-weight:700;font-size:27px;white-space:nowrap}
+
+/* 3 one word, three kalimat */
+.split{position:absolute;left:0;right:0;top:250px;height:400px}
+.joined{position:absolute;left:0;right:0;text-align:center;font-size:220px;line-height:1.45}
+.parts{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:110px}
+.part{text-align:center}
+.pw{font-size:220px;line-height:1.45}
+.pl{font-size:30px;color:var(--muted);margin-top:14px}
+.pl b{color:var(--ink);font-weight:600}
+.gloss{position:absolute;left:0;right:0;top:770px;text-align:center;font-size:32px;color:var(--muted)}
+
+/* 4 the root */
+.rootbadge{position:absolute;left:0;right:0;top:204px;text-align:center}
+.rletters{font-size:112px;line-height:1.2;word-spacing:.18em;text-shadow:0 0 50px rgba(242,181,68,.3)}
+.rb-sub{font-size:28px;color:var(--muted);margin-top:-6px}
+.fam{position:absolute;left:190px;right:190px;top:424px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 26px}
+.fw{padding:8px 20px 12px;text-align:center}
+.fword{font-size:72px;line-height:1.35}
+.fpat{font-size:34px;line-height:1.35;color:var(--muted)}
+.fmean{font-size:26px;color:var(--soft)}
+
+/* 5 the mizan */
+.fal{position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;gap:150px}
+.fl{text-align:center}
+.flet{font-size:250px;line-height:1.55;text-shadow:0 0 60px rgba(242,181,68,.3)}
+.flab{font-size:34px;font-weight:600}
+.flab span{display:block;font-size:26px;font-weight:400;color:var(--muted)}
+.weigh{position:absolute;left:0;right:0;top:250px;height:600px}
+.weigh .ww,.weigh .wp{position:absolute;left:0;right:0;text-align:center;font-size:150px;line-height:1.25}
+.weigh .ww{top:0}
+.weigh .wp{top:330px;color:var(--muted)}
+.weigh svg{position:absolute;left:0;top:0;overflow:visible}
+.wrule{position:absolute;left:0;right:0;top:556px;text-align:center;font-size:30px;color:var(--soft)}
+.wrule .inl{font-size:1.5em}
+.wrule b{display:inline-block;width:46px;height:46px;line-height:46px;border-radius:50%;background:var(--gold);color:#0b1220;font-size:26px;margin-right:14px;vertical-align:2px}
+
+/* 6 ten letters */
+.mnemo{position:absolute;left:0;right:0;top:218px;text-align:center;font-size:124px;line-height:1.3}
+.mnemo-sub{position:absolute;left:0;right:0;top:384px;text-align:center;font-size:30px;color:var(--muted)}
+.ten{position:absolute;left:0;right:0;top:450px;display:flex;justify-content:center;gap:22px}
+.tl{width:92px;height:92px;border-radius:50%;border:2px solid rgba(69,196,181,.55);background:rgba(69,196,181,.08);
+  color:var(--teal);font-size:56px;line-height:92px;text-align:center}
+.ex{position:absolute;left:300px;right:300px;top:590px;padding:22px 40px;display:flex;align-items:center;gap:46px}
+.exw{font-size:110px;line-height:1.25}
+.ext{font-size:30px;color:var(--soft);line-height:2.05}
+.ext .inl{font-size:1.45em}
+
+/* 7 the verb */
+.tri3{display:flex;gap:34px;justify-content:center;margin-top:40px}
+.tc{width:540px;padding:20px 36px 26px;text-align:center}
+.tname{font-size:30px;font-weight:600;color:var(--soft);margin-bottom:16px}
+.tname .inl{color:var(--gold2);margin-right:10px}
+.tword{font-size:104px;line-height:1.6}
+.tmean{font-size:28px;color:var(--muted)}
+.tmean i{color:var(--soft)}
+.tpre{font-size:23px;color:var(--dim);margin-top:4px;height:34px}
+.tpre .inl{font-size:1.45em;color:var(--teal)}
+.tcount{margin-top:10px;font-size:24px;color:var(--muted)}
+.tcount b{display:block;font-size:58px;line-height:1.1;font-weight:700;color:var(--ink)}
+.tbar{height:8px;border-radius:4px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--gold);transform-origin:0 50%}
+.chain{position:absolute;left:0;right:0;top:748px;display:flex;justify-content:center;align-items:center;gap:36px}
+.chain .ar{font-size:74px;line-height:1.3}
+.arrow{font-size:52px;color:var(--dim)}
+
+/* 8 the abwab */
+.tbl{position:absolute;left:120px;top:262px}
+.tr{display:grid;align-items:center;border-bottom:1px solid var(--edge);position:relative}
+.th{font-size:22px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border-bottom-color:rgba(255,255,255,.16)}
+.abwab .tr{grid-template-columns:90px 380px 400px 130px;height:92px}
+.abwab .th{height:46px}
+.abwab .bn{font-size:34px;font-weight:700;color:var(--gold2);padding-left:12px}
+.abwab .pat,.abwab .exa{font-size:46px;line-height:1.2;text-align:center}
+.abwab .pat{color:var(--soft)}
+.abwab .n{font-size:32px;font-weight:600;text-align:right;padding-right:10px}
+.abwab .lat{font-family:Inter;font-size:24px;color:var(--dim);direction:ltr}
+.hlrow{position:absolute;inset:3px -12px;border:2px solid var(--rose);border-radius:14px}
+.riw{position:absolute;left:1200px;right:120px;top:452px;padding:24px 34px 26px}
+.riw h3{font-size:30px;font-weight:700}
+.riw .rr{display:flex;align-items:center;justify-content:space-between;margin-top:14px;font-size:27px;color:var(--soft)}
+.riw .rr .ar{font-size:62px;line-height:1.55;color:var(--ink)}
+.riw .rr em{font-style:normal;color:var(--muted);width:150px;text-align:right}
+.riw .ref{margin-top:8px}
+
+/* 9 derived forms */
+.forms .tr{grid-template-columns:90px 270px 420px 330px 460px;height:62px}
+.forms .th{height:44px;font-size:19px}
+.forms .fn{font-size:28px;font-weight:700;color:var(--gold2);padding-left:10px}
+.forms .ar{font-size:42px;line-height:1.2;text-align:center}
+.forms .exa{display:flex;align-items:center;justify-content:flex-start;gap:16px}
+.forms .exa .ar{min-width:190px;text-align:center}
+.forms .exa span.gl{font-size:22px;color:var(--muted);white-space:nowrap}
+.forms .mean{font-size:25px;color:var(--soft)}
+.forms .barcell{display:flex;align-items:center;gap:14px}
+.forms .track{width:330px;height:16px;border-radius:8px;background:rgba(255,255,255,.06);overflow:hidden}
+.forms .track i{display:block;height:100%;background:var(--gold);transform-origin:0 50%;border-radius:8px}
+.forms .num{font-size:26px;font-weight:600;width:96px;text-align:right}
+.fnote{position:absolute;left:130px;top:850px;font-size:23px;color:var(--dim)}
+
+/* 10 sound and weak */
+.types .tr{grid-template-columns:470px 200px 800px 210px;height:78px;border-bottom:none}
+.types .tn{font-size:31px;font-weight:700}
+.types .tn span{font-weight:400;color:var(--muted);font-size:25px;margin-left:10px}
+.types .ar{font-size:54px;line-height:1.2;text-align:center;word-spacing:.12em}
+.types .track{height:34px;border-radius:8px;background:rgba(255,255,255,.05);overflow:hidden}
+.types .track i{display:block;height:100%;transform-origin:0 50%;border-radius:8px}
+.types .num{font-size:30px;font-weight:600;text-align:right}
+.types .num span{font-size:24px;font-weight:400;color:var(--muted);margin-left:10px}
+.tnote{position:absolute;left:120px;top:236px;font-size:25px;color:var(--muted)}
+
+/* 11 the weak letter at work */
+.weak{position:absolute;left:120px;right:120px;top:236px;display:grid;grid-template-columns:1fr 1fr;gap:24px 28px}
+.wk{padding:18px 34px 20px;height:336px}
+.wk h3{font-size:29px;font-weight:700}
+.wk h3 span{font-weight:400;color:var(--muted)}
+.wk h3 .inl{color:var(--gold);margin-left:8px}
+.wchain{display:flex;align-items:center;gap:24px;margin-top:14px;height:124px}
+.wchain .ar{font-size:68px;line-height:1.3}
+.wchain .arrow{font-size:40px}
+.wnote{font-size:24px;color:var(--soft);line-height:1.8}
+.wk .ref{margin-top:4px}
+
+/* 12 conjugation */
+.conj{position:absolute;left:330px;top:232px}
+.conj .tr{grid-template-columns:200px 400px 400px 400px;height:100px}
+.conj .th{height:78px;padding-bottom:10px;text-transform:none;letter-spacing:0;font-size:26px;font-weight:600;color:var(--soft)}
+.conj .th span{display:block;font-size:19px;font-weight:400;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.conj .pl2{font-size:28px;color:var(--muted);font-weight:600}
+.conj .cell{font-size:58px;line-height:1.2;text-align:center}
+.conj .none{font-family:Inter;font-size:30px;color:var(--dim);text-align:center;direction:ltr}
+
+/* 13 majhul */
+.mj{position:absolute;left:0;right:0;top:226px;display:flex;flex-direction:column;align-items:center;gap:32px}
+.mjrow{display:grid;grid-template-columns:420px 120px 420px;align-items:center;text-align:center}
+.mjrow .ar{font-size:90px;line-height:1.3}
+.mjg{font-size:27px;color:var(--muted);margin-top:2px}
+.mjnote{position:absolute;left:220px;right:220px;top:584px;text-align:center;font-size:30px;color:var(--soft);line-height:2}
+.mjnote .inl{font-size:1.45em}
+.mjnote .ref{font-size:22px}
+.mjstats{position:absolute;left:330px;right:330px;top:724px;padding:20px 30px;display:flex;align-items:center;justify-content:space-between}
+.mjstats .big{font-size:30px;color:var(--soft);width:640px;line-height:1.35}
+.mjstats .big b{font-size:52px;color:var(--ink);display:block}
+.mjstats .k3{display:flex;gap:44px;text-align:center}
+.mjstats .k3 div{font-size:24px;color:var(--muted)}
+.mjstats .k3 b{display:block;font-size:46px;color:var(--ink);font-weight:700;line-height:1.2}
+
+/* 14 one root, a family */
+.ilm{position:absolute;left:150px;right:150px;top:226px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 24px}
+.iw{height:180px;padding:6px 28px 8px 18px;display:grid;grid-template-columns:1fr 236px;align-items:center}
+.iw .ar.word{font-size:80px;line-height:1.3;text-align:center}
+.iw .side{text-align:right}
+.iw .pat{font-size:32px;line-height:1.45;color:var(--muted)}
+.iw .n{font-size:34px;font-weight:700;line-height:1.2;color:var(--ink)}
+.iw .n span{font-size:20px;font-weight:400;color:var(--muted)}
+.iw .lab{font-size:22px;line-height:1.35;color:var(--soft);margin-top:6px}
+.iw .lab span{display:block;color:var(--muted)}
+
+/* 15 one vowel */
+.vs{position:absolute;left:0;right:0;display:grid;grid-template-columns:520px 300px 520px;justify-content:center;align-items:center;text-align:center}
+.vs .big{font-size:110px;line-height:1.5}
+.vs .g .inl{font-size:1.5em}
+.vs .g{font-size:28px;color:var(--soft);margin-top:8px}
+.vs .mid{font-size:26px;color:var(--rose);font-weight:600}
+.vs .mid span{display:block;font-size:22px;color:var(--muted);font-weight:400}
+.names{position:absolute;left:0;right:0;top:796px;text-align:center;font-size:28px;color:var(--muted)}
+.names .ar{display:block;font-size:54px;color:var(--ink);line-height:1.7}
+
+/* 16 close */
+.quote{font-size:48px;line-height:1.35;font-weight:600;text-align:center;max-width:1400px;margin-top:10px;text-wrap:balance}
+.credits{position:absolute;left:0;right:0;bottom:96px;text-align:center;font-size:24px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="pattern"></div>
+<div id="vignette"></div>
+
+<!-- 0 · title -->
+<section class="scene" data-dur="7">
+  <div class="center">
+    <div class="ar hero" data-t=".1" data-a="zoom" data-d="1.8">صَرْف</div>
+    <div class="t1" data-t="1.2">Ṣarf</div>
+    <div class="t2" data-t="1.6">de vormleer van het Arabisch</div>
+    <div class="rule" data-t="2.2" data-a="grow" data-d="1"></div>
+    <div class="t3" data-t="2.6" data-a="fade">een kort overzicht van het lesboek, met voorbeelden en tellingen uit de Qoeraan</div>
+  </div>
+</section>
+
+<!-- 1 · two subjects -->
+<section class="scene" data-dur="15">
+  <div class="tag" data-t=".2" data-a="fade">Vooraf</div>
+  <h2 data-t=".35">Twee vakken</h2>
+  <div class="duo">
+    <div class="card pane" data-t="1">
+      <div class="ar pword r">صَرْف</div>
+      <div class="pname">Ṣarf <span>· de vormleer</span></div>
+      <div class="pdesc">het woord op zichzelf: waar het vandaan komt en hoe het gebouwd is</div>
+      <div class="pq" data-t="2.3">Waarom <span class="ar inl">مَكْتُوب</span> en niet <span class="ar inl">مَكْتَب</span>?</div>
+    </div>
+    <div class="card pane" data-t="3.6">
+      <div class="ar pword" style="color:var(--blue)">نَحْو</div>
+      <div class="pname">Naḥw <span>· de zinsleer</span></div>
+      <div class="pdesc">het woord in de zin: welke plaats het inneemt en welke uitgang het daardoor krijgt</div>
+      <div class="pq" data-t="4.9">Waarom <span class="ar inl">ٱلْحَمْدُ</span> met een ḍamma?</div>
+    </div>
+  </div>
+  <p class="cap" data-t="8">Ṣarf kijkt naar het woord vóórdat het de zin in gaat, naḥw naar wat de zin ermee doet. Dit filmpje gaat over de ṣarf.</p>
+</section>
+
+<!-- 2 · three kinds of word -->
+<section class="scene" data-dur="16">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 1 · Wat zijn woorden?</div>
+  <h2 data-t=".35">Elk woord is een <em>ism</em>, een <em>fiʿl</em> of een <em>ḥarf</em></h2>
+  <div class="trio">
+    <div class="card kind" data-t="1" style="--c:var(--blue)">
+      <div class="ar kname">اِسْم</div>
+      <div class="klabel">Ism · naamwoord</div>
+      <div class="ar kex">كِتَاب · هُوَ · كَبِير · هَٰذَا</div>
+      <div class="ksign">kan <span class="ar inl">ٱلْ</span> of tanwīn krijgen</div>
+    </div>
+    <div class="card kind" data-t="2.1" style="--c:var(--coral)">
+      <div class="ar kname">فِعْل</div>
+      <div class="klabel">Fiʿl · werkwoord</div>
+      <div class="ar kex">كَتَبَ · يَكْتُبُ · اُكْتُبْ</div>
+      <div class="ksign">kan <span class="ar inl">قَدْ</span> of <span class="ar inl">سَـ</span> vóór zich krijgen</div>
+    </div>
+    <div class="card kind" data-t="3.2" style="--c:var(--violet)">
+      <div class="ar kname">حَرْف</div>
+      <div class="klabel">Ḥarf · partikel</div>
+      <div class="ar kex">فِي · مِنْ · لَمْ · وَ</div>
+      <div class="ksign">heeft geen van die tekens</div>
+    </div>
+  </div>
+  <div class="stackbox" data-t="6.2" data-a="fade">
+    <div class="stacklabel">In de Qoeraan: <b data-k="segments"></b> segmenten</div>
+    <div class="stack" data-t="6.5" data-a="wipe" data-d="1.6">
+      <div class="seg" data-w="kalima_pct.ism" style="background:var(--blue)">ism&nbsp;<span data-k="kalima_pct.ism" data-dec="1"></span>%</div>
+      <div class="seg" data-w="kalima_pct.harf" style="background:var(--violet)">ḥarf&nbsp;<span data-k="kalima_pct.harf" data-dec="1"></span>%</div>
+      <div class="seg" data-w="kalima_pct.fiil" style="background:var(--coral)">fiʿl&nbsp;<span data-k="kalima_pct.fiil" data-dec="1"></span>%</div>
+    </div>
+  </div>
+  <p class="cap" data-t="10">Bijna de helft is ism. De voornaamwoorden alleen al, <b data-k="pronouns"></b>, zijn talrijker dan alle werkwoorden samen: <b data-k="verbs"></b>.</p>
+</section>
+
+<!-- 3 · one written word, three kalimat -->
+<section class="scene" data-dur="10">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 1 · Wat is één woord?</div>
+  <h2 data-t=".35">Eén geschreven woord, drie kalimāt</h2>
+  <div class="gloss" data-t="1.5" data-a="fade">‘en voor hen’</div>
+  <div class="split">
+    <div class="ar joined" data-t="1" data-out="3.1">وَلَهُمْ</div>
+    <div class="parts" dir="rtl">
+      <div class="part" data-t="3" data-a="move" data-x="-140" data-fade="1" data-d="1.1">
+        <div class="ar pw">وَ</div><div class="pl" data-t="4" data-a="fade"><b>ḥarf</b> · en</div></div>
+      <div class="part" data-t="3" data-a="move" data-fade="1" data-d="1.1">
+        <div class="ar pw">لَ</div><div class="pl" data-t="4.3" data-a="fade"><b>ḥarf</b> · voor</div></div>
+      <div class="part" data-t="3" data-a="move" data-x="140" data-fade="1" data-d="1.1">
+        <div class="ar pw">هُمْ</div><div class="pl" data-t="4.6" data-a="fade"><b>ism</b> · hen</div></div>
+    </div>
+  </div>
+  <p class="cap" data-t="5.6"><b data-k="words"></b> geschreven woorden, <b data-k="kalimat"></b> kalimāt: het verschil zit in de vastgeplakte partikels en voornaamwoorden.</p>
+</section>
+
+<!-- 4 · the root -->
+<section class="scene" data-dur="20">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 2 · De wortels van woorden</div>
+  <h2 data-t=".35">Een wortel: drie medeklinkers, één betekenisveld</h2>
+  <div class="legend" data-t="7.4" data-a="fade"><span><i style="background:var(--gold)"></i>wortelletter</span><span><i style="background:var(--teal)"></i>toegevoegde letter</span></div>
+  <div class="rootbadge" data-t=".8" data-a="fade">
+    <div data-t="3" data-a="move" data-y="250" data-s="1.9" data-d="1.4">
+      <div class="ar rletters r">ك ت ب</div>
+    </div>
+    <div class="rb-sub" data-t="4.2" data-a="fade">k-t-b · het veld ‘schrijven’</div>
+  </div>
+  <div class="fam" dir="rtl">
+    <div class="card fw" dir="ltr" data-t="4.6"><div class="ar fword" data-m="rrr">كَتَبَ</div><div class="ar fpat" data-m="rrr">فَعَلَ</div><div class="fmean">hij schreef</div></div>
+    <div class="card fw" dir="ltr" data-t="5"><div class="ar fword" data-m="rzrr">كَاتِب</div><div class="ar fpat" data-m="rzrr">فَاعِل</div><div class="fmean">schrijver</div></div>
+    <div class="card fw" dir="ltr" data-t="5.4"><div class="ar fword" data-m="rrzr">كِتَاب</div><div class="ar fpat" data-m="rrzr">فِعَال</div><div class="fmean">boek</div></div>
+    <div class="card fw" dir="ltr" data-t="5.8"><div class="ar fword" data-m="zrrzr">مَكْتُوب</div><div class="ar fpat" data-m="zrrzr">مَفْعُول</div><div class="fmean">geschreven</div></div>
+    <div class="card fw" dir="ltr" data-t="6.2"><div class="ar fword" data-m="zrrr">مَكْتَب</div><div class="ar fpat" data-m="zrrr">مَفْعَل</div><div class="fmean">bureau, kantoor</div></div>
+    <div class="card fw" dir="ltr" data-t="6.6"><div class="ar fword" data-m="zzzrrr">ٱسْتَكْتَبَ</div><div class="ar fpat" data-m="zzzrrr">ٱسْتَفْعَلَ</div><div class="fmean">hij liet schrijven</div></div>
+  </div>
+  <p class="cap" data-t="10.4" data-out="15.3">De wortel zelf is geen woord en niet uit te spreken. Het patroon bepaalt wat er binnen het veld gezegd wordt.</p>
+  <p class="cap" data-t="15.8">In de Qoeraan staan <b data-k="roots.total"></b> wortels: <b data-k="roots.tri"></b> van drie letters en <b data-k="roots.quad"></b> van vier.</p>
+</section>
+
+<!-- 5 · the mizan -->
+<section class="scene" data-dur="24">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 3 · Al-mīzān aṣ-ṣarfī</div>
+  <h2 data-t=".35">De weegschaal: elk woord gewogen tegen <span class="ar r">ف ع ل</span></h2>
+  <div class="fal" dir="rtl" data-t="0" data-a="none" data-out="4.8">
+    <div class="fl" data-t="1"><div class="ar flet r">ف</div><div class="flab" dir="ltr">fāʾ<span>1e wortelletter</span></div></div>
+    <div class="fl" data-t="1.5"><div class="ar flet r">ع</div><div class="flab" dir="ltr">ʿayn<span>2e wortelletter</span></div></div>
+    <div class="fl" data-t="2"><div class="ar flet r">ل</div><div class="flab" dir="ltr">lām<span>3e wortelletter</span></div></div>
+  </div>
+  <div class="weigh" data-t="5.3" data-a="fade" data-out="9.3">
+    <div class="ar ww" data-m="123">نَصَرَ</div><div class="ar wp" data-m="123">فَعَلَ</div><svg class="links"></svg>
+    <div class="wrule"><b>1</b>De wortelletters worden <span class="ar inl r">ف ع ل</span></div>
+  </div>
+  <div class="weigh" data-t="9.6" data-a="fade" data-out="13.4">
+    <div class="ar ww" data-m="123">عَلِمَ</div><div class="ar wp" data-m="123">فَعِلَ</div><svg class="links"></svg>
+    <div class="wrule"><b>2</b>De klinkers gaan precies mee: <span class="ar inl">فَعِلَ</span>, niet <span class="ar inl">فَعَلَ</span></div>
+  </div>
+  <div class="weigh" data-t="13.7" data-a="fade" data-out="17.4">
+    <div class="ar ww" data-m="a123">أَكْرَمَ</div><div class="ar wp" data-m="a123">أَفْعَلَ</div><svg class="links"></svg>
+    <div class="wrule"><b>3</b>Toegevoegde letters blijven staan</div>
+  </div>
+  <div class="weigh" data-t="17.7" data-a="fade">
+    <div class="ar ww" data-m="abc123">مُسْتَغْفِر</div><div class="ar wp" data-m="abc123">مُسْتَفْعِل</div><svg class="links"></svg>
+    <div class="wrule"><b>3</b>… ook als het er drie zijn</div>
+  </div>
+  <p class="cap" data-t="19.4">Wie de weegschaal beheerst, weet van een onbekend woord welke vorm het heeft, en daarmee al veel van zijn betekenis.</p>
+</section>
+
+<!-- 6 · the ten letters -->
+<section class="scene" data-dur="14">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 4 · Radicalen en toegevoegde letters</div>
+  <h2 data-t=".35">Toevoegen kan maar met tien letters</h2>
+  <div class="ar mnemo z" data-t="1" data-a="zoom" data-d="1.2">سَأَلْتُمُونِيهَا</div>
+  <div class="mnemo-sub" data-t="1.9" data-a="fade">saʾaltumūnīhā · ‘jullie vroegen ze mij’</div>
+  <div class="ten" dir="rtl" id="ten"></div>
+  <div class="card ex" data-t="6.4">
+    <div class="ar exw" data-m="zrrrz">مَدْرَسَة</div>
+    <div class="ext">wortel <span class="ar inl r">د ر س</span>, zoals in <span class="ar inl">دَرَسَ · دَرْس · دَارِس</span><br>
+      de <span class="ar inl z">م</span> is toegevoegd, de <span class="ar inl z">ة</span> is de vrouwelijke uitgang<br>
+      weegt <span class="ar inl" data-m="zrrrz">مَفْعَلَة</span></div>
+  </div>
+  <p class="cap" data-t="9.6">Maar niet elke letter uit dat rijtje ís toegevoegd: in <span class="ar inl" data-m="rrr">سَأَلَ</span> zijn alle drie letters wortelletters.</p>
+</section>
+
+<!-- 7 · the verb -->
+<section class="scene" data-dur="18">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 5 · Māḍī, muḍāriʿ, amr</div>
+  <h2 data-t=".35">Het werkwoord: voltooid, lopend, bevolen</h2>
+  <div class="tri3">
+    <div class="card tc" data-t="1">
+      <div class="tname"><span class="ar inl">ٱلْمَاضِي</span>al-māḍī</div>
+      <div class="ar tword" data-m="rrr">كَتَبَ</div>
+      <div class="tmean">voltooid · <i>hij schreef</i></div>
+      <div class="tpre"></div>
+      <div class="tcount"><b data-t="6.2" data-a="count" data-d="1.6" data-k="aspect.PERF"></b><span data-t="6.2" data-a="fade">māḍī-vormen in de Qoeraan</span></div>
+      <div class="tbar"><i data-t="6.2" data-a="barx" data-d="1.6" data-k="aspect.PERF" data-of="aspect.PERF"></i></div>
+    </div>
+    <div class="card tc" data-t="2">
+      <div class="tname"><span class="ar inl">ٱلْمُضَارِع</span>al-muḍāriʿ</div>
+      <div class="ar tword" data-m="zrrr">يَكْتُبُ</div>
+      <div class="tmean">lopend of komend · <i>hij schrijft</i></div>
+      <div class="tpre" data-t="3.4" data-a="fade">voorvoegsel <span class="ar inl">أ ن ي ت</span></div>
+      <div class="tcount"><b data-t="6.6" data-a="count" data-d="1.6" data-k="aspect.IMPF"></b><span data-t="6.6" data-a="fade">muḍāriʿ-vormen in de Qoeraan</span></div>
+      <div class="tbar"><i data-t="6.6" data-a="barx" data-d="1.6" data-k="aspect.IMPF" data-of="aspect.PERF"></i></div>
+    </div>
+    <div class="card tc" data-t="3">
+      <div class="tname"><span class="ar inl">ٱلْأَمْر</span>al-amr</div>
+      <div class="ar tword" data-m="zrrr">اُكْتُبْ</div>
+      <div class="tmean">bevel · <i>schrijf!</i></div>
+      <div class="tpre"></div>
+      <div class="tcount"><b data-t="7" data-a="count" data-d="1.6" data-k="aspect.IMPV"></b><span data-t="7" data-a="fade">amr-vormen in de Qoeraan</span></div>
+      <div class="tbar"><i data-t="7" data-a="barx" data-d="1.6" data-k="aspect.IMPV" data-of="aspect.PERF"></i></div>
+    </div>
+  </div>
+  <div class="chain" dir="ltr">
+    <div class="ar" data-t="11" data-m="zrrr">يَكْتُبُ</div><div class="arrow" data-t="11.5" data-a="fade">→</div>
+    <div class="ar" data-t="11.8" data-m="rrr">كْتُبْ</div><div class="arrow" data-t="12.3" data-a="fade">→</div>
+    <div class="ar" data-t="12.6" data-m="zrrr">اُكْتُبْ</div>
+  </div>
+  <p class="cap" data-t="12.2">De amr: haal het voorvoegsel weg. Begint wat overblijft met een sukūn, dan komt er een hamzat al-waṣl voor.</p>
+</section>
+
+<!-- 8 · the six abwab -->
+<section class="scene" data-dur="24">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 8 · Thulāthī mujarrad</div>
+  <h2 data-t=".35">Zes abwāb: het verschil zit in één klinker</h2>
+  <div class="sub" data-t=".9" data-a="fade">de klinker op de <span class="v">ʿayn</span>, de tweede wortelletter, in de māḍī en de muḍāriʿ</div>
+  <div class="tbl abwab" id="abwab"></div>
+  <div class="card riw" data-t="12.4">
+    <h3>Bāb 6 hangt aan de riwaaya</h3>
+    <div class="rr">Ḥafṣ leest <span class="ar" data-k="warsh_bab6.hafs" data-mk="warsh_bab6.hafs_m"></span><em>bāb 4</em></div>
+    <div class="rr">Warsh leest <span class="ar" data-k="warsh_bab6.warsh" data-mk="warsh_bab6.warsh_m"></span><em>bāb 6</em></div>
+    <div class="ref"><span data-k="warsh_bab6.ref"></span>, en zo op <span data-k="warsh_bab6.places"></span> plaatsen</div>
+  </div>
+  <p class="cap" data-t="18.8">Bāb 5, een blijvende eigenschap, is zeldzaam: in de Qoeraan alleen <span class="ar inl" data-k="abwab.4.madi"></span> — <span data-k="abwab.4.n"></span> keer.</p>
+</section>
+
+<!-- 9 · the derived forms -->
+<section class="scene" data-dur="24">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 8 · Thulāthī mazīd</div>
+  <h2 data-t=".35">Uitgebreide vormen: letters erbij, betekenis erbij</h2>
+  <div class="tbl forms" id="forms" style="top:236px"></div>
+  <div class="fnote" data-t="9" data-a="fade">Daarnaast de kale vorm I met <span data-k="forms.I"></span> werkwoorden, en vorm XII met <span data-k="forms.XII"></span>.</div>
+  <p class="cap" data-t="12.5">Vorm IV, de causatieve, is veruit de grootste uitgebreide vorm. De taal kent vijftien vormen; de Qoeraan gebruikt er <span data-k="forms_used"></span> als werkwoord.</p>
+</section>
+
+<!-- 10 · sound and weak -->
+<section class="scene" data-dur="18">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 9 · Ṣaḥīḥ en muʿtall</div>
+  <h2 data-t=".35">Gaaf of zwak: het hangt aan de wortelletters</h2>
+  <div class="legend" data-t="1" data-a="fade"><span><i style="background:var(--blue)"></i>ṣaḥīḥ · gaaf</span><span><i style="background:var(--rose)"></i>muʿtall · met <span class="ar inl">و</span> of <span class="ar inl">ي</span></span></div>
+  <div class="tnote" data-t="1" data-a="fade">de <span data-k="roots.tri"></span> drieletterige wortels van de Qoeraan</div>
+  <div class="tbl types" id="types" style="top:290px"></div>
+  <p class="cap" data-t="10.2">Ruim de helft is volkomen regelmatig. Maar de twee meest gebruikte werkwoorden van de Qoeraan zijn allebei zwak: <span class="ar inl" data-k="top_verbs.0.word"></span> (<span data-k="top_verbs.0.n"></span>×) en <span class="ar inl" data-k="top_verbs.1.word"></span> (<span data-k="top_verbs.1.n"></span>×).</p>
+</section>
+
+<!-- 11 · the weak letter at work -->
+<section class="scene" data-dur="24">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 9 en 21 · Muʿtall en iʿlāl</div>
+  <h2 data-t=".35">Wat een zwakke letter doet</h2>
+  <div class="weak">
+    <div class="card wk" data-t="1">
+      <h3>Ajwaf <span>· tweede letter zwak</span><span class="ar inl">ق و ل</span></h3>
+      <div class="wchain" dir="ltr">
+        <div class="ar" data-t="1.6" data-m="rwr">قَوَلَ</div><div class="arrow" data-t="2" data-a="fade">→</div>
+        <div class="ar" data-t="2.3" data-m="rwr">قَالَ</div><div class="arrow" data-t="2.7" data-a="fade">→</div>
+        <div class="ar" data-t="3" data-m="rrz">قُلْتُ</div>
+      </div>
+      <div class="wnote">De <span class="ar inl w">و</span> wordt een lange ā, en kort in vóór een medeklinker. De ḍamma van <span class="ar inl">قُلْتُ</span> verraadt de <span class="ar inl w">و</span>.</div>
+      <div class="ref">In de Qoeraan: <span class="ar" data-k="at.qala.word"></span> <span data-k="at.qala.ref"></span> · <span class="ar" data-k="at.qultum.word"></span> <span data-k="at.qultum.ref"></span></div>
+    </div>
+    <div class="card wk" data-t="5.6">
+      <h3>Mithāl <span>· eerste letter zwak</span><span class="ar inl">و ع د</span></h3>
+      <div class="wchain" dir="ltr">
+        <div class="ar" data-t="6.2" data-m="wrr">وَعَدَ</div><div class="arrow" data-t="6.6" data-a="fade">→</div>
+        <div class="ar" data-t="6.9" data-m="zrr">يَعِدُ</div>
+      </div>
+      <div class="wnote">De <span class="ar inl w">و</span> valt weg in de muḍāriʿ: niet <span class="ar inl">يَوْعِدُ</span> maar <span class="ar inl">يَعِدُ</span>.</div>
+      <div class="ref">In de Qoeraan: <span class="ar" data-k="at.yaidu.word"></span> <span data-k="at.yaidu.ref"></span></div>
+    </div>
+    <div class="card wk" data-t="10.2">
+      <h3>Nāqiṣ <span>· derde letter zwak</span><span class="ar inl">د ع و</span></h3>
+      <div class="wchain" dir="ltr">
+        <div class="ar" data-t="10.8" data-m="rrw">دَعَا</div><div class="arrow" data-t="11.2" data-a="fade">→</div>
+        <div class="ar" data-t="11.5" data-m="rrwz">دَعَوْتُ</div>
+      </div>
+      <div class="wnote">Aan het eind werd de <span class="ar inl w">و</span> een ā; vóór een medeklinker komt hij terug.</div>
+      <div class="ref">In de Qoeraan: <span class="ar" data-k="at.dacawtu.word"></span> <span data-k="at.dacawtu.ref"></span></div>
+    </div>
+    <div class="card wk" data-t="14.8">
+      <h3>Lafīf <span>· eerste en derde zwak</span><span class="ar inl">و ق ي</span></h3>
+      <div class="wchain" dir="ltr">
+        <div class="ar" data-t="15.4" data-m="wrw">وَقَى</div><div class="arrow" data-t="15.8" data-a="fade">→</div>
+        <div class="ar" data-t="16.1" data-m="zrw">يَقِي</div><div class="arrow" data-t="16.5" data-a="fade">→</div>
+        <div class="ar" data-t="16.8" data-m="r">قِ</div>
+      </div>
+      <div class="wnote">Vooraan een mithāl, achteraan een nāqiṣ. De amr is één letter: het kortste woord van het Arabisch.</div>
+      <div class="ref">In de Qoeraan: <span class="ar" data-k="at.qina.word"></span> <span data-k="at.qina.ref"></span> · <span class="ar" data-k="at.qu.word"></span> <span data-k="at.qu.ref"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · conjugation -->
+<section class="scene" data-dur="20">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 10 · Isnād: vervoeging</div>
+  <h2 data-t=".35">Vervoegen: de uitgang zegt wie het doet</h2>
+  <div class="tbl conj">
+    <div class="tr th" data-t="1" data-a="fade"><div></div><div style="text-align:center">enkelvoud<span>mufrad</span></div><div style="text-align:center">tweevoud<span>muthannā</span></div><div style="text-align:center">meervoud<span>jamʿ</span></div></div>
+    <div class="tr"><div class="pl2" data-t="1.2" data-a="fade">3e m.</div><div class="ar cell" data-t="1.6" data-m="rrr">كَتَبَ</div><div class="ar cell" data-t="3.1" data-m="rrrz">كَتَبَا</div><div class="ar cell" data-t="4.6" data-m="rrrzz">كَتَبُوا</div></div>
+    <div class="tr"><div class="pl2" data-t="1.4" data-a="fade">3e v.</div><div class="ar cell" data-t="1.85" data-m="rrrz">كَتَبَتْ</div><div class="ar cell" data-t="3.35" data-m="rrrzz">كَتَبَتَا</div><div class="ar cell" data-t="4.85" data-m="rrrz">كَتَبْنَ</div></div>
+    <div class="tr"><div class="pl2" data-t="1.6" data-a="fade">2e m.</div><div class="ar cell" data-t="2.1" data-m="rrrz">كَتَبْتَ</div><div class="ar cell" data-t="3.6" data-m="rrrzzz">كَتَبْتُمَا</div><div class="ar cell" data-t="5.1" data-m="rrrzz">كَتَبْتُمْ</div></div>
+    <div class="tr"><div class="pl2" data-t="1.8" data-a="fade">2e v.</div><div class="ar cell" data-t="2.35" data-m="rrrz">كَتَبْتِ</div><div class="ar cell" data-t="3.85" data-m="rrrzzz">كَتَبْتُمَا</div><div class="ar cell" data-t="5.35" data-m="rrrzz">كَتَبْتُنَّ</div></div>
+    <div class="tr"><div class="pl2" data-t="2" data-a="fade">1e</div><div class="ar cell" data-t="2.6" data-m="rrrz">كَتَبْتُ</div><div class="none" data-t="4.1" data-a="fade">—</div><div class="ar cell" data-t="5.6" data-m="rrrzz">كَتَبْنَا</div></div>
+  </div>
+  <p class="cap" data-t="7.8" data-out="13.3">De ب krijgt een sukūn zodra de uitgang met een medeklinker begint: <span class="ar inl" data-m="rrrz">كَتَبْتُ</span>, <span class="ar inl" data-m="rrrzz">كَتَبْنَا</span>.</p>
+  <p class="cap" data-t="13.8">Geen enkele wortel vult in de Qoeraan het hele schema. <span class="ar inl" data-k="fullest.word"></span> komt het verst: <span data-k="fullest.cells"></span> vormen in māḍī, muḍāriʿ en amr samen.</p>
+</section>
+
+<!-- 13 · the majhul -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 11 · Al-mabnī li-l-majhūl</div>
+  <h2 data-t=".35">Majhūl: wie het deed, blijft onbekend</h2>
+  <div class="mj">
+    <div class="mjrow" data-t="1">
+      <div><div class="ar" data-m="rrr">كَتَبَ</div><div class="mjg">hij schreef</div></div>
+      <div class="arrow">→</div>
+      <div data-t="1.8" data-a="fade"><div class="ar" data-m="vvr">كُتِبَ</div><div class="mjg">er werd geschreven</div></div>
+    </div>
+    <div class="mjrow" data-t="2.6">
+      <div><div class="ar" data-m="zrrr">يَكْتُبُ</div><div class="mjg">hij schrijft</div></div>
+      <div class="arrow">→</div>
+      <div data-t="3.4" data-a="fade"><div class="ar" data-m="vrvr">يُكْتَبُ</div><div class="mjg">er wordt geschreven</div></div>
+    </div>
+  </div>
+  <div class="mjnote" data-t="4.8">Alleen de <span class="v">klinkers</span> veranderen; er komt geen letter bij.<br>
+    In de Qoeraan: <span class="ar inl" data-k="at.kutiba.word"></span> <span class="ref" data-k="at.kutiba.ref"></span>, en bij een holle wortel <span class="ar inl">قَالَ</span> → <span class="ar inl" data-k="at.qila.word"></span> <span class="ref" data-k="at.qila.ref"></span></div>
+  <div class="card mjstats" data-t="8.4">
+    <div class="big"><b data-t="8.6" data-a="count" data-d="1.5" data-k="passive.total"></b>van de <span data-k="verbs"></span> werkwoordsvormen in de Qoeraan staan als majhūl geannoteerd</div>
+    <div class="k3">
+      <div><b data-t="9.4" data-a="count" data-d="1.2" data-k="passive.PERF"></b>māḍī</div>
+      <div><b data-t="9.8" data-a="count" data-d="1.2" data-k="passive.IMPF"></b>muḍāriʿ</div>
+      <div><b data-t="10.2" data-a="fade" data-k="passive.IMPV"></b>amr</div>
+    </div>
+  </div>
+  <p class="cap" data-t="11.6">Geen enkele in de amr: je kunt niets bevelen zonder te zeggen aan wie.</p>
+</section>
+
+<!-- 14 · one root, a family -->
+<section class="scene" data-dur="18">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 12 · Mushtaqqāt</div>
+  <h2 data-t=".35">Eén wortel, een hele familie: <span class="ar r">ع ل م</span> in de Qoeraan</h2>
+  <div class="ilm" dir="rtl" id="ilm"></div>
+  <p class="cap" data-t="10.6">Negen woorden uit één wortel, allemaal in de Qoeraan. Wie het patroon herkent, kent de betekenis al half.</p>
+</section>
+
+<!-- 15 · one vowel, one pattern -->
+<section class="scene" data-dur="14">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 12 · Mushtaqqāt</div>
+  <h2 data-t=".35">Klein verschil, andere betekenis</h2>
+  <div class="vs" style="top:236px" data-t="1">
+    <div><div class="ar big" data-m="zrvr">مُعَلِّم</div><div class="g">wie onderwijst · leraar</div></div>
+    <div class="mid" data-t="2.2" data-a="fade">één klinker<span>kasra of fatḥa</span></div>
+    <div data-t="1.6" data-a="fade"><div class="ar big" data-m="zrvr">مُعَلَّم</div><div class="g">onderwezen · <span class="ar inl" data-k="at.mucallam.word"></span> <span class="ref" data-k="at.mucallam.ref"></span></div></div>
+  </div>
+  <div class="vs" style="top:510px" data-t="5">
+    <div><div class="ar big" data-m="rzrr">عَالِم</div><div class="g">wie weet · <span class="ar inl" data-m="rzrr">فَاعِل</span></div></div>
+    <div class="mid" data-t="6.2" data-a="fade">ander patroon<span>ṣīghat mubālagha</span></div>
+    <div data-t="5.6" data-a="fade"><div class="ar big" data-m="rrzr">عَلِيم</div><div class="g">wie alwetend ís · <span class="ar inl" data-m="rrzr">فَعِيل</span></div></div>
+  </div>
+  <div class="names" data-t="8.6">Zo ook veel van de Schone Namen<br><span class="ar">ٱلْغَفُور · ٱلْعَلِيم · ٱلسَّمِيع · ٱلْبَصِير</span></div>
+</section>
+
+<!-- 16 · close -->
+<section class="scene" data-dur="10" data-fo="1.4">
+  <div class="center">
+    <div class="ar r" style="font-size:130px;line-height:1.2" data-t=".3" data-a="zoom" data-d="1.4">صَرْف</div>
+    <div class="quote" data-t="1">Geen lijst woorden om te onthouden, maar een systeem waarmee de woordenschat zich grotendeels laat afleiden.</div>
+  </div>
+  <div class="credits" data-t="3.4" data-a="fade">Naar het lesboek <b>docs/sarf-nl.md</b> · tellingen uit <b>quran.db</b>: Quranic Arabic Corpus 0.4, riwaaya van Ḥafṣ<br>Wat overblijft is de naḥw: hoe deze woorden zich in de zin tot elkaar verhouden.</div>
+</section>
+
+<div id="progress"></div>
+</div>
+<div id="hud"></div>
+
+<script>
+(function () {
+'use strict';
+const D = window.SARF;
+const stage = document.getElementById('stage');
+const get = k => k.split('.').reduce((o, p) => (o == null ? o : o[p]), D);
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const easeOut = p => 1 - Math.pow(1 - p, 3);
+const easeInOut = p => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+
+// Dutch number format: 128.219 and 48,9
+function fmt(x, dec = 0) {
+  let [i, f] = Math.abs(x).toFixed(dec).split('.');
+  i = i.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return (x < 0 ? '-' : '') + i + (f ? ',' + f : '');
+}
+
+// ------------------------------------------------------------- builders
+// The scenes whose rows come from the data are put together here, before
+// anything is measured or animated.
+
+function html(el, s) { el.insertAdjacentHTML('beforeend', s); }
+
+function buildTen() {
+  const el = document.getElementById('ten');
+  [...'سألتمونيها'].forEach((ch, i) =>
+    html(el, `<div class="ar tl" data-t="${(3.3 + i * .14).toFixed(2)}" data-a="pop" data-d=".5">${ch}</div>`));
+}
+
+function buildAbwab() {
+  const el = document.getElementById('abwab');
+  html(el, `<div class="tr th" data-t="1.4" data-a="fade"><div>Bāb</div><div style="text-align:center">Patroon</div>
+    <div style="text-align:center">Uit de Qoeraan</div><div style="text-align:right">×</div></div>`);
+  D.abwab.forEach((r, i) => {
+    const t = (2 + i * .55).toFixed(2);
+    const ex = r.root
+      ? `<span data-m="${r.madi_m}">${r.madi}</span> / <span data-m="${r.mudari_m}">${r.mudari}</span>`
+      : `<span class="lat">geen gave wortel in Ḥafṣ</span>`;
+    const hl = r.root ? '' : `<div class="hlrow" data-t="12.4" data-a="fade"></div>`;
+    html(el, `<div class="tr" data-t="${t}">${hl}<div class="bn">${r.bab}</div>
+      <div class="ar pat"><span data-m="rvr">${r.madi_p}</span> / <span data-m="zrvr">${r.mudari_p}</span></div>
+      <div class="ar exa">${ex}</div><div class="n">${r.root ? fmt(r.n) + '×' : '—'}</div></div>`);
+  });
+}
+
+// pattern, its colouring, an example, its colouring, gloss, what the form does
+const FORMS = [
+  ['II', 'فَعَّلَ', 'rrr', 'عَلَّمَ', 'rrr', 'onderwijzen', 'intensief of causatief'],
+  ['III', 'فَاعَلَ', 'rzrr', 'جَاهَدَ', 'rzrr', 'strijden tegen', 'gericht op een ander'],
+  ['IV', 'أَفْعَلَ', 'zrrr', 'أَنْزَلَ', 'zrrr', 'neerzenden', 'causatief'],
+  ['V', 'تَفَعَّلَ', 'zrrr', 'تَعَلَّمَ', 'zrrr', 'leren', 'wederkerend van II'],
+  ['VI', 'تَفَاعَلَ', 'zrzrr', 'تَعَاوَنَ', 'zrzrr', 'samenwerken', 'wederkerend van III'],
+  ['VII', 'ٱنْفَعَلَ', 'zzrrr', 'ٱنْكَسَرَ', 'zzrrr', 'breken', 'lijdend, vanzelf'],
+  ['VIII', 'ٱفْتَعَلَ', 'zrzrr', 'ٱكْتَسَبَ', 'zrzrr', 'verwerven', 'voor zichzelf'],
+  ['IX', 'ٱفْعَلَّ', 'zrrr', 'ٱحْمَرَّ', 'zrrr', 'rood worden', 'kleuren en gebreken'],
+  ['X', 'ٱسْتَفْعَلَ', 'zzzrrr', 'ٱسْتَغْفَرَ', 'zzzrrr', 'vergeving vragen', 'vragen om, achten als'],
+];
+
+function buildForms() {
+  const el = document.getElementById('forms');
+  const max = Math.max(...FORMS.map(f => D.forms[f[0]] || 0));
+  html(el, `<div class="tr th" data-t="1" data-a="fade"><div>Vorm</div><div style="text-align:center">Patroon</div>
+    <div style="padding-left:20px">Voorbeeld</div><div>Wat de vorm doet</div><div>Werkwoorden in de Qoeraan</div></div>`);
+  FORMS.forEach(([f, pat, pm, ex, em, gl, mean], i) => {
+    const t = 1.6 + i * .42, n = D.forms[f] || 0;
+    html(el, `<div class="tr" data-t="${t.toFixed(2)}" data-a="left"><div class="fn">${f}</div>
+      <div class="ar" data-m="${pm}">${pat}</div>
+      <div class="exa"><span class="ar" data-m="${em}">${ex}</span><span class="gl">${gl}</span></div>
+      <div class="mean">${mean}</div>
+      <div class="barcell"><div class="track"><i data-t="${(6.4 + i * .12).toFixed(2)}" data-a="barx" data-d="1.3"
+        data-v="${n}" data-max="${max}"></i></div><div class="num" data-t="${(6.4 + i * .12).toFixed(2)}" data-a="count" data-d="1.3" data-v="${n}"></div></div></div>`);
+  });
+}
+
+const TYPES = [  // key, name, what makes it so, a root, its colouring, sound?
+  ['salim', 'Sālim', 'gaaf', 'ك ت ب', 'r.r.r', 1],
+  ['ajwaf', 'Ajwaf', '2e letter zwak', 'ق و ل', 'r.w.r', 0],
+  ['naqis', 'Nāqiṣ', '3e letter zwak', 'د ع و', 'r.r.w', 0],
+  ['mudaccaf', 'Muḍaʿʿaf', 'verdubbeld', 'م د د', 'r.v.v', 1],
+  ['mahmuz', 'Mahmūz', 'met hamza', 'أ خ ذ', 'v.r.r', 1],
+  ['mithal', 'Mithāl', '1e letter zwak', 'و ع د', 'w.r.r', 0],
+  ['lafif', 'Lafīf', 'twee zwakke letters', 'و ق ي', 'w.r.w', 0],
+];
+
+function buildTypes() {
+  const el = document.getElementById('types');
+  const rows = TYPES.map(r => [...r, D.root_types[r[0]]]).sort((a, b) => b[6] - a[6]);
+  const max = rows[0][6];
+  rows.forEach(([k, name, what, root, m, sound, n], i) => {
+    const t = 1.6 + i * .45;
+    html(el, `<div class="tr" data-t="${t.toFixed(2)}" data-a="left">
+      <div class="tn">${name}<span>${what}</span></div>
+      <div class="ar" data-m="${m}">${root}</div>
+      <div class="track"><i style="background:${sound ? 'var(--blue)' : 'var(--rose)'}" data-t="${(t + .3).toFixed(2)}"
+        data-a="barx" data-d="1.2" data-v="${n}" data-max="${max}"></i></div>
+      <div class="num"><b data-t="${(t + .3).toFixed(2)}" data-a="count" data-d="1.2" data-v="${n}"></b><span>${fmt(100 * n / D.roots.tri, 1)}%</span></div></div>`);
+  });
+}
+
+// the word as shown, its colouring, its pattern, what it is, what it means
+const ILM = {
+  'عَلِمَ': ['rrr', 'فَعِلَ', 'fiʿl', 'hij wist'],
+  'عِلْم': ['rrr', 'فِعْل', 'maṣdar', 'kennis'],
+  'عَالِم': ['rzrr', 'فَاعِل', 'ism al-fāʿil', 'wetend'],
+  'مَعْلُوم': ['zrrzr', 'مَفْعُول', 'ism al-mafʿūl', 'bekend'],
+  'عَلِيم': ['rrzr', 'فَعِيل', 'mubālagha', 'alwetend'],
+  'عَلَّام': ['rrzr', 'فَعَّال', 'mubālagha', 'die alles kent'],
+  'أَعْلَم': ['zrrr', 'أَفْعَل', 'tafḍīl', 'beter wetend'],
+  'عَلَّمَ': ['rrr', 'فَعَّلَ', 'vorm II', 'onderwijzen'],
+  'مُعَلَّم': ['zrrr', 'مُفَعَّل', 'mafʿūl van II', 'onderwezen'],
+};
+
+function buildIlm() {
+  const el = document.getElementById('ilm');
+  D.family.forEach((f, i) => {
+    const [m, pat, kind, mean] = ILM[f.word];
+    const t = 1.2 + i * .55;
+    html(el, `<div class="card iw" dir="ltr" data-t="${t.toFixed(2)}">
+      <div class="ar word" data-m="${m}">${f.word}</div>
+      <div class="side"><div class="ar pat" data-m="${m}">${pat}</div>
+      <div class="n"><span data-t="${(t + .2).toFixed(2)}" data-a="count" data-d="1" data-v="${f.n}" style="font-size:34px;font-weight:700;color:var(--ink)"></span><span>×</span></div>
+      <div class="lab">${kind}<span>${mean}</span></div></div></div>`);
+  });
+}
+
+// ------------------------------------------------------- data and colour
+
+function fill() {
+  for (const el of document.querySelectorAll('[data-k]')) {
+    if (el.dataset.a === 'count' || el.dataset.a === 'barx') continue;
+    const v = get(el.dataset.k);
+    if (v === undefined) { console.error('no value for ' + el.dataset.k); continue; }
+    el.textContent = typeof v === 'number' ? fmt(v, +(el.dataset.dec || 0)) : v;
+  }
+  for (const el of document.querySelectorAll('[data-mk]')) el.dataset.m = get(el.dataset.mk);
+  for (const el of document.querySelectorAll('.seg[data-w]')) el.style.width = get(el.dataset.w) + '%';
+}
+
+// A letter with the marks on it; the same split sarf_video.clusters makes.
+const clusters = s => s.match(/\P{M}\p{M}*/gu) || [];
+
+function paint(el) {
+  const cl = clusters(el.textContent), m = el.dataset.m;
+  if (cl.length !== m.length) console.error(`mask ${m} does not fit ${el.textContent} (${cl.length} letters)`);
+  el.textContent = '';
+  cl.forEach((c, i) => {
+    const k = m[i] || '.', span = document.createElement('span');
+    span.textContent = c;
+    if (/[1-9]/.test(k)) { span.className = 'r'; span.dataset.l = k; }
+    else if (/[a-h]/.test(k)) { span.className = 'z'; span.dataset.l = k; }
+    else if (k !== '.') span.className = k;
+    el.appendChild(span);
+  });
+}
+
+// ------------------------------------------------------------ the links
+// In the mizan scene each letter of the word is tied to its letter in the
+// pattern. Positions are measured once, before anything moves.
+
+function buildLinks() {
+  const NS = 'http://www.w3.org/2000/svg';
+  for (const w of document.querySelectorAll('.weigh')) {
+    const svg = w.querySelector('svg.links'), box = w.getBoundingClientRect();
+    svg.setAttribute('width', box.width); svg.setAttribute('height', box.height);
+    const ww = w.querySelector('.ww').getBoundingClientRect(), wp = w.querySelector('.wp').getBoundingClientRect();
+    const t0 = +w.dataset.t + .8;
+    [...w.querySelectorAll('.ww [data-l]')].forEach((a, i) => {
+      const b = w.querySelector(`.wp [data-l="${a.dataset.l}"]`);
+      if (!b) { console.error('no partner for ' + a.dataset.l); return; }
+      const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+      const x1 = ra.left + ra.width / 2 - box.left, y1 = ww.bottom - box.top - 4;
+      const x2 = rb.left + rb.width / 2 - box.left, y2 = wp.top - box.top - 34;
+      const line = document.createElementNS(NS, 'line');
+      Object.entries({ x1, y1, x2, y2, 'stroke-width': 3, 'stroke-linecap': 'round',
+        stroke: a.className === 'r' ? '#f2b544' : '#45c4b5' }).forEach(([k, v]) => line.setAttribute(k, v));
+      const len = Math.hypot(x2 - x1, y2 - y1);
+      line.setAttribute('stroke-dasharray', len);
+      line.dataset.t = (t0 + i * .2).toFixed(2); line.dataset.a = 'draw'; line.dataset.d = '.6';
+      line.dataset.len = len;
+      svg.appendChild(line);
+    });
+  }
+}
+
+// ------------------------------------------------------------- timeline
+
+const scenes = [...document.querySelectorAll('.scene')];
+let TOTAL = 0;
+
+function item(el) {
+  const ds = el.dataset, it = { el, t: +ds.t, d: +(ds.d || .8), a: ds.a || 'up' };
+  it.out = ds.out !== undefined ? +ds.out : null;
+  if (it.a === 'move') { it.x = +(ds.x || 0); it.y = +(ds.y || 0); it.s = +(ds.s || 1); it.fade = !!ds.fade; }
+  if (it.a === 'count') { it.v = ds.k ? get(ds.k) : +ds.v; it.dec = +(ds.dec || 0); }
+  if (it.a === 'barx') {
+    const v = ds.k ? get(ds.k) : +ds.v, max = ds.of ? get(ds.of) : +ds.max;
+    it.frac = max ? v / max : 0;
+  }
+  if (it.a === 'draw') it.len = +ds.len;
+  return it;
+}
+
+function apply(it, lt) {
+  const raw = clamp((lt - it.t) / it.d);
+  const p = (it.a === 'move' ? easeInOut : easeOut)(raw);
+  let o = 1, tf = null;
+  switch (it.a) {
+    case 'up':    o = p; tf = `translateY(${(1 - p) * 26}px)`; break;
+    case 'left':  o = p; tf = `translateX(${-(1 - p) * 36}px)`; break;
+    case 'fade':  o = p; break;
+    case 'pop':   o = p; tf = `scale(${.6 + .4 * p})`; break;
+    case 'zoom':  o = p; tf = `scale(${1.12 - .12 * p})`; break;
+    case 'grow':  o = p; tf = `scaleX(${p})`; break;
+    case 'move':  o = it.fade ? clamp(raw * 2) : 1;
+                  tf = `translate(${it.x * (1 - p)}px,${it.y * (1 - p)}px) scale(${it.s + (1 - it.s) * p})`; break;
+    case 'barx':  o = raw > 0 ? 1 : 0; tf = `scaleX(${p * it.frac})`; break;
+    case 'wipe':  o = raw > 0 ? 1 : 0; it.el.style.clipPath = `inset(0 ${(1 - p) * 100}% 0 0)`; break;
+    case 'count': o = clamp(raw * 4); it.el.textContent = fmt(it.dec ? it.v * p : Math.round(it.v * p), it.dec); break;
+    case 'draw':  o = raw > 0 ? 1 : 0; it.el.style.strokeDashoffset = (1 - p) * it.len; break;
+  }
+  if (it.out !== null) o *= 1 - clamp((lt - it.out) / .45);
+  it.el.style.opacity = o;
+  if (tf) it.el.style.transform = tf;
+}
+
+const pattern = document.getElementById('pattern'), progress = document.getElementById('progress');
+
+function render(t) {
+  for (const s of scenes) {
+    const lt = t - s.start, on = lt >= 0 && lt < s.dur;
+    s.style.visibility = on ? 'visible' : 'hidden';
+    if (!on) continue;
+    const fi = s.start === 0 ? 1 : clamp(lt / .45), fo = clamp((s.dur - lt) / s.fo);
+    s.style.opacity = Math.min(fi, fo);
+    for (const it of s.items) apply(it, lt);
+  }
+  pattern.style.transform = `translate(${-(t * 6) % 180}px,${-(t * 3.5) % 180}px)`;
+  progress.style.transform = `scaleX(${clamp(t / TOTAL)})`;
+}
+
+// an eight-pointed star lattice, very faint, drifting
+function drawPattern() {
+  const star = (x, y) => `<rect x="${x - 26}" y="${y - 26}" width="52" height="52"/>` +
+    `<rect x="${x - 26}" y="${y - 26}" width="52" height="52" transform="rotate(45 ${x} ${y})"/>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><g fill="none" stroke="#fff" stroke-width="1.3">` +
+    star(90, 90) + star(0, 0) + star(180, 0) + star(0, 180) + star(180, 180) +
+    `<path d="M0 90H180M90 0V180" stroke-opacity=".45"/></g></svg>`;
+  pattern.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `translate(${(innerWidth - 1920 * s) / 2}px,${(innerHeight - 1080 * s) / 2}px) scale(${s})`;
+}
+
+async function init() {
+  const ar = 'صرف ابتثجحخدذرزسشصضطظعغفقكلمنهوي ٱ', lat = 'Ṣarf ḍḥṭẓ ʿʾ āīū';
+  await Promise.all(['400 100px Amiri', '700 100px Amiri'].map(f => document.fonts.load(f, ar))
+    .concat(['400', '500', '600', '700', '800'].map(w => document.fonts.load(`${w} 40px Inter`, lat))));
+  await document.fonts.ready;
+  if (!document.fonts.check('100px Amiri', 'ص')) console.error('Amiri did not load');
+  if (!document.fonts.check('40px Inter', 'a')) console.error('Inter did not load');
+
+  buildTen(); buildAbwab(); buildForms(); buildTypes(); buildIlm();
+  fill();
+  for (const el of document.querySelectorAll('[data-m]')) paint(el);
+  drawPattern();
+  buildLinks();
+  for (const s of scenes) {
+    s.start = TOTAL; s.dur = +s.dataset.dur; s.fo = +(s.dataset.fo || .45); TOTAL += s.dur;
+    s.items = [...s.querySelectorAll('[data-t]')].map(item);
+  }
+  window.SARF_TOTAL = TOTAL;
+  window.renderAt = render;
+  render(0);
+
+  if (window.__capture) return;
+  // played in a browser: real time, with a pause and a skip
+  fit(); addEventListener('resize', fit);
+  const hud = document.getElementById('hud');
+  let base = performance.now() / 1000 - (parseFloat((location.hash.match(/t=([\d.]+)/) || [])[1]) || 0);
+  let paused = null;
+  const now = () => (paused !== null ? paused : (performance.now() / 1000 - base) % TOTAL);
+  const toggle = () => { if (paused === null) paused = now(); else { base = performance.now() / 1000 - paused; paused = null; } };
+  addEventListener('click', toggle);
+  addEventListener('keydown', e => {
+    if (e.key === ' ') { toggle(); e.preventDefault(); }
+    const skip = { ArrowRight: 5, ArrowLeft: -5 }[e.key];
+    if (skip) { const t = clamp(now() + skip, 0, TOTAL - .01); if (paused !== null) paused = t; else base = performance.now() / 1000 - t; }
+  });
+  (function loop() {
+    const t = now(); render(t);
+    hud.textContent = `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')} / ${Math.floor(TOTAL / 60)}:${String(Math.round(TOTAL % 60)).padStart(2, '0')}${paused !== null ? ' · pauze' : ''}`;
+    requestAnimationFrame(loop);
+  })();
+}
+
+window.SARF_READY = init();
+})();
+</script>
+</body>
+</html>

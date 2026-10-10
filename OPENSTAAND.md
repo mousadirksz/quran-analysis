@@ -57,6 +57,24 @@ Wat de juiste indeling is, is geen programmeervraag: is zo'n plaats één rij me
 twee klassen, of twee rijen, of blijft hij farsh omdat de combinatie zelf
 woordspecifiek is? Dat hoort de eigenaar te beslissen; daarna is het werk klein.
 
+## Gaten in de annotatie van het corpus
+
+**Majhūl zonder `voice = 'PASS'`.** Bij het tellen van de abwāb voor het
+filmpje (`sarf_video.py`) kwamen drie passieve vormen boven die het corpus als
+bedrijvend laat staan: 4:140 يُكْفَرُ, en 21:47 en 36:54 تُظْلَمُ. Dezelfde vormen
+staan elders wél als PASS: يُكْفَرُ in 3:115, تُظْلَمُ in 2:272, 2:279, 4:77 en
+8:60. De 1.140 majhūl-vormen in hoofdstuk 11 van het ṣarf-boek zijn dus een
+ondergrens, en het filmpje zegt daarom "als majhūl geannoteerd".
+
+**Vorm IV zonder `verb_form`.** 2:233 يُرْضِعْنَ staat zonder vorm, met als
+lemma de vorm zelf, terwijl de vijf andere plaatsen van أَرْضَعَ vorm IV dragen.
+
+Hoeveel van beide er in totaal zijn, is niet uitgezocht. De voor de hand
+liggende toets -- een werkwoord zonder vorm waarvan het voorvoegsel een ḍamma
+draagt, is een passief -- vangt de tweede soort mee, dus de twee moeten eerst
+uit elkaar gehaald worden. Het corpus zelf corrigeren hoort niet in deze repo;
+wat wel kan is een correctielijst zoals `add_kalima_type.py` die per lemma heeft.
+
 ## Beslissingen, geen fouten
 
 Deze kwamen uit de audit van 8 september 2026 en zijn bewust niet uitgevoerd,
