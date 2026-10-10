@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naḥw — de zinsleer van het Arabisch</title>
+<!--
+  The naḥw film. Its scenes are written here; the engine that times and draws
+  them is film.js (with film.css), shared with the ṣarf film, and its figures
+  and Quranic sentences come from nahw_data.js, which nahw_video.py writes
+  from quran.db. A sentence from the Quran is a <div class="dep" data-p="...">
+  that the builder below fills with the words and the treebank's arcs; a
+  sentence the book makes up for the occasion is written out in data-s.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=block" rel="stylesheet">
+<link rel="stylesheet" href="film.css">
+<script src="nahw_data.js"></script>
+<script src="film.js"></script>
+<style>
+.at{position:absolute;left:0;right:0}
+.dep.xl{font-size:118px;line-height:1.6}
+.dep.big{font-size:100px;line-height:1.6}
+.dep.mid{font-size:80px;line-height:1.6}
+.dep.sm{font-size:64px;line-height:1.6}
+.gl{text-align:center;font-size:30px;color:var(--soft)}
+.gl .ref{margin-left:16px}
+.legend.pos{top:30px}
+.legend.pos i.mabni{background:var(--ink)}
+
+/* 0 title */
+.hero{font-size:290px;line-height:1;color:var(--blue);text-shadow:0 0 70px rgba(127,178,240,.28);margin-top:-30px}
+.t1{font-size:88px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-top:18px}
+.t2{font-size:40px;color:var(--muted);margin-top:4px}
+.rule{width:140px;height:3px;background:var(--blue);margin:34px 0 24px;border-radius:2px}
+.t3{font-size:28px;color:var(--muted)}
+
+/* 1 isnad */
+.isn-note{position:absolute;left:0;right:0;top:700px;text-align:center;font-size:30px;color:var(--muted)}
+.isn-note b{color:var(--ink);font-weight:600}
+
+/* 2 who hit whom */
+.chain4{position:absolute;left:0;right:0;top:668px;display:flex;justify-content:center;align-items:center;gap:22px}
+.chain4 .c{width:250px;padding:14px 10px 16px;text-align:center}
+.chain4 .c b{display:block;font-size:30px;font-weight:700}
+.chain4 .c span{display:block;font-size:25px;color:var(--muted);margin-top:4px}
+.chain4 .arrow{font-size:40px;color:var(--dim)}
+
+/* 3 mu'rab and mabni */
+.duo{position:absolute;left:150px;right:150px;top:250px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.duo .card{padding:26px 34px 30px;text-align:center}
+.duo h3{font-size:44px;font-weight:700}
+.duo h3 span{font-weight:400;color:var(--muted)}
+.duo .dep{margin:46px 0 14px}
+.duo p{font-size:27px;color:var(--soft);line-height:1.45}
+
+/* 4 the four positions */
+.four{position:absolute;left:120px;right:120px;top:236px;display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.four .card{padding:14px 26px 20px;text-align:center;border-top:4px solid var(--c)}
+.four .an{font-size:76px;line-height:1.5;color:var(--c)}
+.four .ln{font-size:34px;font-weight:700;margin-top:-6px}
+.four .sg{font-size:26px;color:var(--soft);margin-top:24px}
+.four .sg .inl{font-size:1.45em;color:var(--c);margin-left:12px}
+.four .mn{font-size:23px;color:var(--muted);margin-top:8px;line-height:1.35;height:62px}
+.bars{position:absolute;left:300px;right:300px;top:612px}
+.bars .row{display:grid;grid-template-columns:380px 1fr 130px;align-items:center;height:46px}
+.bars .lab{font-size:26px;color:var(--soft)}
+.bars .lab code{font:500 21px Inter;color:var(--dim);margin-left:10px}
+.bars .track{height:26px;border-radius:7px;background:rgba(255,255,255,.05);overflow:hidden}
+.bars .track i{display:block;height:100%;border-radius:7px;transform-origin:0 50%}
+.bars .num{font-size:28px;font-weight:600;text-align:right}
+
+/* 5 two pitfalls, 13 and 14 rows */
+.pair{position:absolute;left:120px;right:120px;top:250px;display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.pair .card{padding:24px 30px 26px;text-align:center;height:500px}
+.pair h3{font-size:31px;font-weight:700;line-height:1.3}
+.pair h3 span{display:block;font-weight:400;color:var(--muted);font-size:26px}
+.pair .dep{margin-top:150px}
+.pair .gl{margin-top:16px}
+
+/* 6 the 'amil */
+.rules{position:absolute;left:130px;top:262px;width:820px}
+.rules .r1{display:flex;gap:22px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--edge);font-size:29px;color:var(--soft)}
+.rules .r1 b{width:250px;flex:none;color:var(--ink);font-weight:600}
+.rules .r1 em{font-style:normal}
+.amil{position:absolute;left:1000px;right:80px;top:470px}
+
+/* 7 mubtada' and khabar */
+.stat1{position:absolute;left:0;right:0;top:720px;text-align:center;font-size:31px;color:var(--soft)}
+.stat1 b{font-size:44px;color:var(--ink);margin:0 6px}
+
+/* 8 three groups */
+.grp{position:absolute;left:150px;right:150px;top:250px}
+.grp .tr{display:grid;grid-template-columns:420px 1fr 210px 210px;align-items:center;border-bottom:1px solid var(--edge);height:116px}
+.grp .th{height:46px;font-size:21px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.grp .gn{font-size:29px;font-weight:600}
+.grp .gn .inl{font-size:1.45em;color:var(--soft);margin-right:8px}
+.grp .gn small{display:block;font-size:22px;font-weight:400;color:var(--muted)}
+.grp .dep{font-size:70px;line-height:1.5}
+.grp .c2{font-size:28px;font-weight:600;text-align:center}
+.nasstat{position:absolute;left:150px;right:150px;top:790px;display:flex;justify-content:center;gap:60px;font-size:28px;color:var(--soft)}
+.nasstat b{font-size:40px;color:var(--ink);margin-right:8px}
+
+/* 9 fi'l and faa'il */
+.kinds{position:absolute;left:150px;right:150px;top:540px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.kinds .card{padding:12px 20px 0;text-align:center}
+.kinds h3{font-size:30px;font-weight:700}
+.kinds h3 span{display:block;font-size:23px;font-weight:400;color:var(--muted)}
+.kinds .dep{margin:64px 0 50px;font-size:60px;line-height:1.45}
+.fstack{position:absolute;left:150px;right:150px;top:878px}
+.fstack .bar{display:flex;height:56px;border-radius:12px;overflow:hidden}
+.fstack .seg{display:flex;align-items:center;padding-left:18px;color:#0b1220;font-weight:700;font-size:25px;white-space:nowrap}
+
+/* 10 the count */
+.tally{position:absolute;left:0;right:0;top:250px;text-align:center}
+.tally .big{font-size:110px;font-weight:800;line-height:1.05}
+.tally .big span{display:block;font-size:30px;font-weight:400;color:var(--muted)}
+.three{position:absolute;left:250px;right:250px;top:470px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.three .card{padding:18px 20px;text-align:center}
+.three b{display:block;font-size:52px;font-weight:700;line-height:1.15}
+.three span{font-size:25px;color:var(--muted)}
+.sum{position:absolute;left:250px;right:250px;top:680px}
+.sum .bar{display:flex;height:50px;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.05)}
+.sum .seg{height:100%}
+.sum .keys{display:flex;justify-content:space-between;margin-top:14px;font-size:26px;color:var(--soft)}
+.sum .keys b{color:var(--ink);font-size:32px;margin-right:8px}
+.sum .keys i{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:10px;vertical-align:2px}
+
+/* 11 naa'ib al-faa'il, 18 the riwayat */
+.rw{position:absolute;left:150px;right:150px;display:grid;grid-template-columns:150px 1fr 470px;align-items:center}
+.rw .who{font-size:30px;font-weight:700;color:var(--soft)}
+.rw .who span{display:block;font-size:22px;font-weight:400;color:var(--dim)}
+.rw .gl{text-align:left;font-size:27px;line-height:1.35}
+
+/* 12 maf'ool bihi */
+.mrow{position:absolute;left:150px;right:150px;display:grid;grid-template-columns:1fr 520px;align-items:center;gap:40px}
+.mrow .gl{text-align:left;font-size:28px;line-height:1.4}
+.mrow .gl b{color:var(--ink);font-weight:600}
+
+/* 13, 14 rows of examples */
+.rows3{position:absolute;left:120px;right:120px;top:244px}
+.rows3 .row{display:grid;grid-template-columns:400px 1fr;align-items:end;height:210px;border-bottom:1px solid var(--edge)}
+.rows3 .row:last-child{border-bottom:none}
+.rows3 .nm{font-size:31px;font-weight:700;padding-bottom:30px}
+.rows3 .nm i{display:block;font-style:normal;font-size:24px;font-weight:400;color:var(--muted);margin-top:4px}
+.rows3 .nm small{display:block;font-size:22px;font-weight:500;color:var(--dim);margin-top:6px}
+.rows3 .nm small b{color:var(--soft);font-weight:600}
+.rows3 .dep{font-size:68px;line-height:1.55;padding-bottom:8px}
+
+/* 15 jarr, 17 tawabi' */
+.cards4{position:absolute;left:220px;right:220px;top:700px;display:flex;justify-content:center;gap:26px}
+.cards4 .card{width:300px;padding:16px 18px;text-align:center}
+.cards4 b{display:block;font-size:46px;font-weight:700;line-height:1.15}
+.cards4 span{font-size:24px;color:var(--muted)}
+.cards4 .ar{font-size:1.25em;color:var(--soft)}
+
+/* 18 the places */
+.funnel{position:absolute;left:0;right:0;top:226px;display:flex;justify-content:center;align-items:center;gap:30px}
+.funnel .f{text-align:center;width:440px;white-space:nowrap}
+.funnel .f b{display:block;font-size:64px;font-weight:800;line-height:1.1}
+.funnel .f span{font-size:24px;color:var(--muted)}
+.funnel .arrow{font-size:44px;color:var(--dim)}
+
+/* 19 close */
+.quote{font-size:50px;line-height:1.35;font-weight:600;text-align:center;max-width:1300px;margin-top:10px;text-wrap:balance}
+.credits{position:absolute;left:0;right:0;bottom:96px;text-align:center;font-size:24px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="pattern"></div>
+<div id="vignette"></div>
+
+<!-- 0 · title -->
+<section class="scene" data-dur="7">
+  <div class="center">
+    <div class="ar hero" data-t=".1" data-a="zoom" data-d="1.8">نَحْو</div>
+    <div class="t1" data-t="1.2">Naḥw</div>
+    <div class="t2" data-t="1.6">de zinsleer van het Arabisch</div>
+    <div class="rule" data-t="2.2" data-a="grow" data-d="1"></div>
+    <div class="t3" data-t="2.6" data-a="fade">een kort overzicht van het lesboek, met voorbeelden en tellingen uit de Qoeraan</div>
+  </div>
+</section>
+
+<!-- 1 · isnad -->
+<section class="scene" data-dur="15">
+  <div class="tag" data-t=".2" data-a="fade">Vooraf · Wat dit boek doet</div>
+  <h2 data-t=".35">Naḥw begint waar twee woorden <em>elkaar raken</em></h2>
+  <div class="at" style="top:420px">
+    <div class="dep ar xl" id="isnad" data-at="4.7" data-subs-t="5.7"
+      data-s="ٱلْكِتَٰبُ:raf:1 مَكْتُوبٌ:raf:2" data-arcs="1>2:ḫabar:raf" data-subs="0=musnad ilayhi;1=musnad"></div>
+  </div>
+  <div class="isn-note" data-t="1.6" data-a="fade" data-out="3.2"><b>ṣarf</b> · wat het woord in zijn eentje al zegt: ‘wat geschreven is’</div>
+  <div class="isn-note" data-t="6.4" data-a="fade"><b>naḥw</b> · wat het in de zin doet: ‘het boek is geschreven’</div>
+  <p class="cap" data-t="8">Het ene woord vertelt iets over het andere: dat heet <b>isnād</b>. De ḍamma op <span class="ar inl raf">مَكْتُوبٌ</span> is wat je ervan ziet — het staat er als ḫabar.</p>
+</section>
+
+<!-- 2 · who hit whom -->
+<section class="scene" data-dur="24">
+  <div class="tag" data-t=".2" data-a="fade">Vooraf · Wie sloeg wie?</div>
+  <h2 data-t=".35">Het kenteken <em>reist mee</em> met het woord</h2>
+  <div class="legend pos" data-t="2.2" data-a="fade"></div>
+  <div class="at" style="top:370px"><div class="dep ar big" id="sloegA" data-t="1" data-out="7.2"
+    data-s="ضَرَبَ:mabni:1 مُحَمَّدٌ:raf:2 زَيْدًا:nasb:3" data-arcs="1>2:fāʿil:raf;1>3:mafʿūl bihi:nasb"></div></div>
+  <div class="at" style="top:370px"><div class="dep ar big" id="sloegB" data-t="7.2" data-a="fade" data-d=".05" data-at="8.8" data-out="13.4"
+    data-s="ضَرَبَ:mabni:1 زَيْدًا:nasb:3 مُحَمَّدٌ:raf:2" data-arcs="1>2:fāʿil:raf;1>3:mafʿūl bihi:nasb"></div></div>
+  <div class="gl at" style="top:560px" data-t="3.4" data-a="fade" data-out="7">‘Mohammed sloeg Zayd’</div>
+  <div class="gl at" style="top:560px" data-t="9.9" data-a="fade" data-out="13.4">nog altijd ‘Mohammed sloeg Zayd’ — alleen de nadruk verschuift</div>
+  <div class="at" style="top:370px"><div class="dep ar big" data-p="16:75" data-t="13.8" data-a="fade"></div></div>
+  <div class="gl at" style="top:560px" data-t="15.6" data-a="fade">‘Allah geeft een gelijkenis’ <span class="ref">16:75</span></div>
+  <div class="chain4">
+    <div class="card c" data-t="10.6"><b>teken</b><span>ḍamma</span></div><div class="arrow" data-t="10.9" data-a="fade">→</div>
+    <div class="card c" data-t="11.1"><b>positie</b><span>rafʿ</span></div><div class="arrow" data-t="11.4" data-a="fade">→</div>
+    <div class="card c" data-t="11.6"><b>functie</b><span>fāʿil</span></div><div class="arrow" data-t="11.9" data-a="fade">→</div>
+    <div class="card c" data-t="12.1"><b>betekenis</b><span>wie sloeg</span></div>
+  </div>
+  <p class="cap" data-t="17.2">Dit voorbeeld is bedacht. Maar dezelfde drie rollen staan, in dezelfde volgorde, aan het begin van een vers.</p>
+</section>
+
+<!-- 3 · mu'rab and mabni -->
+<section class="scene" data-dur="15">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 1 · Iʿrāb en bināʾ</div>
+  <h2 data-t=".35">Wat verandert, en wat <em>altijd hetzelfde</em> klinkt</h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="duo">
+    <div class="card" data-t="1">
+      <h3>Muʿrab <span>· de uitgang volgt de plaats</span></h3>
+      <div class="dep ar mid" data-s="ٱلْكِتَٰبُ:raf: ٱلْكِتَٰبَ:nasb: ٱلْكِتَٰبِ:jarr:" data-subs="0=rafʿ;1=naṣb;2=jarr" data-subs-t="2.4"></div>
+      <p>de meeste naamwoorden, en de muḍāriʿ</p>
+    </div>
+    <div class="card" data-t="3.4">
+      <h3>Mabnī <span>· altijd dezelfde klank</span></h3>
+      <div class="dep ar mid" data-s="هُوَ:mabni: هَٰذَا:mabni: ٱلَّذِي:mabni: كَتَبَ:mabni:" data-subs="0=ḍamīr;1=aanwijzend;2=betrekkelijk;3=māḍī" data-subs-t="4.6"></div>
+      <p>de ḍamāʾir, de aanwijzende en betrekkelijke woorden, de partikels, de māḍī en de amr</p>
+    </div>
+  </div>
+  <p class="cap" data-t="7.4">Mabnī is niet functieloos: <span class="ar inl">هُوَ</span> kan fāʿil zijn. Het verandert dan niet van vorm, maar staat <b>fī maḥall</b> — op de plaats van een iʿrāb die je niet hoort.</p>
+</section>
+
+<!-- 4 · the four positions -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 2 · De vier posities</div>
+  <h2 data-t=".35">Rafʿ, naṣb, jarr en jazm</h2>
+  <div class="four">
+    <div class="card" data-t="1" style="--c:var(--gold)"><div class="ar an">رَفْع</div><div class="ln">rafʿ</div>
+      <div class="sg">ḍamma<span class="ar inl">ٱلْكِتَٰبُ</span></div><div class="mn">fāʿil, mubtadaʾ, ḫabar</div></div>
+    <div class="card" data-t="1.5" style="--c:var(--teal)"><div class="ar an">نَصْب</div><div class="ln">naṣb</div>
+      <div class="sg">fatḥa<span class="ar inl">ٱلْكِتَٰبَ</span></div><div class="mn">mafʿūl, ḥāl, tamyīz</div></div>
+    <div class="card" data-t="2" style="--c:var(--rose)"><div class="ar an">جَرّ</div><div class="ln">jarr</div>
+      <div class="sg">kasra<span class="ar inl">ٱلْكِتَٰبِ</span></div><div class="mn">na een voorzetsel, als muḍāf ilayhi</div></div>
+    <div class="card" data-t="2.5" style="--c:var(--violet)"><div class="ar an">جَزْم</div><div class="ln">jazm</div>
+      <div class="sg">sukūn<span class="ar inl">لَمْ يَكْتُبْ</span></div><div class="mn">werkwoord na bepaalde partikels</div></div>
+  </div>
+  <div class="bars" id="bars"></div>
+  <p class="cap" data-t="10.2">Naamwoorden kennen rafʿ, naṣb en jarr; werkwoorden rafʿ, naṣb en jazm. De genitief is de grootste: elk voorzetsel dwingt hem af, en elke iḍāfa ook.</p>
+</section>
+
+<!-- 5 · two pitfalls -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 3 · De tekens</div>
+  <h2 data-t=".35">Twee valkuilen: de klinker zegt niet altijd <em>de positie</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="pair">
+    <div class="card" data-t="1">
+      <h3>Gezond vrouwelijk meervoud<span>in naṣb met een kasra</span></h3>
+      <div class="dep ar mid" data-p="2:25" data-t="1.6" data-a="fade" data-subs="1=naṣb, met kasra" data-subs-t="3.4"></div>
+      <div class="gl" data-t="3" data-a="fade">‘en zij deden de goede daden’ <span class="ref">2:25</span></div>
+    </div>
+    <div class="card" data-t="4.6">
+      <h3>Ġayr munṣarif<span>in jarr met een fatḥa</span></h3>
+      <div class="dep ar mid" data-p="2:125" data-t="5.2" data-a="fade" data-subs="2=jarr, met fatḥa" data-subs-t="7.6"></div>
+      <div class="gl" data-t="6.6" data-a="fade">‘van de staanplaats van Ibrāhīm’ <span class="ref">2:125</span></div>
+    </div>
+  </div>
+  <p class="cap" data-t="9.4">Wie de kasra automatisch als jarr leest, of de fatḥa als naṣb, ontleedt de zin verkeerd. De kleur in dit filmpje is de positie, niet de klinker.</p>
+</section>
+
+<!-- 6 · the 'amil -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 4 · De ʿāmil</div>
+  <h2 data-t=".35">Een uitgang heeft altijd <em>een oorzaak</em></h2>
+  <div class="rules">
+    <div class="r1" data-t="1" data-a="left"><b>een werkwoord</b><span>maakt zijn fāʿil <em class="raf">marfūʿ</em> en zijn mafʿūl bihi <em class="nasb">manṣūb</em></span></div>
+    <div class="r1" data-t="1.6" data-a="left"><b>een voorzetsel</b><span>maakt het woord erna <em class="jarr">majrūr</em></span></div>
+    <div class="r1" data-t="2.2" data-a="left"><b>een muḍāf</b><span>maakt zijn muḍāf ilayhi <em class="jarr">majrūr</em></span></div>
+    <div class="r1" data-t="2.8" data-a="left"><b><span class="ar inl">إِنَّ</span></b><span>maakt haar ism <em class="nasb">manṣūb</em> en haar ḫabar <em class="raf">marfūʿ</em> — andersom dan je verwacht</span></div>
+  </div>
+  <div class="amil"><div class="dep ar xl" data-p="amil" data-t="4.4" data-a="fade" data-gap="1.2"></div></div>
+  <p class="cap" data-t="7.6">In <span class="ar inl">بِسْمِ ٱللَّهِ</span> staan twee kasra's met twee verschillende oorzaken. Ontleden is daarom altijd twee vragen tegelijk: welke positie, en wat veroorzaakt die?</p>
+</section>
+
+<!-- 7 · mubtada' and khabar -->
+<section class="scene" data-dur="15">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 6 · De naamwoordelijke zin</div>
+  <h2 data-t=".35">Mubtadaʾ en ḫabar, <em>allebei in rafʿ</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="at" style="top:380px"><div class="dep ar xl" data-p="24:35" data-t="1" data-a="fade" data-subs="0=mubtadaʾ;1=ḫabar" data-subs-t="4"></div></div>
+  <div class="gl at" style="top:610px" data-t="2.6" data-a="fade">‘Allah is het licht van de hemelen’ <span class="ref">24:35</span></div>
+  <div class="stat1" data-t="5.4" data-a="fade">De treebank vindt <b data-k="rel.Pred.written"></b> geschreven ḫabars, en denkt er <b data-k="rel.Pred.posited"></b> bij die er niet staan.</div>
+  <p class="cap" data-t="8.4">Er staat geen werkwoord en geen ‘is’: de zin bestaat uit het isnād alleen. De mubtadaʾ is de musnad ilayhi, de ḫabar de musnad.</p>
+</section>
+
+<!-- 8 · three groups -->
+<section class="scene" data-dur="21">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 8 tot 10 · Kāna, inna en ẓanna</div>
+  <h2 data-t=".35">Wat een naasikh met de zin doet</h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="grp">
+    <div class="tr th" data-t=".9" data-a="fade"><div>Groep</div><div style="text-align:center">‘het huis is groot’</div><div style="text-align:center">eerste deel</div><div style="text-align:center">tweede deel</div></div>
+    <div class="tr" data-t="1.4" data-a="left"><div class="gn">gewone naamwoordelijke zin<small>mubtadaʾ en ḫabar</small></div>
+      <div class="dep ar" data-s="ٱلْبَيْتُ:raf: كَبِيرٌ:raf:"></div><div class="c2 raf">rafʿ</div><div class="c2 raf">rafʿ</div></div>
+    <div class="tr" data-t="3.4" data-a="left"><div class="gn"><span class="ar inl">كَانَ</span> en haar zusters<small>ism kāna, ḫabar kāna</small></div>
+      <div class="dep ar" data-s="كَانَ:mabni: ٱلْبَيْتُ:raf: كَبِيرًا:nasb:"></div><div class="c2 raf">rafʿ</div><div class="c2 nasb">naṣb</div></div>
+    <div class="tr" data-t="5.4" data-a="left"><div class="gn"><span class="ar inl">إِنَّ</span> en haar zusters<small>ism inna, ḫabar inna</small></div>
+      <div class="dep ar" data-s="إِنَّ:mabni: ٱلْبَيْتَ:nasb: كَبِيرٌ:raf:"></div><div class="c2 nasb">naṣb</div><div class="c2 raf">rafʿ</div></div>
+    <div class="tr" data-t="7.4" data-a="left"><div class="gn"><span class="ar inl">ظَنَّ</span> en haar zusters<small>twee mafʿūl bihi</small></div>
+      <div class="dep ar" data-s="ظَنَنْتُ:mabni: ٱلْبَيْتَ:nasb: كَبِيرًا:nasb:"></div><div class="c2 nasb">naṣb</div><div class="c2 nasb">naṣb</div></div>
+  </div>
+  <div class="nasstat" data-t="10" data-a="fade">
+    <div><b data-k="nawasikh.kinds"></b>nawāsikh in de treebank, samen <b data-k="nawasikh.places" style="margin-left:6px"></b>plaatsen</div>
+    <div><b data-k="nawasikh.inna_total"></b>daarvan voor <span class="ar inl">إِنَّ</span> alleen, de grootste</div>
+  </div>
+  <p class="cap" data-t="12.6">Vier groepen, vier rijtjes van twee: het lonendste lijstje van het boek om uit het hoofd te kennen.</p>
+</section>
+
+<!-- 9 · fi'l and faa'il -->
+<section class="scene" data-dur="20">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 11 · Fiʿl en fāʿil</div>
+  <h2 data-t=".35">Elk werkwoord heeft een fāʿil, <em>ook als er niets staat</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="at" style="top:350px"><div class="dep ar mid" data-p="29:44" data-t="1" data-a="fade"></div></div>
+  <div class="gl at" style="top:494px" data-t="2.6" data-a="fade">‘Allah schiep de hemelen’ <span class="ref">29:44</span></div>
+  <div class="kinds">
+    <div class="card" data-t="5"><h3>ẓāhir<span>een naamwoord dat er staat</span></h3>
+      <div class="dep ar" data-s="قَالَ:mabni:1 زَيْدٌ:raf:2" data-arcs="1>2:fāʿil:raf" data-at="5.7"></div></div>
+    <div class="card" data-t="6.2"><h3>bāriz<span>een ḍamīr, aan het werkwoord vast</span></h3>
+      <div class="dep ar" data-s="قَالُ:mabni:1+وا۟:mabni:2" data-arcs="1>2:fāʿil:raf" data-at="6.9"></div></div>
+    <div class="card" data-t="7.4"><h3>mustatir<span>een ḍamīr dat er niet staat</span></h3>
+      <div class="dep ar" data-s="قَالَ:mabni:1 هُوَ:ghost:2" data-arcs="1>2:fāʿil:raf" data-at="8.1"></div></div>
+  </div>
+  <div class="fstack" data-t="9.4" data-a="fade">
+    <div class="bar" data-t="9.6" data-a="wipe" data-d="1.6">
+      <div class="seg" data-w="faail.pct.baariz" style="background:var(--gold)">bāriz&nbsp;<span data-k="faail.pct.baariz"></span>%</div>
+      <div class="seg" data-w="faail.pct.mustatir" style="background:var(--gold2)">mustatir&nbsp;<span data-k="faail.pct.mustatir"></span>%</div>
+      <div class="seg" data-w="faail.pct.zaahir" style="background:var(--soft)">ẓāhir&nbsp;<span data-k="faail.pct.zaahir"></span>%</div>
+    </div>
+  </div>
+  <p class="cap" data-t="11.8" style="bottom:34px">Van de <b data-k="faail.total"></b> fāʿils is nog geen zesde een naamwoord dat er staat.</p>
+</section>
+
+<!-- 10 · the count -->
+<section class="scene" data-dur="15">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 11 · De telling die moet kloppen</div>
+  <h2 data-t=".35">Wijs bij elk werkwoord <em>de fāʿil aan</em></h2>
+  <div class="tally"><div class="big" data-t="1" data-a="count" data-d="1.4" data-k="verbs.verbs"></div>
+    <div class="big" data-t="1" data-a="fade"><span>werkwoorden in het corpus</span></div></div>
+  <div class="three">
+    <div class="card" data-t="2.6"><b class="raf" data-k="verbs.subj"></b><span>met een fāʿil</span></div>
+    <div class="card" data-t="3.1"><b class="raf" data-k="verbs.pas"></b><span>met een nāʾib al-fāʿil</span></div>
+    <div class="card" data-t="3.6"><b class="raf" data-k="verbs.ism"></b><span>met een ism, bij kāna</span></div>
+  </div>
+  <div class="sum" data-t="5" data-a="fade">
+    <div class="bar" id="sumbar"></div>
+    <div class="keys"><div><i style="background:var(--gold)"></i><b data-k="verbs.one"></b>precies één</div><div><i style="background:var(--coral)"></i><b data-k="verbs.both"></b>twee</div><div><i style="background:var(--dim)"></i><b data-k="verbs.none"></b>niets aangewezen</div></div>
+  </div>
+  <p class="cap" data-t="7.6"><b data-k="verbs.pct"></b>% van de werkwoorden krijgt zijn doener toegewezen. De rest is een gat in de bron, niet in de grammatica: een werkwoord zonder fāʿil bestaat niet.</p>
+</section>
+
+<!-- 11 · naa'ib al-faa'il -->
+<section class="scene" data-dur="22">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 12 · Nāʾib al-fāʿil</div>
+  <h2 data-t=".35">Als de handelende <em>niet genoemd</em> wordt</h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="at" style="top:340px"><div class="dep ar big" id="naibA" data-t="1" data-out="5.4"
+    data-s="كَتَبَ:mabni:1 ٱلرَّجُلُ:raf:2 ٱلْكِتَٰبَ:nasb:3" data-arcs="1>2:fāʿil:raf;1>3:mafʿūl bihi:nasb"></div></div>
+  <div class="at" style="top:340px"><div class="dep ar big" id="naibB" data-t="5.4" data-a="fade" data-d=".05" data-at="7" data-out="10.4"
+    data-s="كُتِبَ:mabni:1 ٱلْكِتَٰبُ:raf:3" data-arcs="1>3:nāʾib al-fāʿil:raf"></div></div>
+  <div class="gl at" style="top:540px" data-t="3" data-a="fade" data-out="5.2">‘de man schreef het boek’</div>
+  <div class="gl at" style="top:540px" data-t="7.6" data-a="fade" data-out="10.4">‘het boek werd geschreven’ — de mafʿūl schuift op naar de lege plaats, en krijgt zijn rafʿ</div>
+  <div class="rw" style="top:340px" data-t="10.8" data-a="fade"><div class="who">Ḥafṣ<span>34:17</span></div>
+    <div class="dep ar mid" data-p="34:17" data-at="11.4"></div><div class="gl">‘en vergelden <b>Wij</b> iemand anders dan de ondankbare?’</div></div>
+  <div class="rw" style="top:620px" data-t="13.6" data-a="fade"><div class="who">Warsh<span>34:17</span></div>
+    <div class="dep ar mid" data-p="34:17w" data-at="14.2"></div><div class="gl">‘en wordt iemand anders vergolden dan de ondankbare?’</div></div>
+  <p class="cap" data-t="16">Op 34:17 voeren de twee riwaayaat elk één kant van deze omzetting uit: bij Ḥafṣ staat de Vergelder erin, bij Warsh alleen de vergelding.</p>
+</section>
+
+<!-- 12 · maf'ool bihi -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 13 · Mafʿūl bihi</div>
+  <h2 data-t=".35">Degene aan wie de handeling <em>voltrokken wordt</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="mrow" style="top:310px" data-t="1"><div class="dep ar big" data-p="1:5" data-at="1.9"></div>
+    <div class="gl"><b>Vooraan, en dus met nadruk:</b> ‘U alleen aanbidden wij’ <span class="ref">1:5</span><br>
+      <span style="color:var(--muted)">een ḍamīr: mabnī, maar <i>fī maḥall</i> naṣb</span></div></div>
+  <div class="mrow" style="top:620px" data-t="5.4"><div class="dep ar big" data-p="1:6" data-at="6.3"></div>
+    <div class="gl"><b>Drie van de vier delen staan er;</b> de fāʿil niet. ‘Leid ons het pad’ <span class="ref">1:6</span></div></div>
+  <p class="cap" data-t="10.4"><b data-k="rel.Obj.written"></b> geschreven plaatsen. De mafʿūl bihi kan een ḍamīr zijn, voorop staan, of een hele zin zijn: <span class="ar inl">يَقُولُ ءَامَنَّا</span>.</p>
+</section>
+
+<!-- 13 · the other mafa'il -->
+<section class="scene" data-dur="19">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 14 · De andere mafāʿīl</div>
+  <h2 data-t=".35">Allemaal in naṣb, elk met <em>een eigen vraag</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="rows3">
+    <div class="row" data-t="1"><div class="nm">Mafʿūl muṭlaq<i>hoe? de maṣdar van het werkwoord zelf</i><small><b data-k="rel.cog.written"></b> keer · 4:164</small></div>
+      <div class="dep ar" data-p="4:164" data-at="1.8" data-gap=".55"></div></div>
+    <div class="row" data-t="4.6"><div class="nm">Mafʿūl fīhi<i>wanneer? waar? de ẓarf</i><small>20:130</small></div>
+      <div class="dep ar" data-p="20:130" data-at="5.4" data-gap=".55"></div></div>
+    <div class="row" data-t="8.2"><div class="nm">Mafʿūl lahu<i>waarom? de maṣdar van de reden</i><small><b data-k="rel.prp.written"></b> keer · 2:19</small></div>
+      <div class="dep ar" data-p="2:19" data-at="9" data-gap=".55"></div></div>
+  </div>
+  <p class="cap" data-t="12.4" style="bottom:36px">‘Allah sprak met Mūsā, een werkelijk spreken’ · ‘voor het opgaan van de zon’ · ‘uit angst voor de dood’</p>
+</section>
+
+<!-- 14 · haal and tamyiiz -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 15 · Ḥāl en tamyīz</div>
+  <h2 data-t=".35"><em>Hoe?</em> of <em>waarvan?</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="rows3">
+    <div class="row" data-t="1" style="height:250px"><div class="nm">Ḥāl<i>in welke toestand?</i><small><b data-k="rel.circ.written"></b> geschreven · 17:37</small></div>
+      <div class="dep ar" data-p="17:37" data-at="1.8" data-gap=".8"></div></div>
+    <div class="row" data-t="4.8" style="height:250px"><div class="nm">Tamyīz<i>waarvan? wat er vaag bleef</i><small><b data-k="rel.Spec.written"></b> keer · 19:4</small></div>
+      <div class="dep ar" data-p="19:4" data-at="5.6" data-gap=".8"></div></div>
+  </div>
+  <p class="cap" data-t="8.6">‘Loop niet uitgelaten over de aarde’: de ḥāl hoort bij de fāʿil, en die staat er niet. ‘Het hoofd is ontvlamd van grijsheid’: de tamyīz zegt wát er vlamt.</p>
+</section>
+
+<!-- 15 · jarr -->
+<section class="scene" data-dur="15">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 17 · Jarr</div>
+  <h2 data-t=".35">Het voorzetsel en <em>de iḍāfa</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="at" style="top:380px"><div class="dep ar xl" data-p="1:4" data-t="1" data-a="fade" data-gap="1"
+    data-subs="0=muḍāf;1=muḍāf ilayhi én muḍāf;2=muḍāf ilayhi" data-subs-t="3.8"></div></div>
+  <div class="gl at" style="top:618px" data-t="2.6" data-a="fade">‘de Koning van de Dag des Oordeels’ <span class="ref">1:4</span></div>
+  <div class="cards4">
+    <div class="card" data-t="5.4"><b class="jarr" data-k="rel.gen.written"></b><span>na een voorzetsel</span></div>
+    <div class="card" data-t="5.9"><b class="jarr" data-k="rel.Poss.written"></b><span>als muḍāf ilayhi</span></div>
+  </div>
+  <p class="cap" data-t="7.8">Een iḍāfa kan doorlopen. De muḍāf krijgt nooit een lidwoord of tanwīn, en houdt zijn eigen iʿrāb: die hangt af van zijn plaats in de zin.</p>
+</section>
+
+<!-- 16 · ta'alluq -->
+<section class="scene" data-dur="18">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 18 · Taʿalluq</div>
+  <h2 data-t=".35">Een voorzetselgroep hangt <em>altijd ergens aan</em></h2>
+  <div class="mrow" style="top:300px" data-t="1"><div class="dep ar big" data-p="1:1" data-at="1.8"></div>
+    <div class="gl">‘[ik begin] met de naam van Allah’ <span class="ref">1:1</span></div></div>
+  <div class="mrow" style="top:590px" data-t="3.6"><div class="dep ar big" data-p="1:2" data-at="4.4"></div>
+    <div class="gl">‘de lof [is] aan Allah’ <span class="ref">1:2</span></div></div>
+  <div class="stat1" style="top:800px" data-t="7.4" data-a="fade"><b data-k="rel.link.written"></b> geschreven: de grootste relatie van de treebank. En <b data-k="tokens.posited"></b> woorden die zij erbij denkt.</div>
+  <p class="cap" data-t="10" style="bottom:40px">Waar het woord ontbreekt, zet de treebank een lege plek; de grammatici vullen hem in — <b>mutaʿallaq maḥdhūf</b>. Dit filmpje tekent die plekken gestippeld.</p>
+</section>
+
+<!-- 17 · the tawabi' -->
+<section class="scene" data-dur="17">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 19 · De tawābiʿ</div>
+  <h2 data-t=".35">Woorden <em>zonder eigen iʿrāb</em></h2>
+  <div class="legend pos" data-t="1" data-a="fade"></div>
+  <div class="at" style="top:400px"><div class="dep ar big" data-p="1:6-7" data-t="1" data-a="fade" data-gap=".9"></div></div>
+  <div class="gl at" style="top:580px" data-t="2.4" data-a="fade">‘leid ons het rechte pad, het pad van hen …’ <span class="ref">1:6–7</span></div>
+  <div class="cards4">
+    <div class="card" data-t="5.8"><b data-k="rel.Adj.written"></b><span>ṣifa</span></div>
+    <div class="card" data-t="6.1"><b data-k="rel.conj.written"></b><span>ʿaṭf</span></div>
+    <div class="card" data-t="6.4"><b data-k="rel.emph.written"></b><span>tawkīd</span></div>
+    <div class="card" data-t="6.7"><b data-k="rel.App.written"></b><span>badal</span></div>
+  </div>
+  <p class="cap" data-t="8.6">Ze nemen de iʿrāb over van het woord waar ze bij horen: <span class="ar inl nasb">ٱلْمُسْتَقِيمَ</span> en het tweede <span class="ar inl nasb">صِرَٰطَ</span> staan in naṣb omdat <span class="ar inl nasb">ٱلصِّرَٰطَ</span> dat doet.</p>
+</section>
+
+<!-- 18 · where the riwayat differ -->
+<section class="scene" data-dur="23">
+  <div class="tag" data-t=".2" data-a="fade">Hoofdstuk 22 · Als de riwaayaat de uitgang anders lezen</div>
+  <h2 data-t=".35">Eén klinker, <em>een andere zin</em></h2>
+  <div class="funnel">
+    <div class="f" data-t="1"><b data-k="irab.farsh"></b><span>woorden lezen Ḥafṣ en Warsh anders</span></div><div class="arrow" data-t="1.6" data-a="fade">→</div>
+    <div class="f" data-t="2"><b data-k="irab.last"></b><span>alleen in de laatste klinker</span></div><div class="arrow" data-t="2.6" data-a="fade">→</div>
+    <div class="f" data-t="3"><b data-k="irab.irab"></b><span>daarvan iʿrāb, <span data-k="irab.mabni"></span> niet</span></div>
+  </div>
+  <div class="rw" style="top:500px" data-t="5.6" data-a="fade"><div class="who">Ḥafṣ<span>24:9</span></div>
+    <div class="dep ar mid" data-p="24:9" data-at="6.2"></div><div class="gl">‘… dat Allahs toorn over haar is’</div></div>
+  <div class="rw" style="top:742px" data-t="8.4" data-a="fade"><div class="who">Warsh<span>24:9</span></div>
+    <div class="dep ar mid" data-p="24:9w" data-at="9"></div><div class="gl">‘… dat Allah over haar toornt’</div></div>
+  <p class="cap" data-t="11.4" style="bottom:30px">Vier woorden op rij, en de hele constructie kantelt mee: een naamwoord wordt een werkwoord, een iḍāfa een fāʿil, en <span class="ar inl">ٱلْخَٰمِسَةُ</span> gaat van naṣb naar rafʿ.</p>
+</section>
+
+<!-- 19 · close -->
+<section class="scene" data-dur="11" data-fo="1.4">
+  <div class="center">
+    <div class="ar" style="font-size:130px;line-height:1.2;color:var(--blue)" data-t=".3" data-a="zoom" data-d="1.4">نَحْو</div>
+    <div class="quote" data-t="1">De iʿrāb is niet de administratie achteraf van een zin die er al was. De iʿrāb ís de zin.</div>
+  </div>
+  <div class="credits" data-t="3.6" data-a="fade">Naar het lesboek <b>docs/nahw-nl.md</b> · zinsontleding uit de Extended Quranic Treebank, morfologie uit het Quranic Arabic Corpus 0.4,<br>riwaaya van Ḥafṣ · de Warsh-tekst uit de mushaf van het King Fahd Complex</div>
+</section>
+
+<div id="progress"></div>
+</div>
+<div id="hud"></div>
+
+<script>
+(function () {
+'use strict';
+const D = window.FILM;
+const { fmt, html } = Film;
+
+// ------------------------------------------------------------- builders
+// The sentences, the bars and the moves are put together here, before
+// anything is measured or animated.
+
+// The small yaa and waaw of the Uthmani text (إِبْرَٰهِۦمَ) are spacing letters
+// that do not join, so every font breaks the word at them; a zero-width
+// joiner on both sides keeps it whole.
+const joined = t => t.replace(/([\u06E5\u06E6])(?=[\u0620-\u064A\u0671-\u06D3])/g, '\u200D$1\u200D');
+
+// One sentence: its words from right to left, each a run of coloured spans
+// that stay joined, the posited ones dashed, with a label under a word where
+// data-subs asks for one ("1=muḍāf ilayhi;2=...", by word number from 0).
+function sentence(el, words) {
+  const subs = Object.fromEntries((el.dataset.subs || '').split(';').filter(Boolean).map(s => s.split('=')));
+  const st = el.dataset.subsT;
+  el.innerHTML = words.map((spans, i) => {
+    const kind = { ghost: ' ghost', dots: ' dots' }[spans[0][1]] || '';
+    const inner = spans.map(([t, c, n]) =>
+      `<span${kind ? '' : ` class="${c}"`}${n !== '' && n != null ? ` data-n="${n}"` : ''}>${joined(t)}</span>`).join('');
+    const sub = subs[i] ? `<i class="wl"${st ? ` data-t="${st}" data-a="fade"` : ''}>${subs[i]}</i>` : '';
+    return `<span class="w${kind}"><span class="wt">${inner}</span>${sub}</span>`;
+  }).join('');
+}
+
+function buildSentences() {
+  for (const el of document.querySelectorAll('.dep[data-p]')) {
+    const p = D.p[el.dataset.p];
+    if (!p) { console.error('no sentence ' + el.dataset.p); continue; }
+    sentence(el, p.words);
+    el.dataset.arcs = p.arcs.map(([h, d, l, c]) => `${h}>${d}:${l}:${c}`).join(';');
+  }
+  // made-up sentences: words by spaces, the parts of a word by +, text:colour:n
+  for (const el of document.querySelectorAll('.dep[data-s]'))
+    sentence(el, el.dataset.s.trim().split(/\s+/).map(w => w.split('+').map(s => s.split(':'))));
+}
+
+function buildLegends() {
+  const keys = [['raf', 'rafʿ'], ['nasb', 'naṣb'], ['jarr', 'jarr'], ['jazm', 'jazm'], ['mabni', 'mabnī']];
+  for (const el of document.querySelectorAll('.legend.pos'))
+    el.innerHTML = keys.map(([c, n]) => `<span><i class="${c}" style="background:currentColor"></i>${n}</span>`).join('');
+}
+
+// Words that move from where they stood in one sentence to where they stand
+// in the next: each gets the distance to cover as its starting offset.
+function moveFrom(fromId, toId, at, d = 1.2) {
+  const from = document.getElementById(fromId), to = document.getElementById(toId);
+  let bump = 70;   // two words that change places pass over and under each other
+  for (const w of to.querySelectorAll('.w')) {
+    const n = w.querySelector('[data-n]').dataset.n;
+    const o = from.querySelector(`[data-n="${n}"]`);
+    if (!o) continue;
+    const a = o.closest('.w').getBoundingClientRect(), b = w.getBoundingClientRect();
+    const dx = (a.left + a.width / 2) - (b.left + b.width / 2);
+    if (Math.abs(dx) < 1) continue;
+    Object.assign(w.dataset, { t: at, a: 'move', d, x: dx.toFixed(1), bump });
+    bump = -bump;
+  }
+}
+
+function buildMoves() {
+  moveFrom('sloegA', 'sloegB', 7.4);
+  moveFrom('naibA', 'naibB', 5.6);
+  // isnad: maktuub alone in the middle, then it moves over for al-kitaab
+  const dep = document.getElementById('isnad'), [kitab, maktub] = dep.querySelectorAll('.w');
+  const box = dep.getBoundingClientRect(), m = maktub.getBoundingClientRect();
+  Object.assign(maktub.dataset, { t: 1, a: 'fade' });
+  Object.assign(maktub.querySelector('.wt').dataset,
+    { t: 3, a: 'move', d: 1.1, x: ((box.left + box.width / 2) - (m.left + m.width / 2)).toFixed(1) });
+  Object.assign(kitab.dataset, { t: 3.5, a: 'fade' });
+}
+
+function buildBars() {
+  const rows = [['NOM', 'rafʿ', 'var(--gold)'], ['ACC', 'naṣb', 'var(--teal)'], ['GEN', 'jarr', 'var(--rose)'],
+    ['SUBJ', 'naṣb van het werkwoord', 'var(--teal)'], ['JUS', 'jazm', 'var(--violet)']];
+  const max = Math.max(...rows.map(r => D.cases[r[0]]));
+  const el = document.getElementById('bars');
+  rows.forEach(([k, name, c], i) => {
+    const t = (3.6 + i * .35).toFixed(2), n = D.cases[k];
+    html(el, `<div class="row" data-t="${t}" data-a="left"><div class="lab">${name}<code>${k}</code></div>
+      <div class="track"><i style="background:${c}" data-t="${t}" data-a="barx" data-d="1.3" data-v="${n}" data-max="${max}"></i></div>
+      <div class="num" data-t="${t}" data-a="count" data-d="1.3" data-v="${n}"></div></div>`);
+  });
+  const v = D.verbs, bar = document.getElementById('sumbar');
+  [['one', 'var(--gold)'], ['both', 'var(--coral)'], ['none', 'var(--dim)']].forEach(([k, c]) =>
+    html(bar, `<div class="seg" style="width:${100 * v[k] / v.verbs}%;background:${c}"></div>`));
+}
+
+Film.start([buildSentences, buildLegends, buildMoves, buildBars]);
+})();
+</script>
+</body>
+</html>

@@ -5,69 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ṣarf — de vormleer van het Arabisch</title>
 <!--
-  The page the film is drawn from. Opened in a browser it plays in real time:
-  space or a click pauses, the arrow keys skip five seconds, and #t=95 in the
-  address starts at 95 s. render.cjs drives it frame by frame instead.
-
-  Everything on screen is a function of one number, the time, so a frame can
-  be drawn in any order and by any number of workers. The figures come from
-  sarf_data.js, which sarf_video.py writes from quran.db; nothing here is a
-  count typed by hand.
-
-  Markup conventions:
-    data-dur on a .scene   its length in seconds; scenes follow one another
-    data-t, data-d         when an element comes in (scene time) and how long it takes
-    data-a                 how: up (default), fade, pop, zoom, grow, move, barx,
-                           wipe, count, draw, or none (there from the start)
-    data-out               when it leaves again
-    data-k                 fill with this value from SARF ("roots.total")
-    data-m                 colour an Arabic word letter by letter: r root letter,
-                           z added letter, v vowel that matters, w weak letter,
-                           . as is; digits and a-h also link letters to a pattern
+  The ṣarf film. Its scenes are written here; the engine that times and draws
+  them is film.js (with film.css), shared with the naḥw film, and its figures
+  come from sarf_data.js, which sarf_video.py writes from quran.db. Nothing
+  here is a count typed by hand. See film.js for the markup conventions.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<link rel="stylesheet" href="film.css">
 <script src="sarf_data.js"></script>
+<script src="film.js"></script>
 <style>
-:root{
-  --ink:#ece6d8; --soft:#c9d1dc; --muted:#94a1b5; --dim:#6f7c90;
-  --gold:#f2b544; --gold2:#c99a43; --teal:#45c4b5; --rose:#f27a8d;
-  --blue:#7fb2f0; --coral:#f08f6e; --violet:#b39af0;
-  --card:rgba(255,255,255,.045); --edge:rgba(255,255,255,.085);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#05080f}
-#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;
-  background:radial-gradient(ellipse 85% 75% at 50% 42%,#16243c 0%,#0e182b 52%,#080d18 100%);
-  color:var(--ink);font-family:Inter,sans-serif;font-size:32px;line-height:1.4;
-  -webkit-font-smoothing:antialiased}
-#pattern{position:absolute;left:-180px;top:-180px;width:2280px;height:1440px;opacity:.05;background-size:180px 180px}
-#vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(0,0,0,.5) 100%)}
-#progress{position:absolute;left:0;bottom:0;width:100%;height:4px;opacity:.8;
-  background:linear-gradient(90deg,var(--gold2),var(--gold));transform-origin:0 50%}
-#hud{position:fixed;right:10px;bottom:10px;font:13px/1 Inter,sans-serif;color:#7f8ca0}
-
-.scene{position:absolute;inset:0;padding:72px 120px 0;visibility:hidden}
-.tag{font-size:20px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold2)}
-h2{font-size:56px;line-height:1.15;font-weight:700;letter-spacing:-.012em;margin-top:12px}
-h2 em{font-style:normal;color:var(--gold)}
-h2 .ar{font-size:1.25em;line-height:1}
-.sub{font-size:29px;color:var(--muted);margin-top:8px}
-.ar{font-family:Amiri,serif;direction:rtl;unicode-bidi:isolate;font-weight:400}
-.inl{font-size:1.4em;line-height:1}
-.r{color:var(--gold)} .z{color:var(--teal)} .v,.w{color:var(--rose)}
-.card{background:var(--card);border:1px solid var(--edge);border-radius:22px}
-.cap{position:absolute;left:170px;right:170px;bottom:70px;text-align:center;font-size:34px;
-  line-height:1.9;color:var(--soft)}
-.cap b{color:var(--ink);font-weight:600}
-.cap .inl{font-size:1.3em}
-.ref{font-size:22px;color:var(--dim);letter-spacing:.02em}
-.ref .ar{font-size:1.45em;color:var(--soft)}
-.legend{position:absolute;right:120px;top:84px;font-size:24px;color:var(--muted);display:flex;gap:30px;align-items:center}
-.legend i{display:inline-block;width:16px;height:16px;border-radius:50%;margin-right:10px;vertical-align:-1px}
-.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-
 /* 0 title */
 .hero{font-size:290px;line-height:1;color:var(--gold);text-shadow:0 0 70px rgba(242,181,68,.28);margin-top:-30px}
 .t1{font-size:88px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-top:18px}
@@ -632,25 +581,12 @@ h2 .ar{font-size:1.25em;line-height:1}
 <script>
 (function () {
 'use strict';
-const D = window.SARF;
-const stage = document.getElementById('stage');
-const get = k => k.split('.').reduce((o, p) => (o == null ? o : o[p]), D);
-const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
-const easeOut = p => 1 - Math.pow(1 - p, 3);
-const easeInOut = p => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
-
-// Dutch number format: 128.219 and 48,9
-function fmt(x, dec = 0) {
-  let [i, f] = Math.abs(x).toFixed(dec).split('.');
-  i = i.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return (x < 0 ? '-' : '') + i + (f ? ',' + f : '');
-}
+const D = window.FILM;
+const { fmt, html } = Film;
 
 // ------------------------------------------------------------- builders
 // The scenes whose rows come from the data are put together here, before
 // anything is measured or animated.
-
-function html(el, s) { el.insertAdjacentHTML('beforeend', s); }
 
 function buildTen() {
   const el = document.getElementById('ten');
@@ -754,179 +690,7 @@ function buildIlm() {
   });
 }
 
-// ------------------------------------------------------- data and colour
-
-function fill() {
-  for (const el of document.querySelectorAll('[data-k]')) {
-    if (el.dataset.a === 'count' || el.dataset.a === 'barx') continue;
-    const v = get(el.dataset.k);
-    if (v === undefined) { console.error('no value for ' + el.dataset.k); continue; }
-    el.textContent = typeof v === 'number' ? fmt(v, +(el.dataset.dec || 0)) : v;
-  }
-  for (const el of document.querySelectorAll('[data-mk]')) el.dataset.m = get(el.dataset.mk);
-  for (const el of document.querySelectorAll('.seg[data-w]')) el.style.width = get(el.dataset.w) + '%';
-}
-
-// A letter with the marks on it; the same split sarf_video.clusters makes.
-const clusters = s => s.match(/\P{M}\p{M}*/gu) || [];
-
-function paint(el) {
-  const cl = clusters(el.textContent), m = el.dataset.m;
-  if (cl.length !== m.length) console.error(`mask ${m} does not fit ${el.textContent} (${cl.length} letters)`);
-  el.textContent = '';
-  cl.forEach((c, i) => {
-    const k = m[i] || '.', span = document.createElement('span');
-    span.textContent = c;
-    if (/[1-9]/.test(k)) { span.className = 'r'; span.dataset.l = k; }
-    else if (/[a-h]/.test(k)) { span.className = 'z'; span.dataset.l = k; }
-    else if (k !== '.') span.className = k;
-    el.appendChild(span);
-  });
-}
-
-// ------------------------------------------------------------ the links
-// In the mizan scene each letter of the word is tied to its letter in the
-// pattern. Positions are measured once, before anything moves.
-
-function buildLinks() {
-  const NS = 'http://www.w3.org/2000/svg';
-  for (const w of document.querySelectorAll('.weigh')) {
-    const svg = w.querySelector('svg.links'), box = w.getBoundingClientRect();
-    svg.setAttribute('width', box.width); svg.setAttribute('height', box.height);
-    const ww = w.querySelector('.ww').getBoundingClientRect(), wp = w.querySelector('.wp').getBoundingClientRect();
-    const t0 = +w.dataset.t + .8;
-    [...w.querySelectorAll('.ww [data-l]')].forEach((a, i) => {
-      const b = w.querySelector(`.wp [data-l="${a.dataset.l}"]`);
-      if (!b) { console.error('no partner for ' + a.dataset.l); return; }
-      const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-      const x1 = ra.left + ra.width / 2 - box.left, y1 = ww.bottom - box.top - 4;
-      const x2 = rb.left + rb.width / 2 - box.left, y2 = wp.top - box.top - 34;
-      const line = document.createElementNS(NS, 'line');
-      Object.entries({ x1, y1, x2, y2, 'stroke-width': 3, 'stroke-linecap': 'round',
-        stroke: a.className === 'r' ? '#f2b544' : '#45c4b5' }).forEach(([k, v]) => line.setAttribute(k, v));
-      const len = Math.hypot(x2 - x1, y2 - y1);
-      line.setAttribute('stroke-dasharray', len);
-      line.dataset.t = (t0 + i * .2).toFixed(2); line.dataset.a = 'draw'; line.dataset.d = '.6';
-      line.dataset.len = len;
-      svg.appendChild(line);
-    });
-  }
-}
-
-// ------------------------------------------------------------- timeline
-
-const scenes = [...document.querySelectorAll('.scene')];
-let TOTAL = 0;
-
-function item(el) {
-  const ds = el.dataset, it = { el, t: +ds.t, d: +(ds.d || .8), a: ds.a || 'up' };
-  it.out = ds.out !== undefined ? +ds.out : null;
-  if (it.a === 'move') { it.x = +(ds.x || 0); it.y = +(ds.y || 0); it.s = +(ds.s || 1); it.fade = !!ds.fade; }
-  if (it.a === 'count') { it.v = ds.k ? get(ds.k) : +ds.v; it.dec = +(ds.dec || 0); }
-  if (it.a === 'barx') {
-    const v = ds.k ? get(ds.k) : +ds.v, max = ds.of ? get(ds.of) : +ds.max;
-    it.frac = max ? v / max : 0;
-  }
-  if (it.a === 'draw') it.len = +ds.len;
-  return it;
-}
-
-function apply(it, lt) {
-  const raw = clamp((lt - it.t) / it.d);
-  const p = (it.a === 'move' ? easeInOut : easeOut)(raw);
-  let o = 1, tf = null;
-  switch (it.a) {
-    case 'up':    o = p; tf = `translateY(${(1 - p) * 26}px)`; break;
-    case 'left':  o = p; tf = `translateX(${-(1 - p) * 36}px)`; break;
-    case 'fade':  o = p; break;
-    case 'pop':   o = p; tf = `scale(${.6 + .4 * p})`; break;
-    case 'zoom':  o = p; tf = `scale(${1.12 - .12 * p})`; break;
-    case 'grow':  o = p; tf = `scaleX(${p})`; break;
-    case 'move':  o = it.fade ? clamp(raw * 2) : 1;
-                  tf = `translate(${it.x * (1 - p)}px,${it.y * (1 - p)}px) scale(${it.s + (1 - it.s) * p})`; break;
-    case 'barx':  o = raw > 0 ? 1 : 0; tf = `scaleX(${p * it.frac})`; break;
-    case 'wipe':  o = raw > 0 ? 1 : 0; it.el.style.clipPath = `inset(0 ${(1 - p) * 100}% 0 0)`; break;
-    case 'count': o = clamp(raw * 4); it.el.textContent = fmt(it.dec ? it.v * p : Math.round(it.v * p), it.dec); break;
-    case 'draw':  o = raw > 0 ? 1 : 0; it.el.style.strokeDashoffset = (1 - p) * it.len; break;
-  }
-  if (it.out !== null) o *= 1 - clamp((lt - it.out) / .45);
-  it.el.style.opacity = o;
-  if (tf) it.el.style.transform = tf;
-}
-
-const pattern = document.getElementById('pattern'), progress = document.getElementById('progress');
-
-function render(t) {
-  for (const s of scenes) {
-    const lt = t - s.start, on = lt >= 0 && lt < s.dur;
-    s.style.visibility = on ? 'visible' : 'hidden';
-    if (!on) continue;
-    const fi = s.start === 0 ? 1 : clamp(lt / .45), fo = clamp((s.dur - lt) / s.fo);
-    s.style.opacity = Math.min(fi, fo);
-    for (const it of s.items) apply(it, lt);
-  }
-  pattern.style.transform = `translate(${-(t * 6) % 180}px,${-(t * 3.5) % 180}px)`;
-  progress.style.transform = `scaleX(${clamp(t / TOTAL)})`;
-}
-
-// an eight-pointed star lattice, very faint, drifting
-function drawPattern() {
-  const star = (x, y) => `<rect x="${x - 26}" y="${y - 26}" width="52" height="52"/>` +
-    `<rect x="${x - 26}" y="${y - 26}" width="52" height="52" transform="rotate(45 ${x} ${y})"/>`;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><g fill="none" stroke="#fff" stroke-width="1.3">` +
-    star(90, 90) + star(0, 0) + star(180, 0) + star(0, 180) + star(180, 180) +
-    `<path d="M0 90H180M90 0V180" stroke-opacity=".45"/></g></svg>`;
-  pattern.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-function fit() {
-  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
-  stage.style.transform = `translate(${(innerWidth - 1920 * s) / 2}px,${(innerHeight - 1080 * s) / 2}px) scale(${s})`;
-}
-
-async function init() {
-  const ar = 'صرف ابتثجحخدذرزسشصضطظعغفقكلمنهوي ٱ', lat = 'Ṣarf ḍḥṭẓ ʿʾ āīū';
-  await Promise.all(['400 100px Amiri', '700 100px Amiri'].map(f => document.fonts.load(f, ar))
-    .concat(['400', '500', '600', '700', '800'].map(w => document.fonts.load(`${w} 40px Inter`, lat))));
-  await document.fonts.ready;
-  if (!document.fonts.check('100px Amiri', 'ص')) console.error('Amiri did not load');
-  if (!document.fonts.check('40px Inter', 'a')) console.error('Inter did not load');
-
-  buildTen(); buildAbwab(); buildForms(); buildTypes(); buildIlm();
-  fill();
-  for (const el of document.querySelectorAll('[data-m]')) paint(el);
-  drawPattern();
-  buildLinks();
-  for (const s of scenes) {
-    s.start = TOTAL; s.dur = +s.dataset.dur; s.fo = +(s.dataset.fo || .45); TOTAL += s.dur;
-    s.items = [...s.querySelectorAll('[data-t]')].map(item);
-  }
-  window.SARF_TOTAL = TOTAL;
-  window.renderAt = render;
-  render(0);
-
-  if (window.__capture) return;
-  // played in a browser: real time, with a pause and a skip
-  fit(); addEventListener('resize', fit);
-  const hud = document.getElementById('hud');
-  let base = performance.now() / 1000 - (parseFloat((location.hash.match(/t=([\d.]+)/) || [])[1]) || 0);
-  let paused = null;
-  const now = () => (paused !== null ? paused : (performance.now() / 1000 - base) % TOTAL);
-  const toggle = () => { if (paused === null) paused = now(); else { base = performance.now() / 1000 - paused; paused = null; } };
-  addEventListener('click', toggle);
-  addEventListener('keydown', e => {
-    if (e.key === ' ') { toggle(); e.preventDefault(); }
-    const skip = { ArrowRight: 5, ArrowLeft: -5 }[e.key];
-    if (skip) { const t = clamp(now() + skip, 0, TOTAL - .01); if (paused !== null) paused = t; else base = performance.now() / 1000 - t; }
-  });
-  (function loop() {
-    const t = now(); render(t);
-    hud.textContent = `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')} / ${Math.floor(TOTAL / 60)}:${String(Math.round(TOTAL % 60)).padStart(2, '0')}${paused !== null ? ' · pauze' : ''}`;
-    requestAnimationFrame(loop);
-  })();
-}
-
-window.SARF_READY = init();
+Film.start([buildTen, buildAbwab, buildForms, buildTypes, buildIlm]);
 })();
 </script>
 </body>

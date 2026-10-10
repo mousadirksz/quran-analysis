@@ -1,0 +1,62 @@
+/* What both films share: the stage, the type, the captions and cards, and the
+   arcs that tie the words of a sentence together. Each page adds the styles
+   of its own scenes after this file. */
+:root{
+  --ink:#ece6d8; --soft:#c9d1dc; --muted:#94a1b5; --dim:#6f7c90;
+  --gold:#f2b544; --gold2:#c99a43; --teal:#45c4b5; --rose:#f27a8d;
+  --blue:#7fb2f0; --coral:#f08f6e; --violet:#b39af0;
+  --card:rgba(255,255,255,.045); --edge:rgba(255,255,255,.085);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#05080f}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;
+  background:radial-gradient(ellipse 85% 75% at 50% 42%,#16243c 0%,#0e182b 52%,#080d18 100%);
+  color:var(--ink);font-family:Inter,sans-serif;font-size:32px;line-height:1.4;
+  -webkit-font-smoothing:antialiased}
+#pattern{position:absolute;left:-180px;top:-180px;width:2280px;height:1440px;opacity:.05;background-size:180px 180px}
+#vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(0,0,0,.5) 100%)}
+#progress{position:absolute;left:0;bottom:0;width:100%;height:4px;opacity:.8;
+  background:linear-gradient(90deg,var(--gold2),var(--gold));transform-origin:0 50%}
+#hud{position:fixed;right:10px;bottom:10px;font:13px/1 Inter,sans-serif;color:#7f8ca0}
+
+.scene{position:absolute;inset:0;padding:72px 120px 0;visibility:hidden}
+.tag{font-size:20px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold2)}
+h2{font-size:56px;line-height:1.15;font-weight:700;letter-spacing:-.012em;margin-top:12px}
+h2 em{font-style:normal;color:var(--gold)}
+h2 .ar{font-size:1.25em;line-height:1}
+.sub{font-size:29px;color:var(--muted);margin-top:8px}
+.ar{font-family:Amiri,serif;direction:rtl;unicode-bidi:isolate;font-weight:400}
+.inl{font-size:1.4em;line-height:1}
+.r{color:var(--gold)} .z{color:var(--teal)} .v,.w{color:var(--rose)}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:22px}
+.cap{position:absolute;left:170px;right:170px;bottom:70px;text-align:center;font-size:34px;
+  line-height:1.9;color:var(--soft)}
+.cap b{color:var(--ink);font-weight:600}
+.cap .inl{font-size:1.3em}
+.ref{font-size:22px;color:var(--dim);letter-spacing:.02em}
+.ref .ar{font-size:1.45em;color:var(--soft)}
+.legend{position:absolute;right:120px;top:84px;font-size:24px;color:var(--muted);display:flex;gap:30px;align-items:center}
+.legend i{display:inline-block;width:16px;height:16px;border-radius:50%;margin-right:10px;vertical-align:-1px}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* the four positions, as the nahw film colours a word; mabni is left as ink */
+.raf{color:var(--gold)} .nasb{color:var(--teal)} .jarr{color:var(--rose)} .jazm{color:var(--violet)}
+.mabni{color:var(--ink)}
+
+/* a sentence with arcs: .dep holds words (.w), each its Arabic (.wt, which
+   may be several coloured spans that stay joined) over an optional label (.wl) */
+.dep{position:relative;text-align:center;white-space:nowrap}
+.dep .w{display:inline-flex;flex-direction:column;align-items:center;vertical-align:top;margin:0 .13em}
+.dep .wl{font:italic 400 24px/1.2 Inter,sans-serif;color:var(--muted);direction:ltr;margin-top:-.1em}
+.dep .ghost .wt{color:var(--muted);border:2px dashed rgba(148,161,181,.6);border-radius:14px;
+  padding:0 .2em;font-size:.66em;line-height:1.5;margin-top:.32em}
+.dep .dots .wt{color:var(--dim)}
+.dep svg.arcs{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.arc{fill:none;stroke-width:3;stroke-linecap:round;stroke:var(--muted)}
+.arrowhead{fill:var(--muted)}
+.alab rect{fill:#0d1626;stroke:rgba(255,255,255,.14)}
+.alab text{font-family:Inter,sans-serif;font-size:23px;font-weight:600;fill:var(--soft)}
+.arc.raf{stroke:var(--gold)} .arrowhead.raf{fill:var(--gold)} .alab.raf text{fill:var(--gold)}
+.arc.nasb{stroke:var(--teal)} .arrowhead.nasb{fill:var(--teal)} .alab.nasb text{fill:var(--teal)}
+.arc.jarr{stroke:var(--rose)} .arrowhead.jarr{fill:var(--rose)} .alab.jarr text{fill:var(--rose)}
+.arc.jazm{stroke:var(--violet)} .arrowhead.jazm{fill:var(--violet)} .alab.jazm text{fill:var(--violet)}
