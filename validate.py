@@ -82,7 +82,8 @@ from add_wazifa import WAZIFA
 from add_wujuh import BEST_CONFIDENCE, SPAN_STATUSES
 from resolve_citations import WORKS as PARSED_WORKS
 from resolve_citations import clean_quote, normalize, skeleton
-from sarf_video import collect as collect_film
+from nahw_video import collect as collect_nahw_film
+from sarf_video import collect as collect_sarf_film
 
 HERE = Path(__file__).parent
 SOURCES = HERE / "sources"
@@ -1646,30 +1647,45 @@ def nahw_book(cur, args):
 
 @check("film figures")
 def film_figures(cur, args):
-    """video/sarf_data.js must hold what the database holds now.
+    """video/sarf_data.js and video/nahw_data.js must hold what the database
+    holds now.
 
-    The film about sarf takes every count and every Quranic example it shows
-    from that file, and the file is committed so the page plays without a
-    rebuild. That makes it one more place a figure can go stale: rebuild the
-    database and the film would go on quoting the old one. So the figures are
-    collected again here, the way sarf_video.py collects them, and compared
-    with the file. collect() also stops on a claim the film makes in words
-    that the data no longer bears out, and that is a failure here too."""
-    path = HERE / "video" / "sarf_data.js"
-    if not path.exists():
-        raise Skipped("video/sarf_data.js is not here")
-    require_tables(cur, "corpus", "words", "riwaya_diff")
-    try:
-        now = json.loads(json.dumps(collect_film(cur), ensure_ascii=False))
-    except SystemExit as exc:
-        raise Failed(f"sarf_video.py stops: {exc}")
-    text = path.read_text(encoding="utf-8")
-    held = json.loads(text[text.index("{"):text.rindex("}") + 1])
-    stale = sorted(k for k in set(now) | set(held) if now.get(k) != held.get(k))
-    if stale:
-        raise Failed("video/sarf_data.js no longer matches the database in "
-                     + ", ".join(stale) + "; python3 sarf_video.py --data rewrites it")
-    return f"{len(now)} groups of figures in video/sarf_data.js match the database"
+    The two films take every count and every Quranic sentence they show from
+    those files, and the files are committed so the pages play without a
+    rebuild. That makes them one more place a figure can go stale: rebuild the
+    database and a film would go on quoting the old one. So the figures are
+    collected again here, the way sarf_video.py and nahw_video.py collect
+    them, and compared with the files. collect() also stops on a claim a film
+    makes in words that the data no longer bears out, and that is a failure
+    here too. A film whose tables are not built is left out, not failed."""
+    films = (("sarf", collect_sarf_film, ("corpus", "words", "riwaya_diff")),
+             ("nahw", collect_nahw_film, ("corpus", "words", "syntax", "riwaya_diff")))
+    done, skipped = [], []
+    for name, collect, tables in films:
+        path = HERE / "video" / f"{name}_data.js"
+        if not path.exists():
+            skipped.append(f"video/{name}_data.js is not here")
+            continue
+        try:
+            require_tables(cur, *tables)
+        except Skipped as exc:
+            skipped.append(f"{name}: {exc}")
+            continue
+        try:
+            now = json.loads(json.dumps(collect(cur), ensure_ascii=False))
+        except SystemExit as exc:
+            raise Failed(f"{name}_video.py stops: {exc}")
+        text = path.read_text(encoding="utf-8")
+        held = json.loads(text[text.index("{"):text.rindex("}") + 1])
+        stale = sorted(k for k in set(now) | set(held) if now.get(k) != held.get(k))
+        if stale:
+            raise Failed(f"video/{name}_data.js no longer matches the database in "
+                         + ", ".join(stale) + f"; python3 {name}_video.py --data rewrites it")
+        done.append(f"{len(now)} groups of figures in video/{name}_data.js")
+    if not done:
+        raise Skipped("; ".join(skipped))
+    return "; ".join(done) + " match the database" + (
+        " (" + "; ".join(skipped) + ")" if skipped else "")
 
 
 def report(outcome, name, text):

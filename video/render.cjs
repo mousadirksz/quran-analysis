@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-// Draw video/sarf.html frame by frame and encode the frames with ffmpeg.
+// Draw a film page (video/sarf.html, video/nahw.html) frame by frame and
+// encode the frames with ffmpeg.
 //
-// sarf_video.py calls this after writing sarf_data.js; see there for what the
-// film shows and where its figures come from. The page draws any moment on
+// sarf_video.py and nahw_video.py call this after writing the page's data;
+// see there for what each film shows and where its figures come from. The page draws any moment on
 // request (window.renderAt), so the film is cut into one stretch per worker,
 // each stretch is encoded on its own, and the stretches are joined without
 // re-encoding. Each worker gets a browser of its own: pages in one browser
@@ -11,8 +12,10 @@
 // faster PNG encoder than page.screenshot uses -- 150 ms a frame against 530,
 // and still lossless.
 //
-//   node video/render.cjs [--out video/sarf.mp4] [--fps 30] [--workers 4]
-//   node video/render.cjs --stills 12,95.5 [--dir video/stills]
+//   node video/render.cjs [--html video/nahw.html] [--out video/nahw.mp4] [--fps 30] [--workers 4]
+//   node video/render.cjs [--html ...] --stills 12,95.5 [--dir video/stills]
+//
+// --html defaults to video/sarf.html, --out to the page's name with .mp4.
 
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
@@ -22,8 +25,8 @@ const path = require('path');
 
 const argv = process.argv.slice(2);
 const opt = (name, dflt) => { const i = argv.indexOf(name); return i >= 0 ? argv[i + 1] : dflt; };
-const HTML = path.join(__dirname, 'sarf.html');
-const OUT = path.resolve(opt('--out', path.join(__dirname, 'sarf.mp4')));
+const HTML = path.resolve(opt('--html', path.join(__dirname, 'sarf.html')));
+const OUT = path.resolve(opt('--out', HTML.replace(/\.html$/, '.mp4')));
 const FPS = +opt('--fps', 30);
 const WORKERS = +opt('--workers', Math.max(1, Math.min(4, os.cpus().length)));
 const STILLS = opt('--stills', null);
@@ -37,7 +40,7 @@ async function openPage(browser) {
   page.on('requestfailed', r => errors.push(`${r.url()}: ${r.failure() && r.failure().errorText}`));
   await page.addInitScript(() => { window.__capture = true; });
   await page.goto('file://' + HTML, { waitUntil: 'networkidle' });
-  await page.evaluate(() => window.SARF_READY);
+  await page.evaluate(() => window.FILM_READY);
   if (errors.length) throw new Error('the page reported:\n  ' + errors.join('\n  '));
   return page;
 }
@@ -96,11 +99,11 @@ function launch() {
       return;
     }
     const probe = await openPage(browser);
-    const total = await probe.evaluate(() => window.SARF_TOTAL);
+    const total = await probe.evaluate(() => window.FILM_TOTAL);
     await probe.close();
     await browser.close();
     const frames = Math.round(total * FPS), per = Math.ceil(frames / WORKERS);
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'sarf-'));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'film-'));
     console.log(`${total} s, ${frames} frames at ${FPS} fps, ${WORKERS} workers`);
     let done = 0, last = 0;
     const start = Date.now();

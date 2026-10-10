@@ -27,9 +27,10 @@ one SQLite file. Two files at the root are outside that:
 `quran_analysis.ipynb`, an exploratory notebook from before the schema
 settled, which needs pandas/numpy/matplotlib and is in no pipeline step;
 and `unrar-0.4-py3-none-any.whl`, a third-party wheel nothing in the repo
-references. Neither is needed to build or query the database. The film in
-`video/` is drawn with node, playwright and ffmpeg; the part of
-`sarf_video.py` that reads the database is standard library like the rest.
+references. Neither is needed to build or query the database. The two films
+in `video/` are drawn with node, playwright and ffmpeg; the parts of
+`sarf_video.py` and `nahw_video.py` that read the database are standard
+library like the rest.
 
 ## Quick start
 
@@ -916,6 +917,7 @@ correctness figure is the confidence distribution: 9,242 rows (75%) are `high`,
 | `sarf_examples.py` | generates the paradigm tables in `docs/sarf-nl.md` from the corpus: by root type (default), and `abwab`, `forms`, `quad`, `bab-paradigms`, `form-paradigms` |
 | `sarf_video.py` | the film of the sarf book: writes `video/sarf_data.js` (every count and Quranic example the film shows) from the database, then renders `video/sarf.mp4` with `video/render.cjs`; `--data` for the data alone, `--stills` for single frames |
 | `nahw_examples.py` | generates the tables in `docs/nahw-nl.md` from `syntax`, `corpus` and `riwaya_diff`: `relations`, `nawasikh`, `cases`, `muqaddar`, `faail`, `rel <label>`, `irab-diff`, `irab-book`, `irab-mabni` |
+| `nahw_video.py` | the film of the nahw book: writes `video/nahw_data.js` (every count, and every Quranic sentence with the treebank's relations over it) from the database, then renders `video/nahw.mp4`; the same `--data` and `--stills` |
 
 `docs/hafs-warsh.md` is the reviewable form of the riwaya comparison: the
 classification with its counts, and every farsh difference with its verse.
@@ -948,6 +950,18 @@ places recur throughout the book at the chapter each one belongs to. The
 `nahw book examples` check in `validate.py` reads the book back and looks
 every example up again, so a rebuild cannot leave it quoting figures the
 database no longer holds.
+
+`video/nahw.html` is the film of that book, nearly six minutes in twenty
+scenes. Where the sarf film colours letters it colours words, by the position
+their ending shows -- raf', nasb, jarr, jazm, or mabni -- and draws the
+treebank's relations between them as arcs, from the word that governs to the
+word it governs, with the words the treebank posits drawn dashed where it puts
+them. Every Quranic sentence on screen, with its arcs, is read from `corpus`
+and `syntax` into `video/nahw_data.js` by `nahw_video.py`; only the Warsh side
+of the two riwaya pairs (34:17 and 24:9) has no treebank behind it, so its
+words come from the Warsh mushaf and its analysis from the book. The two films
+share their engine, `video/film.js` and `film.css`, and the `film figures`
+check covers both.
 
 ### Leaving a remark on a book
 
